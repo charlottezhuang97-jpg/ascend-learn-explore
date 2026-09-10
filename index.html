@@ -29,13 +29,25 @@
 <div class="banner-fade" style="left:0.0px;top:296.0px;width:1920.0px;height:112.0px;"></div>
 <img class="ph-img" src="assets/images/banner-float-1.png" alt="" style="left:1458.0px;top:90.0px;width:55.0px;height:56.0px;">
 <img class="ph-img" src="assets/images/banner-float-2.png" alt="" style="left:1272.0px;top:272.0px;width:46.0px;height:52.0px;">
-<div class="txt" style="left:118.0px;top:121.0px;width:545.0px;height:50.0px;font-size:50.0px;line-height:50.0px;font-weight:600;color:var(--color-text-heading);text-align:left;white-space:nowrap;">开发者学习中心（DLC）</div>
-<div class="txt" style="left:118.0px;top:185.0px;width:497.0px;height:22.0px;font-size:16.0px;line-height:22.0px;font-weight:400;color:var(--color-text-secondary);text-align:left;white-space:nowrap;">在开发者学习中心（Deep Learning Center）获取必须技能，通往成功</div>
-<div class="search-bar" style="left:108.0px;top:237.0px;width:900.0px;height:54.0px;">
-<span class="search-icon"></span>
-<input type="text" class="search-input" id="searchInput" placeholder="今天你想学点什么" autocomplete="off" oninput="onSearchInput(this.value)" onfocus="onSearchFocus()">
+<div class="txt" style="left:0.0px;top:121.0px;width:1920.0px;height:50.0px;font-size:50.0px;line-height:50.0px;font-weight:600;color:var(--color-text-heading);text-align:center;white-space:nowrap;">开发者学习中心（DLC）</div>
+<div class="txt" style="left:0.0px;top:185.0px;width:1920.0px;height:22.0px;font-size:16.0px;line-height:22.0px;font-weight:400;color:var(--color-text-secondary);text-align:center;white-space:nowrap;">在开发者学习中心（Deep Learning Center）获取必须技能，通往成功</div>
+<div class="search-bar" style="left:510.0px;top:237.0px;width:900.0px;height:140.0px;">
+<div class="search-tabs">
+<button type="button" class="search-tab active" data-mode="gen" onclick="switchSearchMode('gen')">生成学习内容</button>
+<button type="button" class="search-tab" data-mode="ask" onclick="switchSearchMode('ask')">即时提问</button>
 </div>
-<div class="announce-bar" style="left:108.0px;top:299.0px;width:900.0px;">
+<div class="search-input-row">
+<span class="search-icon"></span>
+<input type="text" class="search-input" id="searchInput" placeholder="开发者学习中心为你生成课程" autocomplete="off" oninput="onSearchInput(this.value)" onfocus="onSearchFocus()">
+</div>
+<div class="search-ask-chips" id="searchAskChips">
+<span class="search-chip">概念讲解</span>
+<span class="search-chip">问题求解</span>
+<span class="search-chip">可视化</span>
+<span class="search-chip">代码解读</span>
+</div>
+</div>
+<div class="announce-bar" style="left:510.0px;top:385.0px;width:900.0px;">
 <img class="announce-icon" src="assets/images/announce-icon.svg" alt="">
 <span class="announce-text">Ascend for PyTorch 社区相关组件名称规范统一预告</span>
 <span class="announce-date">2026/06/30</span>
@@ -43,7 +55,7 @@
 </section>
 <!-- 搜索下拉面板挪到 .banner 外面：.banner 现在有 overflow:hidden 来裁剪
      banner-visual 向上溢出的部分，如果面板还在里面，展开的搜索结果会被一起裁掉 -->
-<div class="search-panel" id="searchPanel" style="left:108px;top:303px;"></div>
+<div class="search-panel" id="searchPanel" style="left:510px;top:389px;"></div>
 <div class="subnav-flow-spacer"></div>
 <div id="subnavSentinel" style="height:1px;"></div>
 <nav class="subnav" id="subnav">
@@ -145,12 +157,13 @@
 </section>
 <!-- #belowFloor1 是 position:relative（用来做楼层整体位移的定位上下文），
      它前面现在多了 .nav/.subnav-flow-spacer/#subnavSentinel/.subnav 这几个
-     新增的 in-flow 吸顶元素（合计 400px 高：64+279+1+56），会把 #belowFloor1
-     自己在文档流里的位置往下推 400px；由于它是定位上下文，其内部所有
+     新增的 in-flow 吸顶元素（合计 486px 高：64+365+1+56，365 是搜索框改成
+     两栏 tab 后变高 86px 顺带跟着长高的 spacer），会把 #belowFloor1 自己在
+     文档流里的位置往下推 486px；由于它是定位上下文，其内部所有
      position:absolute 的子元素坐标都是"页面根坐标"，一旦 #belowFloor1 的
-     流内位置偏移，子元素就会跟着多偏移 400px（第一/二楼层间距变得巨大的
-     原因）。用 margin-top:-400px 把这个偏移抵消掉，让它等效仍在 (0,0)。 -->
-<div id="belowFloor1" style="position:relative;margin-top:-400px;top:0px;transition:top 0.3s ease;">
+     流内位置偏移，子元素就会跟着多偏移 486px（第一/二楼层间距变得巨大的
+     原因）。用 margin-top:-486px 把这个偏移抵消掉，让它等效仍在 (0,0)。 -->
+<div id="belowFloor1" style="position:relative;margin-top:-486px;top:0px;transition:top 0.3s ease;">
 <section class="learn-type">
 <div class="txt" style="left:820.0px;top:839.0px;width:280.0px;height:50.0px;font-size:40.0px;line-height:50.0px;font-weight:600;color:var(--color-text-heading);text-align:center;white-space:nowrap;">按学习类型选择</div>
 <div class="txt" style="left:322.0px;top:901.0px;width:1275.0px;height:18.0px;font-size:16.0px;line-height:18.0px;font-weight:600;color:var(--color-text-secondary);text-align:center;white-space:nowrap;">选择一种类型，为你提供一个最合适的学习资源</div>
@@ -414,6 +427,16 @@ const SEARCH_RESULTS = [
 ];
 
 const addedPlans = new Set();
+
+const SEARCH_MODE_PLACEHOLDER = {
+  gen: '开发者学习中心为你生成课程',
+  ask: '输入你想问的问题，AI 分身马上为你解答'
+};
+function switchSearchMode(mode){
+  document.querySelectorAll('.search-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+  document.getElementById('searchInput').placeholder = SEARCH_MODE_PLACEHOLDER[mode];
+  document.getElementById('searchAskChips').classList.toggle('show', mode === 'ask');
+}
 
 function onSearchFocus(){
   const val = document.getElementById('searchInput').value.trim();

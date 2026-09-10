@@ -138,15 +138,34 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   background: linear-gradient(180deg, rgba(244, 245, 247, 0) 0%, var(--color-bg-subtle) 100%);
 }
 .hero-copy .txt { position: absolute; }
+/* 搜索框：生成学习内容/即时提问 两个 tab + 输入行 + （即时提问态才出现的）
+   提示标签行。高度固定 140px（不随 tab 切换变化，用 visibility 而不是
+   display 隐藏标签行，避免下面公告条/吸顶导航跟着抖动——道理和 .subnav
+   的高度不随 .stuck 变化一样）。 */
 .search-bar {
   position: absolute;
   background: var(--color-bg-surface);
   border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-lg);
+  padding: 16px 24px;
+  box-sizing: border-box;
 }
+.search-tabs { display: flex; gap: 24px; height: 22px; }
+.search-tab {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding-bottom: 6px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+.search-tab.active { color: var(--color-brand-red-dark); border-color: var(--color-brand-red-dark); }
+.search-input-row { position: relative; height: 32px; margin-top: 10px; }
 .search-icon {
   position: absolute;
-  left: 21px; top: 18px;
+  left: 0; top: 7px;
   width: 18px; height: 18px;
   border: 1.6px solid var(--color-text-muted);
   border-radius: 50%;
@@ -162,8 +181,8 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
 }
 .search-input {
   position: absolute;
-  left: 51px; top: 0;
-  width: calc(100% - 71px);
+  left: 30px; top: 0;
+  width: calc(100% - 30px);
   height: 100%;
   border: none;
   outline: none;
@@ -173,6 +192,24 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   color: var(--color-text-primary);
 }
 .search-input::placeholder { color: var(--color-text-muted); }
+.search-ask-chips {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  visibility: hidden;
+}
+.search-ask-chips.show { visibility: visible; }
+.search-chip {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--color-bg-subtle);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background .15s;
+}
+.search-chip:hover { background: var(--color-border-default); }
 
 /* 搜索框下面的新课程上线公告条 */
 .announce-bar {
@@ -295,13 +332,15 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
    与 207:24512（"开发者学习中心-向下滚动"，副导航吸附在一级导航正下方，
    左侧品牌标签+分隔线，居左排列，右侧"我的学伴"胶囊）。
 
-   .subnav-flow-spacer 把 .subnav 在文档流中的自然位置推到 y=343（等于原来
-   absolute 的 top:343），这样 position:sticky 在未吸附时视觉位置和原设计
-   完全一致；一级导航高度 64px，所以 .subnav 的 sticky top 也是 64px，吸附
-   后正好贴在一级导航下方。#subnavSentinel 放在 spacer 末尾（也就是 .subnav
-   吸附前的自然位置），IntersectionObserver 用 rootMargin:-64px 顶部收缩量
-   来匹配同一个吸附临界点，一旦哨兵离开这个收缩后的视口顶部就加上 .stuck。 */
-.subnav-flow-spacer { height: 279px; }
+   .subnav-flow-spacer 把 .subnav 在文档流中的自然位置推到 y=429（原来是
+   343，因为搜索框改成两栏 tab + 输入框后变高了 86px，凡是在它下面的东西
+   都要跟着往下挪 86px，包括这个自然位置），这样 position:sticky 在未吸附
+   时视觉位置和当前设计完全一致；一级导航高度 64px，所以 .subnav 的 sticky
+   top 也是 64px，吸附后正好贴在一级导航下方。#subnavSentinel 放在 spacer
+   末尾（也就是 .subnav 吸附前的自然位置），IntersectionObserver 用
+   rootMargin:-64px 顶部收缩量来匹配同一个吸附临界点，一旦哨兵离开这个收缩
+   后的视口顶部就加上 .stuck。 */
+.subnav-flow-spacer { height: 365px; }
 .subnav {
   /* height 定死不随 .stuck 变化：sticky 元素仍占用自己的流内高度，如果高度
      跟着状态变化，会让 #belowFloor1 及其后所有楼层的坐标基准也跟着抖动
