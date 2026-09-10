@@ -1,0 +1,132 @@
+{
+  "$meta": {
+    "name": "Ascend Design Tokens",
+    "source": "Figma file 社区1.0低保真 (ZdRx22Q9vHcfx6RljvEySW), node 120:205",
+    "extractedAt": "2026-08-31",
+    "updatedAt": "2026-08-31：字体由 Noto Sans SC 替换为 HarmonyOS Sans SC，medium/semibold 字重角色合并映射到 HarmonyOS Medium 字重文件",
+    "note": "低保真线框图导出，数值均来自 Figma 节点实测统计（fills/strokes/effects/style），非目测估算。出现频次为 1 的取值标注 note，建议与视觉定稿复核后再固化为正式 token。"
+  },
+  "color": {
+    "text": {
+      "primary": { "value": "#000000", "description": "主文本/图标，导出中出现 22 次" },
+      "secondary": { "value": "rgba(0, 0, 0, 0.6)", "description": "次级文本，黑色 60% 透明度，出现 45 次（最高频文本色）" },
+      "secondary-alt": { "value": "rgba(51, 51, 51, 0.6)", "description": "次级文本的另一变体，出现 16 次", "note": "与 text.secondary 用途重叠，建议人工确认是否需要合并为同一 token" },
+      "heading": { "value": "#101828", "description": "深色标题文本，出现 8 次" },
+      "muted": { "value": "#99A1AF", "description": "弱化/占位文本", "note": "仅出现 1 次，建议确认是否为独立 token" },
+      "dark-alt": { "value": "#121417", "description": "深色文本变体", "note": "仅出现 1 次，可能与 text.heading 重复，建议确认" }
+    },
+    "background": {
+      "surface": { "value": "#FFFFFF", "description": "卡片/按钮等前景容器底色，出现 14 次" },
+      "subtle": { "value": "#F5F6FA", "description": "浅灰背景", "note": "仅出现 1 次，建议确认使用场景" }
+    },
+    "border": {
+      "default": { "value": "#E5E7EB", "description": "标准描边/分隔线，fill 与 stroke 共出现 9 次" },
+      "subtle": { "value": "#F3F3F3", "description": "浅色描边，出现 6 次" },
+      "strong": { "value": "#000000", "description": "强调描边，出现 5 次" },
+      "transparent": { "value": "rgba(0, 0, 0, 0)", "description": "无描边占位（auto-layout 默认描边），出现 8 次" }
+    },
+    "brand": {
+      "red": { "value": "#DB0000", "description": "品牌红，用于强调色块/图形，出现 4 次" },
+      "red-dark": { "value": "#C7000B", "description": "品牌红（深），用于导航选中态文字与对应描边", "note": "与 brand.red 为两个相近但不同的红，未合并，需人工确认是否为同一 token 的不同状态（如 default/hover）还是两个独立品牌色" }
+    },
+    "accent": {
+      "purple": { "value": "#A78BFA", "description": "紫色强调色，仅见于描边（标签/徽标类元素），出现 2 次" }
+    },
+    "link": {
+      "default": { "value": "#2E53FA", "description": "内联文本链接色（如「查看所有」「立即查看」「查看 XX」），常规字重、默认无下划线，仅颜色本身作为可点击提示", "note": "2026-09-03 补充：首页「按开发场景选择」楼层「查看所有」链接实现时确认的取值" }
+    }
+  },
+
+  "typography": {
+    "fontFamily": {
+      "sans": { "value": "HarmonyOS Sans SC", "description": "全稿字体族（原提取自 Figma 为 Noto Sans SC，已按业务要求替换为 HarmonyOS Sans SC，字号/行高数值不变）" }
+    },
+    "fontWeight": {
+      "thin": { "value": 100, "file": "HarmonyOS_Sans_SC_Thin", "description": "HarmonyOS Sans SC 6 级字重之一，本页未使用，作为通用 token 补全" },
+      "light": { "value": 300, "file": "HarmonyOS_Sans_SC_Light", "description": "本页未使用，作为通用 token 补全" },
+      "regular": { "value": 400, "file": "HarmonyOS_Sans_SC_Regular" },
+      "semibold": { "value": 600, "file": "HarmonyOS_Sans_SC_Medium", "description": "映射自原 Noto Sans SC 的 medium(500) 与 semibold(600) 两个字重角色。HarmonyOS Sans SC 只有 Thin/Light/Regular/Medium/Bold/Black 6 级切片、没有独立的 SemiBold 文件，按业务要求 medium 对应 HarmonyOS 的 semi-bold，因此这两个角色合并映射到同一份 Medium.ttf，在 CSS 中统一以 font-weight:600 加载" },
+      "bold": { "value": 700, "file": "HarmonyOS_Sans_SC_Bold" },
+      "black": { "value": 900, "file": "HarmonyOS_Sans_SC_Black", "description": "本页未使用，作为通用 token 补全" }
+    },
+    "fontSize": {
+      "100": { "value": 14 },
+      "200": { "value": 16 },
+      "300": { "value": 18 },
+      "400": { "value": 20 },
+      "500": { "value": 22 },
+      "600": { "value": 40 },
+      "700": { "value": 50 }
+    },
+    "textStyle": {
+      "body-sm": { "fontFamily": "{typography.fontFamily.sans}", "fontWeight": "{typography.fontWeight.regular}", "fontSize": 14, "lineHeight": 22, "description": "正文小号，出现 16 次（最高频文本样式）" },
+      "body-md": { "fontFamily": "{typography.fontFamily.sans}", "fontWeight": "{typography.fontWeight.regular}", "fontSize": 16, "lineHeight": 24, "description": "正文常规，出现 12 次" },
+      "body-md-tight": { "fontFamily": "{typography.fontFamily.sans}", "fontWeight": "{typography.fontWeight.regular}", "fontSize": 16, "lineHeight": 22, "description": "正文常规（行高更紧凑），出现 9 次" },
+      "label-md": { "fontFamily": "{typography.fontFamily.sans}", "fontWeight": "{typography.fontWeight.semibold}", "fontSize": 16, "lineHeight": 20, "description": "中等强调标签/按钮文字，出现 5 次" },
+      "label-md-tight": { "fontFamily": "{typography.fontFamily.sans}", "fontWeight": "{typography.fontWeight.semibold}", "fontSize": 16, "lineHeight": 19.2, "description": "标签变体，出现 1 次", "note": "低频，确认是否可并入 label-md" },
+      "body-sm-tight": { "fontFamily": "{typography.fontFamily.sans}", "fontWeight": "{typography.fontWeight.regular}", "fontSize": 16, "lineHeight": 19.2, "description": "正文小号紧凑变体，出现 5 次" },
+      "heading-sm": { "fontFamily": "{typography.fontFamily.sans}", "fontWeight": "{typography.fontWeight.semibold}", "fontSize": 18, "lineHeight": 20, "description": "小标题，出现 7 次" },
+      "heading-md": { "fontFamily": "{typography.fontFamily.sans}", "fontWeight": "{typography.fontWeight.bold}", "fontSize": 20, "lineHeight": 24, "description": "标题，出现 1 次", "note": "低频，确认使用场景（如区块小节标题）" },
+      "heading-lg": { "fontFamily": "{typography.fontFamily.sans}", "fontWeight": "{typography.fontWeight.semibold}", "fontSize": 22, "lineHeight": 30, "description": "大标题，出现 5 次" },
+      "display-md": { "fontFamily": "{typography.fontFamily.sans}", "fontWeight": "{typography.fontWeight.semibold}", "fontSize": 40, "lineHeight": 50, "description": "展示级大字号（如 Banner 主标题），出现 3 次" },
+      "display-lg": { "fontFamily": "{typography.fontFamily.sans}", "fontWeight": "{typography.fontWeight.semibold}", "fontSize": 50, "lineHeight": 50, "description": "最大展示字号，出现 1 次", "note": "低频，确认是否为 Hero 专用一次性样式" }
+    }
+  },
+
+  "spacing": {
+    "0": { "value": 0 },
+    "8": { "value": 8 },
+    "16": { "value": 16 },
+    "20": { "value": 20 },
+    "32": { "value": 32 },
+    "40": { "value": 40 },
+    "description": "基于 8px 基础间距体系（auto-layout itemSpacing 实测值：0/8/16/20/32/40）"
+  },
+
+  "radius": {
+    "sm": { "value": 4, "description": "小圆角，如按钮内图标块" },
+    "md": { "value": 12, "description": "中圆角，如图标按钮" },
+    "lg": { "value": 16, "description": "大圆角，最高频（12 次），常规卡片/容器" },
+    "xl": { "value": 20, "description": "超大圆角" },
+    "2xl": { "value": 24, "description": "最大圆角" }
+  },
+
+  "shadow": {
+    "sm": { "value": "0px 1px 2px rgba(0, 0, 0, 0.1)", "description": "轻阴影（spread -1），出现 4 次" },
+    "md": { "value": "0px 1px 3px rgba(0, 0, 0, 0.1)", "description": "卡片默认阴影，出现 4 次" },
+    "lg": { "value": "0px 4px 6px rgba(0, 0, 0, 0.1)", "description": "悬浮/强调阴影（spread -1）", "note": "仅出现 1 次，确认是否为 hover 态专用" }
+  },
+
+  "component": {
+    "button.icon": {
+      "size": { "width": 36, "height": 36 },
+      "radius": "{radius.md}",
+      "background": "{color.background.surface}",
+      "icon": {
+        "size": { "width": 16, "height": 16 },
+        "radius": "{radius.sm}",
+        "background": "{color.border.default}"
+      },
+      "description": "图标按钮基础样式（36×36，圆角12，白底；内部图标占位块 16×16，圆角4）"
+    },
+    "nav.link": {
+      "height": 64,
+      "itemSpacing": "{spacing.32}",
+      "paddingBottom": "{spacing.20}",
+      "color.default": "{color.text.primary}",
+      "color.selected": "{color.brand.red-dark}",
+      "description": "顶部导航链接：横向排列，item 间距 32，文字底部内边距 20（基线对齐），选中态文字变为品牌深红"
+    },
+    "card.padding-default": {
+      "value": { "left": 0, "right": 0, "top": 20, "bottom": 20 },
+      "description": "卡片类容器最常见内边距（9 次），部分带右侧留白变体 (0, 64, 20, 20)"
+    },
+    "text-link": {
+      "color": "{color.link.default}",
+      "fontWeight": "{typography.fontWeight.regular}",
+      "textDecoration": "none",
+      "description": "行内文字链接（穿插在普通段落里的可点击短语，如「查看所有」「立即查看」「查看 XX」），仅用蓝色 #2E53FA 与常规字重和周围正文区分，不加下划线、不加粗。用于跳转到相关子页面/详情页的引导性链接文字。",
+      "example": "首页「按开发场景选择」楼层：「若想访问更多路径，可点击查看所有」— 「查看所有」为本样式，指向学习路径子页面"
+    }
+  }
+}

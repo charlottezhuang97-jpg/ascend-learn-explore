@@ -1,0 +1,711 @@
+/* ================= Design tokens (see /ascenddesign-system/tokens/design-tokens.json) ================= */
+:root {
+  /* color */
+  --color-text-primary: #000000;
+  --color-text-secondary: rgba(0, 0, 0, 0.6);
+  --color-text-secondary-alt: rgba(51, 51, 51, 0.6);
+  --color-text-heading: #101828;
+  --color-text-muted: #99A1AF;
+  --color-text-dark-alt: #121417;
+  --color-bg-surface: #FFFFFF;
+  --color-bg-subtle: #F5F6FA;
+  --color-border-default: #E5E7EB;
+  --color-border-subtle: #F3F3F3;
+  --color-border-strong: #000000;
+  --color-brand-red: #DB0000;
+  --color-brand-red-dark: #C7000B;
+  --color-accent-purple: #A78BFA;
+
+  /* typography */
+  --font-sans: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --fw-regular: 400;
+  --fw-semibold: 600; /* HarmonyOS Medium.ttf loaded at weight 600 — see fontWeight.semibold in design-tokens.json */
+  --fw-bold: 700;
+
+  /* spacing */
+  --space-8: 8px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-32: 32px;
+  --space-40: 40px;
+
+  /* radius */
+  --radius-sm: 4px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+
+  /* shadow */
+  --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ================= Fonts: HarmonyOS Sans SC ================= */
+/* Noto Sans SC 的 medium(500) 与 semibold(600) 字重角色已合并映射到 Medium.ttf，
+   在 font-weight:600 槽位加载（该字重族没有独立的 SemiBold 切片） */
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('../fonts/HarmonyOS_Sans_SC_Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('../fonts/HarmonyOS_Sans_SC_Medium.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('../fonts/HarmonyOS_Sans_SC_Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ================= Reset ================= */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--color-bg-subtle); }
+body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; }
+button { font-family: inherit; border: none; background: none; cursor: pointer; }
+
+/* ================= Page (fixed 1920px canvas, pixel-accurate to Figma) ================= */
+.page {
+  position: relative;
+  width: 1920px;
+  height: 2503px;
+  margin: 0 auto;
+  background: var(--color-bg-subtle);
+  /* overflow:hidden used to live here, but it breaks position:sticky for any descendant
+     (any ancestor with overflow != visible constrains sticky) — the only thing it was
+     protecting against is the banner-visual image bleeding above y=0, so that clip is
+     now scoped to .banner itself (which is position:absolute + its own overflow:hidden,
+     so it doesn't touch the sticky sub-nav's ancestor chain). */
+}
+
+/* Section wrappers are NOT positioning contexts — every element inside them uses
+   coordinates measured relative to .page (the only positioned ancestor). Giving a
+   section its own position:absolute+top would double-apply that offset to its children. */
+
+.txt { position: absolute; font-family: var(--font-sans); white-space: pre-wrap; }
+.ph-img { position: absolute; object-fit: cover; display: block; }
+.box { position: absolute; }
+
+/* ================= Nav ================= */
+.nav {
+  /* sticky + in-flow (first child of .page) instead of absolute, so it stays pinned to
+     the viewport top while scrolling — the sub-nav's "stuck" state docks directly under
+     this bar, which only makes sense if this bar itself never scrolls away. */
+  position: sticky;
+  top: 0;
+  left: 0; width: 1920px; height: 64px;
+  background: var(--color-bg-surface);
+  z-index: 30;
+}
+.nav-links { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.nav-link {
+  position: absolute;
+  font-size: 16px;
+  line-height: 24px;
+  white-space: nowrap;
+  padding-bottom: var(--space-20);
+}
+
+/* ================= Banner ================= */
+/* Taken out of flow (was position:static) so it no longer pushes the in-flow
+   nav/sub-nav-spacer/sub-nav stack down — it paints as an absolute overlay at the
+   page's own origin (0,0), which is pixel-identical to how its children were already
+   positioned (they were always page-relative, since .banner itself was never a
+   positioning context). overflow:hidden is scoped here (see .page comment above). */
+.banner {
+  position: absolute;
+  left: 0; top: 0; width: 1920px; height: 620px; /* tall enough to fully contain
+    banner-visual.png (bottom edge at y≈604px) — only the top bleed (y<0) needs
+    clipping, this must not also cut off content that was always meant to show */
+  overflow: hidden;
+}
+.banner-base {
+  position: absolute;
+  background: linear-gradient(90deg, #E1E7FF 0%, rgba(182, 197, 254, 0.05) 10.2%, rgba(221, 233, 255, 0.05) 88%, #DED1FD 96.2%);
+}
+.banner-fade {
+  position: absolute;
+  background: linear-gradient(180deg, rgba(244, 245, 247, 0) 0%, var(--color-bg-subtle) 100%);
+}
+.hero-copy .txt { position: absolute; }
+.search-bar {
+  position: absolute;
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+}
+.search-icon {
+  position: absolute;
+  left: 21px; top: 18px;
+  width: 18px; height: 18px;
+  border: 1.6px solid var(--color-text-muted);
+  border-radius: 50%;
+}
+.search-icon::after {
+  content: '';
+  position: absolute;
+  right: -5px; bottom: -4px;
+  width: 6px; height: 1.6px;
+  background: var(--color-text-muted);
+  transform: rotate(45deg);
+  transform-origin: right center;
+}
+.search-input {
+  position: absolute;
+  left: 51px; top: 0;
+  width: calc(100% - 71px);
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--color-text-primary);
+}
+.search-input::placeholder { color: var(--color-text-muted); }
+
+/* 搜索框下面的新课程上线公告条 */
+.announce-bar {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-text-primary);
+}
+.announce-icon { width: 14px; height: 14px; flex: none; }
+.announce-date { color: var(--color-text-muted); flex: none; }
+
+/* ================= Search panel (default/初始/激活/悬浮) =================
+   内容/颜色/间距来自 Figma 节点 164:2712(初始面板) / 165:4366(激活/悬浮，
+   两者结构相同，悬浮态只多一个「加入学习计划」按钮)。 */
+.search-panel {
+  display: none;
+  position: absolute;
+  background: var(--color-bg-surface);
+  border: 1px solid #EAECEF;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  /* 25：低于一级导航(30，吸顶后要始终盖住一切)，但要高于副导航(20)——
+     两者原来同为 20，同层级下按 DOM 顺序比较，.subnav 在 .search-panel
+     后面反而会盖在它上面，导致展开的搜索面板看起来和副导航"融合"了。 */
+  z-index: 25;
+  overflow: hidden;
+}
+.search-panel.open { display: block; }
+
+/* 初始面板：空焦点态 */
+.sp-initial { width: 1090px; }
+.sp-suggest-label { padding: 16px 16px 0; font-size: 12px; line-height: 18px; color: #9BA1AB; }
+.sp-suggest-row { display: flex; flex-wrap: wrap; gap: 12px 9px; padding: 12px 16px 16px; }
+.sp-suggest-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #F7F8FA;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: #5A6069;
+  transition: background 0.15s;
+}
+.sp-suggest-pill:hover { background: #EAECEF; }
+.sp-quiz-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  background: #F7F8FA;
+  padding: 12px 16px;
+  font-size: 12px;
+  color: #9BA1AB;
+}
+.sp-quiz-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid #16181D;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #16181D;
+  background: transparent;
+  transition: background 0.15s;
+}
+.sp-quiz-btn:hover { background: var(--color-bg-subtle); }
+
+/* 激活/悬浮面板：搜索结果列表 */
+.sp-active { width: 1080px; }
+.sp-result-count { padding: 13px 16px 12px; font-size: 12px; font-weight: 600; color: #9BA1AB; border-bottom: 1px solid #F2F3F5; }
+.sp-result-list { max-height: 480px; overflow-y: auto; }
+.sp-result-item {
+  display: block;
+  position: relative;
+  padding: 12px 16px;
+  border-bottom: 1px solid #F2F3F5;
+  transition: background 0.15s;
+}
+.sp-result-item:last-child { border-bottom: none; }
+.sp-result-item:hover { background: var(--color-bg-subtle); }
+.sp-result-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.sp-result-tag {
+  flex: none;
+  border: 1px solid;
+  border-radius: 16px;
+  padding: 5px 12px 6px;
+  font-size: 12px;
+  line-height: 18px;
+}
+.sp-result-title { font-size: 14px; font-weight: 600; line-height: 19.25px; color: #16181D; }
+.sp-result-plan-btn {
+  display: none;
+  margin-left: auto;
+  flex: none;
+  border: 1px solid #16181D;
+  border-radius: 16px;
+  padding: 5px 12px 6px;
+  font-size: 12px;
+  color: #16181D;
+  background: var(--color-bg-surface);
+  transition: background 0.15s;
+}
+.sp-result-item:hover .sp-result-plan-btn { display: inline-block; }
+.sp-result-plan-btn:hover { background: var(--color-bg-subtle); }
+.sp-result-plan-btn.added { border-color: var(--color-brand-red-dark); color: var(--color-brand-red-dark); }
+.sp-result-desc { font-size: 12px; line-height: 19.5px; color: #5A6069; margin-bottom: 6px; }
+.sp-result-meta { display: flex; align-items: center; gap: 12px; font-size: 12px; color: #9BA1AB; }
+.sp-result-meta .sp-rating { display: flex; align-items: center; gap: 4px; color: var(--color-brand-red-dark); }
+.sp-result-meta span { display: flex; align-items: center; gap: 4px; }
+.sp-result-meta img { width: 12px; height: 12px; }
+.sp-view-all {
+  display: block;
+  background: #F7F8FA;
+  border-top: 1px solid #EAECEF;
+  padding: 13px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2E53FA;
+}
+.sp-view-all:hover { text-decoration: underline; }
+/* ================= Sub-nav：吸顶 + 内容形变 =================
+   来源 Figma 节点 120:205（默认态，副导航叠在 banner 渐变衬底上，居中排列）
+   与 207:24512（"开发者学习中心-向下滚动"，副导航吸附在一级导航正下方，
+   左侧品牌标签+分隔线，居左排列，右侧"我的学伴"胶囊）。
+
+   .subnav-flow-spacer 把 .subnav 在文档流中的自然位置推到 y=343（等于原来
+   absolute 的 top:343），这样 position:sticky 在未吸附时视觉位置和原设计
+   完全一致；一级导航高度 64px，所以 .subnav 的 sticky top 也是 64px，吸附
+   后正好贴在一级导航下方。#subnavSentinel 放在 spacer 末尾（也就是 .subnav
+   吸附前的自然位置），IntersectionObserver 用 rootMargin:-64px 顶部收缩量
+   来匹配同一个吸附临界点，一旦哨兵离开这个收缩后的视口顶部就加上 .stuck。 */
+.subnav-flow-spacer { height: 279px; }
+.subnav {
+  /* height 定死不随 .stuck 变化：sticky 元素仍占用自己的流内高度，如果高度
+     跟着状态变化，会让 #belowFloor1 及其后所有楼层的坐标基准也跟着抖动
+     （见 #belowFloor1 margin-top:-400px 处的说明）。 */
+  position: sticky;
+  top: 64px;
+  z-index: 20;
+  width: 1920px;
+  height: 56px;
+  background: transparent;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+.subnav.stuck {
+  background: var(--color-bg-surface);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06), 0 4px 12px rgba(16, 24, 40, 0.06);
+}
+.subnav-inner {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  width: 1488px;
+  height: 100%;
+  margin: 0 auto;
+  padding-left: 432px; /* 未吸附时用 padding 模拟原设计的居中效果，因为 padding
+                           可以平滑过渡，justify-content 的关键字切换不行 */
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0%, #fff 31%, rgba(255, 255, 255, 0.8) 68%, rgba(255, 255, 255, 0) 100%);
+  transition: padding-left 0.25s ease, background 0.25s ease;
+}
+.subnav.stuck .subnav-inner { padding-left: 0; background: none; }
+.subnav-item { position: static; font-size: 16px; line-height: 19.2px; white-space: nowrap; }
+.subnav-brand {
+  display: none;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #000;
+  flex: none;
+  white-space: nowrap;
+}
+.subnav-divider { display: none; width: 1px; height: 24px; background: var(--color-border-default); flex: none; }
+.subnav.stuck .subnav-brand, .subnav.stuck .subnav-divider { display: flex; }
+.subnav-inner .comp-wrap { margin-left: auto; flex: none; }
+.subnav-badge {
+  flex: none;
+  border-radius: 999px;
+  padding: 5px 20px;
+  font-size: 14px;
+  color: #730CFF;
+  background: linear-gradient(115deg, rgba(223, 212, 251, 0.5), rgba(222, 209, 253, 0.8));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.subnav.stuck .subnav-badge { opacity: 1; pointer-events: auto; }
+
+/* ================= 我的学伴 下拉面板（和 find.html 等子页面共用同一套
+   .comp-* 样式/交互，来源 Figma 节点 188:24234 / 188:24346 / 188:24427） ================= */
+.comp-wrap { position: relative; flex: none; }
+.comp-panel { position: fixed; width: 400px; max-height: 80vh; overflow-y: auto; background: #fff; border-radius: 16px; box-shadow: 0 16px 48px rgba(16, 24, 40, .18), 0 4px 12px rgba(16, 24, 40, .10); z-index: 200; display: none; }
+.comp-panel.open { display: block; }
+.comp-head { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 1px solid #F3F3F3; }
+.comp-head img { width: 24px; height: 24px; flex: none; }
+.comp-head span { flex: 1; font-size: 14px; font-weight: 600; color: #101828; }
+.comp-close { width: 15px; height: 15px; flex: none; color: #99A1AF; }
+.comp-close:hover { color: #101828; }
+.comp-sec-head { width: 100%; display: flex; align-items: center; gap: 8px; padding: 14px 20px; font-size: 13px; font-weight: 600; color: #101828; }
+.comp-sec-head:hover { background: #FAFAFB; }
+.comp-sec-head .ic { width: 16px; height: 16px; flex: none; display: flex; }
+.comp-sec-head .chev { margin-left: auto; flex: none; transition: transform .2s; }
+.comp-sec-head.closed .chev { transform: rotate(180deg); }
+.comp-sec-body { padding: 0 20px 16px; max-height: 640px; overflow: hidden; transition: max-height .25s ease; }
+.comp-sec-body.closed { max-height: 0; padding-top: 0; padding-bottom: 0; }
+.comp-stat-row { display: flex; gap: 12px; padding: 11px 0; }
+.comp-stat-row + .comp-stat-row { border-top: 1px solid #F3F3F3; }
+.comp-stat-box { flex: none; width: 60px; border-radius: 10px; text-align: center; padding: 10px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+.comp-stat-box b { font-size: 18px; font-weight: 600; line-height: 1; }
+.comp-stat-box span { font-size: 9px; font-weight: 500; }
+.comp-stat-items { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 11px; }
+.comp-stat-item { display: block; padding: 4px 6px; margin: -4px -6px; border-radius: 8px; cursor: pointer; transition: background .12s; }
+.comp-stat-item:hover { background: #F9F9F9; }
+.comp-stat-item .row1 { display: flex; align-items: center; justify-content: space-between; font-size: 11px; gap: 8px; margin-bottom: 5px; }
+.comp-stat-item .row1 .t { color: #101828; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.comp-stat-item:hover .row1 .t { text-decoration: underline; }
+.comp-stat-item .row1 .meta { display: flex; align-items: center; gap: 6px; flex: none; color: #9BA1AB; }
+.comp-stat-item .row1 .meta .sep { width: 1px; height: 9px; background: #D9D9D9; }
+.comp-stat-item .row1 .meta .pct { color: #9BA1AB; }
+.comp-bar { height: 4px; border-radius: 999px; background: #EDEDED; overflow: hidden; }
+.comp-bar-fill { height: 100%; background: #2E53FA; border-radius: 999px; }
+.comp-cert-item { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #101828; gap: 8px; }
+.comp-cert-item + .comp-cert-item { margin-top: 9px; }
+.comp-cert-pill { flex: none; border-radius: 999px; padding: 3px 10px 3px 8px; font-size: 9px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.comp-tabs { display: flex; gap: 2px; background: #F2F3F5; border-radius: 8px; padding: 3px; margin-bottom: 12px; }
+.comp-tab { flex: 1; padding: 6px; border-radius: 6px; border: none; background: none; font-family: inherit; cursor: pointer; font-size: 12px; font-weight: 600; color: #9BA1AB; }
+.comp-tab.active { background: #fff; color: #101828; }
+.comp-list.closed { display: none; }
+.comp-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px; border-radius: 10px; cursor: pointer; transition: background .12s; }
+.comp-item:hover { background: #F9F9F9; }
+.comp-num { flex: none; width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #2E53FA, #7B25F4); color: #fff; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.comp-item.plan .comp-num { background: #000; }
+.comp-item-body { flex: 1; min-width: 0; }
+.comp-item-body h5 { font-size: 12px; font-weight: 400; color: #101828; margin-bottom: 3px; }
+.comp-item:hover .comp-item-body h5 { text-decoration: underline; }
+.comp-item-body p { font-size: 10px; color: #9BA1AB; line-height: 1.5; }
+.comp-item-arrow { flex: none; color: #9BA1AB; margin-top: 3px; }
+.float-btn {
+  position: absolute;
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm), var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.float-btn span {
+  width: 16px; height: 16px;
+  border-radius: var(--radius-sm);
+  background: var(--color-border-default);
+}
+
+/* ================= Buttons ================= */
+.btn {
+  position: absolute;
+  border-radius: var(--radius-xl);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: var(--fw-semibold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-primary {
+  background: var(--color-text-primary);
+  border: 1px solid var(--color-text-primary);
+  color: var(--color-bg-surface);
+}
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--color-text-primary);
+  color: var(--color-text-primary);
+}
+
+/* ================= Intro ================= */
+.intro { position: static; }
+.intro-card {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-lg);
+}
+
+/* ================= 专属推荐楼层 =================
+   内容来自 Figma 节点 136:1414（主页-专属推荐）。卡片高度从 Figma 的 322px
+   压缩到 300px，是为了不把下方"按学习类型选择"楼层往下顶（两个楼层之间
+   原本就有 72px 间隙，压缩后刚好放得下，不用连锁改动后面所有楼层的坐标）。 */
+.rec-floor { position: static; }
+.rec-card-bg {
+  position: absolute;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px 32px;
+  overflow: hidden;
+}
+.rec-card-bg::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -60px;
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(84,120,251,0.14), rgba(152,74,246,0.10) 60%, transparent 72%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.rec-toolbar { position: relative; display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.rec-chips { display: flex; gap: 12px; flex-wrap: wrap; }
+.rec-chip {
+  background: var(--color-bg-surface);
+  border: 1px solid #DFDFDF;
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-size: 12px;
+  color: var(--color-text-primary);
+}
+.rec-toolbar-right { display: flex; align-items: center; gap: 20px; flex: none; }
+.rec-edit-link { font-size: 14px; color: var(--color-text-secondary); cursor: pointer; }
+.rec-edit-link:hover { color: var(--color-text-primary); }
+.rec-refresh-btn { font-size: 14px; color: var(--color-text-secondary); display: flex; align-items: center; gap: 4px; }
+.rec-refresh-btn:hover { color: var(--color-text-primary); }
+
+.rec-cards { position: relative; display: flex; gap: 15px; }
+.rec-card {
+  flex: 1;
+  min-width: 0;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+.rec-card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.rec-card-tag {
+  flex: none;
+  border-radius: var(--radius-lg);
+  padding: 5px 11px 6px;
+  font-size: 12px;
+  border: 1px solid;
+}
+.rec-card-match {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  padding-left: 12px;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rec-card h4 { font-size: 18px; font-weight: 600; color: var(--color-text-primary); margin-bottom: 12px; }
+.rec-card p { font-size: 14px; line-height: 1.4; color: var(--color-text-secondary); margin-bottom: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.rec-card-meta { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--color-text-secondary); }
+.rec-card-meta .rating { color: var(--color-brand-red); }
+.rec-card-meta span { display: inline-flex; align-items: center; gap: 4px; }
+.rec-card-meta img { width: 12px; height: 12px; }
+
+/* ================= Learn type (4-card row) ================= */
+.learn-type { position: static; }
+.learn-type-card-bg {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-lg);
+}
+
+/* ================= Scenario header ================= */
+.scenario-head { position: static; }
+
+/* ================= Scenario category strip ================= */
+.scenario-strip { position: static; }
+.scenario-strip-top,
+.scenario-strip-bottom {
+  position: absolute;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.5));
+  backdrop-filter: blur(4px);
+}
+.scenario-tag-bg {
+  position: absolute;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
+    linear-gradient(135deg, rgba(84, 120, 251, 0.9), rgba(152, 74, 246, 0.9));
+  transition: left 0.25s ease;
+}
+#scenarioIcon { transition: left 0.25s ease; }
+.scenario-tab-hit { position: absolute; cursor: pointer; }
+
+/* ================= Course grid (2x2) ================= */
+.course-grid { position: static; }
+.course-card {
+  position: absolute;
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-lg);
+}
+.stat-icon { position: absolute; }
+.course-card-link {
+  position: absolute;
+  display: block;
+  border-radius: var(--radius-lg);
+  transition: box-shadow 0.15s;
+}
+.course-card-link:hover { box-shadow: var(--shadow-lg); }
+
+/* ================= Footer visual ================= */
+.footer-visual { position: static; }
+.footer-accent { position: absolute; background: var(--color-text-dark-alt); }
+
+/* ================= Quiz match modal =================
+   内容/文案/颜色/间距均来自 Figma 节点 165:8336(第一步)/165:8654(第二步)/
+   165:8968(第三步)/165:9280(第四步·结果)，取值为该弹窗独立的一套灰阶
+   （与主页 token 非常接近但并非同一份，按来源如实取值，不强行合并）。 */
+:root {
+  --qm-ink: #16181D;
+  --qm-ink-3: #9BA1AB;
+  --qm-line: #EAECEF;
+  --qm-line-2: #F2F3F5;
+  --qm-progress-fill: #E4DBFC;
+}
+.qm-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(16, 24, 40, 0.5);
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15vh;
+  z-index: 100;
+}
+.qm-overlay.open { display: flex; }
+.qm-card {
+  background: var(--color-bg-surface);
+  width: 560px;
+  max-width: 90vw;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: qm-card-in 0.2s ease;
+}
+@keyframes qm-card-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.qm-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--qm-line);
+}
+.qm-icon { font-size: 20px; line-height: 30px; }
+.qm-head-text { flex: 1; min-width: 0; }
+.qm-title { font-size: 16px; line-height: 24px; font-weight: 600; color: var(--qm-ink); }
+.qm-subtitle { display: none; font-size: 12px; line-height: 18px; color: var(--qm-ink-3); margin-top: 2px; }
+.qm-close {
+  width: 28px; height: 28px; flex: none;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--qm-ink-3);
+  transition: background 0.15s;
+}
+.qm-close:hover { background: var(--color-bg-subtle); }
+
+.qm-progress-track { height: 3px; background: var(--qm-line-2); }
+.qm-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--qm-progress-fill);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.qm-body { padding: 24px; min-height: 254px; animation: qm-body-in 0.2s ease; }
+@keyframes qm-body-in {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.qm-step-label { font-size: 12px; line-height: 18px; color: var(--qm-ink-3); }
+.qm-question { font-size: 17px; line-height: 23.375px; font-weight: 600; color: var(--qm-ink); margin-top: 4px; margin-bottom: 20px; }
+
+.qm-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 9px;
+}
+.qm-option {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--qm-line);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--qm-ink);
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+.qm-option:hover { border-color: var(--color-text-primary); background: var(--color-bg-subtle); }
+
+/* 加载态：Figma 原型没有这一步，按基础 loading 补充 */
+.qm-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 206px;
+}
+.qm-spinner {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 3px solid var(--qm-line);
+  border-top-color: var(--qm-ink);
+  animation: qm-spin 0.8s linear infinite;
+}
+@keyframes qm-spin { to { transform: rotate(360deg); } }
+.qm-loading-text { font-size: 14px; color: var(--qm-ink-3); }
+
+.qm-result { text-align: center; }
+.qm-result-emoji { font-size: 32px; line-height: 48px; }
+.qm-result-heading { font-size: 15px; line-height: 22.5px; font-weight: 600; color: var(--qm-ink); margin-top: 8px; margin-bottom: 12px; }
+.qm-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.qm-tag {
+  background: var(--qm-line);
+  color: #000000;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
+}
+.qm-cta {
+  width: 100%;
+  height: 45px;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: 1px solid var(--color-text-primary);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+.qm-cta:hover { background: var(--color-bg-subtle); }

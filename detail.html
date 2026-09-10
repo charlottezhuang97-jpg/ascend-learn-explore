@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>昇腾学习 · 详情页原型</title>
+<style>
+  :root{
+    /* 品牌/中性色已对齐 /ascenddesign-system/tokens/design-tokens.json 的 color.* 令牌；
+       AI 分身/知识点标记/链接色是详情页特有的交互语义色，主页令牌里没有对应场景，
+       按约定保留为本页本地变量，不回写共享 token 文件。 */
+    --brand:#C7000B;               /* = color.brand.red-dark */
+    --brand-soft:#FBECEC;
+    --accent-ai:#6E5BE0; --accent-ai-soft:#F0EDFC;   /* 页面本地：AI 分身强调紫 */
+    --link:#2E5BFF;                                   /* 页面本地：链接蓝 */
+    --mark-key:#F5A623; --mark-code:#17B26A;           /* 页面本地：知识点/代码标记色 */
+    --ink:#101828;                 /* = color.text.heading */
+    --ink-2:rgba(0,0,0,.6);        /* = color.text.secondary */
+    --ink-3:#99A1AF;               /* = color.text.muted */
+    --line:#E5E7EB;                /* = color.border.default */
+    --line-2:#F3F3F3;              /* = color.border.subtle */
+    --bg:#FFFFFF;                  /* = color.background.surface */
+    --bg-soft:#F5F6FA;             /* = color.background.subtle */
+    --bg-code:#0E1116;             /* 页面本地：代码编辑器深色底，主页无对应场景 */
+    --r-sm:8px;                    /* 页面本地：密集 UI 小圆角，主页令牌无对应级别 */
+    --r-md:12px; --r-lg:16px; --r-xl:20px;             /* = radius.md / radius.lg / radius.xl */
+    --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px;
+    --shadow-1:0px 1px 3px rgba(0,0,0,.1);             /* = shadow.md */
+    --shadow-2:0 8px 24px rgba(16,24,40,.10),0 2px 6px rgba(16,24,40,.06);   /* 页面本地：浮层阴影，主页无对应级别 */
+    --shadow-float:0 16px 48px rgba(16,24,40,.18),0 4px 12px rgba(16,24,40,.10); /* 页面本地 */
+    --font:'HarmonyOS Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+    --mono:"SF Mono","JetBrains Mono",Consolas,monospace;
+    --panelW:384px;
+  }
+  /* Noto Sans SC 的 medium(500)/semibold(600) 角色合并映射到 Medium.ttf，
+     在 font-weight:600 槽位加载（与 index.html 使用同一批字体文件） */
+  @font-face{
+    font-family:'HarmonyOS Sans SC';
+    src:url('assets/fonts/HarmonyOS_Sans_SC_Regular.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'HarmonyOS Sans SC';
+    src:url('assets/fonts/HarmonyOS_Sans_SC_Medium.woff2') format('woff2');
+    font-weight:600; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'HarmonyOS Sans SC';
+    src:url('assets/fonts/HarmonyOS_Sans_SC_Bold.woff2') format('woff2');
+    font-weight:700; font-style:normal; font-display:swap;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);color:var(--ink);background:var(--bg-soft);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  a{color:var(--link);text-decoration:none}
+
+  .topbar{height:64px;background:var(--bg);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:var(--sp-6);padding:0 var(--sp-6);position:sticky;top:0;z-index:40}
+  .logo{display:flex;align-items:center}
+  .logo img{height:28px;display:block}
+  .nav{display:flex;gap:var(--sp-5);font-size:15px;color:var(--ink-2)}
+  .nav a{color:inherit;padding:4px 2px;position:relative;transition:color .15s}
+  .nav a:hover{color:var(--ink)}
+  .nav a.active{color:var(--brand);font-weight:600}
+  .nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-19px;height:2px;background:var(--brand);border-radius:2px}
+  .top-right{margin-left:auto;display:flex;align-items:center;gap:var(--sp-4)}
+  .ai-entry{display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:var(--accent-ai);color:#fff;font-weight:600;font-size:14px;box-shadow:0 2px 8px rgba(110,91,224,.3);transition:transform .12s}
+  .ai-entry:hover{transform:translateY(-1px)}
+  .ai-entry.on{background:var(--ink)}
+  .ai-entry .logo{width:20px;height:20px;flex:none;display:block}
+  .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#E9EBEF,#D5D9E0);display:grid;place-items:center;color:var(--ink-3)}
+
+  .subhead{background:var(--bg);border-bottom:1px solid var(--line);padding:var(--sp-4) var(--sp-6);display:flex;align-items:center;gap:var(--sp-4);position:sticky;top:64px;z-index:30}
+  .back{display:flex;align-items:center;gap:5px;color:var(--ink-2);font-size:14px;padding:6px 10px;border-radius:var(--r-sm);transition:background .15s}
+  .back:hover{background:var(--bg-soft);color:var(--ink)}
+  .subhead h1{font-size:17px;font-weight:700}
+  .progress-wrap{margin-left:4px;display:flex;align-items:center;gap:12px}
+  .progress-bar{width:180px;height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+  .progress-fill{height:100%;width:40%;background:linear-gradient(90deg,var(--brand),#FF5A45);border-radius:999px}
+  .progress-txt{font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+  .progress-txt b{color:var(--brand);font-size:15px}
+
+  /* 常驻面板时给 body 右侧留出空间 */
+  body.docked{padding-right:var(--panelW)}
+  body.docked .topbar,body.docked .subhead{padding-right:calc(var(--sp-6) + 0px)}
+
+  /* 默认单栏(目录悬浮);常驻时才两栏 */
+  .layout{display:grid;grid-template-columns:1fr;max-width:1440px;margin:0 auto;align-items:start}
+  .layout.docked-toc{grid-template-columns:248px 1fr}
+
+  /* 常驻左栏 */
+  .sidebar{display:none;position:sticky;top:121px;height:calc(100vh - 121px);background:var(--bg);border-right:1px solid var(--line);padding:var(--sp-5) var(--sp-4);overflow-y:auto}
+  .layout.docked-toc .sidebar{display:block}
+  .sidebar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4)}
+  .sidebar-head h2{font-size:15px;font-weight:700}
+  .collapse-btn{width:28px;height:28px;border-radius:var(--r-sm);display:grid;place-items:center;color:var(--ink-2);transition:background .15s}
+  .collapse-btn:hover{background:var(--bg-soft)}
+
+  /* 目录触发按钮(标题左侧 ☰) */
+  .toc-trigger{width:34px;height:34px;flex:none;border-radius:var(--r-sm);display:grid;place-items:center;color:var(--ink-2);transition:background .15s;position:relative}
+  .toc-trigger:hover{background:var(--bg-soft);color:var(--ink)}
+  .toc-trigger.on{background:var(--bg-soft);color:var(--ink)}
+  .layout.docked-toc ~ * .toc-trigger,body.toc-docked .toc-trigger{display:none}
+
+  /* 目录悬浮浮窗 */
+  .toc-pop{position:fixed;width:340px;max-height:70vh;background:var(--bg);border:1px solid var(--line);
+    border-radius:var(--r-lg);box-shadow:var(--shadow-float);z-index:55;display:flex;flex-direction:column;overflow:hidden;
+    opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .18s,transform .18s}
+  .toc-pop.open{opacity:1;transform:translateY(0);pointer-events:auto}
+  .toc-pop-head{display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid var(--line-2)}
+  .toc-pop-head h2{font-size:15px;font-weight:700}
+  .toc-pop-head .cnt{font-size:12px;color:var(--ink-3)}
+  .toc-pop-head .dock-sw{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-2);cursor:pointer}
+  .switch{width:34px;height:19px;border-radius:999px;background:var(--line);position:relative;transition:background .18s;flex:none}
+  .switch::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:var(--shadow-1);transition:left .18s}
+  .switch.on{background:var(--accent-ai)}
+  .switch.on::after{left:17px}
+  .toc-pop-body{overflow-y:auto;padding:10px 10px 12px}
+  .chapter-group-label{font-size:12px;color:var(--ink-3);font-weight:600;margin:var(--sp-5) 0 var(--sp-2);padding-left:4px}
+  .chapter-group-label:first-of-type{margin-top:0}
+
+  /* 目录筛选：全部/含代码/课程，三态互斥；.chap/.sub 上的 data-tags 标记它
+     属于哪些类别，筛选时按 data-tags 是否包含当前选中的筛选值来隐藏/显示。
+     悬浮弹窗和常驻左栏是两份独立 DOM（内容重复，靠 dockToc 切换显示哪个），
+     筛选要同时对两边的按钮组 + 目录项生效，所以用不加限定的 querySelectorAll。 */
+  .toc-filter{display:flex;gap:2px;background:var(--bg-soft);border-radius:8px;padding:3px;margin:0 0 var(--sp-4)}
+  .toc-filter-btn{flex:1;padding:6px 0;border-radius:6px;font-size:12px;font-weight:600;color:var(--ink-2);transition:background .15s,color .15s}
+  .toc-filter-btn.active{background:var(--bg);color:var(--ink);box-shadow:var(--shadow-1)}
+  .chap{display:flex;align-items:center;gap:11px;padding:10px;border-radius:var(--r-md);cursor:pointer;transition:background .15s;position:relative}
+  .chap:hover{background:var(--bg-soft)}
+  /* 当前项:低调的浅底 + 左侧细条,不再用品牌红铺满 */
+  .chap.active{background:var(--bg-soft)}
+  .chap.active::before{content:"";position:absolute;left:0;top:9px;bottom:9px;width:3px;background:var(--ink);border-radius:0 3px 3px 0}
+  /* 序号徽章:默认描边灰;当前项=深墨;已完成=绿 */
+  .chap-num{width:24px;height:24px;flex:none;border-radius:50%;background:transparent;border:1.5px solid var(--line);color:var(--ink-3);display:grid;place-items:center;font-size:12px;font-weight:700;transition:all .15s}
+  .chap.active .chap-num{background:var(--ink);border-color:var(--ink);color:#fff}
+  .chap.done .chap-num{background:transparent;border-color:var(--mark-code);color:var(--mark-code)}
+  /* 当前项前置的播放 icon */
+  .chap .now-ic{display:none;color:var(--ink)}
+  .chap.active .now-ic{display:inline-flex}
+  .chap-text{min-width:0}
+  .chap-text .t{font-size:14px;font-weight:600;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .15s}
+  .chap:hover .chap-text .t{color:var(--ink)}
+  /* 当前项:字体加深加粗变黑 */
+  .chap.active .chap-text .t{color:var(--ink);font-weight:700}
+  .chap.done .chap-text .t{color:var(--ink-3)}
+  .chap-text .s{font-size:12px;color:var(--ink-3)}
+  .sub{margin:2px 0 6px 34px;display:flex;flex-direction:column;gap:1px}
+  .sub a{display:block;font-size:13px;color:var(--ink-3);padding:6px 10px;border-radius:var(--r-sm);transition:background .15s,color .15s}
+  .sub a:hover{background:var(--bg-soft);color:var(--ink)}
+  /* 子章节当前项:去红,改深墨加粗 */
+  .sub a.active{color:var(--ink);background:var(--bg-soft);font-weight:700}
+  .sub a.active::before{content:"▸ ";color:var(--ink)}
+
+  .main{padding:var(--sp-6)}
+  .main-inner{max-width:1060px;margin:0 auto}
+  .content-head{margin-bottom:var(--sp-5)}
+  .eyebrow{font-size:13px;color:var(--ink-3);margin-bottom:8px}
+  .content-head h2{font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:10px}
+  .content-head .lede{font-size:15px;color:var(--ink-2);max-width:70ch}
+
+  .video-card{background:#000;border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-2);position:relative}
+  .video-frame{aspect-ratio:1060/600;background:linear-gradient(rgba(10,12,17,.2),rgba(10,12,17,.55)),url('assets/images/detail-video-cover.jpg') center/cover no-repeat;position:relative;display:grid;place-items:center}
+  .play-btn{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.14);backdrop-filter:blur(8px);display:grid;place-items:center;border:1.5px solid rgba(255,255,255,.35);transition:transform .15s}
+  .play-btn:hover{transform:scale(1.06)}
+  .video-title-ov{position:absolute;left:20px;top:18px;color:#fff;font-size:14px;opacity:.9}
+  .video-tools{position:absolute;right:16px;top:14px;display:flex;gap:8px}
+  .vtool{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.14);backdrop-filter:blur(8px);color:#fff;font-size:13px;border:1px solid rgba(255,255,255,.2);transition:background .15s}
+  .vtool:hover{background:rgba(255,255,255,.26)}
+
+  .video-track-wrap{background:#0a0c11;padding:14px 18px 12px}
+  .video-track{position:relative;height:8px;border-radius:999px;background:rgba(255,255,255,.15);cursor:pointer}
+  .video-played{position:absolute;left:0;top:0;bottom:0;width:32%;background:var(--brand);border-radius:999px}
+  .video-head{position:absolute;top:50%;left:32%;width:14px;height:14px;border-radius:50%;background:#fff;transform:translate(-50%,-50%);box-shadow:0 0 0 3px rgba(199,0,11,.5)}
+  .mark{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:4px;cursor:pointer;border:2px solid #0a0c11;transition:transform .15s;z-index:2}
+  .mark:hover{transform:translate(-50%,-50%) scale(1.25)}
+  .mark.key{background:var(--mark-key)}
+  .mark.code{background:var(--mark-code)}
+  /* 视频控制条:倍速/清晰度 */
+  .video-controls{display:flex;align-items:center;gap:16px;margin-top:12px}
+  .track-legend{display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,.6)}
+  .track-legend span{display:flex;align-items:center;gap:6px}
+  .lg-dot{width:10px;height:10px;border-radius:3px}
+  .vc-right{margin-left:auto;display:flex;gap:8px}
+  .vc-select{position:relative}
+  .vc-btn{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:7px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);font-size:12.5px;font-weight:600;transition:background .15s}
+  .vc-btn:hover{background:rgba(255,255,255,.18)}
+  .vc-menu{position:absolute;bottom:calc(100% + 6px);right:0;background:#1a1e26;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:5px;min-width:96px;display:none;box-shadow:var(--shadow-2);z-index:5}
+  .vc-menu.open{display:block}
+  .vc-opt{display:block;width:100%;text-align:left;padding:7px 11px;border-radius:6px;color:rgba(255,255,255,.75);font-size:13px;transition:background .12s}
+  .vc-opt:hover{background:rgba(255,255,255,.1);color:#fff}
+  .vc-opt.on{color:#8CF5C4}
+
+  .capture{background:var(--bg);border:1px solid var(--line);border-top:none;border-radius:0 0 var(--r-lg) var(--r-lg);padding:0 20px;max-height:0;overflow:hidden;transition:max-height .3s,padding .3s}
+  .capture.open{max-height:460px;padding:18px 20px 20px;box-shadow:var(--shadow-2)}
+  .capture-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .cap-badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;color:#fff}
+  .cap-badge.key{background:var(--mark-key)}
+  .cap-badge.code{background:var(--mark-code)}
+  .cap-time{font-size:13px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .cap-close{margin-left:auto;color:var(--ink-3);width:28px;height:28px;border-radius:var(--r-sm);display:grid;place-items:center}
+  .cap-close:hover{background:var(--bg-soft)}
+  .cap-body{font-size:14px;margin-bottom:14px}
+  .capture .code-block{margin-bottom:0}
+  .cap-edit{width:100%;margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-sm);font-family:inherit;font-size:13.5px;color:var(--ink);resize:vertical;min-height:56px;display:none}
+  .cap-edit.show{display:block}
+  .cap-actions{display:flex;align-items:center;gap:10px;margin-top:14px}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:var(--r-sm);font-size:14px;font-weight:600;transition:all .15s}
+  .btn-primary{background:var(--accent-ai);color:#fff}
+  .btn-primary:hover{background:#5c49cc}
+  .btn-ghost{background:var(--bg-soft);color:var(--ink-2)}
+  .btn-ghost:hover{background:var(--line)}
+
+  .tabs{margin-top:var(--sp-6);border-bottom:1px solid var(--line);display:flex;gap:2px}
+  .tab{padding:12px 18px;font-size:15px;font-weight:600;color:var(--ink-2);position:relative;transition:color .15s}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--brand)}
+  .tab.active::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:2.5px;background:var(--brand);border-radius:2px}
+  .tab .count{margin-left:6px;font-size:12px;color:var(--ink-3);background:var(--bg-soft);padding:1px 7px;border-radius:999px}
+  .tab-panel{display:none;padding-top:var(--sp-5)}
+  .tab-panel.active{display:block}
+
+  .code-block{background:var(--bg-code);border-radius:var(--r-md);overflow:hidden;margin-bottom:var(--sp-4)}
+  .code-bar{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .code-bar .name{font-size:13px;color:#B6BCC7;font-family:var(--mono)}
+  .code-bar .ops{margin-left:auto;display:flex;gap:6px}
+  .code-op{display:flex;align-items:center;gap:5px;font-size:12px;color:#B6BCC7;padding:5px 10px;border-radius:6px;transition:background .15s}
+  .code-op:hover{background:rgba(255,255,255,.1);color:#fff}
+  .code-body{padding:16px;font-family:var(--mono);font-size:13.5px;line-height:1.75;color:#E6E9EF;overflow-x:auto;white-space:pre}
+  .tk-kw{color:#FF7B72}.tk-fn{color:#D2A8FF}.tk-str{color:#A5D6FF}.tk-cm{color:#8B949E}
+
+  /* 代码示例 tab：一节课内的多段代码有先后步骤关系，部分步骤来自视频中的
+     知识点标记（点击时间戳跳转视频进度条并复用 openCapture 面板） */
+  .code-step{display:flex;align-items:center;gap:10px;margin:0 0 10px 2px}
+  .code-step:not(:first-child){margin-top:var(--sp-4)}
+  .step-num{width:22px;height:22px;flex:none;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+  .step-t{font-size:14px;font-weight:700;color:var(--ink)}
+  .step-src{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:12px;color:var(--brand);padding:4px 10px;border:1px solid var(--brand);border-radius:999px;transition:background .15s;flex:none}
+  .step-src:hover{background:var(--brand-soft)}
+
+  .err-item{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;margin-bottom:12px;transition:box-shadow .15s}
+  .err-item:hover{box-shadow:var(--shadow-1)}
+  .err-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .err-code{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--brand);background:var(--brand-soft);padding:3px 10px;border-radius:6px}
+  .err-name{font-weight:600}
+  .err-desc{font-size:14px;color:var(--ink-2)}
+  .err-fix{margin-top:8px;font-size:13px;color:var(--ink-2);padding:10px 12px;background:var(--bg-soft);border-radius:var(--r-sm);border-left:3px solid var(--mark-code)}
+
+  .doc-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-md);margin-bottom:10px;transition:box-shadow .15s,border-color .15s}
+  .doc-item:hover{box-shadow:var(--shadow-1);border-color:var(--ink-3)}
+  .doc-ic{width:36px;height:36px;flex:none;border-radius:var(--r-sm);background:var(--bg-soft);display:grid;place-items:center;color:var(--ink-2)}
+  .doc-body{flex:1;min-width:0}
+  .doc-name{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:5px}
+  .doc-path{font-size:12px;color:var(--ink-3)}
+  .doc-type{font-size:12px;color:var(--ink-3);flex:none;margin-top:2px}
+
+  /* ============ AI 分身 ============ */
+  .ai-panel{position:fixed;top:128px;right:24px;width:var(--panelW);height:600px;background:var(--bg);border-radius:var(--r-xl);box-shadow:var(--shadow-float);z-index:60;display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateX(30px) scale(.98);pointer-events:none;transition:opacity .25s,transform .25s;min-width:340px;min-height:360px}
+  .ai-panel.open{opacity:1;transform:translateX(0) scale(1);pointer-events:auto}
+  /* 吸右侧常驻:贴边、通高、方角、无浮动阴影 */
+  .ai-panel.dock-right{top:64px!important;right:0!important;left:auto!important;bottom:0;height:auto!important;width:var(--panelW);border-radius:0;border-left:1px solid var(--line);box-shadow:-4px 0 24px rgba(16,24,40,.06);transform:none}
+  /* 吸顶:横贯顶部下方的竖向面板靠左?——按你说的仍是竖向面板,置于左上 */
+  .ai-panel.dock-top{top:70px!important;left:24px!important;right:auto!important;height:600px!important;border-radius:var(--r-xl)}
+
+  .ai-header{padding:14px 16px;background:linear-gradient(120deg,var(--accent-ai),#8878ee);color:#fff;display:flex;align-items:center;gap:10px;cursor:grab;user-select:none;flex:none}
+  .ai-header:active{cursor:grabbing}
+  .ai-drag-hint{font-size:11px;opacity:.75;margin-left:2px}
+  .ai-header .tools{margin-left:auto;display:flex;gap:4px}
+  .ai-ht{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;color:#fff;transition:background .15s}
+  .ai-ht:hover{background:rgba(255,255,255,.2)}
+  .ai-ht.on{background:rgba(255,255,255,.28)}
+  .ai-body{flex:1;overflow-y:auto;padding:16px}
+
+  /* 身份卡 */
+  .id-card{border-radius:var(--r-lg);padding:18px;background:linear-gradient(100deg,#FCEDF0 0%,#FBF3E6 55%,#FBEEDB 100%);display:flex;align-items:center;gap:14px;margin-bottom:20px}
+  .id-face{width:56px;height:56px;flex:none;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:26px;box-shadow:0 2px 8px rgba(110,91,224,.2);border:2px solid #E6DEFB}
+  .id-info .lvl{display:flex;align-items:center;gap:8px}
+  .id-info .lvl b{font-size:18px;font-weight:800}
+  .id-tag{font-size:11px;font-weight:700;color:#C67A12;background:#FBE3C0;padding:2px 8px;border-radius:6px}
+  .id-info .sub{font-size:13px;color:var(--ink-2);margin-top:5px}
+  .id-info .sub em{font-style:normal;color:var(--accent-ai);font-weight:700}
+
+  .sec-title{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800;margin-bottom:4px}
+  .sec-title .ic{font-size:17px}
+  .sec-sub{font-size:12.5px;color:var(--ink-3);margin-bottom:14px}
+  .sec-title .fold{margin-left:auto;color:var(--ink-3);cursor:pointer;width:26px;height:26px;display:grid;place-items:center;border-radius:6px;transition:transform .2s,background .15s}
+  .sec-title .fold:hover{background:var(--bg-soft)}
+  .sec-title .fold.closed{transform:rotate(180deg)}
+
+  .total-card{border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px;margin-bottom:12px}
+  .total-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .total-top .l{font-size:13px;color:var(--ink-2)}
+  .total-top a{font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:2px}
+  .total-bar{display:flex;align-items:center;gap:10px}
+  .total-bar .track{flex:1;height:7px;background:var(--line);border-radius:999px;overflow:hidden}
+  .total-bar .fill{height:100%;width:38%;background:var(--accent-ai);border-radius:999px}
+  .total-bar .num{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+
+  .field-row{display:flex;gap:10px;margin-bottom:20px}
+  .field{flex:1;border:1px solid var(--line);border-radius:var(--r-md);padding:13px 14px}
+  .field .fn{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+  .field .fp{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:9px}
+  .field .fbar{height:5px;background:var(--line-2);border-radius:999px;overflow:hidden}
+  .field .fbar i{display:block;height:100%;background:var(--accent-ai);border-radius:999px}
+
+
+  /* 正在学习 */
+  .learning-sec{margin:20px 0 4px}
+  .ln-item{display:flex;align-items:center;gap:13px;padding:13px 14px;border:1px solid var(--line);border-radius:var(--r-md);margin-bottom:10px;transition:box-shadow .15s;cursor:pointer}
+  .ln-item:hover{box-shadow:var(--shadow-1)}
+  .ln-ring{width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:var(--accent-ai);
+    background:conic-gradient(var(--accent-ai) var(--p),var(--line) 0)}
+  .ln-ring i{width:34px;height:34px;border-radius:50%;background:var(--bg);display:grid;place-items:center}
+  .ln-info{flex:1;min-width:0}
+  .ln-info .lt{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ln-info .lb{height:5px;background:var(--line-2);border-radius:999px;overflow:hidden;margin:7px 0 5px}
+  .ln-info .lb i{display:block;height:100%;background:var(--accent-ai);border-radius:999px}
+  .ln-info .lm{font-size:12px;color:var(--ink-3);display:flex;justify-content:space-between}
+  .ln-info .lm em{font-style:normal;color:var(--ink-2)}
+
+  .review-sec{border-top:1px solid var(--line);padding-top:18px}
+  .review-body.closed{display:none}
+  /* 复习分身双 Tab:智能总结/个人总结 */
+  .rv-tabs{display:flex;padding:3px;gap:2px;background:var(--bg-soft);border-radius:var(--r-md);margin:12px 0 14px}
+  .rv-tab{flex:1;text-align:center;padding:8px;font-size:13px;font-weight:600;color:var(--ink-2);border-radius:var(--r-sm);transition:all .15s}
+  .rv-tab.active{background:var(--bg);color:var(--accent-ai);box-shadow:var(--shadow-1)}
+  .rv-view{display:none}.rv-view.active{display:block}
+
+  .rv-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line-2)}
+  .rv-item:last-child{border-bottom:none}
+  .rv-item .txt{flex:1;min-width:0}
+  .rv-item .tt{font-size:14px;font-weight:700;margin-bottom:3px}
+  .rv-item .ss{font-size:12px;color:var(--ink-3)}
+  .rv-btn{flex:none;padding:7px 18px;border:1px solid var(--line);border-radius:999px;font-size:13px;font-weight:600;color:var(--ink);transition:all .15s}
+  .rv-btn:hover{border-color:var(--accent-ai);color:var(--accent-ai)}
+
+  /* 个人总结(采集来的) */
+  .kp{border:1px solid var(--line);border-radius:var(--r-md);padding:13px 14px;margin-bottom:10px;transition:box-shadow .15s}
+  .kp:hover{box-shadow:var(--shadow-1)}
+  .kp-top{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+  .kp-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff}
+  .kp-tag.key{background:var(--mark-key)}.kp-tag.code{background:var(--mark-code)}
+  .kp-src{font-size:11px;color:var(--ink-3);margin-left:auto}
+  .kp-txt{font-size:13.5px;line-height:1.55}
+  .kp-code{margin-top:8px;background:var(--bg-code);color:#D6DAE0;font-family:var(--mono);font-size:12px;padding:9px 11px;border-radius:8px;white-space:pre;overflow-x:auto}
+  .empty{text-align:center;padding:36px 20px;color:var(--ink-3)}
+  .empty .ic{font-size:32px;margin-bottom:10px;opacity:.5}
+  .empty .t{font-size:14px;font-weight:600;color:var(--ink-2);margin-bottom:4px}
+  .empty .s{font-size:12.5px}
+
+  .plan-btn{margin:16px;flex:none}
+  .plan-btn button{width:100%;padding:14px;border-radius:var(--r-md);background:linear-gradient(100deg,var(--accent-ai),#9b7ff0);color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 16px rgba(110,91,224,.3);transition:transform .12s}
+  .plan-btn button:hover{transform:translateY(-1px)}
+
+  /* 缩放手柄 */
+  .resize-handle{position:absolute;right:0;bottom:0;width:18px;height:18px;cursor:nwse-resize;z-index:5}
+  .resize-handle::after{content:"";position:absolute;right:3px;bottom:3px;width:8px;height:8px;border-right:2px solid var(--ink-3);border-bottom:2px solid var(--ink-3);opacity:.5}
+  .ai-panel.dock-right .resize-handle,.ai-panel.dock-top .resize-handle{display:none}
+
+
+  /* 图文模式:横向翻阅 */
+  .imgmode{display:none;background:#0a0c11}
+  .video-card.img-on .video-frame,.video-card.img-on .video-track-wrap{display:none}
+  .video-card.img-on .imgmode{display:block}
+  .imgmode-stage{position:relative;aspect-ratio:16/9;background:#141822;display:grid;place-items:center;overflow:hidden}
+  .imgmode-pic{width:100%;height:100%;object-fit:cover;display:grid;place-items:center;color:rgba(255,255,255,.4);font-size:14px;
+    background:repeating-linear-gradient(135deg,#1a1f2b,#1a1f2b 18px,#161b26 18px,#161b26 36px)}
+  .im-arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;
+    background:rgba(0,0,0,.45);backdrop-filter:blur(6px);color:#fff;display:grid;place-items:center;
+    border:1px solid rgba(255,255,255,.25);transition:background .15s;z-index:2}
+  .im-arrow:hover{background:rgba(0,0,0,.7)}
+  .im-arrow.prev{left:14px}.im-arrow.next{right:14px}
+  .im-count{position:absolute;top:14px;right:16px;background:rgba(0,0,0,.5);color:#fff;font-size:12px;padding:4px 11px;border-radius:999px;z-index:2}
+  .im-back{position:absolute;top:14px;left:16px;z-index:2}
+  .im-caption{background:var(--bg);padding:16px 20px;font-size:14.5px;line-height:1.7;color:var(--ink)}
+  .im-caption .lbl{font-size:12px;color:var(--ink-3);margin-bottom:6px;font-weight:600}
+  .im-dots{display:flex;gap:6px;justify-content:center;padding:0 0 14px;background:var(--bg)}
+  .im-dot{width:7px;height:7px;border-radius:50%;background:var(--line);transition:all .15s;cursor:pointer}
+  .im-dot.on{background:var(--accent-ai);width:20px;border-radius:999px}
+
+  /* 随堂测试 tab 面板 + 测验卡 */
+  .quiz-intro{background:var(--accent-ai-soft);border-radius:var(--r-md);padding:16px 18px;display:flex;align-items:center;gap:14px;margin-bottom:16px}
+  .quiz-intro .qi-ic{font-size:26px}
+  .quiz-intro .qi-t{font-weight:700;font-size:15px;margin-bottom:2px}
+  .quiz-intro .qi-s{font-size:13px;color:var(--ink-2)}
+  .quiz-intro .qi-btn{margin-left:auto;padding:9px 18px;border-radius:var(--r-sm);background:var(--accent-ai);color:#fff;font-weight:600;font-size:14px;transition:background .15s}
+  .quiz-intro .qi-btn:hover{background:#5c49cc}
+  .qz-card{border:1px solid var(--line);border-radius:var(--r-md);padding:18px;margin-bottom:14px}
+  .qz-q{display:flex;gap:9px;margin-bottom:14px}
+  .qz-type{flex:none;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;height:fit-content;color:#fff}
+  .qz-type.single{background:var(--link)}.qz-type.multi{background:var(--accent-ai)}.qz-type.judge{background:var(--mark-code)}
+  .qz-qt{font-size:15px;font-weight:600;line-height:1.5}
+  .qz-opt{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid var(--line);border-radius:var(--r-sm);margin-bottom:9px;cursor:pointer;transition:all .15s;font-size:14px}
+  .qz-opt:hover{border-color:var(--accent-ai);background:var(--accent-ai-soft)}
+  .qz-opt.sel{border-color:var(--accent-ai);background:var(--accent-ai-soft)}
+  .qz-opt.correct{border-color:var(--mark-code);background:#E9F9F0}
+  .qz-opt.wrong{border-color:var(--brand);background:var(--brand-soft)}
+  .qz-mark{width:20px;height:20px;flex:none;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:12px;color:#fff}
+  .qz-opt.sel .qz-mark{border-color:var(--accent-ai);background:var(--accent-ai)}
+  .qz-opt.correct .qz-mark{border-color:var(--mark-code);background:var(--mark-code)}
+  .qz-opt.wrong .qz-mark{border-color:var(--brand);background:var(--brand)}
+  .qz-multi .qz-mark{border-radius:5px}
+
+  /* 强制弹出的测验弹窗 */
+  .quiz-modal{position:fixed;inset:0;background:rgba(16,24,40,.5);backdrop-filter:blur(3px);z-index:90;display:none;align-items:center;justify-content:center;padding:24px}
+  .quiz-modal.open{display:flex}
+  .qm-box{background:var(--bg);border-radius:var(--r-xl);width:600px;max-width:100%;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow-float)}
+  .qm-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+  .qm-head .qm-badge{font-size:12px;font-weight:700;color:var(--accent-ai);background:var(--accent-ai-soft);padding:4px 11px;border-radius:999px}
+  .qm-head h3{font-size:17px;font-weight:800}
+  .qm-prog{margin-left:auto;font-size:13px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .qm-body{padding:22px 24px;overflow-y:auto}
+  .qm-foot{padding:16px 24px;border-top:1px solid var(--line);display:flex;align-items:center;gap:12px}
+  .qm-foot .hint{font-size:13px;color:var(--ink-3)}
+  .qm-skip{margin-left:auto;color:var(--ink-2);font-size:14px;padding:9px 14px;border-radius:var(--r-sm)}
+  .qm-skip:hover{background:var(--bg-soft)}
+  .qm-submit{padding:10px 22px;border-radius:var(--r-sm);background:var(--accent-ai);color:#fff;font-weight:600;font-size:14px}
+  .qm-submit:hover{background:#5c49cc}
+  .qm-result{text-align:center;padding:20px 0 8px}
+  .qm-result .big{font-size:40px;font-weight:800;color:var(--ink)}
+  .qm-result .big em{font-style:normal;color:var(--brand)}
+  .qm-result .rs{font-size:14px;color:var(--ink-2);margin-top:6px}
+  .qm-result .link-review{display:inline-flex;align-items:center;gap:6px;margin-top:14px;color:var(--accent-ai);font-weight:600;font-size:14px;cursor:pointer}
+
+
+  /* IDE 实战入口按钮 */
+  .ide-entry{margin-left:auto;display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;background:var(--ink);color:#fff;font-weight:600;font-size:14px;transition:transform .12s,background .15s}
+  .ide-entry:hover{transform:translateY(-1px);background:#000}
+
+  /* ===== IDE 全屏覆盖层 ===== */
+  .ide{position:fixed;inset:0;background:var(--bg-soft);z-index:100;display:none;flex-direction:column}
+  .ide.open{display:flex}
+  /* 顶部工具栏 */
+  .ide-topbar{height:52px;background:var(--bg);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;flex:none}
+  .ide-logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px}
+  .ide-logo .m{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,var(--accent-ai),#4aa3ff);display:grid;place-items:center;color:#fff;font-size:12px}
+  .ide-modes{display:flex;gap:2px;margin-left:6px}
+  .ide-mode{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--r-sm);font-size:13.5px;font-weight:600;color:var(--ink-2);transition:all .15s}
+  .ide-mode:hover{background:var(--bg-soft)}
+  .ide-mode.active{background:var(--bg-soft);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+  .ide-kernel{display:flex;align-items:center;gap:7px;padding:6px 12px;border:1px solid var(--line);border-radius:var(--r-sm);font-size:13px;color:var(--ink-2);margin-left:4px}
+  .ide-kernel .k-dot{width:7px;height:7px;border-radius:50%;background:var(--mark-code)}
+  .ide-tools{display:flex;align-items:center;gap:3px;margin-left:8px}
+  .ide-tool{width:32px;height:32px;border-radius:var(--r-sm);display:grid;place-items:center;color:var(--ink-2);transition:background .15s}
+  .ide-tool:hover{background:var(--bg-soft);color:var(--ink)}
+  .ide-tool.run:hover{color:var(--mark-code)}
+  .ide-back{margin-left:auto;display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r-sm);font-size:14px;font-weight:600;color:var(--ink-2);transition:background .15s}
+  .ide-back:hover{background:var(--bg-soft);color:var(--ink)}
+  /* NPU 资源条 */
+  .ide-res{height:38px;background:var(--bg);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:22px;padding:0 16px;flex:none;font-size:13px}
+  .res-item{display:flex;align-items:center;gap:9px;color:var(--ink-2)}
+  .res-item .rl{font-weight:600;color:var(--ink)}
+  .res-bar{width:90px;height:6px;border-radius:999px;background:var(--line);overflow:hidden}
+  .res-bar i{display:block;height:100%;background:var(--accent-ai);border-radius:999px}
+  .res-idle{margin-left:auto;display:flex;align-items:center;gap:7px;color:var(--mark-code);font-weight:600}
+  .res-idle .d{width:8px;height:8px;border-radius:50%;background:var(--mark-code)}
+  /* 主体:左文件树 + 中编辑 + 下工作区 */
+  .ide-main{flex:1;display:grid;grid-template-columns:230px 1fr;min-height:0}
+  .ide-files{background:var(--bg);border-right:1px solid var(--line);padding:16px 12px;overflow-y:auto}
+  .ide-files .fl-label{font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:12px;padding-left:4px}
+  .fl-file{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:var(--r-sm);font-size:14px;color:var(--ink-2);cursor:pointer;transition:all .15s;margin-bottom:2px}
+  .fl-file:hover{background:var(--bg-soft)}
+  .fl-file.active{background:var(--accent-ai-soft);color:var(--accent-ai);font-weight:600}
+  .fl-file svg{flex:none;opacity:.7}
+  .fl-sep{height:1px;background:var(--line);margin:12px 4px}
+  .fl-act{display:flex;align-items:center;gap:9px;padding:10px 11px;border:1px solid var(--line);border-radius:var(--r-sm);font-size:13.5px;color:var(--ink-2);cursor:pointer;margin-bottom:8px;transition:all .15s}
+  .fl-act:hover{border-color:var(--accent-ai);color:var(--accent-ai)}
+  .ide-center{display:flex;flex-direction:column;min-width:0}
+  .ide-editor{flex:1;overflow-y:auto;padding:20px;min-height:0}
+  /* notebook cell */
+  .cell{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);margin-bottom:16px;overflow:hidden;transition:box-shadow .15s}
+  .cell:hover{box-shadow:var(--shadow-1)}
+  .cell-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-soft);border-bottom:1px solid var(--line)}
+  .cell-idx{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+  .cell-type{font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;letter-spacing:.5px}
+  .cell-type.md{background:var(--accent-ai-soft);color:var(--accent-ai)}
+  .cell-type.code{background:var(--line);color:var(--ink-2)}
+  .cell-ops{margin-left:auto;display:flex;gap:4px}
+  .cell-op{display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--ink-2);padding:5px 10px;border-radius:6px;transition:background .15s}
+  .cell-op:hover{background:var(--line)}
+  .cell-op.run:hover{color:var(--mark-code)}
+  .cell-body{padding:16px;font-family:var(--mono);font-size:13.5px;line-height:1.7;color:var(--ink);white-space:pre-wrap;word-break:break-all}
+  .cell-body.md-body{font-family:var(--font);white-space:normal}
+  .cell-body.md-body h1{font-size:22px;margin-bottom:10px}
+  .cell-out{border-top:1px dashed var(--line);padding:12px 16px;font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--ink-2);background:var(--bg-soft);white-space:pre-wrap;display:none}
+  .cell-out.show{display:block}
+  .cell-out .ok{color:var(--mark-code)}
+  .ide-addcell{width:100%;padding:12px;border:1.5px dashed var(--line);border-radius:var(--r-md);color:var(--ink-3);font-size:14px;font-weight:600;transition:all .15s}
+  .ide-addcell:hover{border-color:var(--accent-ai);color:var(--accent-ai);background:var(--accent-ai-soft)}
+  /* 底部工作区 */
+  .ide-workspace{height:200px;background:var(--bg);border-top:1px solid var(--line);display:flex;flex-direction:column;flex:none}
+  .ws-tabs{display:flex;align-items:center;gap:2px;padding:0 8px;border-bottom:1px solid var(--line);height:40px;flex:none}
+  .ws-tab{padding:8px 14px;font-size:13.5px;color:var(--ink-2);position:relative;transition:color .15s;border-radius:6px}
+  .ws-tab:hover{color:var(--ink)}
+  .ws-tab.active{color:var(--ink);font-weight:600}
+  .ws-tab.active::after{content:"";position:absolute;left:8px;right:8px;bottom:-1px;height:2px;background:var(--accent-ai);border-radius:2px}
+  .ws-body{flex:1;overflow-y:auto;padding:14px 16px;font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--ink-2)}
+  .ws-view{display:none}.ws-view.active{display:block}
+  .ws-empty{color:var(--ink-3);font-family:var(--font)}
+  .ws-term-line{color:var(--ink)}
+  .ws-term-line .prompt{color:var(--mark-code);font-weight:700}
+
+  /* IDE 实践面板是页面布局的一部分（不是浮层），打开时把视频/tab 往左推：
+     视频到左边距、到顶部都是 32px，到 IDE 面板的间距也是 32px。内部结构
+     （文件列表/编辑器/问题-输出-调试控制台-终端-端口）复用全屏 IDE
+     （.ide-files/.fl-file/.cell/.ide-workspace/.ws-*）同一套视觉与交互。 */
+  .layout.ide-dock-open{grid-template-columns:1fr auto;max-width:none;column-gap:var(--sp-6);padding-right:var(--sp-6)}
+  .layout.ide-dock-open .main{padding:var(--sp-6) 0 var(--sp-6) var(--sp-6)}
+  .layout.docked-toc.ide-dock-open{grid-template-columns:248px 1fr auto}
+  .ide-dock{display:none;width:560px;flex-direction:column;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-1);overflow:hidden;position:sticky;top:121px;height:calc(100vh - 153px);align-self:start}
+  .layout.ide-dock-open .ide-dock{display:flex}
+  .ide-dock-topbar{flex:none;height:48px;background:var(--bg-soft);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:4px;padding:0 10px}
+  .ide-dock-title{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:700;color:var(--ink);margin-right:8px;flex:none}
+  .ide-dock-runbar{display:flex;align-items:center;gap:2px}
+  .ide-dock-runbar button{display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--ink-2);padding:6px 9px;border-radius:var(--r-sm);transition:background .15s}
+  .ide-dock-runbar button:hover{background:var(--line)}
+  .ide-dock-runbar button.run:hover{color:var(--mark-code)}
+  .ide-dock-topbar-tools{margin-left:auto;display:flex;gap:2px;flex:none}
+  .ide-dock-topbar-tools button{width:26px;height:26px;border-radius:var(--r-sm);display:grid;place-items:center;color:var(--ink-2)}
+  .ide-dock-topbar-tools button:hover{background:var(--line);color:var(--ink)}
+  .ide-dock-main{flex:1;display:grid;grid-template-columns:172px 1fr;min-height:0}
+
+  /* 左侧文件树：层级结构，靠缩进+可折叠表现，不是全屏 IDE 那种平铺文件列表 */
+  .ide-dock-files{background:var(--bg);border-right:1px solid var(--line);padding:8px 4px;overflow-y:auto;overflow-x:hidden}
+  .ftree-row{display:flex;align-items:center;gap:4px;padding:4px 6px;font-size:11.5px;color:var(--ink-2);cursor:pointer;border-radius:5px;white-space:nowrap;user-select:none}
+  .ftree-row:hover{background:var(--bg-soft)}
+  .ftree-row.folder{color:var(--ink);font-weight:500}
+  .ftree-row .chev{flex:none;width:10px;height:10px;color:var(--ink-3);transition:transform .15s}
+  .ftree-row.collapsed .chev{transform:rotate(-90deg)}
+  .ftree-row .ic{flex:none;width:13px;height:13px;opacity:.75}
+  .ftree-row.file.active{background:var(--accent-ai-soft);color:var(--accent-ai);font-weight:600}
+  .ftree-kids.hidden{display:none}
+
+  /* 右侧改成连续可输入的代码面板：tab 栏 + 面包屑 + 一整块代码区（带行号），
+     不再是一格一格独立的卡片。颜色沿用已有的 --bg-code 深色代码底与
+     tk-kw/tk-fn/tk-str/tk-cm 语法高亮 token（和下方"代码示例"tab 同一套）。 */
+  .ide-dock-center{display:flex;flex-direction:column;min-width:0;min-height:0}
+  .ide-dock-tabbar{flex:none;display:flex;align-items:center;background:var(--bg-soft);border-bottom:1px solid var(--line);overflow-x:auto}
+  .ide-dock-tab{display:flex;align-items:center;gap:6px;padding:9px 12px;font-size:12px;color:var(--ink-2);border-right:1px solid var(--line);white-space:nowrap;flex:none}
+  .ide-dock-tab.active{background:#D9D9D9;color:#000}
+  .ide-dock-tab .ic{width:12px;height:12px;flex:none;opacity:.8}
+  .ide-dock-tab .tab-close{opacity:.6;font-size:11px}
+  .ide-dock-tab .tab-close:hover{opacity:1}
+  .ide-dock-breadcrumb{flex:none;padding:6px 14px;font-size:11px;color:var(--ink-3);background:var(--bg-code);border-bottom:1px solid rgba(255,255,255,.06)}
+  .ide-dock-editor{flex:1;overflow:auto;min-height:0;background:var(--bg-code);padding:10px 0}
+  .ide-dock-editor[contenteditable]{outline:none;cursor:text}
+  .ide-dock-code-line{display:flex}
+  .ide-dock-code-line .ln{flex:none;width:34px;text-align:right;padding-right:12px;color:#4B5566;font-family:var(--mono);font-size:12.5px;line-height:1.7;user-select:none}
+  .ide-dock-code-line .src{flex:1;font-family:var(--mono);font-size:12.5px;line-height:1.7;color:#E6E9EF;white-space:pre}
+  .ide-dock .ide-workspace{height:150px}
+  .ide-dock .ws-tabs{height:34px;padding:0 6px}
+  .ide-dock .ws-tab{padding:6px 9px;font-size:11.5px}
+  .ide-dock .ws-body{padding:10px 12px;font-size:12px}
+  .ide-dock-reopen{position:fixed;right:24px;bottom:24px;width:48px;height:48px;border-radius:50%;background:var(--ink);color:#fff;display:none;place-items:center;box-shadow:var(--shadow-float);z-index:40;transition:transform .15s}
+  .ide-dock-reopen:hover{transform:scale(1.06)}
+  .ide-dock-reopen.show{display:grid}
+  @media (max-width:1500px){.layout.ide-dock-open{grid-template-columns:1fr;max-width:1440px;padding-right:0}.layout.docked-toc.ide-dock-open{grid-template-columns:248px 1fr}.layout.ide-dock-open .main{padding:var(--sp-6)}.ide-dock,.ide-dock-reopen{display:none!important}}
+
+  .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:all .3s;z-index:80;box-shadow:var(--shadow-2)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast .ic{color:#8CF5C4;margin-right:6px}
+
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:999px}
+  ::-webkit-scrollbar-thumb:hover{background:#D5D9E0}
+
+  /* ===== 知识全景（唤起入口在节点进度条边上，来源 Figma 节点 124:22 /
+     KnowledgeMap-* 8 个状态画板：默认、选中当前节点、选中其他节点节点、
+     选中已掌握、选中在AI已总结、选中在待学习、选中在你在这里、下一步建议）===== */
+  .kg-entry{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-weight:600;font-size:13px;transition:border-color .15s,background .15s}
+  .kg-entry:hover{border-color:var(--ink-3);background:var(--bg-soft)}
+  .kg-overlay{position:fixed;inset:0;background:var(--bg);z-index:120;display:none;flex-direction:column}
+  .kg-overlay.open{display:flex}
+  :root{--kg-blue:#4F6BFB;--kg-purple:#8B4AF6;--kg-ai:var(--mark-key);--kg-locked:#C7CBD3;--kg-line:#E7E5FB;--kg-current:#C7000B}
+  .kg-topbar{flex:none;height:54px;display:flex;align-items:center;gap:14px;padding:0 20px;border-bottom:1px solid var(--line)}
+  .kg-close{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--ink-2)}
+  .kg-close:hover{color:var(--ink)}
+  .kg-vd{width:1px;height:16px;background:var(--line)}
+  .kg-title{font-size:16px;font-weight:700;color:var(--ink)}
+  .kg-scope{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:var(--bg-soft);font-size:13px;font-weight:600;color:var(--ink)}
+  .kg-lit{padding:4px 12px;border-radius:999px;background:var(--bg-soft);font-size:13px;font-weight:600;color:var(--ink-2)}
+  .kg-current-txt{font-size:13px;color:var(--ink-2)}
+  .kg-topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .kg-next-btn{display:flex;align-items:center;gap:7px;padding:6px 16px;border-radius:999px;border:1px solid var(--kg-purple);color:var(--kg-purple);font-size:13px;font-weight:700;transition:background .15s}
+  .kg-next-btn .dot{width:6px;height:6px;border-radius:50%;background:var(--kg-purple)}
+  .kg-next-btn:hover,.kg-next-btn.active{background:#F4F0FE}
+  .kg-theme-btn{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink-2);background:var(--bg-soft)}
+  .kg-legend-strip{flex:none;display:none;align-items:center;gap:24px;padding:10px 20px;background:#F6F3FE;font-size:13px;color:var(--kg-purple);font-weight:600}
+  .kg-legend-strip.show{display:flex}
+  .kg-legend-strip .ls{display:inline-block;width:20px;height:0;border-top:2px solid var(--kg-purple);margin-right:8px;vertical-align:middle}
+  .kg-legend-strip .ls.dashed{border-top-style:dashed}
+  .kg-body{flex:1;display:flex;min-height:0}
+  .kg-graph{position:relative;flex:1;overflow:hidden;background:var(--bg)}
+  .kg-col-header{position:absolute;top:16px;width:25%;text-align:center;font-size:13px;letter-spacing:3px;color:var(--ink-3);font-weight:600}
+  .kg-col-bg{position:absolute;top:0;bottom:0;width:25%}
+  .kg-col-bg:nth-child(odd){background:var(--bg-soft)}
+  .kg-edges{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .kg-node{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:opacity .25s}
+  .kg-node-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--kg-locked);background:var(--bg);transition:all .2s;box-shadow:0 0 0 0 rgba(139,74,246,0)}
+  .kg-node-dot svg{width:11px;height:11px}
+  .kg-node.mastered .kg-node-dot{background:var(--kg-blue);border-color:var(--kg-blue);color:#fff}
+  .kg-node.current .kg-node-dot{width:24px;height:24px;background:var(--kg-current);border-color:var(--kg-current);box-shadow:0 0 0 5px rgba(199,0,11,.18)}
+  .kg-node.ai .kg-node-dot{border-color:var(--kg-ai);color:var(--kg-ai)}
+  .kg-node-label{font-size:12px;color:var(--ink);white-space:nowrap;font-weight:500}
+  .kg-node.dim{opacity:.22}
+  .kg-node.hi .kg-node-dot{box-shadow:0 0 0 5px rgba(139,74,246,.18)}
+  .kg-node-flag{position:absolute;top:-22px;left:50%;transform:translateX(2px);display:flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--kg-current);white-space:nowrap}
+  .kg-legend-box{position:absolute;left:16px;bottom:16px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 16px;box-shadow:var(--shadow-2);display:flex;flex-direction:column;gap:10px}
+  .kg-legend-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink);cursor:pointer;padding:2px 4px;border-radius:6px}
+  .kg-legend-item:hover{background:var(--bg-soft)}
+  .kg-legend-item.active{background:#F0EDFC}
+  .kg-legend-item i.dot{width:11px;height:11px;border-radius:50%;border:2px solid var(--kg-locked);flex:none}
+  .kg-legend-item i.dot.mastered{background:var(--kg-blue);border-color:var(--kg-blue)}
+  .kg-legend-item i.dot.current{background:var(--kg-current);border-color:var(--kg-current)}
+  .kg-legend-item i.dot.ai{border-color:var(--kg-ai)}
+  .kg-panel{flex:none;width:320px;border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+  .kg-panel-main{flex:1;overflow-y:auto;padding:24px}
+  .kg-panel-empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ink-3);gap:14px}
+  .kg-panel-empty .ic{width:48px;height:48px;border-radius:50%;background:#F0EDFC;color:var(--kg-purple);display:flex;align-items:center;justify-content:center}
+  .kg-panel-empty p{font-size:13px;line-height:1.7}
+  .kg-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700;margin-bottom:14px}
+  .kg-badge.mastered{background:#EEF1FF;color:var(--kg-blue)}
+  .kg-badge.current{background:#FBECEC;color:var(--kg-current)}
+  .kg-badge.ai{background:#FEF3E4;color:var(--kg-ai)}
+  .kg-badge.locked{background:var(--bg-soft);color:var(--ink-3)}
+  .kg-badge.next{background:#F4F0FE;color:var(--kg-purple)}
+  .kg-panel-main h3{font-size:19px;font-weight:700;color:var(--ink);margin-bottom:10px}
+  .kg-panel-main .desc{font-size:14px;color:var(--ink-2);line-height:1.7;margin-bottom:20px}
+  .kg-sec-label{font-size:12px;font-weight:700;color:var(--ink-3);margin-bottom:10px}
+  .kg-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+  .kg-chip{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--r-sm);border:1px solid var(--line);font-size:13px;color:var(--ink)}
+  .kg-chip.done{color:var(--kg-blue);border-color:#D6DEFF;background:#F5F7FF}
+  .kg-chip.locked{color:var(--ink-3)}
+  .kg-cta{display:block;width:100%;text-align:center;padding:13px;border-radius:var(--r-md);background:linear-gradient(90deg,var(--kg-blue),var(--kg-purple));color:#fff;font-weight:700;font-size:14px;transition:opacity .15s}
+  .kg-cta:hover{opacity:.9}
+  .kg-cta.disabled{background:var(--bg-soft);color:var(--ink-3);pointer-events:none}
+  .kg-list-note{font-size:13px;color:var(--ink-2);margin-bottom:16px}
+  .kg-list-item{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-md);font-size:14px;font-weight:600;color:var(--ink);margin-bottom:10px;cursor:pointer}
+  .kg-list-item:hover{border-color:var(--kg-blue)}
+  .kg-clear{margin-left:auto;font-size:12px;color:var(--kg-blue);cursor:pointer;font-weight:600}
+  .kg-panel-head{display:flex;align-items:center;margin-bottom:4px}
+  .kg-next-primary{padding:14px 16px;border-radius:var(--r-md);background:#F4F0FE;border:1px solid var(--kg-purple);display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:18px}
+  .kg-next-primary .dot{width:6px;height:6px;border-radius:50%;background:var(--kg-purple)}
+  .kg-footer{flex:none;border-top:1px solid var(--line);padding:16px 24px 20px}
+  .kg-footer-row{display:flex;align-items:center;justify-content:space-between;font-size:13px;margin-bottom:8px}
+  .kg-footer-row b{font-size:15px;color:var(--kg-blue)}
+  .kg-footer-bar{height:6px;border-radius:999px;background:var(--bg-soft);overflow:hidden;margin-bottom:8px}
+  .kg-footer-fill{height:100%;background:linear-gradient(90deg,var(--kg-blue),var(--kg-purple));border-radius:999px}
+  .kg-footer-sub{font-size:12px;color:var(--ink-3)}
+  @media (max-width:900px){.kg-panel{position:absolute;right:0;top:0;bottom:0;background:var(--bg);box-shadow:var(--shadow-float)}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="logo" href="index.html"><img src="assets/images/logo.png" alt="Ascend Developer"></a>
+  <nav class="nav">
+    <a href="#">开发者</a><a href="index.html">主页</a><a href="#">开发</a><a href="#">文档</a>
+    <a href="#">活动</a><a href="#" class="active">学习</a><a href="#">论坛</a><a href="#">博客</a><a href="#">开发者计划</a>
+  </nav>
+  <div class="top-right">
+    <button class="ai-entry" id="aiEntry" onclick="toggleAI()"><img class="logo" src="assets/images/ai-companion-logo.png" alt="">AI 分身</button>
+    <div class="avatar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+  </div>
+</header>
+
+<div class="subhead">
+  <a class="back" href="index.html">‹ 返回</a>
+  <button class="toc-trigger" id="tocTrigger" onclick="toggleToc(event)" title="课程目录">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <h1 id="courseTitle">昇腾硬件架构介绍</h1>
+  <div class="progress-wrap">
+    <span class="progress-txt"><b>2</b> / 5 节点</span>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+  </div>
+  <button class="ide-entry" onclick="openIDE()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 5l-2 14"/></svg>进入 IDE 实战</button>
+  <button class="kg-entry" onclick="openKnowledgeMap()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 7l7-.3M8 8l3 8.5M16 8l-3 8.5"/></svg>知识全景</button>
+</div>
+
+<div class="layout ide-dock-open" id="layout">
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <h2>学习路径</h2>
+      <button class="collapse-btn" onclick="undockToc()" title="收起为悬浮"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
+    </div>
+    <div class="toc-filter">
+      <button class="toc-filter-btn active" data-f="all" onclick="tocFilter('all')">全部</button>
+      <button class="toc-filter-btn" data-f="code" onclick="tocFilter('code')">含代码</button>
+      <button class="toc-filter-btn" data-f="course" onclick="tocFilter('course')">课程</button>
+    </div>
+    <div class="chapter-group-label">昇腾异构编程基础（速成班）</div>
+    <div class="chap done" data-tags="course"><div class="chap-num">✓</div><div class="chap-text"><div class="t">昇腾硬件架构介绍</div><div class="s">第 1 章 · 已完成</div></div></div>
+    <div class="chap active" data-tags="course code"><div class="chap-num">2</div><div class="chap-text"><div class="t"><span class="now-ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-1px;margin-right:4px"><path d="M8 5v14l11-7z"/></svg></span>CANN 软件包结构</div><div class="s">第 2 章 · 学习中</div></div></div>
+    <div class="sub" data-tags="course code"><a href="#" class="active">2.1 软件包分层</a><a href="#">2.2 驱动与运行时</a><a href="#">2.3 环境安装</a></div>
+    <div class="chap" data-tags="course code"><div class="chap-num">3</div><div class="chap-text"><div class="t">算子开发编程基础</div><div class="s">第 3 章</div></div></div>
+    <div class="chapter-group-label">Ascend C Skills 全景概览</div>
+    <div class="chap" data-tags="course"><div class="chap-num">4</div><div class="chap-text"><div class="t">课程体系与学习路径</div><div class="s">3 节</div></div></div>
+    <div class="chapter-group-label">Ascend C 系列 · 算子开发入门</div>
+    <div class="chap" data-tags="course"><div class="chap-num">5</div><div class="chap-text"><div class="t">异构架构与 Ascend C 定位</div><div class="s">第 1 节</div></div></div>
+  </aside>
+
+  <main class="main">
+   <div class="main-inner">
+    <div class="content-head">
+      <div class="eyebrow" id="courseBreadcrumb">昇腾异构编程基础（速成班） · 第 2 章</div>
+      <h2>CANN 软件包结构</h2>
+      <p class="lede">了解 CANN 软件栈的分层结构，认识驱动、运行时与算子库之间的关系，为后续算子开发打下基础。</p>
+    </div>
+
+    <div class="video-card">
+      <div class="video-frame">
+        <div class="video-title-ov">▶ 2.1 CANN 软件包分层 · 08:24</div>
+        <div class="video-tools">
+          <button class="vtool" onclick="toggleImgMode()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 14l4-4 4 4 3-3 4 4"/><circle cx="9" cy="9" r="1.2"/></svg>图文模式</button>
+        </div>
+        <button class="play-btn"><svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></button>
+      </div>
+      <div class="video-track-wrap">
+        <div class="video-track" id="track">
+          <div class="video-played"></div>
+          <div class="video-head"></div>
+          <div class="mark key"  style="left:18%" onclick="openCapture('key',this)"></div>
+          <div class="mark code" style="left:44%" onclick="openCapture('code',this)"></div>
+          <div class="mark key"  style="left:62%" onclick="openCapture('key2',this)"></div>
+          <div class="mark code" style="left:81%" onclick="openCapture('code2',this)"></div>
+        </div>
+        <div class="video-controls">
+          <div class="track-legend">
+            <span><i class="lg-dot" style="background:var(--mark-key)"></i>重要知识点</span>
+            <span><i class="lg-dot" style="background:var(--mark-code)"></i>含代码示例</span>
+          </div>
+          <div class="vc-right">
+            <div class="vc-select">
+              <button class="vc-btn" onclick="toggleVC('speed')">倍速 <b id="speedLbl">1.0x</b></button>
+              <div class="vc-menu" id="vc-speed">
+                <button class="vc-opt" onclick="setVC('speed','0.5x',this)">0.5x</button>
+                <button class="vc-opt on" onclick="setVC('speed','1.0x',this)">1.0x</button>
+                <button class="vc-opt" onclick="setVC('speed','1.25x',this)">1.25x</button>
+                <button class="vc-opt" onclick="setVC('speed','1.5x',this)">1.5x</button>
+                <button class="vc-opt" onclick="setVC('speed','2.0x',this)">2.0x</button>
+              </div>
+            </div>
+            <div class="vc-select">
+              <button class="vc-btn" onclick="toggleVC('hd')"><span id="hdLbl">高清</span></button>
+              <div class="vc-menu" id="vc-hd">
+                <button class="vc-opt" onclick="setVC('hd','流畅',this)">流畅</button>
+                <button class="vc-opt on" onclick="setVC('hd','高清',this)">高清</button>
+                <button class="vc-opt" onclick="setVC('hd','超清',this)">超清</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 图文模式:横向翻阅 -->
+      <div class="imgmode" id="imgmode">
+        <div class="imgmode-stage">
+          <button class="vtool im-back" onclick="toggleImgMode()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 5v14l11-7z"/></svg>回到视频</button>
+          <span class="im-count"><b id="imIdx">1</b> / 4</span>
+          <button class="im-arrow prev" onclick="imStep(-1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <div class="imgmode-pic" id="imPic">配图 1 · 达芬奇架构示意</div>
+          <button class="im-arrow next" onclick="imStep(1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="im-caption"><div class="lbl" id="imTime">口播文字 · 00:00 - 01:30</div><div id="imText">这一段介绍昇腾 NPU 的达芬奇架构，核心是 Cube 单元，专为矩阵乘加运算设计。</div></div>
+        <div class="im-dots" id="imDots"></div>
+      </div>
+
+      <div class="capture" id="capture">
+        <div class="capture-head">
+          <span class="cap-badge" id="capBadge">代码示例</span>
+          <span class="cap-time" id="capTime">03:41</span>
+          <button class="cap-close" onclick="closeCapture()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        </div>
+        <div id="capContent"></div>
+        <textarea class="cap-edit" id="capEdit" placeholder="补充你自己的理解或批注…"></textarea>
+        <div class="cap-actions">
+          <button class="btn btn-primary" onclick="collectKP()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>采集到个人总结</button>
+          <button class="btn btn-ghost" id="editToggle" onclick="toggleEdit()">编辑后采集</button>
+          <button class="btn btn-ghost" onclick="toast('已复制到剪贴板')">复制</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('code',this)">代码示例 <span class="count">3</span></button>
+      <button class="tab" onclick="switchTab('err',this)">常见错误码 <span class="count">5</span></button>
+      <button class="tab" onclick="switchTab('quiz',this)">随堂测试 <span class="count">3</span></button>
+      <button class="tab" onclick="switchTab('docs',this)">相关文档 <span class="count">3</span></button>
+    </div>
+    <div class="tab-panel active" id="panel-code">
+      <div class="code-step">
+        <span class="step-num">1</span>
+        <span class="step-t">检测 NPU 是否可用</span>
+      </div>
+      <div class="code-block">
+        <div class="code-bar"><span class="name">check_npu.py</span><div class="ops"><button class="code-op" onclick="toast('已复制到剪贴板')">复制</button><button class="code-op">✨ AI 解释</button></div></div>
+        <div class="code-body"><span class="tk-kw">import</span> torch
+<span class="tk-kw">import</span> torch_npu
+
+<span class="tk-kw">assert</span> torch.npu.<span class="tk-fn">is_available</span>(), <span class="tk-str">'未检测到可用昇腾 NPU'</span>
+<span class="tk-fn">print</span>(torch.npu.<span class="tk-fn">get_device_name</span>(<span class="tk-str">0</span>))</div>
+      </div>
+
+      <div class="code-step">
+        <span class="step-num">2</span>
+        <span class="step-t">查看 CANN 安装路径</span>
+        <button class="step-src" onclick="jumpToVideo('code')"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>视频 03:41</button>
+      </div>
+      <div class="code-block">
+        <div class="code-bar"><span class="name">cann_version.py</span><div class="ops"><button class="code-op" onclick="toast('已复制到剪贴板')">复制</button><button class="code-op">✨ AI 解释</button></div></div>
+        <div class="code-body"><span class="tk-cm"># 查看 CANN 软件包版本与安装路径</span>
+<span class="tk-kw">import</span> os
+<span class="tk-fn">print</span>(os.environ.<span class="tk-fn">get</span>(<span class="tk-str">'ASCEND_HOME_PATH'</span>))</div>
+      </div>
+
+      <div class="code-step">
+        <span class="step-num">3</span>
+        <span class="step-t">列出已加载的算子包</span>
+        <button class="step-src" onclick="jumpToVideo('code2')"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>视频 06:55</button>
+      </div>
+      <div class="code-block">
+        <div class="code-bar"><span class="name">list_packages.py</span><div class="ops"><button class="code-op" onclick="toast('已复制到剪贴板')">复制</button><button class="code-op">✨ AI 解释</button></div></div>
+        <div class="code-body"><span class="tk-kw">from</span> cann <span class="tk-kw">import</span> opp
+<span class="tk-fn">print</span>(opp.<span class="tk-fn">list_packages</span>())</div>
+      </div>
+    </div>
+    <div class="tab-panel" id="panel-err">
+      <div class="err-item"><div class="err-top"><span class="err-code">EI0006</span><span class="err-name">未检测到 NPU 设备</span></div><div class="err-desc">运行时无法识别昇腾 NPU，通常是驱动未安装或环境变量未生效。</div><div class="err-fix">修复：确认已安装 driver 与 firmware，并执行 source set_env.sh</div></div>
+      <div class="err-item"><div class="err-top"><span class="err-code">EE1001</span><span class="err-name">torch_npu 导入失败</span></div><div class="err-desc">torch_npu 与 torch 版本不匹配，import 时报 undefined symbol。</div><div class="err-fix">修复：安装与当前 PyTorch 版本对应的 torch_npu。</div></div>
+      <div class="err-item"><div class="err-top"><span class="err-code">EL0004</span><span class="err-name">算子编译失败</span></div><div class="err-desc">Ascend C 算子在 build 阶段找不到头文件或工具链。</div><div class="err-fix">修复：检查 CANN 版本与 SDK 路径，确保 include 目录已加入编译参数。</div></div>
+    </div>
+    <div class="tab-panel" id="panel-docs">
+      <a class="doc-item" href="https://www.hiascend.com/document/detail/zh/canncommercial/900/others/tbeaicpudevg/atlasopdev_10_0002.html" target="_blank" rel="noopener">
+        <span class="doc-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></span>
+        <span class="doc-body">
+          <span class="doc-name">CANN 软件栈架构白皮书</span>
+          <span class="doc-path">来自：文档 › CANN › 9.2.0-beta.2 › 产品介绍 › 软件架构 ｜ 更新时间：2026-06-18</span>
+        </span>
+        <span class="doc-type">PDF</span>
+      </a>
+      <a class="doc-item" href="https://www.hiascend.com/document/detail/zh/canncommercial/900/others/tbeaicpudevg/atlasopdev_10_0002.html" target="_blank" rel="noopener">
+        <span class="doc-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></span>
+        <span class="doc-body">
+          <span class="doc-name">昇腾算子开发指南</span>
+          <span class="doc-path">来自：文档 › CANN › 9.2.0-beta.2 › 编程语言 › 算子开发 ｜ 更新时间：2026-07-02</span>
+        </span>
+        <span class="doc-type">PDF</span>
+      </a>
+      <a class="doc-item" href="https://www.hiascend.com/document/detail/zh/canncommercial/900/others/tbeaicpudevg/atlasopdev_10_0002.html" target="_blank" rel="noopener">
+        <span class="doc-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></span>
+        <span class="doc-body">
+          <span class="doc-name">环境变量配置说明</span>
+          <span class="doc-path">来自：文档 › CANN › 9.2.0-beta.2 › 安装指南 › 环境变量 ｜ 更新时间：2026-05-20</span>
+        </span>
+        <span class="doc-type">网页</span>
+      </a>
+    </div>
+    <div class="tab-panel" id="panel-quiz">
+      <div class="quiz-intro">
+        <span class="qi-ic">📝</span>
+        <div><div class="qi-t">随堂测试 · 3 道题</div><div class="qi-s">看完视频来检验一下，答错的题会自动进入 AI 分身复习</div></div>
+        <button class="qi-btn" onclick="openQuiz()">开始答题</button>
+      </div>
+      <div style="font-size:13px;color:var(--ink-3);text-align:center;padding:12px">点击「开始答题」进入测验；每次学完视频也会自动弹出。</div>
+    </div>
+   </div>
+  </main>
+
+  <!-- IDE 实践迷你面板：布局的一部分，不是浮层 -->
+  <aside class="ide-dock" id="ideDock">
+    <div class="ide-dock-topbar">
+      <span class="ide-dock-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 5l-2 14"/></svg>IDE 实践</span>
+      <div class="ide-dock-runbar">
+        <button class="run" onclick="dockRunAll()"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>运行</button>
+        <button onclick="toast('已中止')"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>中止</button>
+        <button onclick="toast('已保存')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3h11l3 3v15H5zM8 3v6h7"/></svg>保存</button>
+      </div>
+      <div class="ide-dock-topbar-tools">
+        <button onclick="openIDE()" title="全屏打开"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg></button>
+        <button onclick="closeIdeDock()" title="收起面板"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+    </div>
+    <div class="ide-dock-main">
+      <aside class="ide-dock-files">
+        <div class="ftree">
+          <div class="ftree-row folder collapsed" onclick="toggleTree(this)"><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5a2 2 0 012-2h4l2 2h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>scripts</div>
+          <div class="ftree-kids hidden">
+            <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>build.sh</div>
+            <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>run_tests.sh</div>
+          </div>
+          <div class="ftree-row folder" onclick="toggleTree(this)"><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5a2 2 0 012-2h4l2 2h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>src</div>
+          <div class="ftree-kids">
+            <div class="ftree-row folder" onclick="toggleTree(this)"><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5a2 2 0 012-2h4l2 2h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>ascendc</div>
+            <div class="ftree-kids">
+              <div class="ftree-row folder collapsed" onclick="toggleTree(this)"><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5a2 2 0 012-2h4l2 2h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>kernels</div>
+              <div class="ftree-kids hidden">
+                <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>vector_add_kernel.cpp</div>
+                <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>reduce_sum_kernel.cpp</div>
+                <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>softmax_kernel.cpp</div>
+              </div>
+              <div class="ftree-row folder collapsed" onclick="toggleTree(this)"><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5a2 2 0 012-2h4l2 2h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>op_host</div>
+              <div class="ftree-kids hidden">
+                <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>vector_add_tiling.cpp</div>
+                <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>reduce_sum_tiling.cpp</div>
+              </div>
+              <div class="ftree-row folder" onclick="toggleTree(this)"><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5a2 2 0 012-2h4l2 2h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>common</div>
+              <div class="ftree-kids">
+                <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>tiling_utils.h</div>
+                <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>tiling_utils.cpp</div>
+                <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>kernel_operator.h</div>
+                <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>data_utils.h</div>
+                <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>op_def_registry.h</div>
+                <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>platform_ascendc.h</div>
+              </div>
+            </div>
+            <div class="ftree-row folder" onclick="toggleTree(this)"><svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5a2 2 0 012-2h4l2 2h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>python</div>
+            <div class="ftree-kids">
+              <div class="ftree-row file active" id="dockFile-check_env.py" onclick="dockOpenFile('check_env.py',this)"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>check_env.py</div>
+              <div class="ftree-row file" id="dockFile-list_packages.py" onclick="dockOpenFile('list_packages.py',this)"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>list_packages.py</div>
+              <div class="ftree-row file" id="dockFile-profile_kernel.py" onclick="dockOpenFile('profile_kernel.py',this)"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>profile_kernel.py</div>
+            </div>
+          </div>
+          <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>CMakeLists.txt</div>
+          <div class="ftree-row file"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>README.md</div>
+        </div>
+      </aside>
+      <div class="ide-dock-center">
+        <div class="ide-dock-tabbar">
+          <div class="ide-dock-tab active" id="dockActiveTab"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg><span id="dockActiveTabName">check_env.py</span><span class="tab-close">✕</span></div>
+          <div class="ide-dock-tab"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg><span>README.md</span><span class="tab-close">✕</span></div>
+        </div>
+        <div class="ide-dock-breadcrumb" id="dockBreadcrumb">cann-npu-samples › src › python › check_env.py</div>
+        <div class="ide-dock-editor" id="dockCodeArea" contenteditable="true" spellcheck="false"><div class="ide-dock-code-line"><span class="ln">1</span><span class="src"><span class="tk-cm"># 检查 CANN 环境</span></span></div><div class="ide-dock-code-line"><span class="ln">2</span><span class="src"><span class="tk-kw">import</span> acl</span></div><div class="ide-dock-code-line"><span class="ln">3</span><span class="src"></span></div><div class="ide-dock-code-line"><span class="ln">4</span><span class="src">ret = acl.<span class="tk-fn">init</span>()</span></div><div class="ide-dock-code-line"><span class="ln">5</span><span class="src"><span class="tk-kw">assert</span> ret == <span class="tk-str">0</span>, <span class="tk-str">f"ACL init failed: {ret}"</span></span></div><div class="ide-dock-code-line"><span class="ln">6</span><span class="src"></span></div><div class="ide-dock-code-line"><span class="ln">7</span><span class="src">ret = acl.rt.<span class="tk-fn">set_device</span>(<span class="tk-str">0</span>)</span></div><div class="ide-dock-code-line"><span class="ln">8</span><span class="src"><span class="tk-fn">print</span>(<span class="tk-str">"✓ ACL 初始化成功"</span>)</span></div><div class="ide-dock-code-line"><span class="ln">9</span><span class="src"><span class="tk-fn">print</span>(acl.rt.<span class="tk-fn">get_version</span>())</span></div></div>
+        <div class="ide-workspace">
+          <div class="ws-tabs">
+            <button class="ws-tab active" onclick="switchWS('problems',this)">问题</button>
+            <button class="ws-tab" onclick="switchWS('output',this)">输出</button>
+            <button class="ws-tab" onclick="switchWS('debug',this)">调试控制台</button>
+            <button class="ws-tab" onclick="switchWS('terminal',this)">终端</button>
+            <button class="ws-tab" onclick="switchWS('ports',this)">端口</button>
+          </div>
+          <div class="ws-body">
+            <div class="ws-view active" data-id="problems"><span class="ws-empty">未在工作区检测到问题。</span></div>
+            <div class="ws-view" data-id="output"><span class="ws-empty">运行代码后，输出将显示在这里。</span></div>
+            <div class="ws-view" data-id="debug"><span class="ws-empty">调试控制台已就绪，等待断点。</span></div>
+            <div class="ws-view" data-id="terminal"><div class="ws-term-line"><span class="prompt">(CANN) root@npu-910b:~$</span> <span style="opacity:.6">▌</span></div></div>
+            <div class="ws-view" data-id="ports"><span class="ws-empty">当前没有转发的端口。</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+<button class="ide-dock-reopen" id="ideDockReopen" onclick="openIdeDock()" title="打开 IDE 实践"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 5l-2 14"/></svg></button>
+
+<!-- 目录悬浮浮窗 -->
+<div class="toc-pop" id="tocPop">
+  <div class="toc-pop-head">
+    <h2>视频选集</h2><span class="cnt">1 / 13</span>
+    <div class="dock-sw" onclick="dockToc()"><span class="switch" id="dockSwitch"></span>成为左栏常驻</div>
+  </div>
+  <div class="toc-pop-body">
+    <div class="toc-filter">
+      <button class="toc-filter-btn active" data-f="all" onclick="tocFilter('all')">全部</button>
+      <button class="toc-filter-btn" data-f="code" onclick="tocFilter('code')">含代码</button>
+      <button class="toc-filter-btn" data-f="course" onclick="tocFilter('course')">课程</button>
+    </div>
+    <div class="chapter-group-label">昇腾异构编程基础（速成班）</div>
+    <div class="chap done" data-tags="course"><div class="chap-num">✓</div><div class="chap-text"><div class="t">昇腾硬件架构介绍</div><div class="s">第 1 章 · 已完成</div></div></div>
+    <div class="chap active" data-tags="course code"><div class="chap-num">2</div><div class="chap-text"><div class="t"><span class="now-ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-1px;margin-right:4px"><path d="M8 5v14l11-7z"/></svg></span>CANN 软件包结构</div><div class="s">第 2 章 · 学习中</div></div></div>
+    <div class="sub" data-tags="course code"><a href="#" class="active">2.1 软件包分层</a><a href="#">2.2 驱动与运行时</a><a href="#">2.3 环境安装</a></div>
+    <div class="chap" data-tags="course code"><div class="chap-num">3</div><div class="chap-text"><div class="t">算子开发编程基础</div><div class="s">第 3 章</div></div></div>
+    <div class="chapter-group-label">Ascend C Skills 全景概览</div>
+    <div class="chap" data-tags="course"><div class="chap-num">4</div><div class="chap-text"><div class="t">课程体系与学习路径</div><div class="s">3 节</div></div></div>
+    <div class="chapter-group-label">Ascend C 系列 · 算子开发入门</div>
+    <div class="chap" data-tags="course"><div class="chap-num">5</div><div class="chap-text"><div class="t">异构架构与 Ascend C 定位</div><div class="s">第 1 节</div></div></div>
+  </div>
+</div>
+
+<!-- IDE 实战全屏层 -->
+<div class="ide" id="ide">
+  <div class="ide-topbar">
+    <div class="ide-logo"><span class="m">H</span>HiDevLab</div>
+    <div class="ide-modes">
+      <button class="ide-mode active"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16"/></svg>Notebook</button>
+      <button class="ide-mode"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6M12 19h8"/></svg>Terminal</button>
+    </div>
+    <div class="ide-kernel"><span class="k-dot"></span>Python 3 (CANN)</div>
+    <div class="ide-tools">
+      <button class="ide-tool run" title="运行全部"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+      <button class="ide-tool" title="停止"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button>
+      <button class="ide-tool" title="重启内核"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 108-8v0M4 4v4h4"/></svg></button>
+      <button class="ide-tool" title="保存"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3h11l3 3v15H5zM8 3v6h7"/></svg></button>
+    </div>
+    <button class="ide-back" onclick="closeIDE()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>退出实战</button>
+  </div>
+
+  <div class="ide-res">
+    <div class="res-item"><span class="rl">NPU 910B</span><div class="res-bar"><i style="width:6%"></i></div><span>6%</span></div>
+    <div class="res-item"><span class="rl">HBM</span><div class="res-bar"><i style="width:14%"></i></div><span>9 / 64GB</span></div>
+    <div class="res-idle"><span class="d"></span>运行中</div>
+  </div>
+
+  <div class="ide-main">
+    <aside class="ide-files">
+      <div class="fl-label">文件</div>
+      <div class="fl-file active"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>main.ipynb</div>
+      <div class="fl-file"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>inference.ipynb</div>
+      <div class="fl-file"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/></svg>custom_op.ipynb</div>
+      <div class="fl-sep"></div>
+      <div class="fl-act"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>新建 Cell</div>
+      <div class="fl-act"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>上传文件</div>
+    </aside>
+
+    <div class="ide-center">
+      <div class="ide-editor">
+        <div class="cell">
+          <div class="cell-bar"><span class="cell-idx">[1]</span><span class="cell-type md">MARKDOWN</span><div class="cell-ops"><button class="cell-op">切换类型</button><button class="cell-op">✕</button></div></div>
+          <div class="cell-body md-body"><h1>CANN 开发环境验证</h1>快速验证昇腾 NPU 环境是否就绪。</div>
+        </div>
+        <div class="cell">
+          <div class="cell-bar"><span class="cell-idx">[2]</span><span class="cell-type code">CODE</span><div class="cell-ops"><button class="cell-op run" onclick="runCell(this,'cellout2')"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>运行</button><button class="cell-op">切换类型</button><button class="cell-op">✕</button></div></div>
+          <div class="cell-body"># 检查 CANN 环境
+import acl
+
+ret = acl.init()
+assert ret == 0, f"ACL init failed: {ret}"
+ret = acl.rt.set_device(0)
+print("✓ ACL 初始化成功")
+print(f"设备 0 已绑定")</div>
+          <div class="cell-out" id="cellout2"><span class="ok">✓ ACL 初始化成功</span>
+设备 0 已绑定</div>
+        </div>
+        <div class="cell">
+          <div class="cell-bar"><span class="cell-idx">[3]</span><span class="cell-type code">CODE</span><div class="cell-ops"><button class="cell-op run" onclick="runCell(this,'cellout3')"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>运行</button><button class="cell-op">切换类型</button><button class="cell-op">✕</button></div></div>
+          <div class="cell-body"># 检查 NPU 信息
+import subprocess
+result = subprocess.run(["npu-smi", "info"], capture_output=True, text=True)
+print(result.stdout)</div>
+          <div class="cell-out" id="cellout3">+------------------------------------------------------+
+| npu-smi 23.0.0   Version: 23.0.rc3                    |
+| NPU  Name    | Health | Power(W) | Temp(C) | HBM-Usage|
+| 0    910B    | OK     | 62.3     | 41      | 9/64 GB  |
++------------------------------------------------------+</div>
+        </div>
+        <button class="ide-addcell">+ 添加 Cell</button>
+      </div>
+
+      <div class="ide-workspace">
+        <div class="ws-tabs">
+          <button class="ws-tab active" onclick="switchWS('problems',this)">问题</button>
+          <button class="ws-tab" onclick="switchWS('output',this)">输出</button>
+          <button class="ws-tab" onclick="switchWS('debug',this)">调试控制台</button>
+          <button class="ws-tab" onclick="switchWS('terminal',this)">终端</button>
+          <button class="ws-tab" onclick="switchWS('ports',this)">端口</button>
+        </div>
+        <div class="ws-body">
+          <div class="ws-view active" data-id="problems"><span class="ws-empty">未在工作区检测到问题。</span></div>
+          <div class="ws-view" data-id="output"><span class="ws-empty">运行 Cell 后，输出将显示在这里。</span></div>
+          <div class="ws-view" data-id="debug"><span class="ws-empty">调试控制台已就绪，等待断点。</span></div>
+          <div class="ws-view" data-id="terminal"><div class="ws-term-line"><span class="prompt">(CANN) root@npu-910b:~$</span> source /usr/local/Ascend/ascend-toolkit/set_env.sh</div><div class="ws-term-line"><span class="prompt">(CANN) root@npu-910b:~$</span> <span style="opacity:.6">▌</span></div></div>
+          <div class="ws-view" data-id="ports"><span class="ws-empty">当前没有转发的端口。</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI 分身面板 -->
+<div class="ai-panel" id="aiPanel">
+  <div class="ai-header" id="aiHeader">
+    <span class="ai-drag-hint">⠿ 拖动</span>
+    <div class="tools">
+      <button class="ai-ht" id="dockTopBtn" onclick="dock('top')" title="吸附左上"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16"/></svg></button>
+      <button class="ai-ht" id="dockRightBtn" onclick="dock('right')" title="吸附右侧常驻"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M15 4v16"/></svg></button>
+      <button class="ai-ht" onclick="toggleAI()" title="关闭"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+  </div>
+
+  <div class="ai-body">
+    <div class="id-card">
+      <div class="id-face">🤖</div>
+      <div class="id-info">
+        <div class="lvl"><b>分身 Lv.2</b><span class="id-tag">成长中</span></div>
+        <div class="sub">已和你一起点亮 <em>5/13</em> 个知识点</div>
+      </div>
+    </div>
+
+    <div class="sec-title"><span class="ic">🗺️</span>知识全景</div>
+    <div class="sec-sub">专属你的成长镜像，我们可以一起点亮更多知识点</div>
+    <div class="total-card">
+      <div class="total-top"><span class="l">总进度</span><a href="#">查看进度详情 ›</a></div>
+      <div class="total-bar"><div class="track"><div class="fill"></div></div><span class="num">5/13</span></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><div class="fn">模型训练</div><div class="fp">71%</div><div class="fbar"><i style="width:71%"></i></div></div>
+      <div class="field"><div class="fn">算子开发</div><div class="fp">2%</div><div class="fbar"><i style="width:2%"></i></div></div>
+      <div class="field"><div class="fn">模型推理</div><div class="fp">0%</div><div class="fbar"><i style="width:0%"></i></div></div>
+    </div>
+
+    <div class="learning-sec">
+      <div class="sec-title"><span class="ic">📖</span>正在学习</div>
+      <div class="sec-sub">继续未完成的内容，离目标更近一步</div>
+      <div class="ln-item" style="--p:40%">
+        <div class="ln-ring"><i>40%</i></div>
+        <div class="ln-info"><div class="lt">CANN 软件包结构</div><div class="lb"><i style="width:40%"></i></div><div class="lm"><span>已学 2 / 5 节</span><em>剩余约 1.2 学时</em></div></div>
+      </div>
+      <div class="ln-item" style="--p:71%">
+        <div class="ln-ring"><i>71%</i></div>
+        <div class="ln-info"><div class="lt">模型训练入门实战</div><div class="lb"><i style="width:71%"></i></div><div class="lm"><span>已学 5 / 7 节</span><em>剩余约 0.8 学时</em></div></div>
+      </div>
+      <div class="ln-item" style="--p:15%">
+        <div class="ln-ring"><i>15%</i></div>
+        <div class="ln-info"><div class="lt">算子开发编程基础</div><div class="lb"><i style="width:15%"></i></div><div class="lm"><span>已学 1 / 6 节</span><em>剩余约 2.5 学时</em></div></div>
+      </div>
+    </div>
+
+
+    <div class="review-sec">
+      <div class="sec-title"><span class="ic">🧠</span>我的复习分身<button class="fold" id="rvFold" onclick="foldReview()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg></button></div>
+      <div class="sec-sub">专门瞄准你的薄弱区域</div>
+      <div class="review-body" id="reviewBody">
+        <div class="rv-tabs">
+          <button class="rv-tab active" onclick="switchRV('smart',this)">智能总结</button>
+          <button class="rv-tab" onclick="switchRV('mine',this)">个人总结 <span id="mineCount" style="color:var(--ink-3)">2</span></button>
+        </div>
+        <!-- 智能:系统从错题/反复观看/认证失败中总结 -->
+        <div class="rv-view active" id="rv-smart">
+          <div class="rv-item"><div class="txt"><div class="tt">CANN 基础知识</div><div class="ss">你在相关题目上答错过 · 建议巩固</div></div><button class="rv-btn">复习</button></div>
+          <div class="rv-item"><div class="txt"><div class="tt">什么是 NPU</div><div class="ss">这段视频你反复看了 3 次</div></div><button class="rv-btn">复习</button></div>
+          <div class="rv-item"><div class="txt"><div class="tt">启动训练</div><div class="ss">认证测试未通过 · 重点回顾</div></div><button class="rv-btn">复习</button></div>
+        </div>
+        <!-- 个人:视频采集来的 -->
+        <div class="rv-view" id="rv-mine">
+          <div id="kpList">
+            <div class="kp"><div class="kp-top"><span class="kp-tag key">重要知识点</span><span class="kp-src">来自 1.1 · 01:12</span></div><div class="kp-txt">昇腾 NPU 采用达芬奇架构，核心是 Cube 计算单元，专为矩阵乘加优化。</div></div>
+            <div class="kp"><div class="kp-top"><span class="kp-tag code">代码片段</span><span class="kp-src">来自 1.1 · 04:30</span></div><div class="kp-txt">NPU 可用性检测</div><div class="kp-code">assert torch.npu.is_available()</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="plan-btn"><button onclick="toast('正在为你规划下一步…')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3v4M3 5h4M6 17v4M4 19h4M13 3l2.5 6.5L22 12l-6.5 2.5L13 21l-2.5-6.5L4 12l6.5-2.5L13 3z"/></svg>让智能助手帮我规划下一步</button></div>
+
+  <div class="resize-handle" id="resizeHandle"></div>
+</div>
+
+<!-- 强制弹出的测验弹窗 -->
+<div class="quiz-modal" id="quizModal">
+  <div class="qm-box">
+    <div class="qm-head">
+      <span class="qm-badge">随堂测试</span>
+      <h3>2.1 CANN 软件包分层</h3>
+      <span class="qm-prog" id="qmProg">第 1 / 3 题</span>
+    </div>
+    <div class="qm-body" id="qmBody"></div>
+    <div class="qm-foot" id="qmFoot">
+      <span class="hint">答错的题会自动进入复习分身</span>
+      <button class="qm-skip" onclick="closeQuiz()">稍后再答</button>
+      <button class="qm-submit" id="qmSubmit" onclick="quizNext()">提交</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="ic">✓</span><span id="toastMsg">已完成</span></div>
+
+<div class="kg-overlay" id="kgOverlay">
+  <div class="kg-topbar">
+    <button class="kg-close" onclick="closeKnowledgeMap()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>关闭</button>
+    <div class="kg-vd"></div>
+    <span class="kg-title">知识全景</span>
+    <span class="kg-scope">算子开发<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></span>
+    <span class="kg-lit">点亮 <span id="kgLitCount">8</span> / 21</span>
+    <span class="kg-current-txt">当前在「矢量算子编写」</span>
+    <div class="kg-topbar-right">
+      <button class="kg-next-btn" id="kgNextBtn" onclick="kgToggleNext()"><span class="dot"></span>下一步建议</button>
+      <span class="kg-theme-btn">🌙</span>
+    </div>
+  </div>
+  <div class="kg-legend-strip" id="kgLegendStrip">
+    <span><i class="ls"></i>下一步主推（先学这个）</span>
+    <span><i class="ls dashed"></i>之后的建议路线</span>
+  </div>
+  <div class="kg-body">
+    <div class="kg-graph" id="kgGraph">
+      <div class="kg-col-bg" style="left:0"></div>
+      <div class="kg-col-bg" style="left:25%"></div>
+      <div class="kg-col-bg" style="left:50%"></div>
+      <div class="kg-col-bg" style="left:75%"></div>
+      <div class="kg-col-header" style="left:0">入 门</div>
+      <div class="kg-col-header" style="left:25%">中 级</div>
+      <div class="kg-col-header" style="left:50%">进 阶</div>
+      <div class="kg-col-header" style="left:75%">高 级</div>
+      <svg class="kg-edges" id="kgEdges"></svg>
+      <div id="kgNodes"></div>
+      <div class="kg-legend-box" id="kgLegendBox">
+        <div class="kg-legend-item" data-s="mastered" onclick="kgFilterStatus('mastered')"><i class="dot mastered"></i>已掌握</div>
+        <div class="kg-legend-item" data-s="ai" onclick="kgFilterStatus('ai')"><i class="dot ai"></i>AI 已总结</div>
+        <div class="kg-legend-item" data-s="current" onclick="kgFilterStatus('current')"><i class="dot current"></i>你在这里</div>
+        <div class="kg-legend-item" data-s="locked" onclick="kgFilterStatus('locked')"><i class="dot"></i>待学习</div>
+      </div>
+    </div>
+    <div class="kg-panel">
+      <div class="kg-panel-main" id="kgPanelMain"></div>
+      <div class="kg-footer">
+        <div class="kg-footer-row"><span>专题掌握度</span><b>38%</b></div>
+        <div class="kg-footer-bar"><div class="kg-footer-fill" style="width:38%"></div></div>
+        <div class="kg-footer-sub">已掌握 8 个知识点，共 21 个</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* 从主页课程卡片跳转过来的 course/title 参数：只替换标题/面包屑，
+     视频/代码示例/错误码/测验等正文内容保持原型自带的「CANN 软件包结构」一章 */
+  (function applyCourseFromQuery(){
+    const params = new URLSearchParams(location.search);
+    const title = params.get('title');
+    if(!title) return;
+    document.title = title + ' · 详情页';
+    const h1 = document.getElementById('courseTitle');
+    if(h1) h1.textContent = title;
+    const bc = document.getElementById('courseBreadcrumb');
+    if(bc) bc.textContent = title + ' · 详情页';
+  })();
+
+  const capData={
+    key:{badge:'重要知识点',cls:'key',time:'01:32',pct:18,text:'CANN 软件栈自上而下分为：应用层 → 图引擎(GE) → 算子库(OPP) → 运行时(Runtime) → 驱动(Driver)。',code:null},
+    code:{badge:'代码示例',cls:'code',time:'03:41',pct:44,text:'查看当前 CANN 安装路径：',code:"import os\nprint(os.environ.get('ASCEND_HOME_PATH'))",file:'cann_version.py'},
+    key2:{badge:'重要知识点',cls:'key',time:'05:18',pct:62,text:'Runtime 负责设备内存管理与任务下发，是 Host 与 Device 之间的桥梁。',code:null},
+    code2:{badge:'代码示例',cls:'code',time:'06:55',pct:81,text:'列出已加载的算子包：',code:"from cann import opp\nprint(opp.list_packages())",file:'list_packages.py'}
+  };
+  let curCap=null;
+  function renderCap(d){
+    let h='<div class="cap-body">'+d.text+'</div>';
+    if(d.code){
+      h+='<div class="code-block"><div class="code-bar"><span class="name">'+(d.file||'code.py')+'</span><div class="ops"><button class="code-op" onclick="toast(\'已复制到剪贴板\')">复制</button></div></div><div class="code-body">'+d.code+'</div></div>';
+    }
+    return h;
+  }
+  function openCapture(k,el){const d=capData[k];curCap=k;const b=document.getElementById('capBadge');b.textContent=d.badge;b.className='cap-badge '+d.cls;document.getElementById('capTime').textContent=d.time;document.getElementById('capContent').innerHTML=renderCap(d);document.getElementById('capEdit').value='';document.getElementById('capEdit').classList.remove('show');document.getElementById('editToggle').textContent='编辑后采集';document.getElementById('capture').classList.add('open');}
+  function closeCapture(){document.getElementById('capture').classList.remove('open');}
+  function jumpToVideo(k){
+    const d=capData[k];
+    if(!d)return;
+    document.querySelector('.video-card').classList.remove('img-on');
+    if(d.pct!=null){
+      document.querySelector('.video-played').style.width=d.pct+'%';
+      document.querySelector('.video-head').style.left=d.pct+'%';
+    }
+    document.querySelector('.video-title-ov').textContent='▶ 2.1 CANN 软件包分层 · '+d.time;
+    document.querySelector('.video-card').scrollIntoView({behavior:'smooth',block:'start'});
+    openCapture(k);
+    toast('已跳转到视频 '+d.time);
+  }
+  function toggleEdit(){const t=document.getElementById('capEdit'),b=document.getElementById('editToggle');const d=capData[curCap];if(!t.classList.contains('show')){t.classList.add('show');t.value=d.text;b.textContent='收起编辑';t.focus();}else{t.classList.remove('show');b.textContent='编辑后采集';}}
+  let mineCount=2;
+  function collectKP(){mineCount++;document.getElementById('mineCount').textContent=mineCount;const d=capData[curCap];const edited=document.getElementById('capEdit');const txt=edited.classList.contains('show')&&edited.value.trim()?edited.value.trim():d.text;const el=document.createElement('div');el.className='kp';let h='<div class="kp-top"><span class="kp-tag '+d.cls+'">'+(d.cls==='key'?'重要知识点':'代码片段')+'</span><span class="kp-src">来自 2.1 · '+d.time+'</span></div><div class="kp-txt">'+txt+'</div>';if(d.code)h+='<div class="kp-code">'+d.code+'</div>';el.innerHTML=h;document.getElementById('kpList').prepend(el);closeCapture();toast('已采集到个人总结');}
+
+  function switchTab(id,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+(id==='code'?'code':'err')).classList.add('active');}
+  function switchRV(id,el){document.querySelectorAll('.rv-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('.rv-view').forEach(v=>v.classList.remove('active'));document.getElementById('rv-'+id).classList.add('active');}
+  function foldReview(){document.getElementById('reviewBody').classList.toggle('closed');document.getElementById('rvFold').classList.toggle('closed');}
+  /* 目录:悬浮浮窗 <-> 左栏常驻 */
+  function toggleToc(e){
+    if(e)e.stopPropagation();
+    const pop=document.getElementById('tocPop'),tr=document.getElementById('tocTrigger');
+    const willOpen=!pop.classList.contains('open');
+    if(willOpen){
+      const r=tr.getBoundingClientRect();
+      pop.style.top=(r.bottom+8)+'px';
+      pop.style.left=r.left+'px';
+    }
+    pop.classList.toggle('open');
+    tr.classList.toggle('on', pop.classList.contains('open'));
+  }
+  function closeToc(){document.getElementById('tocPop').classList.remove('open');document.getElementById('tocTrigger').classList.remove('on');}
+  function dockToc(){document.getElementById('layout').classList.add('docked-toc');document.body.classList.add('toc-docked');document.getElementById('dockSwitch').classList.add('on');closeToc();}
+  function undockToc(){document.getElementById('layout').classList.remove('docked-toc');document.body.classList.remove('toc-docked');document.getElementById('dockSwitch').classList.remove('on');}
+  function tocFilter(f){
+    document.querySelectorAll('.toc-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.f === f));
+    document.querySelectorAll('.chap, .sub').forEach(item => {
+      const tags = (item.dataset.tags || '').split(' ');
+      item.style.display = (f === 'all' || tags.includes(f)) ? '' : 'none';
+    });
+    document.querySelectorAll('.chapter-group-label').forEach(label => {
+      let el = label.nextElementSibling, anyVisible = false;
+      while (el && !el.classList.contains('chapter-group-label')) {
+        if (el.style.display !== 'none') anyVisible = true;
+        el = el.nextElementSibling;
+      }
+      label.style.display = anyVisible ? '' : 'none';
+    });
+  }
+  /* 点击外部收起浮窗 */
+  document.addEventListener('click',e=>{const pop=document.getElementById('tocPop'),tr=document.getElementById('tocTrigger');if(pop.classList.contains('open')&&!pop.contains(e.target)&&!tr.contains(e.target)){closeToc();}});
+
+  function toggleVC(k){document.querySelectorAll('.vc-menu').forEach(m=>{if(m.id!=='vc-'+k)m.classList.remove('open')});document.getElementById('vc-'+k).classList.toggle('open');}
+  function setVC(k,v,el){el.parentElement.querySelectorAll('.vc-opt').forEach(o=>o.classList.remove('on'));el.classList.add('on');document.getElementById(k==='speed'?'speedLbl':'hdLbl').textContent=v;document.getElementById('vc-'+k).classList.remove('open');}
+  document.addEventListener('click',e=>{if(!e.target.closest('.vc-select'))document.querySelectorAll('.vc-menu').forEach(m=>m.classList.remove('open'));});
+
+  function toggleAI(){const p=document.getElementById('aiPanel'),e=document.getElementById('aiEntry');const opening=!p.classList.contains('open');p.classList.toggle('open');e.classList.toggle('on');if(!opening){undock();}}
+
+  let dockState=null;
+  function dock(side){const p=document.getElementById('aiPanel');if(dockState===side){undock();return;}undock();dockState=side;p.classList.add('dock-'+side);document.getElementById('dock'+(side==='top'?'Top':'Right')+'Btn').classList.add('on');if(side==='right'){document.body.classList.add('docked');}p.style.left='';p.style.top='';p.style.width='';p.style.height='';}
+  function undock(){const p=document.getElementById('aiPanel');p.classList.remove('dock-right','dock-top');document.body.classList.remove('docked');document.getElementById('dockTopBtn').classList.remove('on');document.getElementById('dockRightBtn').classList.remove('on');dockState=null;}
+
+  /* 拖拽移动 */
+  (function(){const panel=document.getElementById('aiPanel'),h=document.getElementById('aiHeader');let ox,oy,sl,st,drag=false;h.addEventListener('mousedown',e=>{if(e.target.closest('.ai-ht'))return;if(dockState)undock();drag=true;const r=panel.getBoundingClientRect();panel.style.right='auto';panel.style.left=r.left+'px';panel.style.top=r.top+'px';ox=e.clientX;oy=e.clientY;sl=r.left;st=r.top;document.body.style.userSelect='none';});window.addEventListener('mousemove',e=>{if(!drag)return;panel.style.left=(sl+e.clientX-ox)+'px';panel.style.top=Math.max(64,st+e.clientY-oy)+'px';});window.addEventListener('mouseup',()=>{drag=false;document.body.style.userSelect='';});})();
+
+  /* 拖右下角缩放 */
+  (function(){const panel=document.getElementById('aiPanel'),handle=document.getElementById('resizeHandle');let sw,sh,ox,oy,rz=false;handle.addEventListener('mousedown',e=>{e.stopPropagation();if(dockState)return;rz=true;const r=panel.getBoundingClientRect();sw=r.width;sh=r.height;ox=e.clientX;oy=e.clientY;document.body.style.userSelect='none';});window.addEventListener('mousemove',e=>{if(!rz)return;panel.style.width=Math.max(340,sw+e.clientX-ox)+'px';panel.style.height=Math.max(360,sh+e.clientY-oy)+'px';});window.addEventListener('mouseup',()=>{rz=false;document.body.style.userSelect='';});})();
+
+  let tt;function toast(msg){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200);}
+  /* ===== 图文模式 ===== */
+  const imgData=[
+    {t:'口播文字 · 00:00 - 01:30',pic:'配图 1 · 达芬奇架构示意',txt:'这一段介绍昇腾 NPU 的达芬奇架构，核心是 Cube 单元，专为矩阵乘加运算设计。'},
+    {t:'口播文字 · 01:30 - 03:20',pic:'配图 2 · CANN 软件栈分层',txt:'CANN 自上而下分为应用层、图引擎(GE)、算子库(OPP)、运行时(Runtime)、驱动(Driver)五层。'},
+    {t:'口播文字 · 03:20 - 05:40',pic:'配图 3 · Host 与 Device 协同',txt:'Runtime 负责设备内存管理与任务下发，是 Host 与 Device 之间的桥梁。'},
+    {t:'口播文字 · 05:40 - 08:24',pic:'配图 4 · 算子加载流程',txt:'算子包在运行时按需加载，可通过 opp.list_packages() 查看已加载的算子。'}
+  ];
+  let imIdx=0;
+  function renderIM(){const d=imgData[imIdx];document.getElementById('imPic').textContent=d.pic;document.getElementById('imText').textContent=d.txt;document.getElementById('imTime').textContent=d.t;document.getElementById('imIdx').textContent=imIdx+1;const dots=document.getElementById('imDots');dots.innerHTML='';imgData.forEach((_,i)=>{const b=document.createElement('div');b.className='im-dot'+(i===imIdx?' on':'');b.onclick=()=>{imIdx=i;renderIM();};dots.appendChild(b);});}
+  function imStep(n){imIdx=(imIdx+n+imgData.length)%imgData.length;renderIM();}
+  function toggleImgMode(){const c=document.querySelector('.video-card');c.classList.toggle('img-on');if(c.classList.contains('img-on'))renderIM();}
+
+  /* ===== 随堂测试 ===== */
+  const quizData=[
+    {type:'single',label:'单选',q:'CANN 软件栈中，负责设备内存管理与任务下发的是哪一层？',opts:['图引擎 GE','运行时 Runtime','算子库 OPP','驱动 Driver'],answer:[1]},
+    {type:'multi',label:'多选',q:'以下哪些属于 CANN 软件栈的组成部分？（多选）',opts:['图引擎 GE','算子库 OPP','编译器 GCC','运行时 Runtime'],answer:[0,1,3]},
+    {type:'judge',label:'判断',q:'torch_npu 与 torch 的版本不需要严格对应，任意组合都能正常导入。',opts:['正确','错误'],answer:[1]}
+  ];
+  let qIdx=0,qSel=[],qWrong=[];
+  function openQuiz(){qIdx=0;qWrong=[];document.getElementById('quizModal').classList.add('open');renderQuiz();}
+  function closeQuiz(){document.getElementById('quizModal').classList.remove('open');}
+  function renderQuiz(){
+    const d=quizData[qIdx];qSel=[];
+    document.getElementById('qmProg').textContent='第 '+(qIdx+1)+' / '+quizData.length+' 题';
+    let h='<div class="qz-q"><span class="qz-type '+d.type+'">'+d.label+'</span><span class="qz-qt">'+d.q+'</span></div>';
+    h+='<div class="'+(d.type==='multi'?'qz-multi':'')+'" id="qzOpts">';
+    d.opts.forEach((o,i)=>{h+='<div class="qz-opt" data-i="'+i+'" onclick="pickOpt('+i+')"><span class="qz-mark"></span><span>'+o+'</span></div>';});
+    h+='</div>';
+    document.getElementById('qmBody').innerHTML=h;
+    const sb=document.getElementById('qmSubmit');sb.textContent='提交';sb.onclick=submitAnswer;
+  }
+  function pickOpt(i){const d=quizData[qIdx];const opts=document.querySelectorAll('#qzOpts .qz-opt');if(d.type==='multi'){const p=qSel.indexOf(i);if(p<0)qSel.push(i);else qSel.splice(p,1);}else{qSel=[i];}opts.forEach(o=>{const oi=+o.dataset.i;o.classList.toggle('sel',qSel.includes(oi));o.querySelector('.qz-mark').textContent=qSel.includes(oi)?(d.type==='multi'?'✓':'●'):'';});}
+  function submitAnswer(){
+    const d=quizData[qIdx];if(qSel.length===0){toast('请先选择答案');return;}
+    const correct=JSON.stringify([...qSel].sort())===JSON.stringify([...d.answer].sort());
+    document.querySelectorAll('#qzOpts .qz-opt').forEach(o=>{const oi=+o.dataset.i;const isAns=d.answer.includes(oi),isSel=qSel.includes(oi);if(isAns)o.classList.add('correct');else if(isSel)o.classList.add('wrong');o.onclick=null;o.style.cursor='default';});
+    if(!correct)qWrong.push(d);
+    const sb=document.getElementById('qmSubmit');sb.textContent=qIdx<quizData.length-1?'下一题':'查看结果';sb.onclick=quizNext;
+  }
+  function quizNext(){if(qIdx<quizData.length-1){qIdx++;renderQuiz();}else{showQuizResult();}}
+  function showQuizResult(){
+    const total=quizData.length,wrong=qWrong.length,right=total-wrong;
+    let h='<div class="qm-result"><div class="big"><em>'+right+'</em> / '+total+' 题正确</div>';
+    if(wrong>0){h+='<div class="rs">有 '+wrong+' 道题答错了，已帮你加入复习分身</div><div class="link-review" onclick="goReview()">去复习分身查看 ›</div>';}
+    else{h+='<div class="rs">全部答对，掌握得不错 👍</div>';}
+    h+='</div>';
+    document.getElementById('qmBody').innerHTML=h;
+    document.getElementById('qmFoot').innerHTML='<button class="qm-submit" style="margin-left:auto" onclick="finishQuiz()">完成</button>';
+    // 答错的题联动到 AI 分身 -> 智能总结
+    if(wrong>0)addWrongToReview(qWrong);
+  }
+  function addWrongToReview(list){
+    const box=document.getElementById('rv-smart');
+    list.forEach(d=>{const el=document.createElement('div');el.className='rv-item';el.innerHTML='<div class="txt"><div class="tt">'+d.q.slice(0,16)+'…</div><div class="ss">随堂测试答错 · 建议巩固</div></div><button class="rv-btn">复习</button>';box.prepend(el);});
+    // 更新分身入口的小红点提示（简单加个 toast）
+  }
+  function goReview(){finishQuiz();if(!document.getElementById('aiPanel').classList.contains('open'))toggleAI();switchRV('smart',document.querySelector('.rv-tab'));document.getElementById('reviewBody').classList.remove('closed');document.getElementById('rvFold').classList.remove('closed');}
+  function finishQuiz(){closeQuiz();document.getElementById('qmFoot').innerHTML='<span class="hint">答错的题会自动进入复习分身</span><button class="qm-skip" onclick="closeQuiz()">稍后再答</button><button class="qm-submit" id="qmSubmit" onclick="quizNext()">提交</button>';}
+
+  /* switchTab 扩展支持 quiz */
+  const _switchTab=switchTab;
+  switchTab=function(id,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');};
+
+  /* ===== IDE 实战 ===== */
+  function openIDE(){document.getElementById('ide').classList.add('open');document.body.style.overflow='hidden';}
+  function closeIDE(){document.getElementById('ide').classList.remove('open');document.body.style.overflow='';}
+  function closeIdeDock(){document.getElementById('layout').classList.remove('ide-dock-open');document.getElementById('ideDockReopen').classList.add('show');}
+  function openIdeDock(){document.getElementById('layout').classList.add('ide-dock-open');document.getElementById('ideDockReopen').classList.remove('show');}
+  function dockRunAll(){
+    const outView = document.querySelector('#ideDock .ws-view[data-id="output"]');
+    outView.innerHTML = '<div class="ws-term-line"><span class="ok">✓</span> (7, 0, 0)</div>';
+    const outTab = document.querySelector('#ideDock .ws-tab[onclick*="output"]');
+    if(outTab) switchWS('output', outTab);
+  }
+  function toggleTree(el){
+    el.classList.toggle('collapsed');
+    el.nextElementSibling.classList.toggle('hidden');
+  }
+  /* CANN 示例工程里 python/ 目录下 3 个可切换的文件（仅作演示用途，不是真实工程） */
+  const DOCK_FILES = {
+    'check_env.py': {
+      breadcrumb: 'cann-npu-samples › src › python › check_env.py',
+      html: '<div class="ide-dock-code-line"><span class="ln">1</span><span class="src"><span class="tk-cm"># 检查 CANN 环境</span></span></div><div class="ide-dock-code-line"><span class="ln">2</span><span class="src"><span class="tk-kw">import</span> acl</span></div><div class="ide-dock-code-line"><span class="ln">3</span><span class="src"></span></div><div class="ide-dock-code-line"><span class="ln">4</span><span class="src">ret = acl.<span class="tk-fn">init</span>()</span></div><div class="ide-dock-code-line"><span class="ln">5</span><span class="src"><span class="tk-kw">assert</span> ret == <span class="tk-str">0</span>, <span class="tk-str">f"ACL init failed: {ret}"</span></span></div><div class="ide-dock-code-line"><span class="ln">6</span><span class="src"></span></div><div class="ide-dock-code-line"><span class="ln">7</span><span class="src">ret = acl.rt.<span class="tk-fn">set_device</span>(<span class="tk-str">0</span>)</span></div><div class="ide-dock-code-line"><span class="ln">8</span><span class="src"><span class="tk-fn">print</span>(<span class="tk-str">"✓ ACL 初始化成功"</span>)</span></div><div class="ide-dock-code-line"><span class="ln">9</span><span class="src"><span class="tk-fn">print</span>(acl.rt.<span class="tk-fn">get_version</span>())</span></div>'
+    },
+    'list_packages.py': {
+      breadcrumb: 'cann-npu-samples › src › python › list_packages.py',
+      html: '<div class="ide-dock-code-line"><span class="ln">1</span><span class="src"><span class="tk-cm"># 列出当前环境已加载的算子包</span></span></div><div class="ide-dock-code-line"><span class="ln">2</span><span class="src"><span class="tk-kw">from</span> cann <span class="tk-kw">import</span> opp</span></div><div class="ide-dock-code-line"><span class="ln">3</span><span class="src"></span></div><div class="ide-dock-code-line"><span class="ln">4</span><span class="src">packages = opp.<span class="tk-fn">list_packages</span>()</span></div><div class="ide-dock-code-line"><span class="ln">5</span><span class="src"><span class="tk-kw">for</span> pkg <span class="tk-kw">in</span> packages:</span></div><div class="ide-dock-code-line"><span class="ln">6</span><span class="src">    <span class="tk-fn">print</span>(<span class="tk-str">f"{pkg.name}  {pkg.version}"</span>)</span></div>'
+    },
+    'profile_kernel.py': {
+      breadcrumb: 'cann-npu-samples › src › python › profile_kernel.py',
+      html: '<div class="ide-dock-code-line"><span class="ln">1</span><span class="src"><span class="tk-cm"># 对 vector_add 算子做一次性能采样</span></span></div><div class="ide-dock-code-line"><span class="ln">2</span><span class="src"><span class="tk-kw">from</span> cann <span class="tk-kw">import</span> profiler</span></div><div class="ide-dock-code-line"><span class="ln">3</span><span class="src"></span></div><div class="ide-dock-code-line"><span class="ln">4</span><span class="src"><span class="tk-kw">with</span> profiler.<span class="tk-fn">session</span>(<span class="tk-str">"vector_add_kernel"</span>):</span></div><div class="ide-dock-code-line"><span class="ln">5</span><span class="src">    <span class="tk-fn">run_kernel</span>()</span></div><div class="ide-dock-code-line"><span class="ln">6</span><span class="src"></span></div><div class="ide-dock-code-line"><span class="ln">7</span><span class="src">profiler.<span class="tk-fn">report</span>(top_n=<span class="tk-str">5</span>)</span></div>'
+    }
+  };
+  function dockOpenFile(name, el){
+    const d = DOCK_FILES[name];
+    if(!d) return;
+    document.querySelectorAll('#ideDock .ftree-row.file').forEach(f=>f.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('dockActiveTabName').textContent = name;
+    document.getElementById('dockBreadcrumb').textContent = d.breadcrumb;
+    document.getElementById('dockCodeArea').innerHTML = d.html;
+  }
+  function runCell(btn,outId){const out=document.getElementById(outId);out.classList.add('show');const idx=btn.closest('.cell').querySelector('.cell-idx');idx.textContent='[*]';setTimeout(()=>{idx.textContent=idx.textContent.replace('*',Math.floor(Math.random()*9+2));},400);}
+  function switchWS(id,el){const root=el.closest('.ide-workspace');root.querySelectorAll('.ws-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');root.querySelectorAll('.ws-view').forEach(v=>v.classList.remove('active'));root.querySelector('.ws-view[data-id="'+id+'"]').classList.add('active');}
+
+  /* ===== 知识全景 =====
+     数据来源 Figma 节点 181:16179（KnowledgeMap-默认）及同组 7 个状态画板。
+     节点坐标按其在 847x625 画布内的相对位置换算成百分比；连线按截图还原的
+     连接关系（原稿为手绘贝塞尔曲线，这里简化为直线，连接对象与整体结构一致）。
+     21 个知识点里仅「矢量算子编写」「aclnn 调用」两个在 Figma 里有对应文案示例，
+     其余知识点的一句话简介为按知识点名称撰写的示意文案。 */
+  const KG_NODES = {
+    davinci:   {label:'达芬奇架构',      x:8.9,  y:23.8, status:'mastered'},
+    aicore:    {label:'AI Core 结构',    x:17.9, y:37.7, status:'mastered'},
+    memmodel:  {label:'内存模型',        x:8.2,  y:51.6, status:'mastered'},
+    ascendc:   {label:'Ascend C 语法',   x:17.9, y:66.4, status:'mastered'},
+    paradigm:  {label:'编程范式',        x:8.9,  y:81.2, status:'mastered'},
+    devflow:   {label:'算子开发流程',    x:19.3, y:93.3, status:'mastered'},
+    datamove:  {label:'数据搬运',        x:33.9, y:32.5, status:'mastered'},
+    vecwrite:  {label:'矢量算子编写',    x:37.2, y:54.1, status:'current', desc:'编写矢量计算算子，掌握基本算子开发。你正在这里。'},
+    scalar:    {label:'标量计算',        x:31.3, y:69.0, status:'locked'},
+    tiling:    {label:'Tiling 基础',     x:38.4, y:84.6, status:'locked'},
+    pipeline:  {label:'流水与同步',      x:32.0, y:96.8, status:'locked'},
+    aclnn:     {label:'aclnn 调用',      x:59.0, y:27.3, status:'ai', desc:'通过 aclnn 接口调用算子，连接框架与算子。'},
+    fusion:    {label:'融合算子',        x:64.0, y:44.7, status:'locked'},
+    dynshape:  {label:'动态 Shape',      x:57.1, y:62.1, status:'locked'},
+    multicore: {label:'多核并行',        x:65.3, y:77.7, status:'locked'},
+    cubeop:    {label:'Cube 算子',       x:57.7, y:93.3, status:'locked'},
+    perf:      {label:'性能调优',        x:84.5, y:32.5, status:'locked'},
+    profiling: {label:'Profiling 分析',  x:89.7, y:51.6, status:'locked'},
+    precision: {label:'精度调试',        x:82.0, y:69.0, status:'locked'},
+    memopt:    {label:'内存优化',        x:89.7, y:84.6, status:'locked'},
+    customop:  {label:'自定义高性能算子', x:82.6, y:96.8, status:'locked'},
+  };
+  const KG_EDGES = [
+    ['davinci','aicore'],['davinci','memmodel'],['davinci','datamove'],
+    ['aicore','memmodel'],['aicore','datamove'],
+    ['ascendc','devflow'],['ascendc','paradigm'],['paradigm','devflow'],
+    ['datamove','vecwrite'],['devflow','vecwrite'],
+    ['vecwrite','scalar'],['vecwrite','tiling'],['vecwrite','fusion'],['vecwrite','aclnn'],
+    ['scalar','tiling'],['scalar','pipeline'],['tiling','pipeline'],['devflow','pipeline'],
+    ['aclnn','dynshape'],['aclnn','precision'],
+    ['fusion','dynshape'],['fusion','multicore'],['fusion','perf'],
+    ['dynshape','multicore'],['dynshape','cubeop'],
+    ['multicore','perf'],['multicore','memopt'],['multicore','precision'],['multicore','customop'],
+    ['cubeop','multicore'],['cubeop','memopt'],
+    ['perf','precision'],['perf','profiling'],
+    ['precision','memopt'],['precision','customop'],
+    ['memopt','customop'],
+    ['profiling','precision'],
+  ];
+  const KG_GENERIC_DESC = {
+    davinci:'了解华为达芬奇架构的整体设计思路与计算单元组成。',
+    aicore:'掌握 AI Core 的计算单元结构与数据流转方式。',
+    memmodel:'理解昇腾芯片的片上内存层级与访存模型。',
+    ascendc:'学习 Ascend C 编程语言的基础语法与开发范式。',
+    paradigm:'了解算子开发常用的编程范式与设计模式。',
+    devflow:'掌握从需求到上线的完整算子开发流程。',
+    datamove:'学习片上不同存储层级之间的数据搬运方式。',
+    scalar:'学习标量计算单元的编程方法与适用场景。',
+    tiling:'掌握算子切分与内存分块（Tiling）的基础策略。',
+    pipeline:'理解流水线并行与多级同步机制。',
+    fusion:'学习将多个算子融合以减少访存开销的方法。',
+    dynshape:'掌握动态 Shape 场景下的算子适配技巧。',
+    multicore:'学习多核并行调度与负载均衡策略。',
+    cubeop:'掌握 Cube 单元上的矩阵计算算子开发。',
+    perf:'学习算子性能调优的常用方法与工具链。',
+    profiling:'掌握使用 Profiling 工具定位性能瓶颈。',
+    precision:'学习算子精度问题的定位与调试方法。',
+    memopt:'掌握降低算子内存占用的常见优化手段。',
+    customop:'学习面向特定场景的自定义高性能算子开发。',
+  };
+  const KG_STATUS_LABEL = {mastered:'已掌握', current:'你在这里', ai:'AI 已总结', locked:'待学习'};
+  const KG_STATUS_DESC = {
+    mastered:'你已完成学习并掌握的知识点',
+    ai:'AI 助手已对该知识点生成学习摘要',
+    current:'你当前正在学习的知识点',
+    locked:'尚未满足前置条件，暂时无法解锁',
+  };
+  const KG_NEXT = {primary:'fusion', after:['multicore','perf']};
+  function kgUnlocked(status){ return status==='mastered'||status==='current'; }
+
+  function openKnowledgeMap(){
+    document.getElementById('kgOverlay').classList.add('open');
+    document.body.style.overflow='hidden';
+    if(!document.getElementById('kgNodes').children.length) kgRenderGraph();
+    kgClearSelection();
+  }
+  function closeKnowledgeMap(){
+    document.getElementById('kgOverlay').classList.remove('open');
+    document.body.style.overflow='';
+  }
+
+  function kgRenderGraph(){
+    let nodesHTML='';
+    for(const id in KG_NODES){
+      const n = KG_NODES[id];
+      const dotInner = n.status==='mastered' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L19 7"/></svg>' : '';
+      nodesHTML += '<div class="kg-node '+n.status+'" id="kgNode-'+id+'" style="left:'+n.x+'%;top:'+n.y+'%" onclick="kgSelectNode(\''+id+'\')">'
+        + (n.status==='current' ? '<span class="kg-node-flag">▶ 你在这里</span>' : '')
+        + '<div class="kg-node-dot">'+dotInner+'</div>'
+        + '<div class="kg-node-label">'+n.label+'</div>'
+        + '</div>';
+    }
+    document.getElementById('kgNodes').innerHTML = nodesHTML;
+
+    const svgNS='http://www.w3.org/2000/svg';
+    const svg = document.getElementById('kgEdges');
+    svg.innerHTML='';
+    KG_EDGES.forEach(([a,b])=>{
+      const na=KG_NODES[a], nb=KG_NODES[b];
+      const unlocked = kgUnlocked(na.status) && kgUnlocked(nb.status);
+      const line = document.createElementNS(svgNS,'line');
+      line.setAttribute('x1', na.x+'%'); line.setAttribute('y1', na.y+'%');
+      line.setAttribute('x2', nb.x+'%'); line.setAttribute('y2', nb.y+'%');
+      line.setAttribute('data-a', a); line.setAttribute('data-b', b);
+      line.setAttribute('stroke', unlocked ? '#4F6BFB' : '#C7CBD3');
+      line.setAttribute('stroke-width', unlocked?2:1.5);
+      if(!unlocked) line.setAttribute('stroke-dasharray','4 4');
+      line.setAttribute('opacity', unlocked?0.45:0.35);
+      line.setAttribute('class','kg-edge');
+      svg.appendChild(line);
+    });
+  }
+
+  function kgResetModeUI(){
+    document.getElementById('kgNextBtn').classList.remove('active');
+    document.getElementById('kgLegendStrip').classList.remove('show');
+    document.querySelectorAll('.kg-legend-item').forEach(x=>x.classList.remove('active'));
+  }
+  function kgClearHighlight(){
+    document.querySelectorAll('.kg-edge').forEach(line=>{
+      const a=line.getAttribute('data-a'), b=line.getAttribute('data-b');
+      const unlocked = kgUnlocked(KG_NODES[a].status) && kgUnlocked(KG_NODES[b].status);
+      line.setAttribute('stroke', unlocked?'#4F6BFB':'#C7CBD3');
+      line.setAttribute('opacity', unlocked?0.45:0.35);
+      line.setAttribute('stroke-width', unlocked?2:1.5);
+    });
+    document.querySelectorAll('.kg-node').forEach(el=>el.classList.remove('dim','hi'));
+  }
+  function kgApplyHighlight(activeIds){
+    const touched = new Set(activeIds);
+    document.querySelectorAll('.kg-edge').forEach(line=>{
+      const a=line.getAttribute('data-a'), b=line.getAttribute('data-b');
+      if(activeIds.has(a) || activeIds.has(b)){ touched.add(a); touched.add(b); }
+    });
+    document.querySelectorAll('.kg-edge').forEach(line=>{
+      const a=line.getAttribute('data-a'), b=line.getAttribute('data-b');
+      if(activeIds.has(a) || activeIds.has(b)){
+        line.setAttribute('stroke', '#8B4AF6');
+        line.setAttribute('opacity', 1);
+        line.setAttribute('stroke-width', 2.5);
+      } else {
+        line.setAttribute('opacity', 0.08);
+      }
+    });
+    for(const id in KG_NODES){
+      const el = document.getElementById('kgNode-'+id);
+      el.classList.remove('dim','hi');
+      if(activeIds.has(id)) el.classList.add('hi');
+      else if(!touched.has(id)) el.classList.add('dim');
+    }
+  }
+
+  function kgEmptyPanelHTML(){
+    return '<div class="kg-panel-empty"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 7l7-.3M8 8l3 8.5M16 8l-3 8.5"/></svg></div><p>点图谱上任意一个知识点<br>查看状态、前置，和去哪学</p></div>';
+  }
+  function kgClearSelection(){
+    kgResetModeUI();
+    kgClearHighlight();
+    document.getElementById('kgPanelMain').innerHTML = kgEmptyPanelHTML();
+  }
+
+  function kgNodeCardHTML(id){
+    const n = KG_NODES[id];
+    const pre = KG_EDGES.filter(e=>e[1]===id).map(e=>e[0]);
+    const post = KG_EDGES.filter(e=>e[0]===id).map(e=>e[1]);
+    const badgeLabel = KG_STATUS_LABEL[n.status];
+    const desc = n.desc || KG_GENERIC_DESC[id] || '';
+    const preHTML = pre.length ? pre.map(p=>{
+      const pn=KG_NODES[p], ok=kgUnlocked(pn.status);
+      return '<span class="kg-chip '+(ok?'done':'locked')+'">'+(ok?'✓ ':'🔒 ')+pn.label+'</span>';
+    }).join('') : '<span class="kg-chip">暂无前置知识</span>';
+    const postHTML = post.length ? post.map(p=>{
+      const pn=KG_NODES[p], ok=kgUnlocked(pn.status);
+      return '<span class="kg-chip '+(ok?'':'locked')+'">'+(ok?'':'🔒 ')+pn.label+'</span>';
+    }).join('') : '<span class="kg-chip">暂无后续知识点</span>';
+    let ctaHTML;
+    if(n.status==='current') ctaHTML = '<a class="kg-cta" href="#" onclick="closeKnowledgeMap();return false;">继续当前学习 →</a>';
+    else if(n.status==='mastered') ctaHTML = '<a class="kg-cta" href="#" onclick="closeKnowledgeMap();return false;">复习这一节 →</a>';
+    else if(n.status==='ai') ctaHTML = '<a class="kg-cta" href="#" onclick="closeKnowledgeMap();return false;">去学这一节 →</a>';
+    else ctaHTML = '<span class="kg-cta disabled">尚未满足前置条件，暂时无法解锁</span>';
+    return '<div class="kg-badge '+n.status+'">'+badgeLabel+'</div>'
+      + '<h3>'+n.label+'</h3>'
+      + '<p class="desc">'+desc+'</p>'
+      + '<div class="kg-sec-label">前置知识</div>'
+      + '<div class="kg-chips">'+preHTML+'</div>'
+      + '<div class="kg-sec-label">学完可通向</div>'
+      + '<div class="kg-chips">'+postHTML+'</div>'
+      + ctaHTML;
+  }
+  function kgSelectNode(id){
+    kgResetModeUI();
+    kgApplyHighlight(new Set([id]));
+    document.getElementById('kgPanelMain').innerHTML = kgNodeCardHTML(id);
+  }
+
+  function kgFilterStatus(status){
+    kgResetModeUI();
+    document.querySelector('.kg-legend-item[data-s="'+status+'"]').classList.add('active');
+    const ids = Object.keys(KG_NODES).filter(id=>KG_NODES[id].status===status);
+    kgApplyHighlight(new Set(ids));
+    const itemsHTML = ids.map(id=>'<div class="kg-list-item" onclick="kgSelectNode(\''+id+'\')"><span>'+KG_NODES[id].label+'</span><span>→</span></div>').join('');
+    document.getElementById('kgPanelMain').innerHTML =
+      '<div class="kg-panel-head"><div class="kg-badge '+status+'" style="margin-bottom:0">'+KG_STATUS_LABEL[status]+'</div><span class="kg-clear" onclick="kgClearSelection()">清除筛选</span></div>'
+      + '<p class="kg-list-note" style="margin-top:14px">'+KG_STATUS_DESC[status]+'</p>'
+      + itemsHTML;
+  }
+
+  function kgToggleNext(){
+    const btn = document.getElementById('kgNextBtn');
+    if(btn.classList.contains('active')){ kgClearSelection(); return; }
+    kgResetModeUI();
+    btn.classList.add('active');
+    document.getElementById('kgLegendStrip').classList.add('show');
+    const path = ['vecwrite', KG_NEXT.primary].concat(KG_NEXT.after);
+    kgApplyHighlight(new Set(path));
+    const primaryLabel = KG_NODES[KG_NEXT.primary].label;
+    document.getElementById('kgPanelMain').innerHTML =
+      '<div class="kg-badge next">下一步建议</div>'
+      + '<h3>顺着这条路线走</h3>'
+      + '<p class="desc">基于你已掌握的内容，我们建议你——</p>'
+      + '<div class="kg-sec-label">先学（主推）</div>'
+      + '<div class="kg-next-primary"><span class="dot"></span>'+primaryLabel+'</div>'
+      + '<div class="kg-sec-label">之后的路线</div>'
+      + '<div class="kg-chips">'+KG_NEXT.after.map(id=>'<span class="kg-chip">'+KG_NODES[id].label+'</span>').join('')+'</div>'
+      + '<a class="kg-cta" href="#" onclick="closeKnowledgeMap();return false;">从「'+primaryLabel+'」开始 →</a>';
+  }
+
+</script>
+</body>
+</html>
