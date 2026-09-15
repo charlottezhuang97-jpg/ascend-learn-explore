@@ -40,7 +40,7 @@
     return el;
   }
 
-  window.createCourseOutline = ({ goal, topic, depth, direction, onBack, onClose }) => {
+  window.createCourseOutline = ({ goal, topic, depth, direction, onBack, onClose, onConfirm, onChange }) => {
     const flow = document.getElementById('courseFlow');
     const stage = node('div', 'outline-stage');
     const source = templates[topic] || templates.training;
@@ -72,7 +72,6 @@
     function select(unitId, chapterId) {
       selected = { unitId, chapterId };
       editing = true;
-      confirmed = false;
       render();
       stage.querySelector('.outline-inspector input')?.focus();
     }
@@ -84,6 +83,7 @@
       };
       unit.chapters.push(chapter);
       confirmed = false;
+      onChange?.();
       render();
       stage.querySelector(`[data-node-id="${chapter.id}"]`)?.scrollIntoView({ block: 'nearest' });
     }
@@ -122,6 +122,11 @@
         if (!value) return;
         (chapter || unit).title = value;
         confirmed = false;
+        onChange?.();
+        const confirmButton = stage.querySelector('.outline-footer button.primary');
+        if (confirmButton) { confirmButton.disabled = false; confirmButton.textContent = '确认大纲'; }
+        const status = stage.querySelector('.outline-footer p');
+        if (status) { status.textContent = '当前为可编辑的探索版选题大纲。'; status.classList.remove('outline-confirmed'); }
         const card = stage.querySelector(`[data-node-id="${(chapter || unit).id}"]`);
         if (card) {
           card.querySelector('strong').textContent = value;
@@ -140,7 +145,13 @@
           choice.type = 'button';
           choice.setAttribute('role', 'radio');
           choice.setAttribute('aria-checked', String(chapter.difficulty === level));
-          choice.addEventListener('click', () => { chapter.difficulty = level; confirmed = false; render(); });
+          choice.addEventListener('click', () => {
+            if (chapter.difficulty === level) return;
+            chapter.difficulty = level;
+            confirmed = false;
+            onChange?.();
+            render();
+          });
           difficulty.append(choice);
         });
         inspector.append(difficulty);
@@ -163,7 +174,7 @@
       const intro = node('div');
       intro.append(node('p', 'outline-kicker', '课程选题大纲 · 探索版预览'));
       const heading = node('h2', '', '查看并调整你的课程结构');
-      heading.id = 'flowHeading';
+      heading.id = 'outlineHeading';
       heading.tabIndex = -1;
       intro.append(heading, node('p', 'outline-description', '先全屏查看单元与章节，再点击节点编辑。你可以增加单元下的章节，也可以调整每章的学习深浅难度。'));
       const toolbar = node('div', 'outline-toolbar');
@@ -193,6 +204,21 @@
       const content = node('div', editing ? 'outline-content editing' : 'outline-content');
       const board = node('div', 'outline-board');
       board.setAttribute('aria-label', '课程单元与章节结构');
+      let drag = null;
+      board.addEventListener('pointerdown', event => {
+        if (event.target.closest('button')) return;
+        drag = { x: event.clientX, y: event.clientY, left: board.scrollLeft, top: board.scrollTop };
+        board.setPointerCapture(event.pointerId);
+        board.classList.add('dragging');
+      });
+      board.addEventListener('pointermove', event => {
+        if (!drag) return;
+        board.scrollLeft = drag.left - (event.clientX - drag.x);
+        board.scrollTop = drag.top - (event.clientY - drag.y);
+      });
+      const stopDrag = () => { drag = null; board.classList.remove('dragging'); };
+      board.addEventListener('pointerup', stopDrag);
+      board.addEventListener('pointercancel', stopDrag);
       const tree = node('div', 'outline-tree');
       const root = node('div', 'outline-root', goal);
       root.append(node('small', '', `${units.length} 个单元 · ${chapterTotal()} 个章节`));
@@ -234,7 +260,19 @@
       const confirm = node('button', 'primary', confirmed ? '已确认大纲 ✓' : '确认大纲');
       confirm.type = 'button';
       confirm.disabled = confirmed;
-      confirm.addEventListener('click', () => { confirmed = true; render(); });
+      confirm.addEventListener('click', () => {
+        confirmed = true;
+        expanded = false;
+        flow.classList.remove('outline-expanded');
+        render();
+        onConfirm?.({
+          goal,
+          units: units.map(unit => ({
+            title: unit.title,
+            chapters: unit.chapters.map(chapter => ({ title: chapter.title, difficulty: chapter.difficulty }))
+          }))
+        });
+      });
       const close = node('button', '', '返回首页');
       close.type = 'button';
       close.addEventListener('click', onClose);
@@ -245,7 +283,7 @@
       board.scrollTop = boardPosition[1];
     }
     render();
-    stage.querySelector('#flowHeading')?.focus();
+    stage.querySelector('#outlineHeading')?.focus();
     return stage;
   };
 })();

@@ -117,6 +117,7 @@
   let revealed = 1;
   let goal = '';
   let returnFocus = null;
+  let composition = null;
 
   function element(tag, className, text) {
     const node = document.createElement(tag);
@@ -126,6 +127,7 @@
   }
 
   function renderQuestions(count = 1, focusIndex = 0) {
+    removeComposition();
     stage.replaceChildren();
     revealed = count;
     const intro = element('div', 'flow-intro');
@@ -222,7 +224,7 @@
     customInput.setAttribute('aria-label', '补充自己的情况');
     customInput.value = answer.custom;
     customInput.hidden = !answer.selected.includes('其他');
-    customInput.addEventListener('input', () => { answer.custom = customInput.value; updateContinue(); });
+    customInput.addEventListener('input', () => { answer.custom = customInput.value; invalidateResult(); updateContinue(); });
     const actions = element('div', 'flow-actions');
     const left = element('div');
     const skip = element('button', 'flow-skip', '跳过');
@@ -237,6 +239,7 @@
       stage.append(block);
 
     function updateOptions() {
+      invalidateResult();
       [...options.children].forEach((button, index) => {
         const label = index === question.options.length ? '其他' : question.options[index][0];
         button.setAttribute('aria-checked', String(answer.selected.includes(label)));
@@ -256,20 +259,76 @@
     return answer.selected.map(label => label === '其他' ? answer.custom.trim() : label).filter(Boolean).join('、') || '未指定';
   }
 
+  function invalidateResult() {
+    if (!stage.querySelector('#outlineTurn')) return;
+    removeComposition();
+    stage.querySelector('#outlineTurn')?.remove();
+    flow.classList.remove('outline-expanded');
+    const lastActions = stage.querySelector('#flowQuestion4 .flow-actions');
+    if (lastActions) lastActions.hidden = false;
+  }
+
   function renderResult() {
-    stage.replaceChildren(window.createCourseOutline({
+    if (stage.querySelector('#outlineTurn')) return;
+    stage.querySelector('#flowQuestion4 .flow-actions').hidden = true;
+    const turn = assistantTurn('outlineTurn', 'AI 回答 · 选题大纲', '这是为你整理的选题大纲', '先在画布中查看单元和章节；需要调整时，点击节点即可编辑。确认后我会在下方展示课程预览。');
+    turn.body.append(window.createCourseOutline({
       goal,
       topic: questions === topicQuestions.operator ? 'operator' : questions === topicQuestions.inference ? 'inference' : 'training',
       depth: describe(3),
       direction: describe(1),
-      onBack: () => renderQuestions(questions.length, questions.length - 1),
-      onClose: close
+      onBack: () => {
+        removeComposition();
+        turn.element.remove();
+        flow.classList.remove('outline-expanded');
+        stage.querySelector('#flowQuestion4 .flow-actions').hidden = false;
+        scrollToTurn(stage.querySelector('#flowQuestion4'));
+      },
+      onClose: close,
+      onChange: removeComposition,
+      onConfirm: appendCourseTurn
     }));
-    flow.scrollTop = 0;
-    stage.querySelector('#flowHeading')?.focus();
+    stage.append(turn.element);
+    scrollToTurn(turn.element);
+  }
+
+  function assistantTurn(id, label, title, lead) {
+    const item = element('section', 'assistant-turn');
+    item.id = id;
+    const avatar = element('span', 'assistant-avatar', '✦');
+    avatar.setAttribute('aria-hidden', 'true');
+    const body = element('div', 'assistant-turn-body');
+    body.append(element('p', 'assistant-label', label));
+    const heading = element('h2', '', title);
+    heading.tabIndex = -1;
+    body.append(heading, element('p', 'assistant-lead', lead));
+    item.append(avatar, body);
+    return { element: item, body, heading };
+  }
+
+  function scrollToTurn(item) {
+    if (!item) return;
+    item.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    item.querySelector('h2,h3')?.focus({ preventScroll: true });
+  }
+
+  function removeComposition() {
+    composition?.cancel();
+    composition = null;
+    stage.querySelector('#courseTurn')?.remove();
+  }
+
+  function appendCourseTurn(outline) {
+    removeComposition();
+    const turn = assistantTurn('courseTurn', 'AI 回答 · 课程预览', '正在为你编写这门课程', '下方纸张会逐字写入课程草稿，课程卡片同时逐步展开单元和讲次。当前是探索版示例演示。');
+    composition = window.createCourseCompose(outline);
+    turn.body.append(composition.element);
+    stage.append(turn.element);
+    scrollToTurn(turn.element);
   }
 
   function close() {
+    removeComposition();
     flow.hidden = true;
     flow.classList.remove('outline-expanded');
     background.forEach(node => { node.inert = false; });
