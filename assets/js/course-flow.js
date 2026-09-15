@@ -114,7 +114,7 @@
   const closeButton = document.getElementById('flowClose');
   const background = [document.querySelector('.site-nav'), document.querySelector('main'), document.querySelector('footer'), document.getElementById('panelBackdrop'), document.getElementById('aiPanel')];
   let answers = questions.map(() => ({ selected: [], custom: '' }));
-  let step = 0;
+  let revealed = 1;
   let goal = '';
   let returnFocus = null;
 
@@ -125,24 +125,65 @@
     return node;
   }
 
-  function renderQuestion() {
+  function renderQuestions(count = 1, focusIndex = 0) {
     stage.replaceChildren();
-    const question = questions[step];
-    const answer = answers[step];
+    revealed = count;
     const intro = element('div', 'flow-intro');
     const heading = element('h2', '', '让学习方案更适合你');
     heading.id = 'flowHeading';
-    intro.append(heading, element('p', '', '先回答几个简短问题，再查看学习建议。你可以跳过不确定的选项。'));
+    heading.tabIndex = -1;
+    intro.append(heading, element('p', '', '四个问题会依次出现在同一页。回答后继续向下查看；已选答案可以随时返回修改。'));
     const progress = element('div', 'flow-progress');
-    progress.append(element('strong', '', '构思学习路径'), element('span', '', `第 ${step + 1} 步，共 ${questions.length} 步`));
+    progress.append(element('strong', '', '构思学习路径'));
+    const progressLabel = element('span');
+    progress.append(progressLabel);
     const track = element('div', 'flow-track');
     track.setAttribute('aria-hidden', 'true');
     const fill = element('span');
-    fill.style.width = `${(step + 1) / questions.length * 100}%`;
     track.append(fill);
     progress.append(track);
+    stage.append(intro, progress);
+    for (let index = 0; index < count; index++) appendQuestion(index);
+    updateProgress();
+    if (count > 1) {
+      [...stage.querySelectorAll('.flow-question-block')].slice(0, -1).forEach(block => { block.querySelector('.flow-actions').hidden = true; });
+    }
+    flow.scrollTop = 0;
+    if (focusIndex > 0) scrollToQuestion(focusIndex);
+    else heading.focus({ preventScroll: true });
+
+    function updateProgress() {
+      progressLabel.textContent = `第 ${revealed} 题，共 ${questions.length} 题`;
+      fill.style.width = `${revealed / questions.length * 100}%`;
+    }
+    function scrollToQuestion(index) {
+      const block = stage.querySelector(`#flowQuestion${index + 1}`);
+      if (!block) return;
+      block.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+      block.querySelector('h3').focus({ preventScroll: true });
+    }
+    function revealNext(index) {
+      if (index === questions.length - 1) { renderResult(); return; }
+      const current = stage.querySelector(`#flowQuestion${index + 1}`);
+      current.querySelector('.flow-actions').hidden = true;
+      if (revealed < index + 2) {
+        revealed = index + 2;
+        appendQuestion(index + 1);
+        updateProgress();
+      }
+      scrollToQuestion(index + 1);
+    }
+    function appendQuestion(index) {
+      const question = questions[index];
+      const answer = answers[index];
+      const block = element('section', 'flow-question-block');
+      block.id = `flowQuestion${index + 1}`;
+      block.setAttribute('aria-labelledby', `flowQuestionTitle${index + 1}`);
     const head = element('div', 'flow-question-head');
-    head.append(element('span', 'flow-number', `Q${step + 1}`), element('h3', '', question.title), element('span', 'flow-type', question.type));
+      const questionTitle = element('h3', '', question.title);
+      questionTitle.id = `flowQuestionTitle${index + 1}`;
+      questionTitle.tabIndex = -1;
+      head.append(element('span', 'flow-number', `Q${index + 1}`), questionTitle, element('span', 'flow-type', question.type));
     const options = element('div', 'flow-options');
     question.options.forEach(([label, detail]) => {
       const button = element('button', 'flow-option');
@@ -157,6 +198,7 @@
           answer.selected = [label];
         }
         updateOptions();
+        if (!question.multiple && index < questions.length - 1) revealNext(index);
       });
       options.append(button);
     });
@@ -183,21 +225,16 @@
     customInput.addEventListener('input', () => { answer.custom = customInput.value; updateContinue(); });
     const actions = element('div', 'flow-actions');
     const left = element('div');
-    if (step > 0) {
-      const back = element('button', 'flow-back', '← 上一步');
-      back.type = 'button';
-      back.addEventListener('click', () => { step--; renderQuestion(); });
-      left.append(back);
-    }
     const skip = element('button', 'flow-skip', '跳过');
     skip.type = 'button';
-    skip.addEventListener('click', () => { answer.selected = []; answer.custom = ''; advance(); });
+      skip.addEventListener('click', () => { answer.selected = []; answer.custom = ''; customInput.value = ''; updateOptions(); revealNext(index); });
     left.append(skip);
-    const continueButton = element('button', 'flow-primary', step === questions.length - 1 ? '查看学习建议 →' : '继续 →');
+      const continueButton = element('button', 'flow-primary', index === questions.length - 1 ? '查看选题大纲 →' : '继续到下一题 →');
     continueButton.type = 'button';
-    continueButton.addEventListener('click', advance);
+      continueButton.addEventListener('click', () => revealNext(index));
     actions.append(left, continueButton);
-    stage.append(intro, progress, head, options, customInput, actions);
+      block.append(head, options, customInput, actions);
+      stage.append(block);
 
     function updateOptions() {
       [...options.children].forEach((button, index) => {
@@ -211,17 +248,6 @@
       continueButton.disabled = !answer.selected.length || (answer.selected.includes('其他') && !answer.custom.trim() && answer.selected.length === 1);
     }
     updateContinue();
-    flow.scrollTop = 0;
-    heading.tabIndex = -1;
-    heading.focus();
-  }
-
-  function advance() {
-    if (step < questions.length - 1) {
-      step++;
-      renderQuestion();
-    } else {
-      renderResult();
     }
   }
 
@@ -236,7 +262,7 @@
       topic: questions === topicQuestions.operator ? 'operator' : questions === topicQuestions.inference ? 'inference' : 'training',
       depth: describe(3),
       direction: describe(1),
-      onBack: () => { step = questions.length - 1; renderQuestion(); },
+      onBack: () => renderQuestions(questions.length, questions.length - 1),
       onClose: close
     }));
     flow.scrollTop = 0;
@@ -256,13 +282,13 @@
     goalElement.textContent = value;
     questions = /算子|Ascend\s*C/i.test(value) ? topicQuestions.operator : /推理|部署|服务化/i.test(value) ? topicQuestions.inference : trainingQuestions;
     answers = questions.map(() => ({ selected: [], custom: '' }));
-    step = 0;
+    revealed = 1;
     returnFocus = document.activeElement;
     flow.hidden = false;
     flow.classList.remove('outline-expanded');
     background.forEach(node => { node.inert = true; });
     document.body.style.overflow = 'hidden';
-    renderQuestion();
+    renderQuestions();
   };
 
   closeButton.addEventListener('click', close);
