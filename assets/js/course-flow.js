@@ -231,52 +231,21 @@
   }
 
   function renderResult() {
-    stage.replaceChildren();
-    const result = element('div', 'flow-result');
-    const heading = element('h2', '', '你的学习路径建议');
-    heading.id = 'flowHeading';
-    heading.tabIndex = -1;
-    result.append(heading, element('p', 'flow-result-lead', '根据你刚才选择的方向，先从基础概念进入实践，再按目标补充进阶内容。你可以返回修改选择。'));
-    const summary = element('div', 'flow-summary');
-    summary.append(element('strong', '', '学习目标'), element('p', '', goal), element('p', '', `当前基础：${describe(0)} · 实践方向：${describe(1)}`), element('p', '', `预期成果：${describe(2)} · 课程深度：${describe(3)}`));
-    result.append(summary);
-    const list = element('div', 'flow-steps');
-    const direction = describe(1) === '未指定' ? '适合你的入门实践' : describe(1);
-    const steps = questions === topicQuestions.operator ? [
-      ['01 · 搭好基础', '了解昇腾算子开发流程、开发环境和基础计算概念。'],
-      ['02 · 完成一次实践', `围绕“${goal}”，从${direction}开始完成一个可运行的小任务。`],
-      ['03 · 调试与复盘', '记录编译、精度与性能问题，再按预期成果增加练习。']
-    ] : questions === topicQuestions.inference ? [
-      ['01 · 梳理推理链路', '确认模型输入输出、运行环境和调用方式。'],
-      ['02 · 完成一次部署', `围绕“${goal}”，从${direction}开始验证一次端到端推理调用。`],
-      ['03 · 观察与调优', '记录时延、吞吐和资源使用情况，整理后续优化方向。']
-    ] : [
-      ['01 · 搭好基础', '梳理昇腾训练环境、框架概念和数据准备，确认运行条件。'],
-      ['02 · 完成一次实践', `围绕“${goal}”，从${direction}开始运行一个小规模训练任务，记录过程和问题。`],
-      ['03 · 复盘与扩展', '根据希望达到的成果，继续补充模型迁移、并行训练或性能调优练习。']
-    ];
-    steps.forEach(([title, detail]) => {
-      const card = element('div', 'flow-step');
-      card.append(element('strong', '', title), element('p', '', detail));
-      list.append(card);
-    });
-    result.append(list);
-    const actions = element('div', 'flow-result-actions');
-    const revise = element('button', 'secondary', '返回修改选择');
-    revise.type = 'button';
-    revise.addEventListener('click', () => { step = questions.length - 1; renderQuestion(); });
-    const home = element('button', '', '返回首页');
-    home.type = 'button';
-    home.addEventListener('click', close);
-    actions.append(revise, home);
-    result.append(actions);
-    stage.append(result);
+    stage.replaceChildren(window.createCourseOutline({
+      goal,
+      topic: questions === topicQuestions.operator ? 'operator' : questions === topicQuestions.inference ? 'inference' : 'training',
+      depth: describe(3),
+      direction: describe(1),
+      onBack: () => { step = questions.length - 1; renderQuestion(); },
+      onClose: close
+    }));
     flow.scrollTop = 0;
-    heading.focus();
+    stage.querySelector('#flowHeading')?.focus();
   }
 
   function close() {
     flow.hidden = true;
+    flow.classList.remove('outline-expanded');
     background.forEach(node => { node.inert = false; });
     document.body.style.overflow = '';
     if (returnFocus) returnFocus.focus();
@@ -290,6 +259,7 @@
     step = 0;
     returnFocus = document.activeElement;
     flow.hidden = false;
+    flow.classList.remove('outline-expanded');
     background.forEach(node => { node.inert = true; });
     document.body.style.overflow = 'hidden';
     renderQuestion();
