@@ -8,3 +8,7 @@
 | 楼层标题（`.section h2`） | HarmonyOS Sans SC Medium | 40px | 600 | 50px | normal | `#101828` |
 
 CSS 中以 `font-weight: 600` 加载本地 `HarmonyOS_Sans_SC_Medium.woff2`。主标题避免使用 Bold（700）和负字间距。小屏继续使用现有的 40px Hero、30px 楼层标题响应式字号，保持 600 字重和正常字间距；其行高可按小屏排版调整。
+
+## 生成课程问答界面
+
+全屏问答界面使用近白底 `#FCFCFE`，对应参考截图的轻浅背景。选项卡默认白底、浅灰描边；选中、悬停和主操作使用主题蓝 `#2E53FA`（`design-tokens.json` 的 `color.link.default`，页面变量 `--blue`）。选中卡采用浅蓝底 `#F3F6FF`，保持标题与说明文字清晰。问答内容和学习建议目前是探索版示例，页面应明确标出未接入实时 AI 与资料检索。
