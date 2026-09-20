@@ -21,6 +21,36 @@
   let lastFocus = null;
   let quizIndex = 0;
   let quizAnswers = [];
+  let selectedShortcut = null;
+  let selectedPromptIndex = 0;
+
+  const shortcutPrompts = {
+    '新手入门': [
+      '我刚接触昇腾，希望从基础开始学习',
+      '我想先完成昇腾环境配置并运行第一个模型',
+      '我有深度学习基础，想了解如何使用昇腾进行开发'
+    ],
+    '算子开发': [
+      '我想学习 Ascend C 算子开发',
+      '我想开发一个自定义算子，并完成编译、运行和验证',
+      '我需要排查算子精度或性能问题'
+    ],
+    '训练开发': [
+      '我想学习模型训练并完成一次分布式训练',
+      '我想在昇腾环境完成大模型训练和混合精度配置',
+      '我需要优化训练吞吐和多卡通信效率'
+    ],
+    '推理开发': [
+      '我想把模型部署到昇腾并完成推理服务验证',
+      '我需要完成模型转换、推理适配和服务部署',
+      '我想优化推理时延和吞吐，并完成上线验证'
+    ],
+    '生成式AI应用开发与部署': [
+      '我想开发一个 RAG 智能体应用，并部署到昇腾环境',
+      '我想学习大模型应用、知识库构建与工具调用',
+      '我想完成生成式 AI 应用的部署、评估与持续优化'
+    ]
+  };
 
   const quizSteps = [
     { question: '你是什么角色？', options: ['AI 初学者', '高校学生', '算法工程师', '应用开发者', '推理部署', '算子开发', '随便看看'] },
@@ -40,17 +70,29 @@
   }
 
   function chooseShortcut(button) {
-    selectedPromptText.textContent = button.dataset.label || button.textContent.trim();
+    selectedShortcut = button.dataset.label || button.textContent.trim();
+    selectedPromptIndex = 0;
+    selectedPromptText.textContent = selectedShortcut;
     selectedPrompt.hidden = false;
     form.classList.add('has-selection');
-    input.value = button.dataset.prompt || button.textContent.trim();
+    input.value = shortcutPrompts[selectedShortcut]?.[0] || button.dataset.prompt || button.textContent.trim();
     setQuickMenu(false);
     input.focus();
+  }
+
+  function cycleShortcutPrompt() {
+    const prompts = shortcutPrompts[selectedShortcut];
+    if (!prompts || prompts.length < 2) return;
+    selectedPromptIndex = (selectedPromptIndex + 1) % prompts.length;
+    input.value = prompts[selectedPromptIndex];
+    input.select();
   }
 
   function clearSelectedShortcut() {
     selectedPrompt.hidden = true;
     form.classList.remove('has-selection');
+    selectedShortcut = null;
+    selectedPromptIndex = 0;
     input.value = '';
     input.focus();
   }
@@ -79,6 +121,14 @@
     if (!quickMenu.hidden && event.key === 'Enter') {
       event.preventDefault();
       chooseShortcut(quickOptions[quickIndex < 0 ? 0 : quickIndex]);
+    }
+    if (event.key === 'Tab' && selectedShortcut && quickMenu.hidden) {
+      event.preventDefault();
+      cycleShortcutPrompt();
+    }
+    if (event.key === 'Enter' && quickMenu.hidden && input.value.trim()) {
+      event.preventDefault();
+      form.requestSubmit();
     }
     if (event.key === 'Escape') setQuickMenu(false);
   });
