@@ -5,35 +5,99 @@
   const input = document.getElementById('heroInput');
   const hint = document.getElementById('searchFeedback');
   const quickMenu = document.getElementById('quickMenu');
+  const selectedPrompt = document.getElementById('selectedPrompt');
+  const selectedPromptText = document.getElementById('selectedPromptText');
+  const clearShortcut = document.getElementById('clearShortcut');
+  const quizHelper = document.getElementById('quizHelper');
+  const openQuizButton = document.getElementById('openQuiz');
+  const quiz = document.getElementById('learningQuiz');
+  const quizClose = document.getElementById('quizClose');
+  const quizDialog = quiz.querySelector('.quiz-dialog');
+  const quizStage = document.getElementById('quizStage');
+  const quizProgress = document.getElementById('quizProgress');
+  const quickOptions = [...quickMenu.querySelectorAll('button')];
   let mode = 'course';
+  let quickIndex = -1;
+  let lastFocus = null;
+  let quizIndex = 0;
+  let quizAnswers = [];
+
+  const quizSteps = [
+    { question: '你是什么角色？', options: ['AI 初学者', '高校学生', '算法工程师', '应用开发者', '推理部署', '算子开发', '随便看看'] },
+    { question: '你的目标是？', options: ['掌握基础知识', '训练开发', '推理开发', '调试优化', '获取认证', '开发 AI 应用'] },
+    { question: '你当前的水平是？', options: ['零基础', '熟悉 Python', '熟悉 Triton', '熟悉 C++', '熟悉 CUDA / Ascend C'] }
+  ];
+
+  function setQuickMenu(open) {
+    quickMenu.hidden = !open;
+    input.setAttribute('aria-expanded', String(open));
+    if (!open) quickIndex = -1;
+  }
+
+  function setQuickActive(nextIndex) {
+    quickIndex = (nextIndex + quickOptions.length) % quickOptions.length;
+    quickOptions.forEach((option, index) => option.setAttribute('aria-selected', String(index === quickIndex)));
+  }
+
+  function chooseShortcut(button) {
+    selectedPromptText.textContent = button.dataset.label || button.textContent.trim();
+    selectedPrompt.hidden = false;
+    form.classList.add('has-selection');
+    input.value = button.dataset.prompt || button.textContent.trim();
+    setQuickMenu(false);
+    input.focus();
+  }
+
+  function clearSelectedShortcut() {
+    selectedPrompt.hidden = true;
+    form.classList.remove('has-selection');
+    input.value = '';
+    input.focus();
+  }
 
   function setMode(nextMode) {
     mode = nextMode;
     const course = mode === 'course';
     courseTab.setAttribute('aria-selected', String(course));
     askTab.setAttribute('aria-selected', String(!course));
-    input.placeholder = course ? '使用 / 获取快捷选项' : '输入正在解决的开发问题';
-    hint.textContent = course ? '不知道如何开始？输入 / 选择开发任务，或直接描述你的学习目标' : '描述报错、环境与预期结果，AI 将从问题出发协助定位';
+    input.placeholder = course ? '今天你想学点什么？使用/获取快捷选项' : '输入正在解决的开发问题';
+    quizHelper.hidden = !course;
+    hint.textContent = course ? '' : '描述报错、环境与预期结果，AI 将从问题出发协助定位';
   }
 
   courseTab.addEventListener('click', () => setMode('course'));
   askTab.addEventListener('click', () => setMode('ask'));
   input.addEventListener('input', () => {
-    quickMenu.hidden = !(input.value.trim() === '/' || input.value.trim() === '／');
+    const isShortcutQuery = mode === 'course' && (input.value.trim() === '/' || input.value.trim() === '／');
+    setQuickMenu(isShortcutQuery);
+    if (isShortcutQuery) setQuickActive(0);
   });
   input.addEventListener('keydown', event => {
-    if (event.key === '/' && !input.value) requestAnimationFrame(() => { quickMenu.hidden = false; });
-    if (event.key === 'Escape') quickMenu.hidden = true;
+    if (event.key === '/' && !input.value && mode === 'course') requestAnimationFrame(() => { setQuickMenu(true); setQuickActive(0); });
+    if (!quickMenu.hidden && event.key === 'ArrowDown') { event.preventDefault(); setQuickActive(quickIndex + 1); }
+    if (!quickMenu.hidden && event.key === 'ArrowUp') { event.preventDefault(); setQuickActive(quickIndex - 1); }
+    if (!quickMenu.hidden && event.key === 'Enter') {
+      event.preventDefault();
+      chooseShortcut(quickOptions[quickIndex < 0 ? 0 : quickIndex]);
+    }
+    if (event.key === 'Escape') setQuickMenu(false);
   });
   quickMenu.querySelectorAll('button').forEach(button => {
-    button.addEventListener('click', () => {
-      input.value = button.dataset.prompt || button.textContent.trim();
-      quickMenu.hidden = true;
-      input.focus();
-    });
+    button.addEventListener('click', () => chooseShortcut(button));
   });
+  clearShortcut.addEventListener('click', clearSelectedShortcut);
   document.addEventListener('click', event => {
-    if (!form.contains(event.target)) quickMenu.hidden = true;
+    if (!form.contains(event.target)) setQuickMenu(false);
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === '/' && mode === 'course' && !quiz.hidden && document.activeElement !== input) return;
+    if (event.key === '/' && mode === 'course' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+      event.preventDefault();
+      input.focus();
+      input.value = '/';
+      setQuickMenu(true);
+      setQuickActive(0);
+    }
   });
   form.addEventListener('submit', event => {
     event.preventDefault();
@@ -48,6 +112,62 @@
       return;
     }
     hint.textContent = `已记录问题「${value}」。快速问答将在后续版本接入。`;
+  });
+
+  function renderQuiz() {
+    const isSummary = quizIndex === quizSteps.length;
+    quizProgress.style.width = `${isSummary ? 100 : (quizIndex / quizSteps.length) * 100}%`;
+    if (isSummary) {
+      quizStage.innerHTML = `<div class="quiz-summary"><div class="quiz-summary-mark" aria-hidden="true">✓</div><h2>为你整理好了学习方向</h2><p>将以官方内容为主，为你生成可继续调整的专属课程。</p><div class="quiz-answer-tags">${quizAnswers.map(answer => `<span>${answer}</span>`).join('')}</div><button class="quiz-primary" id="quizComplete" type="button">查看专属课程</button></div>`;
+      document.getElementById('quizComplete').addEventListener('click', completeQuiz);
+      return;
+    }
+    const step = quizSteps[quizIndex];
+    quizStage.innerHTML = `<div class="quiz-content"><p class="quiz-step">第 ${quizIndex + 1} 步 / 共 ${quizSteps.length} 步</p><h2>${step.question}</h2><p>选择最符合你当前情况的一项。</p><div class="quiz-options">${step.options.map(option => `<button class="quiz-option" type="button" data-answer="${option}" aria-pressed="false">${option}</button>`).join('')}</div></div>`;
+    quizStage.querySelectorAll('.quiz-option').forEach(button => {
+      button.addEventListener('click', () => {
+        quizStage.querySelectorAll('.quiz-option').forEach(option => option.setAttribute('aria-pressed', String(option === button)));
+        quizAnswers[quizIndex] = button.dataset.answer;
+        window.setTimeout(() => { quizIndex += 1; renderQuiz(); quizDialog.focus(); }, 140);
+      });
+    });
+  }
+
+  function openQuiz() {
+    lastFocus = document.activeElement;
+    quizIndex = 0;
+    quizAnswers = [];
+    renderQuiz();
+    quiz.hidden = false;
+    [document.querySelector('.site-nav'), document.querySelector('main'), document.querySelector('footer')].forEach(element => { if (element) element.inert = true; });
+    quizDialog.focus();
+  }
+
+  function closeQuiz() {
+    quiz.hidden = true;
+    [document.querySelector('.site-nav'), document.querySelector('main'), document.querySelector('footer')].forEach(element => { if (element) element.inert = false; });
+    if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+  }
+
+  function completeQuiz() {
+    const [role, goal, level] = quizAnswers;
+    const generatedGoal = `${role}，希望${goal}，当前${level}`;
+    closeQuiz();
+    if (window.openCourseFlow) window.openCourseFlow(generatedGoal);
+  }
+
+  openQuizButton.addEventListener('click', openQuiz);
+  quizClose.addEventListener('click', closeQuiz);
+  quiz.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { event.preventDefault(); closeQuiz(); }
+    if (event.key === 'Tab') {
+      const focusables = [...quiz.querySelectorAll('button:not([disabled])')];
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
   });
 
   const sceneButtons = [...document.querySelectorAll('.scene-tabs button')];
