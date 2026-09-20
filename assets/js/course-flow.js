@@ -154,6 +154,29 @@
     return journey;
   }
 
+  function createSearchEvidence(state = 'done') {
+    const entry = element('section', 'flow-process-entry');
+    entry.dataset.state = state;
+    entry.setAttribute('aria-label', '第 1 步检索依据');
+    const title = element('div', 'flow-process-title');
+    title.append(
+      element('span', 'flow-process-state'),
+      element('strong', '', '正在搜索相关资料'),
+      element('small', '', '｜第 1 步，共 4 步')
+    );
+    const tech = element('div', 'flow-process-tech');
+    ['Ascend C', '模型训练', '算子开发'].forEach(name => tech.append(element('span', '', name)));
+    const source = element('div', 'flow-process-source');
+    source.append(
+      element('span', 'flow-process-source-icon'),
+      element('span', '', 'Ascend C 算子开发指南'),
+      element('span', 'flow-process-url', 'hiascend.com'),
+      element('span', 'flow-process-official', '官方')
+    );
+    entry.append(title, tech, source);
+    return entry;
+  }
+
   function setJourneyState(currentIndex) {
     stage.querySelectorAll('.flow-journey-step').forEach(item => {
       const index = Number(item.dataset.step);
@@ -181,7 +204,9 @@
     const fill = element('span');
     track.append(fill);
     progress.append(track);
-    stage.append(createJourney(1), intro, progress);
+    const processLog = element('div', 'flow-process-log');
+    processLog.append(createSearchEvidence('done'));
+    stage.append(createJourney(1), processLog, intro, progress);
     for (let index = 0; index < count; index++) appendQuestion(index);
     updateProgress();
     if (count > 1) {
