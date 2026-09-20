@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>白板学习 · Ascend Developer</title>
   <link rel="stylesheet" href="assets/css/learning-room.css?v=1">
+  <link rel="stylesheet" href="assets/css/video-learning.css?v=1">
 </head>
 <body>
   <main class="learning-room" id="learningRoom" aria-label="沉浸式课程学习">
@@ -14,6 +15,7 @@
         <a class="room-close" href="index.html" aria-label="关闭课程">×</a>
         <div class="lesson-title"><span>课节 1</span><strong id="lessonTitle">昇腾处理器的逻辑结构拆解</strong></div>
         <div class="board-tools" aria-label="板书辅助功能">
+          <nav class="learning-mode-tabs" aria-label="学习形式"><button type="button" class="active" data-view="board">白板</button><button type="button" data-view="video">视频</button></nav>
           <button type="button" aria-label="缩小板书">−</button><span class="zoom-value">100%</span><button type="button" aria-label="放大板书">＋</button>
           <button type="button" aria-label="上一页板书">‹</button><span class="page-value">1 / 3</span><button type="button" aria-label="下一页板书">›</button>
           <button type="button" aria-label="下载板书">⇩</button><button type="button" aria-label="AI 学伴">✦</button><button type="button" aria-label="设置">⚙</button>
@@ -48,6 +50,29 @@
       <form class="companion-input" id="companionForm"><button type="button" aria-label="添加资料">＋</button><input aria-label="向 AI 学伴提问" placeholder="输入问题…"><button type="submit" aria-label="发送问题">↑</button></form>
     </aside>
   </main>
+  <main class="video-workspace" id="videoWorkspace" aria-label="视频学习工作台" hidden>
+    <header class="video-header">
+      <a class="room-close" href="index.html" aria-label="关闭课程">×</a>
+      <div class="lesson-title"><span>课节 1</span><strong id="videoLessonTitle">昇腾处理器的逻辑结构拆解</strong></div>
+      <nav class="learning-mode-tabs" aria-label="学习形式"><button type="button" data-view="board">白板</button><button type="button" class="active" data-view="video">视频</button></nav>
+      <button type="button" class="ide-collapse" id="ideCollapse">收起 IDE ›</button>
+    </header>
+    <section class="video-column" aria-label="视频学习区">
+      <div class="video-player"><div class="video-meta">▶ 课节 1 · 昇腾处理器的逻辑结构拆解 <span>08:24 / 18:40</span></div><div class="video-stage"><p>昇腾 AI 处理器架构</p><strong>Da Vinci 计算直觉</strong><button type="button" aria-label="播放视频">▶</button></div><div class="video-timeline"><span class="video-played"></span><i class="marker key" title="重要知识点"></i><i class="marker code" title="代码示例"></i><i class="marker practice" title="实践节点"></i></div><div class="timeline-legend"><span>● 重要知识点</span><span>● 代码示例</span><span>● 实践节点</span></div></div>
+      <nav class="video-resource-tabs" aria-label="视频辅助内容"><button type="button" class="active" data-resource="examples">代码全览 <span>3</span></button><button type="button" data-resource="errors">常见错误码 <span>5</span></button><button type="button" data-resource="quiz">随堂测试 <span>3</span></button><button type="button" data-resource="docs">相关文档 <span>3</span></button></nav>
+      <section class="video-resource-content" id="videoResourceContent"><strong>代码全览</strong><p>按视频章节查看本节的环境检查、设备初始化与版本确认代码。</p></section>
+    </section>
+    <section class="video-code-panel" aria-label="随视频联动的代码片段">
+      <header><strong>随视频联动</strong><span>08:24</span></header><p class="code-panel-lead">当前讲解：在运行任务前确认 CANN 与设备环境。</p>
+      <article class="video-code-card selected" data-code="import acl&#10;&#10;ret = acl.init()&#10;assert ret == 0, 'ACL init failed'&#10;&#10;ret = acl.rt.set_device(0)&#10;print(acl.rt.get_version())"><div><span>08:24</span><strong>检查 CANN 环境</strong></div><pre>import acl&#10;&#10;ret = acl.init()&#10;assert ret == 0, 'ACL init failed'</pre><footer><button type="button" data-action="copy">复制</button><button type="button" data-action="explain">AI 解读</button><button type="button" data-action="insert">置入 IDE</button></footer><p class="code-explanation" hidden>初始化 ACL 后再选择设备，可确保后续计算任务在正确的昇腾运行环境中执行。</p></article>
+      <article class="video-code-card" data-code="device_count = acl.rt.get_device_count()&#10;print(f'发现 {device_count} 个设备')"><div><span>10:12</span><strong>确认可用设备</strong></div><pre>device_count = acl.rt.get_device_count()&#10;print(device_count)</pre><footer><button type="button" data-action="copy">复制</button><button type="button" data-action="explain">AI 解读</button><button type="button" data-action="insert">置入 IDE</button></footer><p class="code-explanation" hidden>用设备数量确认运行时能否识别当前环境中的 NPU。</p></article>
+      <article class="video-code-card" data-code="acl.rt.reset_device(0)&#10;acl.finalize()"><div><span>15:36</span><strong>释放运行资源</strong></div><pre>acl.rt.reset_device(0)&#10;acl.finalize()</pre><footer><button type="button" data-action="copy">复制</button><button type="button" data-action="explain">AI 解读</button><button type="button" data-action="insert">置入 IDE</button></footer><p class="code-explanation" hidden>任务结束后释放设备和运行时，避免资源被后续任务占用。</p></article>
+    </section>
+    <section class="video-ide" id="videoIde" aria-label="IDE 实践区"><header><strong>⌘ IDE 实践</strong><div><button type="button">▶ 运行</button><button type="button">■ 停止</button><button type="button">保存</button></div></header><div class="ide-body"><aside><strong>› scripts</strong><strong>› src</strong><strong>› ascendc</strong><strong class="file active">◻ check_env.py</strong><strong class="file">◻ README.md</strong></aside><section><div class="ide-tabs"><span>check_env.py ×</span><span>README.md ×</span></div><textarea id="ideEditor" spellcheck="false"># 检查 CANN 环境
+import acl
+
+# 在此置入视频中的代码片段</textarea><div class="ide-output">问题　输出　调试控制台　终端<br><small>尚未运行代码。</small></div></section></div></section>
+  </main>
   <section class="mode-overlay" id="modeOverlay" role="dialog" aria-modal="true" aria-labelledby="modeTitle">
     <div class="mode-card">
       <h2 id="modeTitle">你想以什么形式学习这一课？</h2>
@@ -59,6 +84,6 @@
       <button type="button" class="enter-learning" id="enterLearning">进入白板学习</button>
     </div>
   </section>
-  <script src="assets/js/learning-room.js?v=1"></script>
+  <script src="assets/js/learning-room.js?v=2"></script>
 </body>
 </html>
