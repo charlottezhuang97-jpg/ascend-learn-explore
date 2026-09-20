@@ -118,13 +118,7 @@
   let goal = '';
   let returnFocus = null;
   let composition = null;
-
-  const journeySteps = [
-    ['正在搜索相关资料', '从官方课程、文档和已验证资料中筛选学习依据。'],
-    ['构建初步思路', '结合你的基础、目标和学习深度，补齐关键信息。'],
-    ['打造课程', '按知识递进组织单元与章节，并支持你调整大纲。'],
-    ['完善课程', '生成讲次、实验和认证建议，形成可开始的课程。']
-  ];
+  let stepTimer = null;
 
   function element(tag, className, text) {
     const node = document.createElement(tag);
@@ -133,88 +127,111 @@
     return node;
   }
 
-  function createJourney(currentIndex = 1) {
-    const journey = element('ol', 'flow-journey');
-    journey.setAttribute('aria-label', '课程生成进度');
-    journeySteps.forEach(([title, detail], index) => {
-      const item = element('li', 'flow-journey-step');
-      item.dataset.step = String(index);
-      const state = index < currentIndex ? '已完成' : index === currentIndex ? '进行中' : '待进行';
-      item.dataset.state = index < currentIndex ? 'done' : index === currentIndex ? 'active' : 'pending';
-      item.append(
-        element('span', 'flow-journey-index', String(index + 1)),
-        (() => {
-          const copy = element('div', 'flow-journey-copy');
-          copy.append(element('strong', '', title), element('p', '', detail), element('span', 'flow-journey-state', state));
-          return copy;
-        })()
-      );
-      journey.append(item);
-    });
-    return journey;
-  }
-
-  function createSearchEvidence(state = 'done') {
-    const entry = element('section', 'flow-process-entry');
+  function createStep(title, number, state = 'done', id) {
+    const entry = element('section', 'flow-step');
+    if (id) entry.id = id;
     entry.dataset.state = state;
-    entry.setAttribute('aria-label', '第 1 步检索依据');
-    const title = element('div', 'flow-process-title');
-    title.append(
-      element('span', 'flow-process-state'),
-      element('strong', '', '正在搜索相关资料'),
-      element('small', '', '｜第 1 步，共 4 步')
+    entry.setAttribute('aria-label', `${title}，第 ${number} 步，共 4 步`);
+    const titleRow = element('div', 'flow-step-title');
+    titleRow.append(
+      element('span', 'flow-step-state'),
+      element('h2', '', title),
+      element('span', 'flow-step-count', `｜第 ${number} 步，共 4 步`)
     );
-    const tech = element('div', 'flow-process-tech');
-    ['Ascend C', '模型训练', '算子开发'].forEach(name => tech.append(element('span', '', name)));
-    const source = element('div', 'flow-process-source');
-    source.append(
-      element('span', 'flow-process-source-icon'),
-      element('span', '', 'Ascend C 算子开发指南'),
-      element('span', 'flow-process-url', 'hiascend.com'),
-      element('span', 'flow-process-official', '官方')
-    );
-    entry.append(title, tech, source);
+    entry.append(titleRow);
     return entry;
   }
 
-  function setJourneyState(currentIndex) {
-    stage.querySelectorAll('.flow-journey-step').forEach(item => {
-      const index = Number(item.dataset.step);
-      const state = index < currentIndex ? '已完成' : index === currentIndex ? '进行中' : '待进行';
-      item.dataset.state = index < currentIndex ? 'done' : index === currentIndex ? 'active' : 'pending';
-      item.querySelector('.flow-journey-state').textContent = state;
+  function sourceRow(title, url, official = true) {
+    const source = element('div', 'flow-process-source');
+    source.append(
+      element('span', 'flow-process-source-icon'),
+      element('span', 'flow-process-source-title', title),
+      element('span', 'flow-process-url', url)
+    );
+    if (official) source.append(element('span', 'flow-process-official', '官方'));
+    return source;
+  }
+
+  function createSearchEvidence() {
+    const entry = createStep('正在搜索相关资料', 1, 'done', 'searchStep');
+    entry.classList.add('flow-search-step');
+    const tech = element('div', 'flow-process-tech');
+    ['Ascend C', '模型训练', '算子开发'].forEach(name => tech.append(element('span', '', name)));
+    const sources = [
+      ['Ascend C 算子开发指南', 'hiascend.com'],
+      ['Ascend C 编程模型说明', 'hiascend.com'],
+      ['CANN 算子开发流程', 'hiascend.com'],
+      ['算子工程化实践课程', 'hiascend.com'],
+      ['Ascend C API 参考', 'hiascend.com'],
+      ['算子编译与运行指南', 'hiascend.com'],
+      ['算子调试工具使用说明', 'hiascend.com'],
+      ['算子性能分析指南', 'hiascend.com'],
+      ['昇腾社区精选案例', 'hiascend.com']
+    ];
+    const sourceList = element('div', 'flow-source-list');
+    sources.forEach(([title, url]) => sourceList.append(sourceRow(title, url)));
+    const more = element('button', 'flow-more-sources', '查看更多资料');
+    more.type = 'button';
+    more.setAttribute('aria-expanded', 'false');
+    const morePanel = element('div', 'flow-more-panel');
+    morePanel.hidden = true;
+    [
+      ['CANN 版本适配说明', 'hiascend.com'],
+      ['算子开发常见问题', 'hiascend.com'],
+      ['MindSpore 算子样例', 'mindspore.cn']
+    ].forEach(([title, url]) => morePanel.append(sourceRow(title, url)));
+    more.addEventListener('click', () => {
+      const expanded = more.getAttribute('aria-expanded') === 'true';
+      more.setAttribute('aria-expanded', String(!expanded));
+      more.textContent = expanded ? '查看更多资料' : '收起资料';
+      morePanel.hidden = expanded;
     });
+    entry.append(tech, sourceList, more, morePanel);
+    return entry;
   }
 
   function renderQuestions(count = 1, focusIndex = 0) {
     removeComposition();
+    window.clearTimeout(stepTimer);
     stage.replaceChildren();
     revealed = count;
+    let heading;
+    let progressLabel;
+    let fill;
+    const searchStep = createSearchEvidence();
+    stage.append(searchStep);
+    flow.scrollTop = 0;
+
+    stepTimer = window.setTimeout(() => {
+      appendPlanningStep();
+      if (focusIndex > 0) scrollToQuestion(focusIndex);
+      else heading.focus({ preventScroll: true });
+    }, 500);
+
+    function appendPlanningStep() {
+    const planningStep = createStep('构思学习路径', 2, 'active', 'planningStep');
     const intro = element('div', 'flow-intro');
-    const heading = element('h2', '', '让学习方案更适合你');
+    heading = element('h2', '', '让学习方案更适合你');
     heading.id = 'flowHeading';
     heading.tabIndex = -1;
     intro.append(heading, element('p', '', '四个问题会依次出现在同一页。回答后继续向下查看；已选答案可以随时返回修改。'));
     const progress = element('div', 'flow-progress');
-    progress.append(element('strong', '', '构思学习路径'));
-    const progressLabel = element('span');
+    progressLabel = element('span');
     progress.append(progressLabel);
     const track = element('div', 'flow-track');
     track.setAttribute('aria-hidden', 'true');
-    const fill = element('span');
+    fill = element('span');
     track.append(fill);
     progress.append(track);
-    const processLog = element('div', 'flow-process-log');
-    processLog.append(createSearchEvidence('done'));
-    stage.append(createJourney(1), processLog, intro, progress);
+    planningStep.append(intro, progress);
+    stage.append(planningStep);
     for (let index = 0; index < count; index++) appendQuestion(index);
     updateProgress();
     if (count > 1) {
       [...stage.querySelectorAll('.flow-question-block')].slice(0, -1).forEach(block => { block.querySelector('.flow-actions').hidden = true; });
     }
-    flow.scrollTop = 0;
-    if (focusIndex > 0) scrollToQuestion(focusIndex);
-    else heading.focus({ preventScroll: true });
+    }
 
     function updateProgress() {
       progressLabel.textContent = `第 ${revealed} 题，共 ${questions.length} 题`;
@@ -326,7 +343,7 @@
     removeComposition();
     stage.querySelector('#outlineTurn')?.remove();
     flow.classList.remove('outline-expanded');
-    setJourneyState(1);
+    stage.querySelector('#courseBuildStep')?.remove();
     const lastActions = stage.querySelector('#flowQuestion4 .flow-actions');
     if (lastActions) lastActions.hidden = false;
   }
@@ -334,8 +351,8 @@
   function renderResult() {
     if (stage.querySelector('#outlineTurn')) return;
     stage.querySelector('#flowQuestion4 .flow-actions').hidden = true;
-    setJourneyState(2);
-    const turn = assistantTurn('outlineTurn', 'AI 回答 · 选题大纲', '这是为你整理的选题大纲', '先在画布中查看单元和章节；需要调整时，点击节点即可编辑。确认后我会在下方展示课程预览。');
+    const buildStep = createStep('打造课程', 3, 'active', 'courseBuildStep');
+    const turn = assistantTurn('outlineTurn', 'AI 正在组织课程大纲', '这是为你整理的选题大纲', '先在画布中查看单元和章节；需要调整时，点击节点即可编辑。确认后我会生成课程预览。');
     turn.body.append(window.createCourseOutline({
       goal,
       topic: questions === topicQuestions.operator ? 'operator' : questions === topicQuestions.inference ? 'inference' : 'training',
@@ -343,7 +360,7 @@
       direction: describe(1),
       onBack: () => {
         removeComposition();
-        turn.element.remove();
+        buildStep.remove();
         flow.classList.remove('outline-expanded');
         stage.querySelector('#flowQuestion4 .flow-actions').hidden = false;
         scrollToTurn(stage.querySelector('#flowQuestion4'));
@@ -352,8 +369,9 @@
       onChange: removeComposition,
       onConfirm: appendCourseTurn
     }));
-    stage.append(turn.element);
-    scrollToTurn(turn.element);
+    buildStep.append(turn.element);
+    stage.append(buildStep);
+    scrollToTurn(buildStep);
   }
 
   function assistantTurn(id, label, title, lead) {
@@ -384,12 +402,14 @@
 
   function appendCourseTurn(outline) {
     removeComposition();
-    const turn = assistantTurn('courseTurn', 'AI 回答 · 课程预览', '正在为你编写这门课程', '下方纸张会逐字写入课程草稿，课程卡片同时逐步展开单元和讲次。当前是探索版示例演示。');
-    setJourneyState(3);
+    stage.querySelector('#courseBuildStep')?.setAttribute('data-state', 'done');
+    const previewStep = createStep('查看课程预览', 4, 'active', 'coursePreviewStep');
+    const turn = assistantTurn('courseTurn', 'AI 正在生成课程预览', '正在为你编写这门课程', '下方纸张会逐字写入课程草稿，课程卡片同时逐步展开单元和讲次。当前是探索版示例演示。');
     composition = window.createCourseCompose(outline);
     turn.body.append(composition.element);
-    stage.append(turn.element);
-    scrollToTurn(turn.element);
+    previewStep.append(turn.element);
+    stage.append(previewStep);
+    scrollToTurn(previewStep);
   }
 
   function close() {
