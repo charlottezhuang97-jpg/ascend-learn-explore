@@ -74,6 +74,17 @@
     let timer = null;
     let finished = false;
 
+    function appendLesson(lecture, number, kind, icon, title, duration) {
+      const lesson = node('div', 'preview-lesson');
+      const main = node('div', 'preview-lesson-main');
+      main.append(node('span', '', `课节 ${number}`));
+      const type = node('span', 'preview-lesson-kind');
+      type.append(node('i', '', icon), document.createTextNode(kind));
+      main.append(type, node('span', '', title));
+      lesson.append(main, node('em', '', duration));
+      lecture.append(lesson);
+    }
+
     function appendUnit(unit, index) {
       const row = node('section', 'preview-unit');
       row.append(node('div', 'preview-unit-number', `单元\n${String(index + 1).padStart(2, '0')}`));
@@ -84,14 +95,11 @@
         const lecture = node('div', 'preview-lecture');
         const head = node('div', 'preview-lecture-head');
         head.append(node('span', '', `讲次 ${chapterIndex + 1}`), document.createTextNode(chapter.title));
-        const lesson = node('div', 'preview-lesson');
-        lesson.append(node('span', '', `课节 1 · ${chapter.difficulty}与示例`), node('em', '', '20 分钟'));
-        lecture.append(head, lesson);
-        if (chapter.difficulty !== '基础理解') {
-          const practice = node('div', 'preview-lesson');
-          practice.append(node('span', '', '课节 2 · 练习与复盘'), node('em', '', '25 分钟'));
-          lecture.append(practice);
-        }
+        lecture.append(head);
+        appendLesson(lecture, 1, '课程', '▣', `${chapter.difficulty}与示例`, '20 分钟');
+        if (chapter.difficulty === '基础理解') appendLesson(lecture, 2, '文档', '▤', '关键概念与 API 阅读', '10 分钟');
+        else appendLesson(lecture, 2, '实践', '⌘', '练习与复盘', '25 分钟');
+        if (chapterIndex === unit.chapters.length - 1) appendLesson(lecture, 3, '测验', '✓', '单元掌握度检查', '10 分钟');
         content.append(lecture);
       });
       row.append(content);

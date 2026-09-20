@@ -407,7 +407,20 @@
     const turn = assistantTurn('courseTurn', 'AI 正在生成课程预览', '正在为你编写这门课程', '下方纸张会逐字写入课程草稿，课程卡片同时逐步展开单元和讲次。当前是探索版示例演示。');
     composition = window.createCourseCompose(outline);
     turn.body.append(composition.element);
-    previewStep.append(turn.element);
+    const actions = element('div', 'preview-action-panel');
+    const start = element('button', 'preview-start', '开始学习');
+    start.type = 'button';
+    start.addEventListener('click', () => { window.location.href = `detail.html?title=${encodeURIComponent(outline.goal)}`; });
+    const plan = element('button', 'preview-plan', '＋ 加入学习计划');
+    plan.type = 'button';
+    plan.setAttribute('aria-pressed', 'false');
+    plan.addEventListener('click', () => {
+      const added = plan.getAttribute('aria-pressed') === 'true';
+      plan.setAttribute('aria-pressed', String(!added));
+      plan.textContent = added ? '＋ 加入学习计划' : '✓ 已加入学习计划';
+    });
+    actions.append(start, plan);
+    previewStep.append(turn.element, actions);
     stage.append(previewStep);
     scrollToTurn(previewStep);
   }
