@@ -2,6 +2,8 @@
   const params = new URLSearchParams(window.location.search);
   const courseName = params.get('title') || '昇腾学习课程';
   document.getElementById('courseName').textContent = courseName;
+  document.getElementById('lessonTitle').textContent = '昇腾处理器的逻辑结构拆解';
+  document.getElementById('videoLessonTitle').textContent = '昇腾处理器的逻辑结构拆解';
   document.title = `${courseName} · 学习`;
   let selectedMode = 'board';
   const overlay = document.getElementById('modeOverlay');
@@ -17,8 +19,18 @@
   }));
   enter.addEventListener('click', () => {
     overlay.hidden = true;
-    if (selectedMode === 'video') document.querySelector('.board-subtitle').textContent = '视频学习模式已就绪；本探索版先展示与视频内容同步的板书和字幕。';
+    setView(selectedMode);
   });
+
+  const boardRoom = document.getElementById('learningRoom');
+  const videoRoom = document.getElementById('videoWorkspace');
+  function setView(view) {
+    const video = view === 'video';
+    boardRoom.hidden = video;
+    videoRoom.hidden = !video;
+    document.querySelectorAll('.learning-mode-tabs button').forEach(button => button.classList.toggle('active', button.dataset.view === view));
+  }
+  document.querySelectorAll('.learning-mode-tabs button').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
 
   const tabs = document.querySelectorAll('.companion-tabs button');
   const chat = document.getElementById('chatPanel');
@@ -52,4 +64,30 @@
     tip.hidden = true; window.getSelection().removeAllRanges();
   });
   document.getElementById('companionForm').addEventListener('submit', event => { event.preventDefault(); });
+
+  const resourceCopy = {
+    examples: ['代码全览', '按视频章节查看本节的环境检查、设备初始化与版本确认代码。'],
+    errors: ['常见错误码', '聚合 ACL 初始化失败、设备不可见与版本不匹配等高频问题。'],
+    quiz: ['随堂测试', '完成 3 道题，检查是否理解运行时初始化和设备选择。'],
+    docs: ['相关文档', '查看 CANN 运行时、ACL API 与环境检查的官方文档。']
+  };
+  const resourceContent = document.getElementById('videoResourceContent');
+  document.querySelectorAll('.video-resource-tabs button').forEach(button => button.addEventListener('click', () => {
+    document.querySelectorAll('.video-resource-tabs button').forEach(item => item.classList.toggle('active', item === button));
+    const [title, content] = resourceCopy[button.dataset.resource];
+    resourceContent.replaceChildren(Object.assign(document.createElement('strong'), { textContent: title }), Object.assign(document.createElement('p'), { textContent: content }));
+  }));
+  const editor = document.getElementById('ideEditor');
+  document.querySelectorAll('.video-code-card').forEach(card => card.addEventListener('click', event => {
+    const action = event.target.dataset.action;
+    if (!action) { document.querySelectorAll('.video-code-card').forEach(item => item.classList.toggle('selected', item === card)); return; }
+    const code = card.dataset.code;
+    if (action === 'explain') card.querySelector('.code-explanation').hidden = !card.querySelector('.code-explanation').hidden;
+    if (action === 'insert') { editor.value = `${editor.value.trim()}\n\n# 来自视频 ${card.querySelector('span').textContent}\n${code}\n`; editor.focus(); }
+    if (action === 'copy') { navigator.clipboard?.writeText(code); event.target.textContent = '已复制'; window.setTimeout(() => { event.target.textContent = '复制'; }, 1000); }
+  }));
+  document.getElementById('ideCollapse').addEventListener('click', event => {
+    videoRoom.classList.toggle('ide-collapsed');
+    event.currentTarget.textContent = videoRoom.classList.contains('ide-collapsed') ? '展开 IDE ‹' : '收起 IDE ›';
+  });
 })();
