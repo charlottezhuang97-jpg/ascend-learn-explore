@@ -25,64 +25,114 @@
   </style>
   <link rel="stylesheet" href="assets/css/course-outline.css">
   <link rel="stylesheet" href="assets/css/course-conversation.css">
+  <link rel="stylesheet" href="assets/css/home-figma.css">
 </head>
 <body>
-  <!-- 01 顶部导航 -->
   <header class="site-nav">
-    <div class="wrap nav-inner">
-      <a class="brand" href="index.html" aria-label="昇腾开发者社区，返回首页"><img src="assets/images/logo.png" alt="Ascend"><span>开发者社区</span></a>
-      <nav class="nav-links" aria-label="全局导航"><a href="#top">开发者</a><a href="#top">主页</a><a href="#top">开发</a><a href="#top">文档</a><a href="#top">活动</a><a href="#top" class="active" aria-current="page">学习</a><a href="#community">论坛</a><a href="#community">博客</a><a href="#top">开发者计划</a></nav>
-      <div class="nav-actions"><button class="ai-launch" id="openAi" type="button" aria-controls="aiPanel" aria-expanded="false"><span class="ai-orb">✦</span><span>AI 分身</span></button><span class="avatar" aria-label="用户头像">人</span></div>
+    <div class="dlc-nav">
+      <a href="index.html" aria-label="Ascend 开发者首页"><img class="dlc-logo" src="assets/images/figma-home/nav-logo.png" alt="Ascend"></a>
+      <nav class="dlc-nav-links" aria-label="全局导航">
+        <a href="#top">开发者</a><a href="#top">主页</a><a href="#scenes">开发</a><a href="#top">文档</a><a href="#growth">活动</a><a class="active" href="#top" aria-current="page">学习</a><a href="#growth">论坛</a><a href="#growth">博客</a><a href="#growth">开发者计划</a>
+      </nav>
+      <img class="dlc-nav-actions" src="assets/images/figma-home/nav-actions.png" alt="搜索、下载、支持、积分兑换与账户入口">
     </div>
   </header>
 
-  <main id="top">
-    <!-- 02 Hero 区 -->
-    <section class="hero" aria-labelledby="heroTitle">
-      <div class="wrap hero-inner"><div class="hero-content">
-        <span class="eyebrow">昇腾开发者学习中心</span>
-        <h1 id="heroTitle">从问题出发，找到<br><span>适合你的学习路径</span></h1>
-        <p class="hero-lead">说出想学的内容或正在解决的问题，从社区课程开始，逐步走向实战。</p>
-        <form class="search-box" id="heroForm"><div class="tabs" role="tablist" aria-label="学习方式"><button id="courseTab" role="tab" aria-selected="true" type="button">AI 生成课程</button><button id="askTab" role="tab" aria-selected="false" type="button">问 AI</button></div><div class="search-row"><span class="search-icon" aria-hidden="true">⌕</span><input id="heroInput" type="text" autocomplete="off" aria-label="输入学习目标" placeholder="想学什么？例如：帮我理解 loss 不降怎么排查"><button class="submit" id="submitBtn" type="submit">生成课程 →</button></div><div class="capabilities" id="capabilities" aria-label="问 AI 的能力"><button type="button" class="active">概念讲解</button><button type="button">个性化学习资料生成</button><button type="button">长文件消化</button><button type="button">问题求解</button><button type="button">可视化</button></div></form>
-        <div class="suggestions" id="suggestions"><span>热门学习目标</span><button type="button">Qwen3 微调实战</button><button type="button">Ascend C 算子入门</button><button type="button">推理服务化部署</button></div><div class="search-feedback" id="searchFeedback" role="status" aria-live="polite"></div>
-      </div></div>
+  <main class="dlc-main" id="top">
+    <section class="dlc-hero" aria-labelledby="heroTitle">
+      <div class="dlc-hero-inner">
+        <h1 class="dlc-title" id="heroTitle">开发者学习中心<span>DLC</span></h1>
+        <p class="dlc-subtitle">你想学习什么，或正在解决什么开发问题？</p>
+        <div class="dlc-mode-tabs" role="tablist" aria-label="学习方式">
+          <button id="courseTab" type="button" role="tab" aria-selected="true">规划学习</button>
+          <button id="askTab" type="button" role="tab" aria-selected="false">解决问题</button>
+        </div>
+        <form class="dlc-search" id="heroForm">
+          <span class="dlc-search-icon" aria-hidden="true"></span>
+          <input id="heroInput" type="text" autocomplete="off" aria-label="输入学习目标" placeholder="使用 / 获取快捷选项">
+          <kbd class="dlc-shortcut-key">/</kbd>
+          <button class="dlc-submit" type="submit" aria-label="提交">↑</button>
+          <div class="dlc-quick-menu" id="quickMenu" hidden>
+            <button type="button" data-prompt="我刚接触昇腾，希望从基础开始学习">新手入门</button>
+            <button type="button" data-prompt="我想学习模型训练并完成一次分布式训练">模型训练</button>
+            <button type="button" data-prompt="我想把模型部署到昇腾并完成推理服务验证">推理与部署</button>
+            <button type="button" data-prompt="我想学习Ascend C算子开发">算子开发</button>
+            <button type="button" data-prompt="我需要定位训练或推理中的性能问题">调试与性能优化</button>
+            <button type="button" data-prompt="我想开发一个RAG智能体应用">AI应用与智能体</button>
+          </div>
+        </form>
+        <p class="dlc-search-hint" id="searchFeedback" role="status" aria-live="polite"></p>
+      </div>
     </section>
 
-    <!-- 04 课程集市 -->
-    <section class="section section-alt" id="courses" aria-labelledby="coursesTitle"><div class="wrap">
-      <div class="section-top"><div><p class="section-kicker">COURSE MARKETPLACE</p><h2 id="coursesTitle">发现值得学的课程</h2><p class="section-desc">从真实问题与开发场景出发，看看社区正在学什么。课程信息与数据为探索示例。</p></div><a class="text-link" href="courses.html">查看全部课程 →</a></div>
-      <div class="filters" aria-label="课程筛选"><button class="filter active" type="button" data-filter="全部" aria-pressed="true">全部</button><button class="filter" type="button" data-filter="模型训练" aria-pressed="false">模型训练</button><button class="filter" type="button" data-filter="算子开发" aria-pressed="false">算子开发</button><button class="filter" type="button" data-filter="模型推理" aria-pressed="false">模型推理</button><select class="filter-select" id="sortCourses" aria-label="课程排序"><option value="recommend">排序：为你推荐</option><option value="popular">排序：学习人数</option><option value="rating">排序：评分</option></select></div>
-      <div class="course-grid" id="courseGrid">
-        <article class="course-card" data-category="模型训练" data-rating="4.9" data-people="10100"><div class="course-art"><span class="course-badge">新手推荐</span><span class="course-type">模型训练 · 实战课程</span><span class="symbol">Q</span></div><div class="course-body"><h3>Qwen3 微调实战入门</h3><p>从环境准备到训练调优，建立模型微调的完整实践路径。</p><div class="course-meta"><span><strong>★ 4.9</strong> 评分</span><span>⏱ 2.5 小时</span><span>1.01 万人在学</span></div></div></article>
-        <article class="course-card" data-category="算子开发" data-rating="4.8" data-people="5800"><div class="course-art tone-2"><span class="course-badge">热门</span><span class="course-type">算子开发 · 入门课程</span><span class="symbol">C</span></div><div class="course-body"><h3>Ascend C 算子开发入门</h3><p>理解算子开发流程，完成第一个可运行的 Ascend C 算子。</p><div class="course-meta"><span><strong>★ 4.8</strong> 评分</span><span>⏱ 3.8 小时</span><span>5800 人在学</span></div></div></article>
-        <article class="course-card" data-category="模型推理" data-rating="4.7" data-people="3200"><div class="course-art tone-3"><span class="course-badge">官方认证</span><span class="course-type">模型推理 · 项目课程</span><span class="symbol">∞</span></div><div class="course-body"><h3>模型推理服务化部署</h3><p>梳理模型转换、部署与服务调用的关键步骤。</p><div class="course-meta"><span><strong>★ 4.7</strong> 评分</span><span>⏱ 4.2 小时</span><span>3200 人在学</span></div></div></article>
-        <article class="course-card" data-category="模型训练" data-rating="4.6" data-people="8900"><div class="course-art tone-4"><span class="course-type">模型训练 · 问题排查</span><span class="symbol">↗</span></div><div class="course-body"><h3>训练 Loss 不降的排查思路</h3><p>从数据、超参到计算链路，形成有顺序的问题定位方法。</p><div class="course-meta"><span><strong>★ 4.6</strong> 评分</span><span>⏱ 2.0 小时</span><span>8900 人在学</span></div></div></article>
-        <article class="course-card" data-category="算子开发" data-rating="4.9" data-people="2400"><div class="course-art tone-5"><span class="course-type">算子开发 · 进阶课程</span><span class="symbol">◈</span></div><div class="course-body"><h3>算子性能优化实践</h3><p>结合典型性能瓶颈，学习分析与优化算子执行效率。</p><div class="course-meta"><span><strong>★ 4.9</strong> 评分</span><span>⏱ 5.1 小时</span><span>2400 人在学</span></div></div></article>
-        <article class="course-card" data-category="模型推理" data-rating="4.5" data-people="6700"><div class="course-art tone-6"><span class="course-type">模型推理 · 基础课程</span><span class="symbol">▶</span></div><div class="course-body"><h3>推理性能分析与调优</h3><p>理解推理链路中的关键指标，找到性能优化的切入点。</p><div class="course-meta"><span><strong>★ 4.5</strong> 评分</span><span>⏱ 1.8 小时</span><span>6700 人在学</span></div></div></article>
-        <div class="course-empty" id="courseEmpty">暂无符合该条件的课程，试试其他开发场景。</div>
-        <div class="longtail"><div><h3>没找到想学的内容？<span class="state">AI 生成 · 待社区验证</span></h3><p>从官方文档与知识库中摘取概念，为你的目标组织一条来源可追溯的学习路径。</p></div><button type="button" id="longtailBtn">让 AI 帮我生成 →</button></div>
+    <section class="dlc-section dlc-continue" aria-labelledby="continueTitle">
+      <h2 class="dlc-section-title" id="continueTitle">继续学习</h2>
+      <a class="continue-card" href="detail.html">
+        <span class="continue-topic">生成式AI与模型</span>
+        <img class="continue-cover" src="assets/images/figma-home/continue-course.png" alt="课程封面">
+        <div class="continue-content">
+          <h3>昇腾算力与 MindSpore 框架：大语言模型开发与深度调优全栈</h3>
+          <p>深度解析昇腾 NPU 硬件架构及 CANN 软件栈底层原理，掌握从 MindSpore 中的模型构建、训练与性能调优，到大模型服务化部署的完整流程。</p>
+          <div class="continue-tags"><span>上次学到</span><span>第1单元 · 讲次1</span></div>
+        </div>
+        <div class="continue-progress"><strong>继续学习 →</strong><div class="continue-bar"><span></span></div><span>1%</span></div>
+      </a>
+    </section>
+
+    <section class="dlc-section dlc-scenes" id="scenes" aria-labelledby="scenesTitle">
+      <h2 class="dlc-section-title" id="scenesTitle">按开发场景选择</h2>
+      <div class="scene-tabs" role="tablist" aria-label="开发场景筛选">
+        <button type="button" role="tab" aria-selected="true" data-filter="精选">精选</button>
+        <button type="button" role="tab" aria-selected="false" data-filter="模型训练">模型训练</button>
+        <button type="button" role="tab" aria-selected="false" data-filter="推理与部署">推理与部署</button>
+        <button type="button" role="tab" aria-selected="false" data-filter="算子开发">算子开发</button>
+        <button type="button" role="tab" aria-selected="false" data-filter="调试与性能优化">调试与性能优化</button>
+        <button type="button" role="tab" aria-selected="false" data-filter="AI应用与智能体">AI应用与智能体</button>
       </div>
-    </div></section>
+      <div class="scene-grid">
+        <a class="scene-card" href="detail.html" data-category="算子开发">
+          <div class="scene-main"><div class="scene-tags"><span>算子开发</span><span>CANN</span><span class="micro-cert"><img src="assets/images/figma-home/certification.svg" alt="">微认证</span></div><h3>Ascend C 算子开发</h3><div class="scene-user"><b>用户</b><span>适合需要开发自定义算子，解决算子不支持、性能不足问题的开发者</span></div><img class="scene-orb" src="assets/images/figma-home/course-orb.png" alt=""><div class="knowledge-route"><span>编程模型</span><span>编程范式</span><span>SIMD编程</span><span>矩阵计算</span></div></div>
+          <div class="scene-cost"><span><img src="assets/images/figma-home/meta-icon.svg" alt="">12h</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">6单元｜18讲</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">标准实践</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">1406人学习</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">4.8分</span></div>
+        </a>
+        <a class="scene-card" href="detail.html" data-category="模型训练">
+          <div class="scene-main"><div class="scene-tags"><span>模型训练</span><span>生成式AI与大模型</span><span class="micro-cert"><img src="assets/images/figma-home/certification.svg" alt="">微认证</span></div><h3>大模型分布式训练</h3><div class="scene-user"><b>用户</b><span>适合需要完成模型训练、扩展多卡并行并解决吞吐问题的开发者</span></div><img class="scene-orb" src="assets/images/figma-home/course-orb.png" alt=""><div class="knowledge-route"><span>模型构建</span><span>训练编排</span><span>混合精度</span><span>分布式训练</span></div></div>
+          <div class="scene-cost"><span><img src="assets/images/figma-home/meta-icon.svg" alt="">16h</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">7单元｜22讲</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">强实践</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">986人学习</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">4.9分</span></div>
+        </a>
+        <a class="scene-card" href="detail.html" data-category="推理与部署">
+          <div class="scene-main"><div class="scene-tags"><span>推理与部署</span><span>生成式AI与大模型</span></div><h3>大模型推理服务部署</h3><div class="scene-user"><b>用户</b><span>适合需要完成模型转换、推理适配和服务化部署验证的开发者</span></div><img class="scene-orb" src="assets/images/figma-home/course-orb.png" alt=""><div class="knowledge-route"><span>模型转换</span><span>推理适配</span><span>服务部署</span><span>性能验证</span></div></div>
+          <div class="scene-cost"><span><img src="assets/images/figma-home/meta-icon.svg" alt="">10h</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">5单元｜16讲</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">标准实践</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">1218人学习</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">4.7分</span></div>
+        </a>
+        <a class="scene-card" href="detail.html" data-category="AI应用与智能体">
+          <div class="scene-main"><div class="scene-tags"><span>AI应用与智能体</span><span>生成式AI与大模型</span></div><h3>RAG 智能体应用开发</h3><div class="scene-user"><b>用户</b><span>适合希望构建知识问答、工具调用与智能体工作流的应用开发者</span></div><img class="scene-orb" src="assets/images/figma-home/course-orb.png" alt=""><div class="knowledge-route"><span>模型接入</span><span>RAG</span><span>工具调用</span><span>应用评估</span></div></div>
+          <div class="scene-cost"><span><img src="assets/images/figma-home/meta-icon.svg" alt="">8h</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">5单元｜14讲</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">轻实践</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">764人学习</span><span><img src="assets/images/figma-home/meta-icon.svg" alt="">4.8分</span></div>
+        </a>
+      </div>
+      <p class="scene-more">若想访问更多路径，可点击<a href="courses.html">查看所有</a></p>
+    </section>
 
-    <!-- 06 底部通用区 -->
-    <section class="section" id="community" aria-labelledby="communityTitle"><div class="wrap"><div class="section-top"><div><p class="section-kicker">FROM THE COMMUNITY</p><h2 id="communityTitle">从社区经验继续学习</h2><p class="section-desc">课程之外，看看开发者如何讨论问题、沉淀实践。讨论与案例为探索示例。</p></div></div><div class="community-grid"><div class="community-card"><div class="community-head"><h3>论坛精选讨论</h3><a class="text-link" href="#community">查看更多 →</a></div><a href="#community" class="community-item"><strong>模型训练时 Loss 波动较大，先排查什么？</strong><span>训练排查 · 社区讨论</span></a><a href="#community" class="community-item"><strong>Ascend C 算子调试中常见的三个问题</strong><span>算子开发 · 经验交流</span></a><a href="#community" class="community-item"><strong>推理部署后的吞吐量如何定位瓶颈？</strong><span>模型推理 · 社区讨论</span></a></div><div class="community-card"><div class="community-head"><h3>真实案例与最佳实践</h3><a class="text-link" href="#community">查看更多 →</a></div><a href="#community" class="community-item"><strong>从模型微调到推理上线的完整实践</strong><span>模型训练 · 端到端案例</span></a><a href="#community" class="community-item"><strong>算子优化实践：从分析到验证</strong><span>算子开发 · 最佳实践</span></a><a href="#community" class="community-item"><strong>服务化部署的性能调优记录</strong><span>模型推理 · 实战案例</span></a></div></div><div class="knowledge"><span>知识库集成：连接昇腾文档库，扩展课程与问答的可追溯来源</span><b>即将上线</b></div></div></section>
+    <section class="dlc-section dlc-growth" id="growth" aria-labelledby="growthTitle">
+      <h2 class="dlc-section-title" id="growthTitle">开发者成长与贡献</h2>
+      <div class="growth-tabs" role="tablist" aria-label="成长与贡献榜单">
+        <button type="button" role="tab" aria-selected="true" data-type="学习成长榜"><img src="assets/images/figma-home/growth-icon.svg" alt="">学习成长榜</button>
+        <button type="button" role="tab" aria-selected="false" data-type="实战突破榜"><img src="assets/images/figma-home/icon.svg" alt="">实战突破榜</button>
+        <button type="button" role="tab" aria-selected="false" data-type="社区共建榜"><img src="assets/images/figma-home/growth-icon.svg" alt="">社区共建榜</button>
+      </div>
+      <div class="growth-panel"><div class="growth-list"></div><div class="growth-divider" aria-hidden="true"></div><div class="growth-list"></div></div>
+    </section>
   </main>
-  <footer><div class="wrap footer-inner"><span>昇腾开发者社区 · 学习方案探索版</span><span>学习，从一个具体问题开始。</span></div></footer>
 
-  <div class="panel-backdrop" id="panelBackdrop"></div><aside class="ai-panel" id="aiPanel" aria-label="AI 分身面板" aria-hidden="true"><div class="panel-top"><h2>你的 AI 分身</h2><button class="close-panel" id="closeAi" type="button" aria-label="关闭 AI 分身">×</button></div><div class="panel-card"><span class="pill">学习身份卡</span><h3>正在探索的开发者</h3><p>围绕你的学习目标，逐步整理知识与实践记录。</p></div><div class="panel-card"><h3>知识图谱</h3><div class="panel-list"><div>模型训练 <span>入门中</span></div><div>算子开发 <span>待探索</span></div><div>模型推理 <span>待探索</span></div></div></div><div class="panel-card"><h3>正在学习</h3><p>Qwen3 微调实战入门 · 第 2 节</p><div class="panel-progress"><span></span></div><p>学习进度 42% · 可从上次位置继续</p></div><div class="panel-card"><h3>复习分身</h3><p>把学过的概念与练习串起来，回顾容易忘记的知识点。</p></div></aside>
+  <footer class="dlc-footer">
+    <div class="footer-content"><div class="footer-columns"><div><h3>关于昇腾</h3><a href="#">昇腾计算产业概述</a></div><div><h3>新闻与活动</h3><a href="#">新闻资讯</a><a href="#">昇腾活动</a></div><div><h3>交流与资讯</h3><a href="#">昇腾论坛</a><a href="#">官方技术文章</a></div><div><h3>支持与服务</h3><a href="#">文档</a><a href="#">技术白皮书</a><a href="#">昇腾中心</a></div><div><h3>开源社区</h3><a href="#">昇思社区</a><a href="#">昇腾开放社区</a></div></div><div class="footer-bottom"><span>版权所有 © 2021–2026 华为技术有限公司</span><div class="footer-links"><a href="#">法律声明</a><a href="#">隐私政策</a><a href="#">Cookie协议</a><a href="#">用户协议</a><a href="#">联系我们</a></div></div></div>
+  </footer>
 
-  <section class="course-flow conversation" id="courseFlow" role="dialog" aria-modal="true" aria-labelledby="flowHeading" hidden>
+  <div id="panelBackdrop" hidden></div><aside id="aiPanel" hidden></aside>
+
+    <section class="course-flow conversation" id="courseFlow" role="dialog" aria-modal="true" aria-labelledby="flowHeading" hidden>
     <header class="flow-header"><div class="flow-brand"><img src="assets/images/logo.png" alt=""><span>学习方案探索</span></div><button class="flow-close" id="flowClose" type="button" aria-label="关闭并返回首页">返回首页 ×</button></header>
     <div class="flow-main"><div class="flow-goal" id="flowGoal"></div><div id="flowStage"></div><p class="flow-note">探索版交互示例：选择结果仅在当前页面使用，尚未接入 AI 生成或实时资料检索。</p></div>
   </section>
 
-  <script>
-    const courseTab=document.getElementById('courseTab'),askTab=document.getElementById('askTab'),capabilities=document.getElementById('capabilities'),suggestions=document.getElementById('suggestions'),heroInput=document.getElementById('heroInput'),submitBtn=document.getElementById('submitBtn'),feedback=document.getElementById('searchFeedback');let heroMode='course';
-    function setMode(mode){heroMode=mode;const course=mode==='course';courseTab.setAttribute('aria-selected',String(course));askTab.setAttribute('aria-selected',String(!course));capabilities.classList.toggle('show',!course);suggestions.hidden=!course;heroInput.placeholder=course?'想学什么？例如：帮我理解 loss 不降怎么排查':'直接提问，例如：这段报错是什么意思？';heroInput.setAttribute('aria-label',course?'输入学习目标':'输入要问 AI 的问题');submitBtn.textContent=course?'生成课程 →':'开始提问 →';feedback.textContent=''}
-    courseTab.addEventListener('click',()=>setMode('course'));askTab.addEventListener('click',()=>setMode('ask'));capabilities.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{capabilities.querySelectorAll('button').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}));suggestions.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{heroInput.value=btn.textContent;heroInput.focus()}));document.getElementById('heroForm').addEventListener('submit',event=>{event.preventDefault();const value=heroInput.value.trim();if(!value){feedback.textContent='先写下你的学习目标或问题。';heroInput.focus();return}if(heroMode==='course'){window.openCourseFlow(value);return}feedback.textContent=`已记录问题「${value}」。AI 问答将在后续版本接入。`});document.getElementById('longtailBtn').addEventListener('click',()=>{setMode('course');window.scrollTo({top:0,behavior:'smooth'});heroInput.focus()});
-    const cards=[...document.querySelectorAll('.course-card')],grid=document.getElementById('courseGrid'),empty=document.getElementById('courseEmpty');let activeFilter='全部';function renderCourses(){const sort=document.getElementById('sortCourses').value;const visible=cards.filter(card=>activeFilter==='全部'||card.dataset.category===activeFilter);const ordered=[...cards].sort((a,b)=>sort==='popular'?Number(b.dataset.people)-Number(a.dataset.people):sort==='rating'?Number(b.dataset.rating)-Number(a.dataset.rating):0);ordered.forEach(card=>grid.insertBefore(card,empty));cards.forEach(card=>card.hidden=!visible.includes(card));empty.style.display=visible.length?'none':'block'}document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click',()=>{activeFilter=btn.dataset.filter;document.querySelectorAll('.filter').forEach(b=>{const active=b===btn;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});renderCourses()}));document.getElementById('sortCourses').addEventListener('change',renderCourses);
-    const panel=document.getElementById('aiPanel'),backdrop=document.getElementById('panelBackdrop'),openAi=document.getElementById('openAi'),closeAi=document.getElementById('closeAi');function setPanel(open){panel.classList.toggle('open',open);backdrop.classList.toggle('show',open);panel.setAttribute('aria-hidden',String(!open));openAi.setAttribute('aria-expanded',String(open));document.body.style.overflow=open?'hidden':'';if(open)closeAi.focus();else openAi.focus()}openAi.addEventListener('click',()=>setPanel(true));closeAi.addEventListener('click',()=>setPanel(false));backdrop.addEventListener('click',()=>setPanel(false));document.addEventListener('keydown',event=>{if(event.key==='Escape'&&panel.classList.contains('open'))setPanel(false)});if(location.hash==='#ask')setMode('ask');
-  </script>
+  <script src="assets/js/home-figma.js"></script>
   <script src="assets/js/course-outline.js"></script>
   <script src="assets/js/course-compose.js"></script>
   <script src="assets/js/course-flow.js"></script>
