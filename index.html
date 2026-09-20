@@ -47,23 +47,25 @@
           <button id="courseTab" type="button" role="tab" aria-selected="true">规划学习</button>
           <button id="askTab" type="button" role="tab" aria-selected="false">解决问题</button>
         </div>
-        <form class="dlc-search" id="heroForm">
-          <span class="dlc-search-icon" aria-hidden="true"></span>
-          <span class="dlc-selected-prompt" id="selectedPrompt" hidden><span id="selectedPromptText"></span><button id="clearShortcut" type="button" aria-label="清除快捷选项">×</button></span>
-          <input id="heroInput" type="text" autocomplete="off" aria-label="输入学习目标" placeholder="今天你想学点什么？使用/获取快捷选项">
-          <span class="dlc-input-actions" id="inputActions" aria-hidden="true"><kbd>Tab</kbd>切换 <kbd>Enter</kbd>开始搜索</span>
-          <kbd class="dlc-shortcut-key">/</kbd>
-          <button class="dlc-submit" type="submit" aria-label="提交">↑</button>
-          <div class="dlc-quick-menu" id="quickMenu" role="listbox" aria-label="学习快捷选项" hidden>
-            <button type="button" role="option" data-label="新手入门" data-prompt="我刚接触昇腾，希望从基础开始学习"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>新手入门</b><small>从环境搭建开始，完成首个昇腾开发任务。</small></span></button>
-            <button type="button" role="option" data-label="算子开发" data-prompt="我想学习 Ascend C 算子开发"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>算子开发</b><small>开发、调试和优化昇腾自定义算子。</small></span></button>
-            <button type="button" role="option" data-label="训练开发" data-prompt="我想学习模型训练并完成一次分布式训练"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>训练开发</b><small>完成模型训练、分布式训练和性能优化。</small></span></button>
-            <button type="button" role="option" data-label="推理开发" data-prompt="我想把模型部署到昇腾并完成推理服务验证"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>推理开发</b><small>学习模型转换、推理适配与部署的上线流程。</small></span></button>
-            <button type="button" role="option" data-label="生成式AI应用开发与部署" data-prompt="我想开发一个 RAG 智能体应用，并部署到昇腾环境"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>生成式AI应用开发与部署</b><small>学习大模型、RAG 和智能体应用开发与部署。</small></span></button>
-          </div>
-        </form>
-        <p class="dlc-search-helper" id="quizHelper">不知道从哪开始？<button id="openQuiz" type="button">开启</button>3步骤测验为你推荐专属学习内容</p>
-        <p class="dlc-search-hint" id="searchFeedback" role="status" aria-live="polite"></p>
+        <div class="dlc-search-shell">
+          <form class="dlc-search" id="heroForm">
+            <span class="dlc-search-icon" aria-hidden="true"></span>
+            <span class="dlc-selected-prompt" id="selectedPrompt" hidden><span class="selected-prompt-mark" aria-hidden="true"></span><span id="selectedPromptText"></span><button id="clearShortcut" type="button" aria-label="清除快捷选项">×</button></span>
+            <input id="heroInput" type="text" autocomplete="off" aria-label="输入学习目标" placeholder="今天你想学点什么？使用/获取快捷选项">
+            <span class="dlc-input-actions" id="inputActions" aria-hidden="true"><kbd>Tab</kbd>切换 <kbd>Enter</kbd>开始搜索</span>
+            <kbd class="dlc-shortcut-key">/</kbd>
+            <button class="dlc-submit" type="submit" aria-label="提交">↑</button>
+            <div class="dlc-quick-menu" id="quickMenu" role="listbox" aria-label="学习快捷选项" hidden>
+              <button type="button" role="option" data-label="新手入门" data-prompt="我刚接触昇腾，希望从基础开始学习"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>新手入门</b><small>从环境搭建开始，完成首个昇腾开发任务。</small></span></button>
+              <button type="button" role="option" data-label="算子开发" data-prompt="我想学习 Ascend C 算子开发"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>算子开发</b><small>开发、调试和优化昇腾自定义算子。</small></span></button>
+              <button type="button" role="option" data-label="训练开发" data-prompt="我想学习模型训练并完成一次分布式训练"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>训练开发</b><small>完成模型训练、分布式训练和性能优化。</small></span></button>
+              <button type="button" role="option" data-label="推理开发" data-prompt="我想把模型部署到昇腾并完成推理服务验证"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>推理开发</b><small>学习模型转换、推理适配与部署的上线流程。</small></span></button>
+              <button type="button" role="option" data-label="生成式AI应用开发与部署" data-prompt="我想开发一个 RAG 智能体应用，并部署到昇腾环境"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>生成式AI应用开发与部署</b><small>学习大模型、RAG 和智能体应用开发与部署。</small></span></button>
+            </div>
+          </form>
+          <p class="dlc-search-helper" id="quizHelper">不知道从哪开始？<button id="openQuiz" type="button">开启</button>3步骤测验为你推荐专属学习内容</p>
+          <p class="dlc-search-hint" id="searchFeedback" role="status" aria-live="polite"></p>
+        </div>
       </div>
     </section>
 
