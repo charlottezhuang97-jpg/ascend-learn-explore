@@ -6,7 +6,7 @@
     return item;
   }
 
-  window.createCourseCompose = outline => {
+  window.createCourseCompose = (outline, onComplete = () => {}) => {
     const wrapper = node('div', 'compose-shell');
     const header = node('div', 'compose-header');
     const title = node('strong', '', '正在编写课程预览');
@@ -130,6 +130,7 @@
       title.textContent = '课程预览已完成';
       status.textContent = '可以查看下方的单元与讲次';
       skip.textContent = '查看课程内容 ↓';
+      onComplete();
       skip.addEventListener('click', () => preview.scrollIntoView({ behavior: 'smooth', block: 'start' }), { once: true });
     }
     skip.addEventListener('click', () => { if (!finished) finish(); });

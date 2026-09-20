@@ -134,9 +134,9 @@
     entry.setAttribute('aria-label', `${title}，第 ${number} 步，共 4 步`);
     const titleRow = element('div', 'flow-step-title');
     titleRow.append(
-      element('span', 'flow-step-state'),
       element('h2', '', title),
-      element('span', 'flow-step-count', `｜第 ${number} 步，共 4 步`)
+      element('span', 'flow-step-count', `｜第 ${number} 步，共 4 步`),
+      element('span', 'flow-step-state')
     );
     entry.append(titleRow);
     return entry;
@@ -351,6 +351,7 @@
   function renderResult() {
     if (stage.querySelector('#outlineTurn')) return;
     stage.querySelector('#flowQuestion4 .flow-actions').hidden = true;
+    stage.querySelector('#planningStep')?.setAttribute('data-state', 'done');
     const buildStep = createStep('打造课程', 3, 'active', 'courseBuildStep');
     const turn = assistantTurn('outlineTurn', 'AI 正在组织课程大纲', '这是为你整理的选题大纲', '先在画布中查看单元和章节；需要调整时，点击节点即可编辑。确认后我会生成课程预览。');
     turn.body.append(window.createCourseOutline({
@@ -377,14 +378,12 @@
   function assistantTurn(id, label, title, lead) {
     const item = element('section', 'assistant-turn');
     item.id = id;
-    const avatar = element('span', 'assistant-avatar', 'AI');
-    avatar.setAttribute('aria-hidden', 'true');
     const body = element('div', 'assistant-turn-body');
     body.append(element('p', 'assistant-label', label));
     const heading = element('h2', '', title);
     heading.tabIndex = -1;
     body.append(heading, element('p', 'assistant-lead', lead));
-    item.append(avatar, body);
+    item.append(body);
     return { element: item, body, heading };
   }
 
@@ -405,7 +404,7 @@
     stage.querySelector('#courseBuildStep')?.setAttribute('data-state', 'done');
     const previewStep = createStep('查看课程预览', 4, 'active', 'coursePreviewStep');
     const turn = assistantTurn('courseTurn', 'AI 正在生成课程预览', '正在为你编写这门课程', '下方纸张会逐字写入课程草稿，课程卡片同时逐步展开单元和讲次。当前是探索版示例演示。');
-    composition = window.createCourseCompose(outline);
+    composition = window.createCourseCompose(outline, () => previewStep.setAttribute('data-state', 'done'));
     turn.body.append(composition.element);
     const actions = element('div', 'preview-action-panel');
     const start = element('button', 'preview-start', '开始学习');
