@@ -119,11 +119,48 @@
   let returnFocus = null;
   let composition = null;
 
+  const journeySteps = [
+    ['正在搜索相关资料', '从官方课程、文档和已验证资料中筛选学习依据。'],
+    ['构建初步思路', '结合你的基础、目标和学习深度，补齐关键信息。'],
+    ['打造课程', '按知识递进组织单元与章节，并支持你调整大纲。'],
+    ['完善课程', '生成讲次、实验和认证建议，形成可开始的课程。']
+  ];
+
   function element(tag, className, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
     if (text !== undefined) node.textContent = text;
     return node;
+  }
+
+  function createJourney(currentIndex = 1) {
+    const journey = element('ol', 'flow-journey');
+    journey.setAttribute('aria-label', '课程生成进度');
+    journeySteps.forEach(([title, detail], index) => {
+      const item = element('li', 'flow-journey-step');
+      item.dataset.step = String(index);
+      const state = index < currentIndex ? '已完成' : index === currentIndex ? '进行中' : '待进行';
+      item.dataset.state = index < currentIndex ? 'done' : index === currentIndex ? 'active' : 'pending';
+      item.append(
+        element('span', 'flow-journey-index', String(index + 1)),
+        (() => {
+          const copy = element('div', 'flow-journey-copy');
+          copy.append(element('strong', '', title), element('p', '', detail), element('span', 'flow-journey-state', state));
+          return copy;
+        })()
+      );
+      journey.append(item);
+    });
+    return journey;
+  }
+
+  function setJourneyState(currentIndex) {
+    stage.querySelectorAll('.flow-journey-step').forEach(item => {
+      const index = Number(item.dataset.step);
+      const state = index < currentIndex ? '已完成' : index === currentIndex ? '进行中' : '待进行';
+      item.dataset.state = index < currentIndex ? 'done' : index === currentIndex ? 'active' : 'pending';
+      item.querySelector('.flow-journey-state').textContent = state;
+    });
   }
 
   function renderQuestions(count = 1, focusIndex = 0) {
@@ -144,7 +181,7 @@
     const fill = element('span');
     track.append(fill);
     progress.append(track);
-    stage.append(intro, progress);
+    stage.append(createJourney(1), intro, progress);
     for (let index = 0; index < count; index++) appendQuestion(index);
     updateProgress();
     if (count > 1) {
@@ -264,6 +301,7 @@
     removeComposition();
     stage.querySelector('#outlineTurn')?.remove();
     flow.classList.remove('outline-expanded');
+    setJourneyState(1);
     const lastActions = stage.querySelector('#flowQuestion4 .flow-actions');
     if (lastActions) lastActions.hidden = false;
   }
@@ -271,6 +309,7 @@
   function renderResult() {
     if (stage.querySelector('#outlineTurn')) return;
     stage.querySelector('#flowQuestion4 .flow-actions').hidden = true;
+    setJourneyState(2);
     const turn = assistantTurn('outlineTurn', 'AI 回答 · 选题大纲', '这是为你整理的选题大纲', '先在画布中查看单元和章节；需要调整时，点击节点即可编辑。确认后我会在下方展示课程预览。');
     turn.body.append(window.createCourseOutline({
       goal,
@@ -295,7 +334,7 @@
   function assistantTurn(id, label, title, lead) {
     const item = element('section', 'assistant-turn');
     item.id = id;
-    const avatar = element('span', 'assistant-avatar', '✦');
+    const avatar = element('span', 'assistant-avatar', 'AI');
     avatar.setAttribute('aria-hidden', 'true');
     const body = element('div', 'assistant-turn-body');
     body.append(element('p', 'assistant-label', label));
@@ -321,6 +360,7 @@
   function appendCourseTurn(outline) {
     removeComposition();
     const turn = assistantTurn('courseTurn', 'AI 回答 · 课程预览', '正在为你编写这门课程', '下方纸张会逐字写入课程草稿，课程卡片同时逐步展开单元和讲次。当前是探索版示例演示。');
+    setJourneyState(3);
     composition = window.createCourseCompose(outline);
     turn.body.append(composition.element);
     stage.append(turn.element);
