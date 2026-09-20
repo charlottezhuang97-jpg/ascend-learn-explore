@@ -69,6 +69,18 @@
     quickOptions.forEach((option, index) => option.setAttribute('aria-selected', String(index === quickIndex)));
   }
 
+  function updateShortcutActionPosition() {
+    if (!selectedShortcut) return;
+    const style = window.getComputedStyle(input);
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    const inputStart = input.offsetLeft + Number.parseFloat(style.paddingLeft);
+    const targetLeft = inputStart + context.measureText(input.value).width + 14;
+    const maxLeft = form.clientWidth - 214;
+    form.style.setProperty('--shortcut-action-left', `${Math.round(Math.min(maxLeft, Math.max(365, targetLeft)))}px`);
+  }
+
   function chooseShortcut(button) {
     selectedShortcut = button.dataset.label || button.textContent.trim();
     selectedPromptIndex = 0;
@@ -77,6 +89,7 @@
     form.classList.add('has-selection');
     input.value = shortcutPrompts[selectedShortcut]?.[0] || button.dataset.prompt || button.textContent.trim();
     setQuickMenu(false);
+    updateShortcutActionPosition();
     input.focus();
   }
 
@@ -85,6 +98,7 @@
     if (!prompts || prompts.length < 2) return;
     selectedPromptIndex = (selectedPromptIndex + 1) % prompts.length;
     input.value = prompts[selectedPromptIndex];
+    updateShortcutActionPosition();
     input.select();
   }
 
@@ -113,6 +127,7 @@
     const isShortcutQuery = mode === 'course' && (input.value.trim() === '/' || input.value.trim() === '／');
     setQuickMenu(isShortcutQuery);
     if (isShortcutQuery) setQuickActive(0);
+    if (!isShortcutQuery) updateShortcutActionPosition();
   });
   input.addEventListener('keydown', event => {
     if (event.key === '/' && !input.value && mode === 'course') requestAnimationFrame(() => { setQuickMenu(true); setQuickActive(0); });
