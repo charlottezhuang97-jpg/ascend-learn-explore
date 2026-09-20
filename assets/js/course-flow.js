@@ -215,7 +215,7 @@
     heading = element('h2', '', '让学习方案更适合你');
     heading.id = 'flowHeading';
     heading.tabIndex = -1;
-    intro.append(heading, element('p', '', '四个问题会依次出现在同一页。回答后继续向下查看；已选答案可以随时返回修改。'));
+    intro.append(heading);
     const progress = element('div', 'flow-progress');
     progressLabel = element('span');
     progress.append(progressLabel);
@@ -409,7 +409,7 @@
     const actions = element('div', 'preview-action-panel');
     const start = element('button', 'preview-start', '开始学习');
     start.type = 'button';
-    start.addEventListener('click', () => { window.location.href = `detail.html?title=${encodeURIComponent(outline.goal)}`; });
+    start.addEventListener('click', () => { window.location.href = `learn.html?title=${encodeURIComponent(outline.goal)}`; });
     const plan = element('button', 'preview-plan', '＋ 加入学习计划');
     plan.type = 'button';
     plan.setAttribute('aria-pressed', 'false');
