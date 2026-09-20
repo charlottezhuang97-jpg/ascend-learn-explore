@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>白板学习 · Ascend Developer</title>
+  <link rel="stylesheet" href="assets/css/learning-room.css?v=1">
+</head>
+<body>
+  <main class="learning-room" id="learningRoom" aria-label="沉浸式课程学习">
+    <div class="room-topbar" aria-hidden="true"></div>
+    <section class="board-area" aria-label="讲课区域">
+      <header class="board-header">
+        <a class="room-close" href="index.html" aria-label="关闭课程">×</a>
+        <div class="lesson-title"><span>课节 1</span><strong id="lessonTitle">昇腾处理器的逻辑结构拆解</strong></div>
+        <div class="board-tools" aria-label="板书辅助功能">
+          <button type="button" aria-label="缩小板书">−</button><span class="zoom-value">100%</span><button type="button" aria-label="放大板书">＋</button>
+          <button type="button" aria-label="上一页板书">‹</button><span class="page-value">1 / 3</span><button type="button" aria-label="下一页板书">›</button>
+          <button type="button" aria-label="下载板书">⇩</button><button type="button" aria-label="AI 学伴">✦</button><button type="button" aria-label="设置">⚙</button>
+        </div>
+      </header>
+      <section class="whiteboard" id="whiteboard" aria-label="课程板书画布">
+        <div class="board-writing">
+          <p class="board-kicker">课程开篇</p>
+          <h1>昇腾 AI 处理器架构与 Da Vinci 计算直觉</h1>
+          <p>从计算任务如何在 NPU 中被拆解开始，理解训练与推理中的核心计算单元。</p>
+        </div>
+        <ol class="board-points" aria-label="课堂要点">
+          <li class="active">CPU 与 NPU 的逻辑资源配比差异及异构计算协作模型</li>
+          <li>昇腾处理器控制单元在多核任务分发中的调度机制</li>
+          <li>存储分层架构与总线接口在缓存问题中的角色</li>
+          <li>达芬奇架构计算组件的宏观功能定位</li>
+        </ol>
+        <div class="selection-tip" id="selectionTip" hidden><button type="button" id="addNote">＋ 加入我的笔记</button></div>
+        <div class="board-subtitle" aria-live="polite">这一节我们先建立直觉：模型计算会被拆分成不同类型的任务，再由对应的计算单元协同完成。</div>
+      </section>
+      <footer class="board-footer"><button type="button">☷ 目录</button><button type="button">◖ 声音</button><span>长按画布中的文字，可加入我的笔记</span></footer>
+    </section>
+    <aside class="companion" aria-label="AI 学伴">
+      <header><strong>AI 学伴</strong><button type="button" aria-label="收起 AI 学伴">×</button></header>
+      <nav class="companion-tabs" aria-label="AI 学伴内容"><button type="button" class="active" data-tab="chat">对话</button><button type="button" data-tab="notes">我的笔记 <span id="noteCount">0</span></button></nav>
+      <section class="companion-content" id="chatPanel">
+        <p class="companion-label">✎ 课程开篇</p>
+        <p>你好，欢迎来到这一课。今天我们会理解昇腾处理器如何组织计算任务，并建立 NPU 与 CPU 协作的基本直觉。</p>
+        <p>有不理解的概念，随时问我；也可以在画布上长按选词，把内容加入笔记。</p>
+      </section>
+      <section class="companion-content" id="notesPanel" hidden><p class="empty-note">长按并选中板书文字后，笔记会保存在这里。</p></section>
+      <form class="companion-input" id="companionForm"><button type="button" aria-label="添加资料">＋</button><input aria-label="向 AI 学伴提问" placeholder="输入问题…"><button type="submit" aria-label="发送问题">↑</button></form>
+    </aside>
+  </main>
+  <section class="mode-overlay" id="modeOverlay" role="dialog" aria-modal="true" aria-labelledby="modeTitle">
+    <div class="mode-card">
+      <h2 id="modeTitle">你想以什么形式学习这一课？</h2>
+      <p>《<span id="courseName">昇腾学习课程</span>》支持视频与白板两种学习形式，之后可随时切换。</p>
+      <div class="mode-options" role="radiogroup" aria-label="选择学习形式">
+        <button type="button" class="mode-option" role="radio" aria-checked="false" data-mode="video"><span>▶</span><strong>视频学习</strong><small>结合讲解视频、代码节点与字幕学习。</small></button>
+        <button type="button" class="mode-option selected" role="radio" aria-checked="true" data-mode="board"><span>✎</span><strong>白板学习</strong><small>跟随板书与字幕推进，可将选词加入笔记。</small></button>
+      </div>
+      <button type="button" class="enter-learning" id="enterLearning">进入白板学习</button>
+    </div>
+  </section>
+  <script src="assets/js/learning-room.js?v=1"></script>
+</body>
+</html>
