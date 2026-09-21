@@ -1,22 +1,22 @@
-# 学习方案探索版标题字体规范
+# 学习方案探索版设计系统入口
 
-参考已落地的[开发者学习中心页面](https://charlottezhuang97-jpg.github.io/developerlearningcenter/)核对其浏览器计算样式，记录于 2026-09-15。此规范用于探索版首页的大标题与各楼层标题；其余排版沿用 [`design-tokens.json`](design-system/tokens/design-tokens.json)。
+设计系统已经拆成五层，完整入口见 [`design-system/README.md`](design-system/README.md)。本文件保留为历史入口，记录首页标题的已确认基线，并把后续规则指向新的分层文档。
 
-| 位置 | 字体 | 字号 | 字重 | 行高 | 字间距 | 颜色 |
-| --- | --- | ---: | ---: | ---: | --- | --- |
-| 首页主标题（Hero `h1`） | HarmonyOS Sans SC Medium | 50px | 600 | 50px | normal | `#101828` |
-| 楼层标题（`.section h2`） | HarmonyOS Sans SC Medium | 40px | 600 | 50px | normal | `#101828` |
+## 首页标题基线
 
-CSS 中以 `font-weight: 600` 加载本地 `HarmonyOS_Sans_SC_Medium.woff2`。主标题避免使用 Bold（700）和负字间距。小屏继续使用现有的 40px Hero、30px 楼层标题响应式字号，保持 600 字重和正常字间距；其行高可按小屏排版调整。
+| 位置 | 字体 | 字号 | 字重 | 行高 | 颜色 |
+| --- | --- | ---: | ---: | ---: | --- |
+| 首页主标题（Hero `h1`） | HarmonyOS Sans SC Medium | 50px | 600 | 50px | `foundation.color.heading` |
+| 楼层标题 | HarmonyOS Sans SC Medium | 40px | 600 | 50px | `foundation.color.heading` |
 
-## 生成课程问答界面
+小屏继续使用现有的响应式字号，保持 HarmonyOS Sans SC Medium 和正常字间距。字体、颜色和间距的新引用以 [`design-system/tokens/foundation.json`](design-system/tokens/foundation.json) 和 [`semantic.json`](design-system/tokens/semantic.json) 为准。
 
-全屏问答界面使用近白底 `#FCFCFE`，对应参考截图的轻浅背景。选项卡默认白底、浅灰描边；选中、悬停和主操作使用主题蓝 `#2E53FA`（`design-tokens.json` 的 `color.link.default`，页面变量 `--blue`）。选中卡采用浅蓝底 `#F3F6FF`，保持标题与说明文字清晰。问答内容和学习建议目前是探索版示例，页面应明确标出未接入实时 AI 与资料检索。
+## 规则去向
 
-四个问题在同一页面逐步展开。多选题由用户点击“继续到下一题”结束选择；单选题选择预设项后直接展开下一题并平滑滚动，自定义项需先填写内容再继续。已经展开的问题和答案保留在页面上，用户可向上滚动修改；第四题之后进入课程大纲。
+- 基础值、语义色和组件值：[`design-system/tokens/`](design-system/tokens/README.md)
+- 可复用组件：[`design-system/components/`](design-system/components/README.md)
+- 页面级场景模式：[`design-system/patterns/`](design-system/patterns/README.md)
+- loading、完成、错误和恢复：[`design-system/states.md`](design-system/states.md)
+- 开发验收：[`design-system/acceptance.md`](design-system/acceptance.md)
 
-## 课程选题大纲
-
-四题完成后，课程结构作为下一条 AI 回答出现在同一页面的较大卡片中；画布可在空白处拖拽，也可滚动查看。画布沿用近白底与浅灰点阵，结构按“课程目标 → 单元 → 章节”展开；节点默认白底和浅灰描边，选中态使用主题蓝 `#2E53FA` 描边及浅蓝底 `#F4F7FF`。编辑面板允许修改单元或章节名称、增加单元下的章节，以及为章节设置“基础理解 / 标准实践 / 深入掌握”三档学习深度。
-
-确认大纲后，同一页面继续向下出现课程预览回答。预览以纸张和打字机作为视觉隐喻，课程草稿逐字写入纸张，右侧课程卡片逐步展开单元、讲次和课节；减少动画设置下直接呈现完整内容，并提供跳过打字动画操作。大纲和课程内容均为当前页面的探索版示例，不应表达为已由 AI 实时生成。
+旧页面中的问答、大纲和课程预览实现仍然保留；新增或重构时按 `ai-dialogue` 和 `course-preview` 模式实现，不再在本文件新增页面级规则。
