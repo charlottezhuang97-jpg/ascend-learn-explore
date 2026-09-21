@@ -170,13 +170,6 @@
       const oldBoard = stage.querySelector('.outline-board');
       const boardPosition = oldBoard ? [oldBoard.scrollLeft, oldBoard.scrollTop] : [0, 0];
       stage.replaceChildren();
-      const top = node('div', 'outline-top');
-      const intro = node('div');
-      intro.append(node('p', 'outline-kicker', '课程选题大纲 · 探索版预览'));
-      const heading = node('h2', '', '查看并调整你的课程结构');
-      heading.id = 'outlineHeading';
-      heading.tabIndex = -1;
-      intro.append(heading, node('p', 'outline-description', '先全屏查看单元与章节，再点击节点编辑。你可以增加单元下的章节，也可以调整每章的学习深浅难度。'));
       const toolbar = node('div', 'outline-toolbar');
       const expand = node('button', '', expanded ? '退出全屏' : '全屏查看大纲');
       expand.type = 'button';
@@ -190,11 +183,14 @@
       edit.type = 'button';
       edit.addEventListener('click', () => { editing = !editing; if (!editing) selected = null; render(); });
       toolbar.append(expand, edit);
-      top.append(intro, toolbar);
       const shell = node('div', 'outline-shell');
       const summary = node('div', 'outline-summary');
-      summary.append(node('div', 'outline-summary-label', '课程讲解结构'));
-      summary.append(node('h3', '', `${goal} · 学习选题大纲`));
+      const summaryTop = node('div', 'outline-summary-top');
+      const summaryHeading = node('div', 'outline-summary-heading');
+      summaryHeading.append(node('div', 'outline-summary-label', '课程讲解结构'));
+      summaryHeading.append(node('h3', '', `${goal} · 学习选题大纲`));
+      summaryTop.append(summaryHeading, toolbar);
+      summary.append(summaryTop);
       summary.append(node('p', '', `面向当前目标，按“${direction === '未指定' ? '适合你的实践方向' : direction}”组织。以下内容可在当前页面修改。`));
       const meta = node('div', 'outline-meta');
       meta.append(node('span', 'outline-count', `${units.length} 个单元 · ${chapterTotal()} 个章节`), node('span', '', '课节深度'));
@@ -278,7 +274,7 @@
       close.addEventListener('click', onClose);
       actions.append(back, confirm, close);
       footer.append(status, actions);
-      stage.append(top, shell, footer);
+      stage.append(shell, footer);
       board.scrollLeft = boardPosition[0];
       board.scrollTop = boardPosition[1];
     }

@@ -76,3 +76,10 @@
 .course-flow.conversation .flow-progress{margin:0 0 12px}
 .course-flow.conversation .flow-question-block{margin-top:12px;padding-top:12px}
 .course-flow.conversation .flow-question-head h3{font-size:14px;line-height:20px;font-weight:500}
+
+/* AI 对话场景：课程大纲与课程预览的文字输出 */
+.course-flow.conversation .flow-step>.assistant-turn{margin-top:8px}
+.course-flow.conversation .assistant-label{margin:0 0 8px;color:rgba(0,0,0,.6);font-size:16px;line-height:24px;font-weight:400}
+.course-flow.conversation .assistant-turn-body>h2{margin:0 0 8px;color:#17223a;font-size:16px;line-height:24px;font-weight:400}
+.course-flow.conversation .assistant-turn-body>.assistant-lead{margin:0 0 12px;color:rgba(0,0,0,.6);font-size:14px;line-height:22px;font-weight:400}
+.course-flow.conversation .outline-summary{padding:20px 28px}
