@@ -80,7 +80,11 @@
   const editor = document.getElementById('ideEditor');
   document.querySelectorAll('.video-code-card').forEach(card => card.addEventListener('click', event => {
     const action = event.target.dataset.action;
-    if (!action) { document.querySelectorAll('.video-code-card').forEach(item => item.classList.toggle('selected', item === card)); return; }
+    if (!action) {
+      document.querySelectorAll('.video-code-card').forEach(item => item.classList.toggle('selected', item === card));
+      document.querySelector('.video-meta span').textContent = `${card.querySelector('span').textContent} / 18:40`;
+      return;
+    }
     const code = card.dataset.code;
     if (action === 'explain') card.querySelector('.code-explanation').hidden = !card.querySelector('.code-explanation').hidden;
     if (action === 'insert') { editor.value = `${editor.value.trim()}\n\n# 来自视频 ${card.querySelector('span').textContent}\n${code}\n`; editor.focus(); }
@@ -88,6 +92,58 @@
   }));
   document.getElementById('ideCollapse').addEventListener('click', event => {
     videoRoom.classList.toggle('ide-collapsed');
+    event.currentTarget.setAttribute('aria-expanded', String(!videoRoom.classList.contains('ide-collapsed')));
     event.currentTarget.textContent = videoRoom.classList.contains('ide-collapsed') ? '展开 IDE ‹' : '收起 IDE ›';
+  });
+
+  const videoDock = document.getElementById('videoDock');
+  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+  const paneWidth = name => {
+    const raw = getComputedStyle(videoRoom).getPropertyValue(name).trim();
+    return raw.endsWith('%') ? parseFloat(raw) / 100 * videoDock.clientWidth : parseFloat(raw);
+  };
+  function resizePane(kind, clientX) {
+    const bounds = videoDock.getBoundingClientRect();
+    const minVideo = 320;
+    const minCode = 250;
+    const minIde = 360;
+    if (kind === 'video') {
+      const maxVideo = bounds.width - paneWidth('--code-width') - minIde - 16;
+      const width = clamp(clientX - bounds.left, minVideo, maxVideo);
+      videoRoom.style.setProperty('--video-width', `${width}px`);
+    } else {
+      const videoWidth = videoDock.querySelector('.video-column').getBoundingClientRect().width;
+      const maxCode = bounds.width - videoWidth - minIde - 16;
+      const width = clamp(clientX - bounds.left - videoWidth - 8, minCode, maxCode);
+      videoRoom.style.setProperty('--code-width', `${width}px`);
+    }
+  }
+  document.querySelectorAll('.dock-resizer').forEach(resizer => {
+    resizer.addEventListener('pointerdown', event => {
+      if (videoRoom.classList.contains('ide-collapsed') && resizer.dataset.resize === 'code') {
+        document.getElementById('ideCollapse').click();
+        return;
+      }
+      resizer.classList.add('dragging');
+      resizer.setPointerCapture(event.pointerId);
+    });
+    resizer.addEventListener('pointermove', event => {
+      if (!resizer.classList.contains('dragging')) return;
+      resizePane(resizer.dataset.resize, event.clientX);
+    });
+    const stopResize = event => {
+      resizer.classList.remove('dragging');
+      if (resizer.hasPointerCapture?.(event.pointerId)) resizer.releasePointerCapture(event.pointerId);
+    };
+    resizer.addEventListener('pointerup', stopResize);
+    resizer.addEventListener('pointercancel', stopResize);
+    resizer.addEventListener('keydown', event => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      const step = event.shiftKey ? 40 : 16;
+      const direction = event.key === 'ArrowLeft' ? -1 : 1;
+      const bounds = resizer.getBoundingClientRect();
+      resizePane(resizer.dataset.resize, bounds.left + direction * step);
+    });
   });
 })();
