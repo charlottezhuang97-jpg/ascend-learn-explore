@@ -9,6 +9,8 @@
 .outline-toolbar button.primary,.outline-footer button.primary{background:var(--blue);border-color:var(--blue);color:white}
 .outline-shell{border:1px solid #e0e6f0;border-radius:17px;background:#fff;overflow:hidden;box-shadow:0 5px 20px rgba(16,24,40,.04)}
 .outline-summary{padding:22px 26px;border-bottom:1px solid #e7ebf3}
+.outline-summary-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.outline-summary-heading{min-width:0}
 .outline-summary-label{font-size:13px;color:#5a7298;font-weight:600;margin-bottom:7px}
 .outline-summary h3{font-size:21px;line-height:1.4;margin:0 0 6px;font-weight:600}
 .outline-summary p{font-size:14px;color:#788494;margin:0 0 14px;line-height:1.55}
@@ -58,5 +60,5 @@
 .course-flow.outline-expanded .outline-stage{width:100%;left:0;transform:none;min-height:100dvh;padding:20px 24px;background:#fcfcfe}
 .course-flow.outline-expanded .outline-top{margin-bottom:15px}
 .course-flow.outline-expanded .outline-board,.course-flow.outline-expanded .outline-inspector{max-height:calc(100dvh - 260px);min-height:calc(100dvh - 260px)}
-@media(max-width:900px){.outline-stage{width:calc(100vw - 32px)}.outline-top{flex-direction:column}.outline-toolbar{justify-content:flex-start}.outline-content.editing{grid-template-columns:1fr}.outline-inspector{border-left:0;border-top:1px solid #e5e9f0;max-height:none}.outline-board{min-height:440px}.course-flow.outline-expanded .outline-stage{padding:16px}.course-flow.outline-expanded .outline-board{min-height:50dvh;max-height:50dvh}.course-flow.outline-expanded .outline-inspector{min-height:auto;max-height:none}}
+@media(max-width:900px){.outline-stage{width:calc(100vw - 32px)}.outline-top{flex-direction:column}.outline-toolbar{justify-content:flex-start}.outline-summary-top{flex-direction:column}.outline-content.editing{grid-template-columns:1fr}.outline-inspector{border-left:0;border-top:1px solid #e5e9f0;max-height:none}.outline-board{min-height:440px}.course-flow.outline-expanded .outline-stage{padding:16px}.course-flow.outline-expanded .outline-board{min-height:50dvh;max-height:50dvh}.course-flow.outline-expanded .outline-inspector{min-height:auto;max-height:none}}
 @media(max-width:700px){.outline-top h2{font-size:24px}.outline-summary{padding:18px}.outline-summary h3{font-size:17px}.outline-scroll-hint{display:block!important;margin:12px 0 0!important;color:#637085!important}.outline-tree{padding:20px;gap:20px}.outline-footer{align-items:flex-start}.outline-footer-actions{width:100%}.outline-footer-actions button{flex:1}}
