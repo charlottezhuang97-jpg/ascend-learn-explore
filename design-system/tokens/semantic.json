@@ -1,0 +1,51 @@
+{
+  "$meta": {
+    "name": "Ascend Learning Semantic Tokens",
+    "version": "0.1.0",
+    "rule": "页面按语义引用 Token，不按页面私自创建颜色。"
+  },
+  "surface": {
+    "page": "foundation.color.white",
+    "subtle": "foundation.color.surfaceSubtle",
+    "card": "foundation.color.white",
+    "selected": "#F3F6FF",
+    "aiConversation": "#FCFCFE",
+    "board": "#FFFFFF",
+    "videoWorkbench": "#F8FAFC",
+    "code": "#0E1116"
+  },
+  "text": {
+    "primary": "foundation.color.black",
+    "heading": "foundation.color.heading",
+    "secondary": "foundation.color.secondary",
+    "muted": "foundation.color.muted",
+    "link": "foundation.color.linkBlue",
+    "onBrand": "foundation.color.white"
+  },
+  "border": {
+    "default": "foundation.color.border",
+    "subtle": "foundation.color.borderSubtle",
+    "focus": "foundation.color.linkBlue",
+    "selected": "foundation.color.linkBlue"
+  },
+  "action": {
+    "primary": "foundation.color.brandRed",
+    "primaryHover": "foundation.color.brandRedBright",
+    "secondary": "foundation.color.linkBlue",
+    "dark": "foundation.color.heading",
+    "ai": "foundation.color.aiPurple"
+  },
+  "state": {
+    "success": "foundation.color.success",
+    "warning": "foundation.color.warning",
+    "danger": "foundation.color.danger",
+    "loading": "foundation.color.linkBlue",
+    "disabled": "rgba(0, 0, 0, 0.25)"
+  },
+  "source": {
+    "official": "foundation.color.linkBlue",
+    "community": "foundation.color.aiPurple",
+    "aiGenerated": "foundation.color.aiPurple",
+    "unverified": "foundation.color.warning"
+  }
+}

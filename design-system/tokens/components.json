@@ -1,0 +1,66 @@
+{
+  "$meta": {
+    "name": "Ascend Learning Component Tokens",
+    "version": "0.1.0",
+    "rule": "组件尺寸和状态由组件 Token 统一提供；业务模块只能组合，不得重新发明。"
+  },
+  "button": {
+    "height": { "sm": 32, "md": 40, "lg": 48 },
+    "paddingX": { "sm": 12, "md": 16, "lg": 24 },
+    "radius": "foundation.radius.lg",
+    "primaryBackground": "semantic.action.dark",
+    "secondaryBackground": "semantic.surface.subtle",
+    "focusRing": "0 0 0 3px rgba(46, 83, 250, 0.24)"
+  },
+  "input": {
+    "height": 48,
+    "paddingX": 16,
+    "radius": "foundation.radius.xl",
+    "background": "semantic.surface.card",
+    "border": "semantic.border.default"
+  },
+  "chip": {
+    "height": 32,
+    "paddingX": 12,
+    "radius": "foundation.radius.pill",
+    "fontSize": "foundation.fontSize.sm"
+  },
+  "card": {
+    "radius": "foundation.radius.xl",
+    "padding": 24,
+    "gap": 16,
+    "background": "semantic.surface.card",
+    "border": "semantic.border.default",
+    "shadow": "foundation.shadow.md"
+  },
+  "aiStep": {
+    "titleFontSize": 16,
+    "titleWeight": 500,
+    "descriptionFontSize": 16,
+    "descriptionOpacity": 0.6,
+    "titleToDescription": 8,
+    "descriptionToContent": 12,
+    "stepToStep": 20
+  },
+  "courseCard": {
+    "width": 300,
+    "height": 160,
+    "titleFontSize": 16,
+    "descriptionFontSize": 14,
+    "radius": "foundation.radius.xl"
+  },
+  "videoWorkbench": {
+    "cardGap": 8,
+    "cardRadius": 12,
+    "videoMinWidth": 520,
+    "codeMinWidth": 300,
+    "ideMinWidth": 360,
+    "headerHeight": 56
+  },
+  "courseLesson": {
+    "titleFontSize": 16,
+    "bodyFontSize": 14,
+    "unitBadgeSize": 80,
+    "floatingActionHeight": 72
+  }
+}
