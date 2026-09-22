@@ -9,13 +9,15 @@
 | `PrimaryButton` / `SecondaryButton` / `IconButton` | 提交、进入、工具操作 | `components.button` | 全站 |
 | `SearchInput` | 表达学习目标或开发问题 | `components.input` | 首页、AI 对话 |
 | `Chip` / `StatusBadge` | 分类、来源、状态和内容类型 | `components.chip`、`semantic.state` | 课程、资源、视频代码 |
-| `CourseCard` | 展示课程和学习成本 | `components.courseCard` | 首页、课程列表、课程预览 |
+| `CourseCard` | 展示课程、角色、场景和学习成本 | `components.courseCard` | 首页、课程列表、课程预览 |
 | `AIStep` | 表示生成流程中的一个大步骤 | `components.aiStep` | AI 对话 |
 | `QuestionOption` | 表示学习路径问答选项 | `components.aiStep` | 构思学习路径 |
 | `UnitBadge` / `LessonRow` | 课程单元和课节层级 | `components.courseLesson` | 课程预览、课程详情 |
 | `CodeSnippet` | 展示代码、时间点和操作 | `components.videoWorkbench` | 视频学习 |
 | `ToolBar` / `ModeToggle` | 白板、视频和画布工具切换 | `components.button` | 沉浸式学习 |
 | `FloatingActionBar` | 开始学习、加入学习计划 | `components.courseLesson` | 课程预览 |
+
+课程卡片的完整字段和默认／悬浮信息层级见 [`course-card.md`](course-card.md)。首页默认态必须控制信息密度，学习成本、环境和认证信息按需展开。
 
 ## 组件状态
 
