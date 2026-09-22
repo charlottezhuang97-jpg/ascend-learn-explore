@@ -98,5 +98,5 @@ Token → 组件 → 场景模式 → 状态 → 验收
 
 ## Contributors
 
-- [Cindy_wxd](https://github.com/charlottezhuang97-jpg)：产品设计、交互决策与项目维护
+- [charlottezhuang97](https://github.com/charlottezhuang97)：仓库维护、产品设计与交互决策
 - **Codex**：设计系统整理、前端原型实现与文档协作
