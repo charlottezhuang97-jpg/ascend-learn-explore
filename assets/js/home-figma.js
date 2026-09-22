@@ -247,22 +247,22 @@
 
   const growthData = {
     '学习成长榜': [
-      ['小林098321', '完成「分布式训练基础」学习路径并通过结课测验'],
-      ['昇腾新手阿杰', '本周完成6个学习单元，首次掌握12个知识点'],
-      ['笔记temmmy', '完成大模型训练入门课程及3次配套实验'],
-      ['MindSpore小林', '完成模型训练学习路径并通过结课测验']
+      ['小林098321', '通过分布式训练能力验证', '完成 <b>4</b> 项训练任务，关键实验结果均已验证。'],
+      ['昇腾新手阿杰', '首次跑通推理部署链路', '完成模型转换、服务启动与调用验证，留下 <b>1</b> 份可运行成果。'],
+      ['笔记temmmy', '获得模型训练实践徽章', '完成 <b>3</b> 次有效实验，并将结果整理进个人学习档案。'],
+      ['MindSpore小林', '完成学习方案的实战验收', '通过 <b>1</b> 组标准化任务，下一步可挑战更高难度的实践。']
     ],
     '实战突破榜': [
-      ['NPU调优手记', '定位并解决3个推理部署问题，方案均已验证'],
-      ['算子工坊Leo', '完成Ascend C自定义算子的开发、运行与精度验证'],
-      ['HCCL观察员', '解决多卡训练通信超时，使训练任务恢复运行'],
-      ['部署巡检员', '完成模型转换与服务调用链路验证']
+      ['NPU调优手记', '闭环推理部署性能问题', '定位根因并完成修复验证，端到端时延降低 <b>28%</b>。'],
+      ['算子工坊Leo', '交付可运行的 AscendC 算子', '通过正确性与精度验证，代码已被置入 <b>12</b> 次 IDE 实践。'],
+      ['HCCL观察员', '恢复多卡训练任务', '解决通信超时问题，沉淀 <b>1</b> 份可复现实战案例。'],
+      ['部署巡检员', '通过推理部署 Benchmark', '完成 <b>5</b> 项标准任务验证，获得推理部署能力记录。']
     ],
     '社区共建榜': [
-      ['CANN捕虫者', '发现课程代码的版本兼容问题并推动完成修复'],
-      ['文档修补匠', '贡献OOM排查最佳实践，已被官方知识库收录'],
-      ['AI纠错员', '纠正AI回答中的接口版本错误，帮助更新引用来源'],
-      ['社区观察员', '补充推理部署问题的可复现案例']
+      ['CANN捕虫者', '推动课程版本问题完成修复', '提交的兼容性问题已采纳，帮助 <b>86</b> 位学习者避开环境阻塞。'],
+      ['文档修补匠', '贡献 OOM 排查最佳实践', '案例已收录至知识库，被引用 <b>24</b> 次。'],
+      ['AI纠错员', '纠正 AI 回答中的接口错误', '补充可信来源并完成审核，相关回答准确率持续更新。'],
+      ['社区观察员', '发布可复现的推理部署案例', '已有 <b>17</b> 位开发者复用该案例完成排查。']
     ]
   };
   const growthButtons = [...document.querySelectorAll('.growth-tabs button')];
@@ -274,7 +274,13 @@
       list.replaceChildren(...halves[listIndex].map((item, index) => {
         const row = document.createElement('article');
         row.className = 'growth-item';
-        row.innerHTML = `<span class="growth-avatar a${listIndex * 2 + index + 1}" aria-hidden="true"></span><div class="growth-copy"><strong>${item[0]}</strong><span>${item[1]}</span></div>`;
+        row.innerHTML = `<span class="growth-avatar a${listIndex * 2 + index + 1}" aria-hidden="true"></span><div class="growth-copy"><span class="growth-user">${item[0]}</span><span class="growth-achievement">${item[1]}</span><span class="growth-description">${item[2]}</span></div><button class="growth-follow" type="button" aria-pressed="false">关注</button>`;
+        const follow = row.querySelector('.growth-follow');
+        follow.addEventListener('click', () => {
+          const isFollowing = follow.getAttribute('aria-pressed') === 'true';
+          follow.setAttribute('aria-pressed', String(!isFollowing));
+          follow.textContent = isFollowing ? '关注' : '已关注';
+        });
         return row;
       }));
     });
