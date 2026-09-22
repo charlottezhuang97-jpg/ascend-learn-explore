@@ -2,7 +2,8 @@
   "$meta": {
     "name": "Ascend Learning Semantic Tokens",
     "version": "0.1.0",
-    "rule": "页面按语义引用 Token，不按页面私自创建颜色。"
+    "rule": "页面按语义引用 Token，不按页面私自创建颜色。",
+    "brandColorRule": "品牌红仅用于品牌标识、少量强调和官方状态；主要按钮优先使用黑色 action.dark。"
   },
   "surface": {
     "page": "foundation.color.white",
@@ -29,11 +30,13 @@
     "selected": "foundation.color.linkBlue"
   },
   "action": {
-    "primary": "foundation.color.brandRed",
-    "primaryHover": "foundation.color.brandRedBright",
+    "primary": "foundation.color.black",
+    "primaryHover": "foundation.color.heading",
     "secondary": "foundation.color.linkBlue",
     "dark": "foundation.color.heading",
-    "ai": "foundation.color.aiPurple"
+    "ai": "foundation.color.aiPurple",
+    "brand": "foundation.color.brandRed",
+    "brandHover": "foundation.color.brandRedBright"
   },
   "state": {
     "success": "foundation.color.success",

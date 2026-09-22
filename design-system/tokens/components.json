@@ -2,11 +2,20 @@
   "$meta": {
     "name": "Ascend Learning Component Tokens",
     "version": "0.1.0",
-    "rule": "组件尺寸和状态由组件 Token 统一提供；业务模块只能组合，不得重新发明。"
+    "rule": "组件尺寸和状态由组件 Token 统一提供；业务模块只能组合，不得重新发明。",
+    "buttonRule": "主要按钮使用 semantic.action.dark（黑色）；品牌红仅作为受限品牌强调色，不作为主要按钮底色。"
   },
   "button": {
-    "height": { "sm": 32, "md": 40, "lg": 48 },
-    "paddingX": { "sm": 12, "md": 16, "lg": 24 },
+    "height": {
+      "sm": 32,
+      "md": 40,
+      "lg": 48
+    },
+    "paddingX": {
+      "sm": 12,
+      "md": 16,
+      "lg": 24
+    },
     "radius": "foundation.radius.lg",
     "primaryBackground": "semantic.action.dark",
     "secondaryBackground": "semantic.surface.subtle",
