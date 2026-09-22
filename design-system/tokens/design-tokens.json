@@ -3,7 +3,7 @@
     "name": "Ascend Design Tokens",
     "source": "Figma file 社区1.0低保真 (ZdRx22Q9vHcfx6RljvEySW), node 120:205",
     "extractedAt": "2026-08-31",
-    "updatedAt": "2026-08-31：字体由 Noto Sans SC 替换为 HarmonyOS Sans SC，medium/semibold 字重角色合并映射到 HarmonyOS Medium 字重文件",
+    "updatedAt": "2026-09-22：全局字体统一为 HarmonyOS Sans；主要按钮优先使用黑色，品牌红收敛为受限强调色",
     "note": "低保真线框图导出，数值均来自 Figma 节点实测统计（fills/strokes/effects/style），非目测估算。此文件保留为旧页面兼容导出；新页面请使用同目录 foundation.json、semantic.json、components.json 三层 Token。"
   },
   "color": {
@@ -27,7 +27,7 @@
     },
     "brand": {
       "red": { "value": "#DB0000", "description": "品牌红，用于强调色块/图形，出现 4 次" },
-      "red-dark": { "value": "#C7000B", "description": "品牌红（深），用于导航选中态文字与对应描边", "note": "与 brand.red 为两个相近但不同的红，未合并，需人工确认是否为同一 token 的不同状态（如 default/hover）还是两个独立品牌色" }
+      "red-dark": { "value": "#C7000B", "description": "品牌红（深），仅用于受限品牌强调或官方状态，不用于主要按钮和默认导航选中态", "note": "与 brand.red 为两个相近但不同的红，未合并，需人工确认是否为同一 token 的不同状态（如 default/hover）还是两个独立品牌色" }
     },
     "accent": {
       "purple": { "value": "#A78BFA", "description": "紫色强调色，仅见于描边（标签/徽标类元素），出现 2 次" }
@@ -39,15 +39,15 @@
 
   "typography": {
     "fontFamily": {
-      "sans": { "value": "HarmonyOS Sans SC", "description": "全稿字体族（原提取自 Figma 为 Noto Sans SC，已按业务要求替换为 HarmonyOS Sans SC，字号/行高数值不变）" }
+      "sans": { "value": "HarmonyOS Sans", "description": "全稿统一字体族；业务页面使用 HarmonyOS Sans，按系统回退到中文无衬线字体" }
     },
     "fontWeight": {
-      "thin": { "value": 100, "file": "HarmonyOS_Sans_SC_Thin", "description": "HarmonyOS Sans SC 6 级字重之一，本页未使用，作为通用 token 补全" },
-      "light": { "value": 300, "file": "HarmonyOS_Sans_SC_Light", "description": "本页未使用，作为通用 token 补全" },
-      "regular": { "value": 400, "file": "HarmonyOS_Sans_SC_Regular" },
-      "semibold": { "value": 600, "file": "HarmonyOS_Sans_SC_Medium", "description": "映射自原 Noto Sans SC 的 medium(500) 与 semibold(600) 两个字重角色。HarmonyOS Sans SC 只有 Thin/Light/Regular/Medium/Bold/Black 6 级切片、没有独立的 SemiBold 文件，按业务要求 medium 对应 HarmonyOS 的 semi-bold，因此这两个角色合并映射到同一份 Medium.ttf，在 CSS 中统一以 font-weight:600 加载" },
-      "bold": { "value": 700, "file": "HarmonyOS_Sans_SC_Bold" },
-      "black": { "value": 900, "file": "HarmonyOS_Sans_SC_Black", "description": "本页未使用，作为通用 token 补全" }
+      "thin": { "value": 100, "file": "HarmonyOS_Sans_Thin", "description": "HarmonyOS Sans 6 级字重之一，本页未使用，作为通用 token 补全" },
+      "light": { "value": 300, "file": "HarmonyOS_Sans_Light", "description": "本页未使用，作为通用 token 补全" },
+      "regular": { "value": 400, "file": "HarmonyOS_Sans_Regular" },
+      "semibold": { "value": 600, "file": "HarmonyOS_Sans_Medium", "description": "映射自原 Noto Sans SC 的 medium(500) 与 semibold(600) 两个字重角色。HarmonyOS Sans 只有 Thin/Light/Regular/Medium/Bold/Black 6 级切片、没有独立的 SemiBold 文件，按业务要求 medium 对应 HarmonyOS 的 semi-bold，因此这两个角色合并映射到同一份 Medium.ttf，在 CSS 中统一以 font-weight:600 加载" },
+      "bold": { "value": 700, "file": "HarmonyOS_Sans_Bold" },
+      "black": { "value": 900, "file": "HarmonyOS_Sans_Black", "description": "本页未使用，作为通用 token 补全" }
     },
     "fontSize": {
       "100": { "value": 14 },
@@ -114,8 +114,8 @@
       "itemSpacing": "{spacing.32}",
       "paddingBottom": "{spacing.20}",
       "color.default": "{color.text.primary}",
-      "color.selected": "{color.brand.red-dark}",
-      "description": "顶部导航链接：横向排列，item 间距 32，文字底部内边距 20（基线对齐），选中态文字变为品牌深红"
+      "color.selected": "{color.text.primary}",
+      "description": "顶部导航链接：横向排列，item 间距 32，文字底部内边距 20；选中态优先使用黑色，不使用品牌红作为默认导航强调。"
     },
     "card.padding-default": {
       "value": { "left": 0, "right": 0, "top": 20, "bottom": 20 },
@@ -127,6 +127,7 @@
       "textDecoration": "none",
       "description": "行内文字链接（穿插在普通段落里的可点击短语，如「查看所有」「立即查看」「查看 XX」），仅用蓝色 #2E53FA 与常规字重和周围正文区分，不加下划线、不加粗。用于跳转到相关子页面/详情页的引导性链接文字。",
       "example": "首页「按开发场景选择」楼层：「若想访问更多路径，可点击查看所有」— 「查看所有」为本样式，指向学习路径子页面"
-    }
+    },
+    "button.primary": "主要按钮使用黑色底色（#000000）与白色文字；品牌红仅用于受限品牌强调。"
   }
 }

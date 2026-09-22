@@ -7,7 +7,7 @@
     "usage": "基础值只能被 semantic.json 或 components.json 引用，业务页面不直接硬编码。"
   },
   "fontFamily": {
-    "sans": "HarmonyOS Sans SC, PingFang SC, Microsoft YaHei, sans-serif",
+    "sans": "HarmonyOS Sans, PingFang SC, Microsoft YaHei, sans-serif",
     "mono": "SF Mono, JetBrains Mono, Consolas, monospace"
   },
   "fontWeight": {
@@ -45,7 +45,8 @@
     "aiPurple": "#A78BFA",
     "success": "#17B26A",
     "warning": "#F5A623",
-    "danger": "#D92D20"
+    "danger": "#D92D20",
+    "brandRedUsage": "仅用于品牌标识、极少量品牌强调或官方状态，不用于主要按钮和大面积背景"
   },
   "spacing": {
     "0": 0,
