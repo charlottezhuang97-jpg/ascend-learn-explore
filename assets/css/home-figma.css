@@ -48,30 +48,37 @@ body{background:var(--home-bg)}
 .continue-bar{height:4px;border-radius:99px;background:#e6e9ef;overflow:hidden}
 .continue-bar span{display:block;width:1%;height:100%;background:#2e53fa}
 .dlc-scenes{padding-top:120px}
-.scene-tabs{display:flex;gap:42px;align-items:center;margin:0 0 38px;padding:0 12px;overflow:auto;scrollbar-width:none}
+.scene-tabs{display:flex;justify-content:center;gap:42px;align-items:center;margin:0 0 38px;padding:0 12px;overflow:auto;scrollbar-width:none}
 .scene-tabs::-webkit-scrollbar{display:none}
-.scene-tabs button{position:relative;border:0;background:transparent;color:#555e6d;font-size:14px;white-space:nowrap;padding:8px 0}
-.scene-tabs button[aria-selected="true"]{color:#111;font-weight:600}
-.scene-tabs button[aria-selected="true"]:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:#111}
+.scene-tabs button{position:relative;border:0;background:transparent;color:#667085;font-size:14px;white-space:nowrap;padding:8px 0;cursor:pointer;transition:color .16s ease}
+.scene-tabs button[aria-selected="true"]{color:#2e53fa;font-weight:600}
+.scene-tabs button[aria-selected="true"]:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:#2e53fa}
+.scene-tabs button:hover,.scene-tabs button:focus-visible{color:#2e53fa;outline:none}
 .scene-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 28px}
-.scene-card{height:176px;display:grid;grid-template-columns:minmax(0,1fr) 173px;color:#111;transition:transform .18s,filter .18s}
+.scene-card{height:176px;display:grid;grid-template-columns:minmax(0,1fr) 173px;color:#111;transition:transform .18s,filter .18s,grid-template-columns .18s,height .18s}
 .scene-card[hidden]{display:none}
-.scene-card:hover{transform:translateY(-2px);filter:drop-shadow(0 8px 18px rgba(16,24,40,.07))}
+.scene-card:hover,.scene-card:focus-visible{height:192px;grid-template-columns:1fr;transform:translateY(-2px);filter:drop-shadow(0 8px 18px rgba(16,24,40,.07));outline:none}
 .scene-main{position:relative;border-radius:12px 0 0 12px;background:#fff;padding:16px;overflow:hidden}
+.scene-card:hover .scene-main,.scene-card:focus-visible .scene-main{border-radius:12px;padding-right:160px}
 .scene-main:after{content:"";position:absolute;right:-7px;top:16px;bottom:16px;width:14px;background:url("../images/figma-home/perforation.svg") center/14px 144px no-repeat;z-index:2}
+.scene-card:hover .scene-main:after,.scene-card:focus-visible .scene-main:after{display:none}
 .scene-tags{display:flex;gap:6px;align-items:center;height:20px}
 .scene-tags span{border-radius:4px;background:#f0f0f0;padding:1px 6px;font-size:12px;line-height:16px}
 .scene-tags .micro-cert{display:inline-flex;gap:5px;align-items:center;background:transparent}
 .micro-cert img{width:20px;height:20px}
 .scene-main h3{font-size:18px;line-height:20px;margin:10px 0 10px;font-weight:600}
 .scene-user{display:flex;gap:10px;font-size:14px;line-height:22px;color:rgba(0,0,0,.6);padding-right:80px}
+.scene-card:hover .scene-user,.scene-card:focus-visible .scene-user{padding-right:0}
 .scene-user b{font-weight:400;color:#111;flex:0 0 auto}
-.scene-orb{position:absolute;right:20px;top:6px;width:80px;height:60px;object-fit:cover;border-radius:8px}
+.scene-orb{position:absolute;right:20px;top:6px;width:80px;height:60px;object-fit:cover;border-radius:8px;transition:opacity .15s ease}
 .knowledge-route{position:absolute;left:16px;right:16px;bottom:16px;display:flex;gap:10px;overflow:hidden}
 .knowledge-route span{border-radius:4px;background:#d9ecfd;color:#fff;padding:2px 6px;font-size:12px;line-height:22px;white-space:nowrap}
+.scene-hover-details{display:none;position:absolute;left:16px;bottom:15px;gap:8px;align-items:center;color:rgba(0,0,0,.55);font-size:12px;line-height:18px}.scene-hover-details span+span:before{content:"|";margin-right:8px;color:#c2c8d1}.scene-actions{display:none;position:absolute;right:16px;top:50%;width:86px;transform:translateY(-50%);gap:12px;flex-direction:column;align-items:stretch;text-align:center;font-size:12px;line-height:24px}.scene-primary{border-radius:999px;background:#000;color:#fff}.scene-secondary{border:1px solid #101828;border-radius:999px;background:#fff;color:#101828}
+.scene-card:hover .scene-orb,.scene-card:hover .knowledge-route,.scene-card:focus-visible .scene-orb,.scene-card:focus-visible .knowledge-route{opacity:0;pointer-events:none}.scene-card:hover .scene-hover-details,.scene-card:hover .scene-actions,.scene-card:focus-visible .scene-hover-details,.scene-card:focus-visible .scene-actions{display:flex}
 .scene-cost{border-radius:0 12px 12px 0;background:#fff;padding:12px 18px 12px 26px;display:grid;align-content:center;gap:9px}
+.scene-card:hover .scene-cost,.scene-card:focus-visible .scene-cost{display:none}
 .scene-cost span{display:flex;align-items:center;gap:8px;font-size:14px;line-height:22px;white-space:nowrap}
-.scene-cost img{width:20px;height:20px}
+.scene-cost img{width:16px;height:16px;object-fit:contain}
 .scene-more{margin:24px 0 0;font-size:14px;color:rgba(0,0,0,.6)}
 .scene-more a{color:#2e53fa}
 .dlc-growth{padding-top:106px;padding-bottom:92px}
