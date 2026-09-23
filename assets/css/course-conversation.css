@@ -96,3 +96,8 @@
 .course-flow.conversation.outline-expanded .outline-board .outline-tree{zoom:.5;width:200%}
 .course-flow.conversation.outline-expanded .outline-board{overflow:auto}
 @media(max-width:700px){.course-flow.conversation .flow-step-title h2,.course-flow.conversation .flow-step-count{font-size:14px}.course-flow.conversation .flow-question-head h3{font-size:16px}.course-flow.conversation.course-preview-expanded #coursePreviewStep{padding:14px 14px 100px}.course-flow.conversation.outline-expanded .outline-board .outline-tree{zoom:.65;width:154%}}
+
+/* 修复全屏课程预览：不继承对话流的内容宽度 */
+.course-flow.conversation .flow-intro h2{font-size:14px;line-height:20px;font-weight:400;color:rgba(0,0,0,.6)}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep{width:100%;max-width:none;margin:0;right:0;bottom:0;left:0;top:0}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep.flow-step{width:100%;max-width:none;margin:0}
