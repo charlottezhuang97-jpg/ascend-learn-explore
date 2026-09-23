@@ -83,3 +83,16 @@
 .course-flow.conversation .assistant-turn-body>h2{margin:0 0 8px;color:#17223a;font-size:16px;line-height:24px;font-weight:400}
 .course-flow.conversation .assistant-turn-body>.assistant-lead{margin:0 0 12px;color:rgba(0,0,0,.6);font-size:14px;line-height:22px;font-weight:400}
 .course-flow.conversation .outline-summary{padding:20px 28px}
+
+/* AI 对话场景：检索与全屏阶段 */
+.course-flow.conversation .flow-step-title h2{font-size:14px;line-height:20px;font-weight:400;color:rgba(0,0,0,.6)}
+.course-flow.conversation .flow-step-count{font-size:14px;line-height:20px;font-weight:400;color:rgba(0,0,0,.6)}
+.course-flow.conversation .flow-question-head h3{font-size:16px;line-height:24px;font-weight:500}
+.flow-process-source{transition:opacity .22s ease,transform .22s ease}.flow-process-source.source-pending{opacity:0;transform:translateY(6px);pointer-events:none}
+.preview-title-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.preview-title-row h3{margin:0!important}.preview-play{border:0;border-radius:999px;background:#000;color:#fff;padding:6px 10px;font-size:12px;line-height:18px;font-weight:500}.preview-play:hover{background:#2e53fa}
+.course-preview-fullscreen-header{display:none}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep{position:fixed;inset:0;z-index:70;overflow:auto;background:#fcfcfe;padding:20px 24px 108px}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep>.assistant-turn{width:min(1280px,100%);margin:0 auto}.course-flow.conversation.course-preview-expanded #coursePreviewStep .compose-shell{margin-top:16px}.course-flow.conversation.course-preview-expanded .preview-action-panel{z-index:80}.course-flow.conversation.course-preview-expanded .course-preview-fullscreen-header{width:min(1280px,100%);margin:0 auto;display:flex;align-items:center;justify-content:space-between}.course-preview-fullscreen-header strong{font-size:16px;font-weight:500}.course-preview-fullscreen-header button{border:1px solid #d7dfed;border-radius:9px;background:#fff;padding:8px 12px;color:#365173;font-size:14px}.course-preview-fullscreen-header button:hover{border-color:#2e53fa;color:#2e53fa}
+.course-flow.conversation.outline-expanded .outline-board .outline-tree{zoom:.5;width:200%}
+.course-flow.conversation.outline-expanded .outline-board{overflow:auto}
+@media(max-width:700px){.course-flow.conversation .flow-step-title h2,.course-flow.conversation .flow-step-count{font-size:14px}.course-flow.conversation .flow-question-head h3{font-size:16px}.course-flow.conversation.course-preview-expanded #coursePreviewStep{padding:14px 14px 100px}.course-flow.conversation.outline-expanded .outline-board .outline-tree{zoom:.65;width:154%}}
