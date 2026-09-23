@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6fa">
+  <title>课程预览 · 昇腾开发者学习中心</title>
+  <link rel="stylesheet" href="assets/css/course-preview.css">
+</head>
+<body>
+  <header class="preview-header">
+    <a class="exit-course" href="index.html" aria-label="退出课程并返回首页"><span aria-hidden="true">×</span>退出课程</a>
+    <div class="header-actions" aria-label="课程工具">
+      <span class="points">FREE <b>✦ 20</b></span>
+      <button type="button" class="icon-button" aria-label="切换语言">文A</button>
+      <button type="button" class="problem-button">⚑ 遇到问题？</button>
+      <span class="course-avatar" aria-label="当前用户">C</span>
+    </div>
+  </header>
+
+  <div class="preview-layout">
+    <aside class="course-sidebar" aria-label="课程导航">
+      <div class="course-cover"><img src="assets/images/figma-home/continue-course.png" alt="课程封面"></div>
+      <div class="cover-actions"><button type="button" aria-label="分享课程">↗</button><button type="button" aria-label="添加到日历">▣</button></div>
+      <div class="course-author"><span class="author-mark">⌁</span><span><small>策划自</small><b data-course-author>Ascend 学习中心</b></span></div>
+      <h1 data-course-title>Ascend C 算子开发</h1>
+      <p class="course-summary" data-course-summary>面向需要开发自定义算子、解决算子不支持和性能不足问题的开发者。</p>
+      <button class="show-more" type="button">显示更多</button>
+      <nav class="sidebar-tabs" role="tablist" aria-label="课程内容">
+        <button type="button" role="tab" aria-selected="true" data-panel="units">☷ 单元</button>
+        <button type="button" role="tab" aria-selected="false" data-panel="materials">▧ 资料</button>
+        <button type="button" role="tab" aria-selected="false" data-panel="practices">✎ 练习</button>
+      </nav>
+      <ol class="unit-list" id="unitList" aria-label="课程单元"></ol>
+      <div class="sidebar-panel" id="materials" hidden><b>课程资料</b><p>讲义、示例工程和官方文档会随课节解锁。</p></div>
+      <div class="sidebar-panel" id="practices" hidden><b>课程练习</b><p>完成当前课节后，可进入配套实验和单元测验。</p></div>
+    </aside>
+
+    <main class="preview-main">
+      <section class="unit-intro" aria-labelledby="unitTitle">
+        <span class="unit-badge" data-unit-count>第 1 单元，共 6 单元</span>
+        <h2 id="unitTitle" data-unit-title>单元 1：理解算子在计算图中的作用</h2>
+        <p data-unit-intro>从计算图、算子接口和执行路径入手，建立自定义算子开发的整体认知。</p>
+      </section>
+
+      <button type="button" class="material-card" aria-label="上传资料扩展课程">
+        <span class="material-files" aria-hidden="true"><i>W</i><i>X</i><i>PDF</i></span>
+        <span><b>上传材料，扩展这门课程</b><small>上传新的 PDF，或直接描述你想添加、修改的内容</small></span>
+        <span class="material-arrow" aria-hidden="true">›</span>
+      </button>
+
+      <section class="learning-status" aria-label="学习状态说明">
+        <div class="status-legend"><span class="mastered">✓ 已掌握</span><span class="skilled">◔ 熟练</span><span class="familiar">◔ 熟悉</span><span class="tried">○ 已尝试</span><span class="not-started">○ 未开始</span><span>▣ 项目</span><span>♙ 测验</span></div>
+        <div class="unit-progress"><div class="progress-dots" aria-label="单元进度"><span class="current"></span><span></span><span></span><span></span><span></span><span></span></div><button type="button" class="next-unit">▶ 下一步：开始第一个课节 <span>›</span></button></div>
+      </section>
+
+      <section class="lesson-timeline" aria-label="当前单元课节">
+        <article class="lesson-card active-card" tabindex="0">
+          <div class="timeline-marker" aria-hidden="true">▧</div>
+          <div class="lesson-main">
+            <p class="lesson-kicker">课程 · 讲次 1</p>
+            <h3>理解算子在计算图中的作用</h3>
+            <p class="lesson-description">明确算子的任务边界、输入输出和调度位置，建立从模型到自定义算子的基础认知。</p>
+            <div class="lesson-rows">
+              <div><span><b>课节 1</b><em>▻ 课程</em> 算子开发的任务边界</span><a href="learn.html">继续学习</a></div>
+              <div><span><b>课节 2</b><em>▧ 文档</em> 从计算图到自定义算子</span><a href="learn.html">开始学习</a></div>
+            </div>
+          </div>
+          <aside class="lesson-hover-panel" aria-label="讲次操作">
+            <span class="panel-label">继续此讲次</span>
+            <strong>从课节 1 开始</strong>
+            <a href="learn.html" class="panel-primary">▶ 开始学习</a>
+            <button type="button" class="panel-secondary">＋ 加入计划</button>
+          </aside>
+        </article>
+
+        <article class="lesson-card" tabindex="0">
+          <div class="timeline-marker" aria-hidden="true">▧</div>
+          <div class="lesson-main">
+            <p class="lesson-kicker">课程 · 讲次 2</p>
+            <h3>编程模型与编程范式</h3>
+            <p class="lesson-description">理解 Ascend C 的编程模型和基础语法，为后续的向量、矩阵计算做好准备。</p>
+            <div class="lesson-rows compact"><div><span><b>课节 3</b><em>▻ 课程</em> Kernel 结构与执行模型</span></div><div><span><b>课节 4</b><em>⌁ 实践</em> 编写第一个算子工程</span></div></div>
+          </div>
+          <aside class="lesson-hover-panel" aria-label="讲次操作"><span class="panel-label">尚未开始</span><strong>预计 2 小时</strong><a href="learn.html" class="panel-primary">▶ 预览课节</a><button type="button" class="panel-secondary">＋ 加入计划</button></aside>
+        </article>
+
+        <article class="lesson-card" tabindex="0">
+          <div class="timeline-marker" aria-hidden="true">▧</div>
+          <div class="lesson-main">
+            <p class="lesson-kicker">课程 · 讲次 3</p>
+            <h3>SIMD 编程与矩阵计算</h3>
+            <p class="lesson-description">从数据搬运、向量化计算和矩阵运算三个角度，学习优化算子性能的方法。</p>
+            <div class="lesson-rows compact"><div><span><b>课节 5</b><em>▻ 课程</em> 向量计算与数据搬运</span></div><div><span><b>课节 6</b><em>♙ 测验</em> SIMD 编程随堂测试</span></div></div>
+          </div>
+          <aside class="lesson-hover-panel" aria-label="讲次操作"><span class="panel-label">尚未开始</span><strong>预计 2.5 小时</strong><a href="learn.html" class="panel-primary">▶ 预览课节</a><button type="button" class="panel-secondary">＋ 加入计划</button></aside>
+        </article>
+
+        <article class="lesson-card" tabindex="0">
+          <div class="timeline-marker medal" aria-hidden="true">♙</div>
+          <div class="lesson-main"><p class="lesson-kicker">单元测验</p><h3>算子开发基础能力测验</h3><p class="lesson-description">验证你是否能正确理解算子接口、计算图映射和基础编程模型。</p></div>
+          <aside class="lesson-hover-panel" aria-label="测验操作"><span class="panel-label">完成前置课节后解锁</span><strong>预计 20 分钟</strong><button type="button" class="panel-secondary locked">🔒 待解锁</button></aside>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div class="course-preview-actions" aria-label="课程操作">
+    <span><b data-course-action-title>Ascend C 算子开发</b><small>已为你保留当前学习进度</small></span>
+    <button type="button" class="plan-button" id="planButton">＋ 加入学习计划</button>
+    <a href="learn.html" class="start-button">开始学习</a>
+  </div>
+  <script src="assets/js/course-preview.js"></script>
+</body>
+</html>
