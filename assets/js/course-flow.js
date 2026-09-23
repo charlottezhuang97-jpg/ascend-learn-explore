@@ -119,12 +119,18 @@
   let returnFocus = null;
   let composition = null;
   let stepTimer = null;
+  let sourceTimers = [];
 
   function element(tag, className, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
     if (text !== undefined) node.textContent = text;
     return node;
+  }
+
+  function clearSourceTimers() {
+    sourceTimers.forEach(timer => window.clearTimeout(timer));
+    sourceTimers = [];
   }
 
   function createStep(title, number, state = 'done', id) {
@@ -135,7 +141,7 @@
     const titleRow = element('div', 'flow-step-title');
     titleRow.append(
       element('h2', '', title),
-      element('span', 'flow-step-count', `｜第 ${number} 步，共 4 步`),
+      element('span', 'flow-step-count', `｜第 ${number} 步｜共 4 步`),
       element('span', 'flow-step-state')
     );
     entry.append(titleRow);
@@ -154,7 +160,7 @@
   }
 
   function createSearchEvidence() {
-    const entry = createStep('正在搜索相关资料', 1, 'done', 'searchStep');
+    const entry = createStep('正在搜索相关资料', 1, 'active', 'searchStep');
     entry.classList.add('flow-search-step');
     const tech = element('div', 'flow-process-tech');
     ['Ascend C', '模型训练', '算子开发'].forEach(name => tech.append(element('span', '', name)));
@@ -170,17 +176,22 @@
       ['昇腾社区精选案例', 'hiascend.com']
     ];
     const sourceList = element('div', 'flow-source-list');
-    sources.forEach(([title, url]) => sourceList.append(sourceRow(title, url)));
+    const visibleSources = sources.slice(0, 3);
+    visibleSources.forEach(([title, url], index) => {
+      const row = sourceRow(title, url);
+      row.classList.add('source-pending');
+      sourceList.append(row);
+      sourceTimers.push(window.setTimeout(() => {
+        row.classList.remove('source-pending');
+        if (index === visibleSources.length - 1) entry.dataset.state = 'done';
+      }, 420 * (index + 1)));
+    });
     const more = element('button', 'flow-more-sources', '查看更多资料');
     more.type = 'button';
     more.setAttribute('aria-expanded', 'false');
     const morePanel = element('div', 'flow-more-panel');
     morePanel.hidden = true;
-    [
-      ['CANN 版本适配说明', 'hiascend.com'],
-      ['算子开发常见问题', 'hiascend.com'],
-      ['MindSpore 算子样例', 'mindspore.cn']
-    ].forEach(([title, url]) => morePanel.append(sourceRow(title, url)));
+    sources.slice(3).forEach(([title, url]) => morePanel.append(sourceRow(title, url)));
     more.addEventListener('click', () => {
       const expanded = more.getAttribute('aria-expanded') === 'true';
       more.setAttribute('aria-expanded', String(!expanded));
@@ -194,6 +205,7 @@
   function renderQuestions(count = 1, focusIndex = 0) {
     removeComposition();
     window.clearTimeout(stepTimer);
+    clearSourceTimers();
     stage.replaceChildren();
     revealed = count;
     let heading;
@@ -342,7 +354,7 @@
     if (!stage.querySelector('#outlineTurn')) return;
     removeComposition();
     stage.querySelector('#outlineTurn')?.remove();
-    flow.classList.remove('outline-expanded');
+    flow.classList.remove('outline-expanded', 'course-preview-expanded');
     stage.querySelector('#courseBuildStep')?.remove();
     const lastActions = stage.querySelector('#flowQuestion4 .flow-actions');
     if (lastActions) lastActions.hidden = false;
@@ -359,6 +371,7 @@
       topic: questions === topicQuestions.operator ? 'operator' : questions === topicQuestions.inference ? 'inference' : 'training',
       depth: describe(3),
       direction: describe(1),
+      startExpanded: true,
       onBack: () => {
         removeComposition();
         buildStep.remove();
@@ -404,7 +417,14 @@
     stage.querySelector('#courseBuildStep')?.setAttribute('data-state', 'done');
     const previewStep = createStep('查看课程预览', 4, 'active', 'coursePreviewStep');
     const turn = assistantTurn('courseTurn', 'AI 正在生成课程预览', '正在为你编写这门课程', '下方纸张会逐字写入课程草稿，课程卡片同时逐步展开单元和讲次。当前是探索版示例演示。');
-    composition = window.createCourseCompose(outline, () => previewStep.setAttribute('data-state', 'done'));
+    flow.classList.add('course-preview-expanded');
+    const fullscreenHeader = element('div', 'course-preview-fullscreen-header');
+    fullscreenHeader.append(element('strong', '', '课程预览'));
+    const exitPreview = element('button', '', '退出全屏');
+    exitPreview.type = 'button';
+    exitPreview.addEventListener('click', () => { flow.classList.remove('course-preview-expanded'); scrollToTurn(previewStep); });
+    fullscreenHeader.append(exitPreview);
+    composition = window.createCourseCompose(outline, () => previewStep.setAttribute('data-state', 'done'), () => { window.location.href = `learn.html?title=${encodeURIComponent(outline.goal)}`; });
     turn.body.append(composition.element);
     const actions = element('div', 'preview-action-panel');
     const start = element('button', 'preview-start', '开始学习');
@@ -419,7 +439,7 @@
       plan.textContent = added ? '＋ 加入学习计划' : '✓ 已加入学习计划';
     });
     actions.append(start, plan);
-    previewStep.append(turn.element, actions);
+    previewStep.append(fullscreenHeader, turn.element, actions);
     stage.append(previewStep);
     scrollToTurn(previewStep);
   }
@@ -427,7 +447,8 @@
   function close() {
     removeComposition();
     flow.hidden = true;
-    flow.classList.remove('outline-expanded');
+    clearSourceTimers();
+    flow.classList.remove('outline-expanded', 'course-preview-expanded');
     background.forEach(node => { node.inert = false; });
     document.body.style.overflow = '';
     if (returnFocus) returnFocus.focus();
@@ -441,7 +462,8 @@
     revealed = 1;
     returnFocus = document.activeElement;
     flow.hidden = false;
-    flow.classList.remove('outline-expanded');
+    clearSourceTimers();
+    flow.classList.remove('outline-expanded', 'course-preview-expanded');
     background.forEach(node => { node.inert = true; });
     document.body.style.overflow = 'hidden';
     renderQuestions();
@@ -449,7 +471,11 @@
 
   closeButton.addEventListener('click', close);
   flow.addEventListener('keydown', event => {
-    if (event.key === 'Escape') { close(); return; }
+    if (event.key === 'Escape') {
+      if (flow.classList.contains('course-preview-expanded')) { flow.classList.remove('course-preview-expanded'); scrollToTurn(stage.querySelector('#coursePreviewStep')); return; }
+      if (flow.classList.contains('outline-expanded')) { flow.querySelector('.outline-toolbar button')?.click(); return; }
+      close(); return;
+    }
     if (event.key !== 'Tab') return;
     const focusable = [...flow.querySelectorAll('button:not([disabled]),textarea:not([hidden])')];
     const first = focusable[0], last = focusable[focusable.length - 1];

@@ -40,7 +40,7 @@
     return el;
   }
 
-  window.createCourseOutline = ({ goal, topic, depth, direction, onBack, onClose, onConfirm, onChange }) => {
+  window.createCourseOutline = ({ goal, topic, depth, direction, startExpanded = false, onBack, onClose, onConfirm, onChange }) => {
     const flow = document.getElementById('courseFlow');
     const stage = node('div', 'outline-stage');
     const source = templates[topic] || templates.training;
@@ -56,7 +56,7 @@
     }));
     let nextChapterId = 100;
     let editing = false;
-    let expanded = false;
+    let expanded = Boolean(startExpanded);
     let selected = null;
     let confirmed = false;
 
@@ -278,6 +278,7 @@
       board.scrollLeft = boardPosition[0];
       board.scrollTop = boardPosition[1];
     }
+    flow.classList.toggle('outline-expanded', expanded);
     render();
     stage.querySelector('#outlineHeading')?.focus();
     return stage;

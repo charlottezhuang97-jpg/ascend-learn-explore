@@ -6,7 +6,7 @@
     return item;
   }
 
-  window.createCourseCompose = (outline, onComplete = () => {}) => {
+  window.createCourseCompose = (outline, onComplete = () => {}, onStart = () => {}) => {
     const wrapper = node('div', 'compose-shell');
     const header = node('div', 'compose-header');
     const title = node('strong', '', '正在编写课程预览');
@@ -42,7 +42,13 @@
     cover.append(node('span', '', '✦'));
     const heroBody = node('div');
     heroBody.append(node('span', 'preview-kicker', '课程内容预览'));
-    heroBody.append(node('h3', '', outline.goal));
+    const previewTitle = node('div', 'preview-title-row');
+    previewTitle.append(node('h3', '', outline.goal));
+    const play = node('button', 'preview-play', '▶ 开始学习');
+    play.type = 'button';
+    play.addEventListener('click', onStart);
+    previewTitle.append(play);
+    heroBody.append(previewTitle);
     heroBody.append(node('p', 'preview-description', `围绕“${outline.goal}”安排循序渐进的学习内容：先理解关键概念，再完成练习与复盘。课程结构以你确认的大纲为准。`));
     const tags = node('div', 'preview-tags');
     [`# ${outline.units.length} 个单元`, '# 昇腾学习', '# 实践课程'].forEach(tag => tags.append(node('span', '', tag)));
