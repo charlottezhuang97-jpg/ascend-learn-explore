@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | `home-discovery` | `index.html` | 表达目标、发现开发场景、发现榜样 | Hero 搜索 → 场景路线 → 公共成长榜 |
 | `ai-dialogue` | 首页搜索后 | 补齐目标、生成路径和课程 | 连续步骤流，不使用大步骤卡片 |
-| `course-preview` | `detail.html` / AI 生成完成后 | 判断是否适合并开始学习 | 课程成果、知识路线、成本、底部操作栏 |
+| `course-preview` | 首页课程卡、课程列表课程卡 / AI 生成完成后 | 判断是否适合并开始学习 | 课程成果、知识路线、成本、底部操作栏 |
 | `whiteboard-learning` | `learn.html` 默认视图 | 通过板书和字幕理解概念 | 讲课画布 + 右侧 AI 学伴 |
 | `video-workbench` | `learn.html` 切换视频 | 边看视频边查看代码并实践 | 视频 + 代码 + 可收起 IDE，支持拖动调宽 |
 | `growth-feedback` | 首页成长榜、个人空间、AI 学伴 | 看到成果并获得下一步行动 | 公共榜单摘要与个人证据记录分离 |
