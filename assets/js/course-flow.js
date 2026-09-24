@@ -133,13 +133,26 @@
     sourceTimers = [];
   }
 
+  const stepIcons = {
+    1: 'assets/images/figma-home/flow-search.svg',
+    2: 'assets/images/figma-home/flow-learning-path.svg',
+    3: 'assets/images/figma-home/flow-course-outline.svg',
+    4: 'assets/images/figma-home/flow-course-preview.svg'
+  };
+
   function createStep(title, number, state = 'done', id) {
     const entry = element('section', 'flow-step');
     if (id) entry.id = id;
     entry.dataset.state = state;
     entry.setAttribute('aria-label', `${title}，第 ${number} 步，共 4 步`);
     const titleRow = element('div', 'flow-step-title');
+    const icon = document.createElement('img');
+    icon.className = 'flow-step-icon';
+    icon.src = stepIcons[number];
+    icon.alt = '';
+    icon.setAttribute('aria-hidden', 'true');
     titleRow.append(
+      icon,
       element('h2', '', title),
       element('span', 'flow-step-count', `｜第 ${number} 步｜共 4 步`),
       element('span', 'flow-step-state')
@@ -150,8 +163,13 @@
 
   function sourceRow(title, url, official = true) {
     const source = element('div', 'flow-process-source');
+    const icon = document.createElement('img');
+    icon.className = 'flow-process-source-icon';
+    icon.src = 'assets/images/figma-home/source-map.png';
+    icon.alt = '';
+    icon.setAttribute('aria-hidden', 'true');
     source.append(
-      element('span', 'flow-process-source-icon'),
+      icon,
       element('span', 'flow-process-source-title', title),
       element('span', 'flow-process-url', url)
     );
