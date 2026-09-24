@@ -274,11 +274,17 @@
   function completeQuiz() {
     const [role, goal, level] = quizAnswers;
     const generatedGoal = `${role}，希望${goal}，当前${level}`;
+    const profile = `${role || ''} ${goal || ''} ${level || ''}`;
+    const course = /推理/.test(profile) ? 'inference' : /应用/.test(profile) ? 'agent' : /算子|Ascend C|Triton|CUDA/.test(profile) ? 'operator' : 'training';
     closeQuiz();
-    if (window.openCourseFlow) window.openCourseFlow(generatedGoal);
+    window.location.assign(`course-preview.html?course=${course}&source=quiz&profile=${encodeURIComponent(generatedGoal)}`);
   }
 
-  openQuizButton.addEventListener('click', openQuiz);
+  openQuizButton.addEventListener('click', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    openQuiz();
+  });
   quizClose.addEventListener('click', closeQuiz);
   quiz.addEventListener('keydown', event => {
     if (event.key === 'Escape') { event.preventDefault(); closeQuiz(); }
@@ -294,6 +300,15 @@
 
   const sceneButtons = [...document.querySelectorAll('.scene-tabs button')];
   const sceneCards = [...document.querySelectorAll('.scene-card')];
+  document.querySelectorAll('a.scene-card, a.continue-card').forEach(card => {
+    card.addEventListener('click', event => {
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const href = card.getAttribute('href');
+      if (!href) return;
+      event.preventDefault();
+      window.location.assign(href);
+    });
+  });
   sceneButtons.forEach(button => {
     button.addEventListener('click', () => {
       const filter = button.dataset.filter;
