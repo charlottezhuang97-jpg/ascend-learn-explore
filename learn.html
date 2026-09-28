@@ -4,8 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>白板学习 · Ascend Developer</title>
-  <link rel="stylesheet" href="assets/css/learning-room.css?v=1">
-  <link rel="stylesheet" href="assets/css/video-learning.css?v=video-dock-1">
+  <link rel="stylesheet" href="assets/css/learning-room.css?v=learning-anchor-1">
+  <link rel="stylesheet" href="assets/css/video-learning.css?v=ide-recovery-1">
+  <link rel="stylesheet" href="assets/css/learning-high-fidelity.css?v=1">
 </head>
 <body>
   <main class="learning-room" id="learningRoom" aria-label="沉浸式课程学习">
@@ -22,6 +23,11 @@
         </div>
       </header>
       <section class="whiteboard" id="whiteboard" aria-label="课程板书画布">
+        <nav class="learning-anchor" aria-label="当前板书关联内容">
+          <span><i aria-hidden="true"></i>板书 01 · 数据流</span>
+          <button type="button" id="boardToVideo" data-time="03:20"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 7 5-7 5z"/><rect x="3" y="4" width="18" height="16" rx="3"/></svg>对应视频 03:20–05:45</button>
+          <button type="button" id="openDocument"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15H6zM9 10h6M9 14h6"/></svg>文档 §2.3</button>
+        </nav>
         <div class="board-writing">
           <p class="board-kicker">课程开篇</p>
           <h1>昇腾 AI 处理器架构与 Da Vinci 计算直觉</h1>
@@ -36,6 +42,12 @@
         <div class="selection-tip" id="selectionTip" hidden><button type="button" id="addNote">＋ 加入我的笔记</button></div>
         <div class="board-subtitle" aria-live="polite">这一节我们先建立直觉：模型计算会被拆分成不同类型的任务，再由对应的计算单元协同完成。</div>
       </section>
+      <aside class="reference-drawer" id="referenceDrawer" aria-label="关联资料" aria-hidden="true">
+        <header><div><span>关联资料</span><strong>板书 01 · 数据流</strong></div><button type="button" id="closeDocument" aria-label="关闭关联资料">×</button></header>
+        <section class="reference-section"><span class="reference-eyebrow">官方文档</span><h2>Ascend C 编程指南</h2><p>§2.3 数据搬运：理解输入搬运、向量计算和结果写回的职责边界。</p><blockquote>搬运流程应明确输入位置、计算目标以及写回长度，避免输出参数与结果空间不一致。</blockquote><a href="https://www.hiascend.com/document" target="_blank" rel="noreferrer">打开官方原文 ↗</a></section>
+        <section class="reference-section"><span class="reference-eyebrow">视频对应位置</span><h2>板书内容在视频中的位置</h2><button type="button" class="reference-timeline" data-seek="03:20"><b>03:20</b><span>输入搬运</span></button><button type="button" class="reference-timeline" data-seek="04:10"><b>04:10</b><span>向量计算</span></button><button type="button" class="reference-timeline" data-seek="05:05"><b>05:05</b><span>结果写回</span></button></section>
+        <p class="reference-note">切换媒体后会保留板书页码、字幕位置和当前代码。</p>
+      </aside>
       <footer class="board-footer"><button type="button">☷ 目录</button><button type="button">◖ 声音</button><span>长按画布中的文字，可加入我的笔记</span></footer>
     </section>
     <aside class="companion" aria-label="AI 学伴">
@@ -66,7 +78,8 @@
     <section class="video-dock" id="videoDock" aria-label="视频、代码和 IDE 工作区">
       <section class="video-column dock-card" aria-label="视频学习区">
         <div class="dock-card-title"><span>视频讲解</span><small>课节 1 · 18:40</small></div>
-        <div class="video-player"><div class="video-meta">▶ 昇腾处理器的逻辑结构拆解 <span>08:24 / 18:40</span></div><div class="video-stage"><p>昇腾 AI 处理器架构</p><strong>Da Vinci 计算直觉</strong><button type="button" aria-label="播放视频">▶</button></div><div class="video-timeline"><span class="video-played"></span><i class="marker key" title="重要知识点"></i><i class="marker code" title="代码示例"></i><i class="marker practice" title="实践节点"></i></div><div class="timeline-legend"><span>● 重要知识点</span><span>● 代码示例</span><span>● 实践节点</span></div></div>
+        <div class="media-origin"><span>来自板书 01 · 数据流</span><button type="button" id="returnToBoard">返回板书</button></div>
+        <div class="video-player"><div class="video-meta">▶ 昇腾处理器的逻辑结构拆解 <span id="videoCurrentTime">08:24 / 18:40</span></div><div class="video-stage"><p>昇腾 AI 处理器架构</p><strong>Da Vinci 计算直觉</strong><button type="button" aria-label="播放视频">▶</button></div><div class="video-timeline"><span class="video-played" id="videoPlayed"></span><button type="button" class="marker key" data-seek="03:20" aria-label="跳转到 03:20 输入搬运" title="03:20 输入搬运"></button><button type="button" class="marker code" data-seek="05:05" aria-label="跳转到 05:05 结果写回" title="05:05 结果写回"></button><button type="button" class="marker practice" data-seek="08:24" aria-label="跳转到 08:24 实践节点" title="08:24 实践节点"></button></div><div class="timeline-legend"><span>● 重要知识点</span><span>● 代码示例</span><span>● 实践节点</span></div></div>
         <nav class="video-resource-tabs" aria-label="视频辅助内容"><button type="button" class="active" data-resource="examples">代码全览 <span>3</span></button><button type="button" data-resource="errors">常见错误码 <span>5</span></button><button type="button" data-resource="quiz">随堂测试 <span>3</span></button><button type="button" data-resource="docs">相关文档 <span>3</span></button></nav>
         <section class="video-resource-content" id="videoResourceContent"><strong>代码全览</strong><p>按视频章节查看本节的环境检查、设备初始化与版本确认代码。</p></section>
       </section>
@@ -78,10 +91,22 @@
         <article class="video-code-card" data-code="acl.rt.reset_device(0)&#10;acl.finalize()"><div><span>15:36</span><strong>释放运行资源</strong></div><pre>acl.rt.reset_device(0)&#10;acl.finalize()</pre><footer><button type="button" data-action="copy">复制</button><button type="button" data-action="explain">AI 解读</button><button type="button" data-action="insert">置入 IDE</button></footer><p class="code-explanation" hidden>任务结束后释放设备和运行时，避免资源被后续任务占用。</p></article>
       </section>
       <div class="dock-resizer" data-resize="code" role="separator" aria-label="调整代码区域宽度；可用左右方向键" aria-orientation="vertical" tabindex="0"></div>
-      <section class="video-ide dock-card" id="videoIde" aria-label="IDE 实践区"><header><strong>⌘ IDE 实践</strong><div><button type="button">▶ 运行</button><button type="button">■ 停止</button><button type="button">保存</button></div></header><div class="ide-body"><aside><strong>› scripts</strong><strong>› src</strong><strong>› ascendc</strong><strong class="file active">◻ check_env.py</strong><strong class="file">◻ README.md</strong></aside><section><div class="ide-tabs"><span>check_env.py ×</span><span>README.md ×</span></div><textarea id="ideEditor" spellcheck="false"># 检查 CANN 环境
+      <section class="video-ide dock-card" id="videoIde" aria-label="IDE 实践区"><header><strong>⌘ IDE 实践</strong><div><button type="button" id="runCode">▶ 运行</button><button type="button">■ 停止</button><button type="button">保存</button></div></header><div class="ide-body"><aside><strong>› scripts</strong><strong>› src</strong><strong>› ascendc</strong><strong class="file active">◻ check_env.py</strong><strong class="file">◻ README.md</strong></aside><section><div class="ide-tabs"><span>check_env.py ×</span><span>README.md ×</span></div><textarea id="ideEditor" spellcheck="false" aria-describedby="ideOutput"># 检查 CANN 环境
 import acl
 
-# 在此置入视频中的代码片段</textarea><div class="ide-output">问题　输出　调试控制台　终端<br><small>尚未运行代码。</small></div></section></div></section>
+# 在此置入视频中的代码片段</textarea><div class="ide-output" id="ideOutput">问题　输出　调试控制台　终端<br><small>尚未运行代码。</small></div></section></div></section>
+    </section>
+    <aside class="ai-fix-panel" id="aiFixPanel" aria-label="AI 修复建议" aria-hidden="true">
+      <header><div><span>AI 学伴</span><strong>建议修复 E-DEMO-102</strong></div><button type="button" id="closeFixPanel" aria-label="关闭修复建议">×</button></header>
+      <div class="fix-context">已带入：check_env.py 第 8 行、演示错误码 E-DEMO-102、视频 05:05</div>
+      <section><span class="fix-eyebrow">原因判断</span><h2>结果写回缺少长度参数</h2><p>当前调用没有告诉运行时需要写回多少结果，可能导致输出空间与写回范围不一致。</p></section>
+      <section><span class="fix-eyebrow">建议修改</span><div class="code-diff"><code class="removed">− CopyOut()</code><code class="added">+ CopyOut(output, result_length)</code></div></section>
+      <section><span class="fix-eyebrow">依据</span><a href="#" data-fix-source="docs">官方编程指南 §2.3 · 数据搬运</a><a href="#" data-fix-source="board">当前课程板书 01 · 结果写回</a><a href="#" data-fix-source="video">视频 05:05 · CopyOut 参数说明</a></section>
+      <p class="fix-caution">应用只修改当前文件，不会自动运行。应用后需要重新验证。</p>
+      <footer><button type="button" id="copyFix">仅复制</button><button type="button" class="primary" id="applyFix">确认并应用</button></footer>
+    </aside>
+    <div class="ai-fix-nudge" id="aiFixNudge" role="status" hidden><div><span>AI 学伴</span><strong>检测到 E-DEMO-102</strong><p>我可以解释原因并生成修复建议，应用前由你确认。</p></div><button type="button" id="dismissFixNudge" aria-label="稍后处理">×</button><button type="button" id="showFixPanel">查看修复建议</button></div>
+    <div class="learning-toast" id="learningToast" role="status" aria-live="polite" hidden></div>
   </main>
   <section class="mode-overlay" id="modeOverlay" role="dialog" aria-modal="true" aria-labelledby="modeTitle">
     <div class="mode-card">
@@ -94,6 +119,6 @@ import acl
       <button type="button" class="enter-learning" id="enterLearning">进入白板学习</button>
     </div>
   </section>
-  <script src="assets/js/learning-room.js?v=video-dock-1"></script>
+  <script src="assets/js/learning-room.js?v=ide-recovery-1"></script>
 </body>
 </html>
