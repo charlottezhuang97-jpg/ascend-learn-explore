@@ -459,7 +459,7 @@
     actions.append(start, plan);
     previewStep.append(fullscreenHeader, turn.element, actions);
     stage.append(previewStep);
-    scrollToTurn(previewStep);
+    fullscreenHeader.querySelector('button')?.focus({ preventScroll: true });
   }
 
   function close() {

@@ -110,6 +110,9 @@
       });
       row.append(content);
       unitList.append(row);
+      requestAnimationFrame(() => {
+        preview.scrollTo({ top: preview.scrollHeight, behavior: 'smooth' });
+      });
     }
     function updatePreview() {
       const target = Math.min(outline.units.length, Math.floor(typed / text.length * outline.units.length) + (typed > 0 ? 1 : 0));
@@ -137,7 +140,10 @@
       status.textContent = '可以查看下方的单元与讲次';
       skip.textContent = '查看课程内容 ↓';
       onComplete();
-      skip.addEventListener('click', () => preview.scrollIntoView({ behavior: 'smooth', block: 'start' }), { once: true });
+      requestAnimationFrame(() => {
+        preview.scrollTo({ top: preview.scrollHeight, behavior: 'smooth' });
+      });
+      skip.addEventListener('click', () => preview.scrollTo({ top: preview.scrollHeight, behavior: 'smooth' }), { once: true });
     }
     skip.addEventListener('click', () => { if (!finished) finish(); });
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

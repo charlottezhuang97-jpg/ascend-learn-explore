@@ -101,3 +101,26 @@
 .course-flow.conversation .flow-intro h2{font-size:14px;line-height:20px;font-weight:400;color:rgba(0,0,0,.6)}
 .course-flow.conversation.course-preview-expanded #coursePreviewStep{width:100%;max-width:none;margin:0;right:0;bottom:0;left:0;top:0}
 .course-flow.conversation.course-preview-expanded #coursePreviewStep.flow-step{width:100%;max-width:none;margin:0}
+
+/* 第四步：锁定视口，纸张与课程内容各自在定高区域内滚动 */
+.course-flow.conversation.course-preview-expanded #coursePreviewStep{height:100dvh;overflow:hidden;padding:18px 24px 92px;display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep>.assistant-turn{height:100%;min-height:0;overflow:hidden}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep .assistant-turn-body{height:100%;min-height:0;display:grid;grid-template-rows:auto auto auto minmax(0,1fr);overflow:hidden}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep .assistant-label{margin-bottom:2px}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep .assistant-turn-body>h2{margin-bottom:2px}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep .assistant-turn-body>.assistant-lead{margin-bottom:8px}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep .compose-shell{height:100%;min-height:0;margin-top:0;padding:18px;display:grid;grid-template-rows:auto 5px minmax(0,1fr);overflow:hidden}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep .compose-header{margin-bottom:12px;flex-wrap:nowrap}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep .compose-progress{margin-bottom:12px}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep .compose-grid{height:100%;min-height:0;gap:16px;align-items:stretch;overflow:hidden}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep .paper-area{height:100%;min-height:0;padding:8px 12px 0;position:relative;display:flex;align-items:flex-end;overflow:hidden}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep .paper-sheet{width:100%;height:100%;min-height:0;max-height:none;padding-bottom:112px;overscroll-behavior:contain;scrollbar-gutter:stable}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep .typewriter-base{position:absolute;z-index:2;left:12px;right:12px;bottom:0;margin:0}
+.course-flow.conversation.course-preview-expanded #coursePreviewStep .course-preview{height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-bottom:72px}
+
+@media(max-width:900px){
+  .course-flow.conversation.course-preview-expanded #coursePreviewStep{overflow:auto;display:block;height:100dvh;padding-bottom:96px}
+  .course-flow.conversation.course-preview-expanded #coursePreviewStep>.assistant-turn,.course-flow.conversation.course-preview-expanded #coursePreviewStep .assistant-turn-body,.course-flow.conversation.course-preview-expanded #coursePreviewStep .compose-shell{height:auto;overflow:visible}
+  .course-flow.conversation.course-preview-expanded #coursePreviewStep .compose-grid{height:auto;grid-template-columns:1fr;overflow:visible}
+  .course-flow.conversation.course-preview-expanded #coursePreviewStep .paper-area,.course-flow.conversation.course-preview-expanded #coursePreviewStep .course-preview{height:min(560px,58dvh)}
+}
