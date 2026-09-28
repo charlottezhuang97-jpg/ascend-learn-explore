@@ -5,6 +5,30 @@
   document.getElementById('lessonTitle').textContent = '昇腾处理器的逻辑结构拆解';
   document.getElementById('videoLessonTitle').textContent = '昇腾处理器的逻辑结构拆解';
   document.title = `${courseName} · 学习`;
+  const typingTargets = ['boardHeading', 'boardDescription', 'boardSubtitle'].map(id => document.getElementById(id));
+  const typingTexts = typingTargets.map(target => target.textContent);
+  typingTargets.forEach((target, index) => {
+    target.dataset.fullText = typingTexts[index];
+    target.setAttribute('aria-label', typingTexts[index]);
+    target.textContent = '';
+  });
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    typingTargets.forEach((target, index) => { target.textContent = typingTexts[index]; });
+  } else {
+    (async () => {
+      for (let index = 0; index < typingTargets.length; index++) {
+        const target = typingTargets[index];
+        const chars = Array.from(typingTexts[index]);
+        target.classList.add('typing');
+        for (const char of chars) {
+          target.textContent += char;
+          await new Promise(resolve => window.setTimeout(resolve, 42));
+        }
+        target.classList.remove('typing');
+        await new Promise(resolve => window.setTimeout(resolve, 260));
+      }
+    })();
+  }
   let selectedMode = 'board';
   const overlay = document.getElementById('modeOverlay');
   const enter = document.getElementById('enterLearning');
@@ -65,6 +89,20 @@
     referenceDrawer.classList.remove('open');
     referenceDrawer.setAttribute('aria-hidden', 'true');
     document.getElementById('openDocument').focus();
+  });
+  const outlinePanel = document.getElementById('lessonOutline');
+  const outlineToggle = document.getElementById('toggleLessonOutline');
+  function setOutlineOpen(open) {
+    outlinePanel.hidden = !open;
+    outlinePanel.setAttribute('aria-hidden', String(!open));
+    outlineToggle.setAttribute('aria-expanded', String(open));
+    if (open) document.getElementById('closeLessonOutline').focus();
+    else outlineToggle.focus();
+  }
+  outlineToggle.addEventListener('click', () => setOutlineOpen(outlinePanel.hidden));
+  document.getElementById('closeLessonOutline').addEventListener('click', () => setOutlineOpen(false));
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !outlinePanel.hidden) setOutlineOpen(false);
   });
   document.querySelectorAll('[data-seek]').forEach(button => button.addEventListener('click', () => seekVideo(button.dataset.seek)));
 

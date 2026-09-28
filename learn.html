@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>白板学习 · Ascend Developer</title>
-  <link rel="stylesheet" href="assets/css/learning-room.css?v=learning-anchor-1">
+  <link rel="stylesheet" href="assets/css/learning-room.css?v=board-typing-outline-2">
   <link rel="stylesheet" href="assets/css/video-learning.css?v=ide-recovery-1">
   <link rel="stylesheet" href="assets/css/learning-high-fidelity.css?v=1">
 </head>
@@ -30,8 +30,8 @@
         </nav>
         <div class="board-writing">
           <p class="board-kicker">课程开篇</p>
-          <h1>昇腾 AI 处理器架构与 Da Vinci 计算直觉</h1>
-          <p>从计算任务如何在 NPU 中被拆解开始，理解训练与推理中的核心计算单元。</p>
+          <h1 id="boardHeading" aria-live="off">昇腾 AI 处理器架构与 Da Vinci 计算直觉</h1>
+          <p id="boardDescription" aria-live="off">从计算任务如何在 NPU 中被拆解开始，理解训练与推理中的核心计算单元。</p>
         </div>
         <ol class="board-points" aria-label="课堂要点">
           <li class="active">CPU 与 NPU 的逻辑资源配比差异及异构计算协作模型</li>
@@ -40,7 +40,7 @@
           <li>达芬奇架构计算组件的宏观功能定位</li>
         </ol>
         <div class="selection-tip" id="selectionTip" hidden><button type="button" id="addNote">＋ 加入我的笔记</button></div>
-        <div class="board-subtitle" aria-live="polite">这一节我们先建立直觉：模型计算会被拆分成不同类型的任务，再由对应的计算单元协同完成。</div>
+        <div class="board-subtitle" id="boardSubtitle" aria-live="off">这一节我们先建立直觉：模型计算会被拆分成不同类型的任务，再由对应的计算单元协同完成。</div>
       </section>
       <aside class="reference-drawer" id="referenceDrawer" aria-label="关联资料" aria-hidden="true">
         <header><div><span>关联资料</span><strong>板书 01 · 数据流</strong></div><button type="button" id="closeDocument" aria-label="关闭关联资料">×</button></header>
@@ -48,7 +48,16 @@
         <section class="reference-section"><span class="reference-eyebrow">视频对应位置</span><h2>板书内容在视频中的位置</h2><button type="button" class="reference-timeline" data-seek="03:20"><b>03:20</b><span>输入搬运</span></button><button type="button" class="reference-timeline" data-seek="04:10"><b>04:10</b><span>向量计算</span></button><button type="button" class="reference-timeline" data-seek="05:05"><b>05:05</b><span>结果写回</span></button></section>
         <p class="reference-note">切换媒体后会保留板书页码、字幕位置和当前代码。</p>
       </aside>
-      <footer class="board-footer"><button type="button">☷ 目录</button><button type="button">◖ 声音</button><span>长按画布中的文字，可加入我的笔记</span></footer>
+      <aside class="lesson-outline" id="lessonOutline" aria-label="本节大纲" aria-hidden="true" hidden>
+        <header><div><span>课程 · 讲次 1</span><strong>本节大纲</strong></div><button type="button" id="closeLessonOutline" aria-label="关闭本节大纲">×</button></header>
+        <h2>理解算子在计算图中的作用</h2>
+        <p>明确算子的任务边界、输入输出和调度位置，建立从模型到自定义算子的基础认知。</p>
+        <ol>
+          <li><span class="outline-lesson-type">▻ 课程</span><span><b>课节 1</b>算子开发的任务边界</span><small>理解算子在计算图中的职责与位置</small></li>
+          <li><span class="outline-lesson-type">▧ 文档</span><span><b>课节 2</b>从计算图到自定义算子</span><small>认识模型算子与自定义实现的关系</small></li>
+        </ol>
+      </aside>
+      <footer class="board-footer"><button type="button" id="toggleLessonOutline" aria-expanded="false" aria-controls="lessonOutline">☷ 本节大纲</button><button type="button">◖ 声音</button><span>长按画布中的文字，可加入我的笔记</span></footer>
     </section>
     <aside class="companion" aria-label="AI 学伴">
       <header><strong>AI 学伴</strong><button type="button" aria-label="收起 AI 学伴">×</button></header>
@@ -119,6 +128,6 @@ import acl
       <button type="button" class="enter-learning" id="enterLearning">进入白板学习</button>
     </div>
   </section>
-  <script src="assets/js/learning-room.js?v=ide-recovery-1"></script>
+  <script src="assets/js/learning-room.js?v=board-typing-outline-2"></script>
 </body>
 </html>
