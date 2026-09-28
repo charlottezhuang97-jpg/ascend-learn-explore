@@ -113,8 +113,8 @@ import acl
       <h2 id="modeTitle">你想以什么形式学习这一课？</h2>
       <p>《<span id="courseName">昇腾学习课程</span>》支持视频与白板两种学习形式，之后可随时切换。</p>
       <div class="mode-options" role="radiogroup" aria-label="选择学习形式">
-        <button type="button" class="mode-option" role="radio" aria-checked="false" data-mode="video"><span>▶</span><strong>视频学习</strong><small>结合讲解视频、代码节点与字幕学习。</small></button>
-        <button type="button" class="mode-option selected" role="radio" aria-checked="true" data-mode="board"><span>✎</span><strong>白板学习</strong><small>跟随板书与字幕推进，可将选词加入笔记。</small></button>
+        <button type="button" class="mode-option selected" role="radio" aria-checked="true" data-mode="board"><span aria-hidden="true">✎</span><strong>白板学习</strong><small>跟随板书与字幕推进，可将选词加入笔记。</small></button>
+        <button type="button" class="mode-option" role="radio" aria-checked="false" data-mode="video"><span aria-hidden="true">▶</span><strong>视频学习</strong><small>结合讲解视频、代码节点与字幕学习。</small></button>
       </div>
       <button type="button" class="enter-learning" id="enterLearning">进入白板学习</button>
     </div>
