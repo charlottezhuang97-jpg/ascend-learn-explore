@@ -22,7 +22,7 @@
 | 沉浸式课程学习 | [learn.html](learn.html) | 如何完成当前课节、实践代码并获得 AI 辅助？ |
 | 开发者认证 | [certification.html](certification.html) | 学习路径和认证准备之间如何衔接？ |
 
-补充页面：[自主学习课程](courses.html)、[讲师指导培训](training.html)、[算子开发场景卡低保真](prototypes/operator-development-card-lowfi.html)。
+补充页面：[自主学习课程](courses.html)、[讲师指导培训](training.html)、[算子开发场景卡低保真](prototypes/operator-development-card-lowfi.html)、[AI 分身统一入口低保真](ai-companion-lowfi.html)。
 
 ## 主要产品链路
 
@@ -49,7 +49,7 @@ Token → 组件 → 场景模式 → 状态 → 验收
 
 - **Token**：`design-system/tokens/`，包含基础 Token、语义 Token、组件 Token 和旧页面兼容导出。字体统一为 HarmonyOS Sans；主要按钮优先使用黑色，品牌红只作为受限品牌强调色。
 - **组件**：`design-system/components/`，定义按钮、输入框、标签、卡片、步骤、代码片段和面板的结构与尺寸。
-- **场景模式**：`design-system/patterns/`，定义首页发现、AI 对话、课程预览、白板学习、视频工作台和成长反馈等复杂场景。
+- **场景模式**：`design-system/patterns/`，定义首页发现、AI 对话、AI 分身、课程预览、白板学习、视频工作台和成长反馈等复杂场景。
 - **状态**：[`design-system/states.md`](design-system/states.md)，定义加载、进行中、成功、失败、完成、选中、收起和恢复。
 - **验收**：[`design-system/acceptance.md`](design-system/acceptance.md)，定义视觉、交互、层级、可访问性和响应式检查。
 
