@@ -22,7 +22,7 @@
 | 沉浸式课程学习 | [learn.html](learn.html) | 如何完成当前课节、实践代码并获得 AI 辅助？ |
 | 开发者认证 | [certification.html](certification.html) | 学习路径和认证准备之间如何衔接？ |
 
-补充页面：[自主学习课程](courses.html)、[讲师指导培训](training.html)、[算子开发场景卡低保真](prototypes/operator-development-card-lowfi.html)、[AI 分身统一入口低保真](ai-companion-lowfi.html)、[知识地图与社区回填低保真](knowledge-community-lowfi.html)。
+补充页面：[自主学习课程](courses.html)、[讲师指导培训](training.html)、[算子开发场景卡低保真](prototypes/operator-development-card-lowfi.html)、[AI 分身统一入口低保真](ai-companion-lowfi.html)、[AI 分身六触点与知识地图视窗低保真](ai-companion-touchpoints-lowfi.html)、[知识地图与社区回填低保真](knowledge-community-lowfi.html)。
 
 ## 主要产品链路
 
