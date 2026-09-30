@@ -1,10 +1,30 @@
 (() => {
   const params = new URLSearchParams(window.location.search);
-  const courseName = params.get('title') || '昇腾学习课程';
+  const isTrainingCourse = params.get('course') === 'training';
+  const courseName = params.get('title') || (isTrainingCourse ? '大模型分布式训练' : '昇腾学习课程');
   document.getElementById('courseName').textContent = courseName;
   document.getElementById('lessonTitle').textContent = '昇腾处理器的逻辑结构拆解';
   document.getElementById('videoLessonTitle').textContent = '昇腾处理器的逻辑结构拆解';
   document.title = `${courseName} · 学习`;
+  if (isTrainingCourse) {
+    document.getElementById('lessonTitle').textContent = '数据并行与梯度同步';
+    document.getElementById('videoLessonTitle').textContent = '数据并行与梯度同步';
+    document.getElementById('boardHeading').textContent = '数据并行：同一模型，拆分不同批次';
+    document.getElementById('boardDescription').textContent = '每张 NPU 保留一份完整模型，各自计算局部梯度，再通过 AllReduce 得到一致更新。';
+    document.getElementById('boardSubtitle').textContent = '这一节先跟踪一个批次从拆分、局部反向传播到全局梯度同步的完整过程。';
+    const points = ['将一个 mini-batch 均匀拆分到 NPU 0–3','各设备独立完成前向与反向传播','AllReduce 汇总并平均所有局部梯度','每张设备使用相同全局梯度更新参数'];
+    document.querySelectorAll('.board-points li').forEach((item, index) => { item.textContent = points[index]; });
+    const anchor = document.querySelector('.learning-anchor span');
+    anchor.lastChild.textContent = '板书 02 · 数据并行';
+    const videoLink = document.getElementById('boardToVideo');
+    videoLink.dataset.time = '06:20'; videoLink.lastChild.textContent = '对应视频 06:20–09:40';
+    document.getElementById('openDocument').lastChild.textContent = '分布式并行指南 §3.2';
+    document.querySelector('#lessonOutline h2').textContent = '理解数据并行与梯度同步';
+    document.querySelector('#lessonOutline>p').textContent = '跟踪一个训练批次如何拆分、计算局部梯度并通过 AllReduce 完成一致更新。';
+    document.querySelector('#chatPanel .companion-label').textContent = '✎ 数据并行';
+    document.querySelectorAll('#chatPanel>p')[1].textContent = '这节课会沿着一个训练批次，观察四张 NPU 如何独立计算局部梯度，再通过 AllReduce 保持模型参数一致。';
+    document.querySelectorAll('#chatPanel>p')[2].textContent = '你可以切换图解、GIF 动态演示和思维导图；每种形式都定位到视频 06:20–09:40 和分布式并行指南 §3.2。';
+  }
   const typingTargets = ['boardHeading', 'boardDescription', 'boardSubtitle'].map(id => document.getElementById(id));
   const typingTexts = typingTargets.map(target => target.textContent);
   typingTargets.forEach((target, index) => {
@@ -105,6 +125,19 @@
     if (event.key === 'Escape' && !outlinePanel.hidden) setOutlineOpen(false);
   });
   document.querySelectorAll('[data-seek]').forEach(button => button.addEventListener('click', () => seekVideo(button.dataset.seek)));
+
+  const boardModeButtons = document.querySelectorAll('[data-board-mode]');
+  boardModeButtons.forEach(button => button.addEventListener('click', () => {
+    boardModeButtons.forEach(item => item.classList.toggle('active', item === button));
+    document.querySelectorAll('[data-board-panel]').forEach(panel => { panel.hidden = panel.dataset.boardPanel !== button.dataset.boardMode; });
+    showToast(`已切换到${button.textContent.trim().replace('GIF', '')}`);
+  }));
+  const motionToggle = document.getElementById('toggleGradientMotion');
+  motionToggle.addEventListener('click', () => {
+    const demo = document.getElementById('gradientDemo');
+    const paused = demo.classList.toggle('paused');
+    motionToggle.textContent = paused ? '继续播放' : '暂停';
+  });
 
   const tabs = document.querySelectorAll('.companion-tabs button');
   const chat = document.getElementById('chatPanel');
