@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f5f6fa">
   <title>课程预览 · 昇腾开发者学习中心</title>
-  <link rel="stylesheet" href="assets/css/course-preview.css?v=learning-route-1">
+  <link rel="stylesheet" href="assets/css/course-preview.css?v=learning-route-2">
 </head>
 <body>
   <header class="preview-header">
@@ -42,11 +42,22 @@
 
       <section class="course-route-card" aria-labelledby="courseRouteTitle">
         <div class="course-route-heading">
-          <div><span class="route-kicker">学习关键路径</span><h3 id="courseRouteTitle">完成这门课要经过哪些关键步骤</h3><p data-map-path>算子开发 / 入门路线</p></div>
+          <div><span class="route-kicker">学习关键路径</span><h3 id="courseRouteTitle">完成这门课要经过哪些关键步骤</h3><p><span data-map-path>算子开发 / 入门路线</span> · 每一步都会产出下一步需要的基础</p></div>
           <a href="knowledge-community-lowfi.html">在完整知识地图中查看 <span aria-hidden="true">↗</span></a>
         </div>
         <ol class="course-route" id="courseRoute" aria-label="课程学习关键步骤"></ol>
         <div class="route-explanation"><b>学习结果</b><span data-route-outcome>完成一次可运行、可验证的算子开发闭环，并保存为能力证明。</span></div>
+        <div class="practice-bridge" aria-labelledby="practiceBridgeTitle">
+          <div class="practice-bridge-heading"><span class="route-kicker">课程与实战</span><h3 id="practiceBridgeTitle">学会方法后，马上用一个真实任务验证</h3></div>
+          <div class="practice-flow">
+            <div class="practice-flow-step"><span>1</span><b>课程学习</b><small data-practice-learning>先理解任务边界并完成代码练习</small></div>
+            <div class="practice-flow-link"><span aria-hidden="true">→</span><small data-practice-unlock>完成核心课节后解锁</small></div>
+            <div class="practice-flow-step task"><span>2</span><b data-practice-title>完成首个算子开发任务</b><small data-practice-description>把所学方法用于真实输入、运行和验证</small></div>
+            <div class="practice-flow-link"><span aria-hidden="true">→</span><small>验证通过后沉淀</small></div>
+            <div class="practice-flow-step evidence"><span>3</span><b>能力证明</b><small data-practice-evidence>保存代码、运行结果与问题记录</small></div>
+          </div>
+          <a class="practice-link" href="#lessonPractice">查看课程中的实战节点 <span aria-hidden="true">↓</span></a>
+        </div>
       </section>
 
       <section class="prerequisite-card" aria-labelledby="prerequisiteTitle">
@@ -88,7 +99,7 @@
           </aside>
         </article>
 
-        <article class="lesson-card" tabindex="0">
+        <article class="lesson-card" id="lessonPractice" tabindex="0">
           <div class="timeline-marker" aria-hidden="true">▧</div>
           <div class="lesson-main">
             <p class="lesson-kicker">课程 · 讲次 2</p>
