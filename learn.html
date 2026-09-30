@@ -18,7 +18,7 @@
         <div class="board-tools" aria-label="板书辅助功能">
           <nav class="learning-mode-tabs" aria-label="学习形式"><button type="button" class="active" data-view="board">白板</button><button type="button" data-view="video">视频</button></nav>
           <button type="button" aria-label="缩小板书">−</button><span class="zoom-value">100%</span><button type="button" aria-label="放大板书">＋</button>
-          <button type="button" aria-label="上一页板书">‹</button><span class="page-value">1 / 3</span><button type="button" aria-label="下一页板书">›</button>
+          <button type="button" id="previousBoardPage" aria-label="上一页板书">‹</button><span class="page-value" id="boardPageValue" aria-live="polite">1 / 3</span><button type="button" id="nextBoardPage" aria-label="下一页板书">›</button>
           <button type="button" aria-label="下载板书">⇩</button><button type="button" aria-label="AI 学伴">✦</button><button type="button" aria-label="设置">⚙</button>
         </div>
       </header>
@@ -28,56 +28,46 @@
           <button type="button" id="boardToVideo" data-time="03:20"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 7 5-7 5z"/><rect x="3" y="4" width="18" height="16" rx="3"/></svg>对应视频 03:20–05:45</button>
           <button type="button" id="openDocument"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15H6zM9 10h6M9 14h6"/></svg>文档 §2.3</button>
         </nav>
-        <nav class="board-content-tabs" aria-label="白板内容形式">
-          <button type="button" class="active" data-board-mode="board">板书</button>
-          <button type="button" data-board-mode="image">图解</button>
-          <button type="button" data-board-mode="gif">动态演示 <span>GIF</span></button>
-          <button type="button" data-board-mode="mindmap">思维导图</button>
-        </nav>
-        <div class="board-media-panel board-mode-board" data-board-panel="board">
-        <div class="board-writing">
-          <p class="board-kicker">课程开篇</p>
-          <h1 id="boardHeading" aria-live="off">昇腾 AI 处理器架构与 Da Vinci 计算直觉</h1>
-          <p id="boardDescription" aria-live="off">从计算任务如何在 NPU 中被拆解开始，理解训练与推理中的核心计算单元。</p>
-        </div>
-        <ol class="board-points" aria-label="课堂要点">
-          <li class="active">CPU 与 NPU 的逻辑资源配比差异及异构计算协作模型</li>
-          <li>昇腾处理器控制单元在多核任务分发中的调度机制</li>
-          <li>存储分层架构与总线接口在缓存问题中的角色</li>
-          <li>达芬奇架构计算组件的宏观功能定位</li>
-        </ol>
-        </div>
-        <div class="board-media-panel board-mode-image" data-board-panel="image" hidden>
-          <header><span>架构图解</span><strong>数据并行与梯度同步</strong></header>
-          <div class="training-architecture" role="img" aria-label="数据批次拆分到四张 NPU，经过局部训练与 AllReduce 梯度同步后更新同一模型">
-            <div class="data-batch"><b>训练数据</b><small>Batch 1024</small></div>
-            <span class="flow-arrow">→ 拆分</span>
-            <div class="device-grid"><div><b>NPU 0</b><small>Batch 0–255</small></div><div><b>NPU 1</b><small>Batch 256–511</small></div><div><b>NPU 2</b><small>Batch 512–767</small></div><div><b>NPU 3</b><small>Batch 768–1023</small></div></div>
-            <span class="flow-arrow">→ 梯度</span>
-            <div class="allreduce-node"><b>AllReduce</b><small>求和并取平均</small></div>
-            <span class="flow-arrow">→ 同步</span>
-            <div class="data-batch result"><b>一致模型</b><small>进入下一步</small></div>
+        <section class="board-page board-page-one" data-board-page="1" aria-label="板书第 1 页：数据并行结构">
+          <div class="board-page-copy">
+            <div class="board-writing">
+              <p class="board-kicker">知识点 01 · 数据拆分</p>
+              <h1 id="boardHeading" aria-live="off">昇腾 AI 处理器架构与 Da Vinci 计算直觉</h1>
+              <p id="boardDescription" aria-live="off">从计算任务如何在 NPU 中被拆解开始，理解训练与推理中的核心计算单元。</p>
+            </div>
+            <ol class="board-points" aria-label="课堂要点">
+              <li class="active">CPU 与 NPU 的逻辑资源配比差异及异构计算协作模型</li>
+              <li>昇腾处理器控制单元在多核任务分发中的调度机制</li>
+              <li>存储分层架构与总线接口在缓存问题中的角色</li>
+              <li>达芬奇架构计算组件的宏观功能定位</li>
+            </ol>
           </div>
-          <p>每张 NPU 保存完整模型，只处理不同的数据切片；同步发生在参数更新之前。</p>
-        </div>
-        <div class="board-media-panel board-mode-gif" data-board-panel="gif" hidden>
-          <header><span>GIF 动态演示</span><strong>一次梯度同步如何完成</strong><button type="button" id="toggleGradientMotion">暂停</button></header>
-          <div class="gradient-demo" id="gradientDemo" role="img" aria-label="四张 NPU 的局部梯度汇聚到 AllReduce 后再同步返回">
-            <div class="gradient-device d1">NPU 0<i></i></div><div class="gradient-device d2">NPU 1<i></i></div><div class="gradient-device d3">NPU 2<i></i></div><div class="gradient-device d4">NPU 3<i></i></div>
-            <div class="gradient-center"><b>AllReduce</b><small>聚合 g₀…g₃</small></div>
-          </div>
-          <div class="gif-caption"><b>循环 ①</b><span>各设备计算局部梯度</span><b>循环 ②</b><span>集合通信聚合</span><b>循环 ③</b><span>同步更新参数</span></div>
-        </div>
-        <div class="board-media-panel board-mode-mindmap" data-board-panel="mindmap" hidden>
-          <header><span>思维导图</span><strong>分布式训练知识结构</strong></header>
-          <div class="training-mindmap" aria-label="分布式训练思维导图">
-            <div class="mind-root">分布式训练<small>目标：扩展规模与吞吐</small></div>
-            <div class="mind-branch b1"><b>并行策略</b><span>数据并行</span><span>模型并行</span><span>流水线并行</span></div>
-            <div class="mind-branch b2"><b>通信机制</b><span>AllReduce</span><span>通信域</span><span>拓扑与带宽</span></div>
-            <div class="mind-branch b3"><b>性能优化</b><span>计算通信重叠</span><span>混合精度</span><span>梯度累积</span></div>
-            <div class="mind-branch b4"><b>稳定性</b><span>Loss 收敛</span><span>溢出检测</span><span>断点续训</span></div>
-          </div>
-        </div>
+          <figure class="embedded-board-media board-image-card">
+            <figcaption><span>课堂图解</span><strong>数据并行的完整结构</strong></figcaption>
+            <div class="training-architecture" role="img" aria-label="数据批次拆分到四张 NPU，经过局部训练与 AllReduce 梯度同步后更新同一模型">
+              <div class="data-batch"><b>训练数据</b><small>Batch 1024</small></div><span class="flow-arrow">→</span>
+              <div class="device-grid"><div><b>NPU 0</b><small>0–255</small></div><div><b>NPU 1</b><small>256–511</small></div><div><b>NPU 2</b><small>512–767</small></div><div><b>NPU 3</b><small>768–1023</small></div></div>
+              <span class="flow-arrow">→</span><div class="allreduce-node"><b>AllReduce</b><small>同步梯度</small></div>
+            </div>
+            <p>老师讲到数据拆分时同步出现：每张 NPU 保存完整模型，只处理不同数据切片。</p>
+          </figure>
+        </section>
+        <section class="board-page board-page-two" data-board-page="2" aria-label="板书第 2 页：梯度同步过程" hidden>
+          <div class="board-page-intro"><span>知识点 02 · 集合通信</span><h2>局部梯度为什么必须在更新前同步？</h2><p>各设备处理的数据不同，算出的局部梯度也不同。AllReduce 会汇总并平均 g₀–g₃，让每张 NPU 用同一份全局梯度更新模型。</p></div>
+          <figure class="embedded-board-media board-gif-card">
+            <figcaption><span>老师讲到同步过程时播放</span><strong>GIF · 一次梯度同步</strong><button type="button" id="toggleGradientMotion">暂停</button></figcaption>
+            <div class="gradient-demo" id="gradientDemo" role="img" aria-label="四张 NPU 的局部梯度汇聚到 AllReduce 后再同步返回">
+              <div class="gradient-device d1">NPU 0<i></i></div><div class="gradient-device d2">NPU 1<i></i></div><div class="gradient-device d3">NPU 2<i></i></div><div class="gradient-device d4">NPU 3<i></i></div><div class="gradient-center"><b>AllReduce</b><small>聚合 g₀…g₃</small></div>
+            </div>
+            <div class="gif-caption"><b>① 局部计算</b><span>各设备独立反向传播</span><b>② 集合通信</b><span>聚合并平均梯度</span><b>③ 一致更新</b><span>同步进入下一步</span></div>
+          </figure>
+        </section>
+        <section class="board-page board-page-three" data-board-page="3" aria-label="板书第 3 页：知识总结" hidden>
+          <div class="board-page-intro"><span>知识点 03 · 课堂总结</span><h2>从数据并行继续延伸到完整分布式训练</h2><p>当前课节解决了“数据怎么拆、梯度怎么合”。后续还要继续理解并行策略、通信开销、性能优化和训练稳定性。</p></div>
+          <figure class="embedded-board-media board-map-card"><figcaption><span>课程总结</span><strong>思维导图 · 分布式训练知识结构</strong></figcaption>
+            <div class="training-mindmap" aria-label="分布式训练思维导图"><div class="mind-root">分布式训练<small>扩展规模与吞吐</small></div><div class="mind-branch b1"><b>并行策略</b><span>数据并行</span><span>模型并行</span><span>流水线并行</span></div><div class="mind-branch b2"><b>通信机制</b><span>AllReduce</span><span>通信域</span><span>拓扑与带宽</span></div><div class="mind-branch b3"><b>性能优化</b><span>计算通信重叠</span><span>混合精度</span><span>梯度累积</span></div><div class="mind-branch b4"><b>稳定性</b><span>Loss 收敛</span><span>溢出检测</span><span>断点续训</span></div></div>
+          </figure>
+        </section>
         <div class="selection-tip" id="selectionTip" hidden><button type="button" id="addNote">＋ 加入我的笔记</button></div>
         <div class="board-subtitle" id="boardSubtitle" aria-live="off">这一节我们先建立直觉：模型计算会被拆分成不同类型的任务，再由对应的计算单元协同完成。</div>
       </section>
