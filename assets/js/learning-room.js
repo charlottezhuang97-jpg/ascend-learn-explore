@@ -34,6 +34,7 @@
   });
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     typingTargets.forEach((target, index) => { target.textContent = typingTexts[index]; });
+    document.querySelector('[data-board-page="1"]').classList.add('media-ready');
   } else {
     (async () => {
       for (let index = 0; index < typingTargets.length; index++) {
@@ -45,6 +46,7 @@
           await new Promise(resolve => window.setTimeout(resolve, 42));
         }
         target.classList.remove('typing');
+        if (index === 1) document.querySelector('[data-board-page="1"]').classList.add('media-ready');
         await new Promise(resolve => window.setTimeout(resolve, 260));
       }
     })();
@@ -126,12 +128,56 @@
   });
   document.querySelectorAll('[data-seek]').forEach(button => button.addEventListener('click', () => seekVideo(button.dataset.seek)));
 
-  const boardModeButtons = document.querySelectorAll('[data-board-mode]');
-  boardModeButtons.forEach(button => button.addEventListener('click', () => {
-    boardModeButtons.forEach(item => item.classList.toggle('active', item === button));
-    document.querySelectorAll('[data-board-panel]').forEach(panel => { panel.hidden = panel.dataset.boardPanel !== button.dataset.boardMode; });
-    showToast(`已切换到${button.textContent.trim().replace('GIF', '')}`);
-  }));
+  const boardPages = [...document.querySelectorAll('[data-board-page]')];
+  const boardPageValue = document.getElementById('boardPageValue');
+  const previousBoardPage = document.getElementById('previousBoardPage');
+  const nextBoardPage = document.getElementById('nextBoardPage');
+  const boardPageContent = [
+    {anchor:'板书 01 · 数据并行结构',time:'06:20',range:'对应视频 06:20–07:35',document:'分布式并行指南 §3.2',caption:'先看数据如何被拆分：同一模型保留在每张 NPU 上，每张设备只接收不同的数据切片。'},
+    {anchor:'板书 02 · 梯度同步',time:'07:36',range:'对应视频 07:36–09:40',document:'集合通信指南 §4.1',caption:'局部梯度不能直接更新模型；AllReduce 先完成聚合和平均，再让每张设备执行一致更新。'},
+    {anchor:'板书 03 · 知识总结',time:'09:41',range:'对应视频 09:41–11:10',document:'分布式训练总览 §1.4',caption:'把数据并行放回完整知识结构：下一步继续学习通信开销、计算通信重叠和训练稳定性。'}
+  ];
+  let currentBoardPage = 0;
+  async function typeSupportingPage(page) {
+    if (page.dataset.typed === 'true') return;
+    page.dataset.typed = 'true';
+    const targets = [...page.querySelectorAll('.board-page-intro h2,.board-page-intro p')];
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      page.classList.add('media-ready');
+      return;
+    }
+    for (const target of targets) {
+      const fullText = target.textContent;
+      target.setAttribute('aria-label', fullText);
+      target.textContent = '';
+      target.classList.add('typing');
+      for (const char of Array.from(fullText)) {
+        target.textContent += char;
+        await new Promise(resolve => window.setTimeout(resolve, 24));
+      }
+      target.classList.remove('typing');
+      await new Promise(resolve => window.setTimeout(resolve, 160));
+    }
+    page.classList.add('media-ready');
+  }
+  function renderBoardPage(index, announce = true) {
+    currentBoardPage = Math.max(0, Math.min(boardPages.length - 1, index));
+    boardPages.forEach((page, pageIndex) => { page.hidden = pageIndex !== currentBoardPage; });
+    const content = boardPageContent[currentBoardPage];
+    boardPageValue.textContent = `${currentBoardPage + 1} / ${boardPages.length}`;
+    previousBoardPage.disabled = currentBoardPage === 0;
+    nextBoardPage.disabled = currentBoardPage === boardPages.length - 1;
+    document.querySelector('.learning-anchor span').lastChild.textContent = content.anchor;
+    document.getElementById('boardToVideo').dataset.time = content.time;
+    document.getElementById('boardToVideo').lastChild.textContent = content.range;
+    document.getElementById('openDocument').lastChild.textContent = content.document;
+    document.getElementById('boardSubtitle').textContent = content.caption;
+    if (currentBoardPage > 0) typeSupportingPage(boardPages[currentBoardPage]);
+    if (announce) showToast(`已翻到板书第 ${currentBoardPage + 1} 页`);
+  }
+  previousBoardPage.addEventListener('click', () => renderBoardPage(currentBoardPage - 1));
+  nextBoardPage.addEventListener('click', () => renderBoardPage(currentBoardPage + 1));
+  renderBoardPage(0, false);
   const motionToggle = document.getElementById('toggleGradientMotion');
   motionToggle.addEventListener('click', () => {
     const demo = document.getElementById('gradientDemo');
