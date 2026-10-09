@@ -18,6 +18,11 @@ if [[ -d "$repo_root/outputs/ux-audit" ]]; then
   cp -R "$repo_root/outputs/ux-audit" "$dist/lab/ux-audit"
 fi
 
+if [[ -f "$repo_root/outputs/highfi/home-community-contribution-floor-v1.png" ]]; then
+  mkdir -p "$dist/lab/highfi"
+  cp "$repo_root/outputs/highfi/home-community-contribution-floor-v1.png" "$dist/lab/highfi/"
+fi
+
 touch "$dist/.nojekyll"
 
 write_redirect() {

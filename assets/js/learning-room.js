@@ -135,7 +135,9 @@
   const boardPageContent = [
     {anchor:'板书 01 · 数据并行结构',time:'06:20',range:'对应视频 06:20–07:35',document:'分布式并行指南 §3.2',caption:'先看数据如何被拆分：同一模型保留在每张 NPU 上，每张设备只接收不同的数据切片。'},
     {anchor:'板书 02 · 梯度同步',time:'07:36',range:'对应视频 07:36–09:40',document:'集合通信指南 §4.1',caption:'局部梯度不能直接更新模型；AllReduce 先完成聚合和平均，再让每张设备执行一致更新。'},
-    {anchor:'板书 03 · 知识总结',time:'09:41',range:'对应视频 09:41–11:10',document:'分布式训练总览 §1.4',caption:'把数据并行放回完整知识结构：下一步继续学习通信开销、计算通信重叠和训练稳定性。'}
+    {anchor:'板书 03 · 知识总结',time:'09:41',range:'对应视频 09:41–11:10',document:'分布式训练总览 §1.4',caption:'把数据并行放回完整知识结构：下一步继续学习通信开销、计算通信重叠和训练稳定性。'},
+    {anchor:'板书 04 · 计算通信重叠',time:'11:11',range:'对应视频 11:11–14:25',document:'性能调优指南 §5.3',caption:'反向计算与梯度同步可以交错执行，减少设备等待通信完成的空档。'},
+    {anchor:'板书 05 · 训练验收',time:'14:26',range:'对应视频 14:26–18:40',document:'训练验收清单 §2.1',caption:'用正确性、性能、稳定性和可复现性四类证据，判断一次分布式训练是否完成。'}
   ];
   let currentBoardPage = 0;
   async function typeSupportingPage(page) {
@@ -172,6 +174,11 @@
     document.getElementById('boardToVideo').lastChild.textContent = content.range;
     document.getElementById('openDocument').lastChild.textContent = content.document;
     document.getElementById('boardSubtitle').textContent = content.caption;
+    document.querySelectorAll('[data-board-jump]').forEach(button => {
+      const active = Number(button.dataset.boardJump) === currentBoardPage;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-current', active ? 'step' : 'false');
+    });
     if (currentBoardPage > 0) typeSupportingPage(boardPages[currentBoardPage]);
     if (announce) showToast(`已翻到板书第 ${currentBoardPage + 1} 页`);
   }
@@ -186,12 +193,19 @@
   });
 
   const tabs = document.querySelectorAll('.companion-tabs button');
+  const keypoints = document.getElementById('keypointsPanel');
   const chat = document.getElementById('chatPanel');
   const notes = document.getElementById('notesPanel');
   tabs.forEach(tab => tab.addEventListener('click', () => {
-    const isNotes = tab.dataset.tab === 'notes';
+    const target = tab.dataset.tab;
     tabs.forEach(item => item.classList.toggle('active', item === tab));
-    chat.hidden = isNotes; notes.hidden = !isNotes;
+    keypoints.hidden = target !== 'keypoints';
+    chat.hidden = target !== 'chat';
+    notes.hidden = target !== 'notes';
+  }));
+  document.querySelectorAll('[data-board-jump]').forEach(button => button.addEventListener('click', () => {
+    setView('board');
+    renderBoardPage(Number(button.dataset.boardJump));
   }));
   const board = document.getElementById('whiteboard');
   const tip = document.getElementById('selectionTip');

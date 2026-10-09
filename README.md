@@ -2,17 +2,13 @@
 
 这是一个面向昇腾开发者的智能学习方案交互原型。它把“我想学什么”或“我正在解决什么开发问题”作为入口，经过目标确认、学习路径编排和课程预览，进入白板或视频工作台，最终连接知识学习、代码实践、AI 学伴和实战能力验证。
 
-## 当前 Demo
-
-- [打开当前 Demo 首页](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/index.html)
-- [打开页面版本目录](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/catalog.html)
-- [本地首页](index.html)
-
-> GitHub Pages 由 `main` 分支自动部署。Demo 中的课程、用户、学习进度和代码运行结果均为演示数据，用于验证信息结构与交互方向。
-
 ## 当前探索方案
 
 当前持续维护的页面只保留发现、预览、学习执行和个人学习分析链路。页面状态的唯一清单是 [`page-registry.json`](page-registry.json)。
+
+在线入口：[当前方案首页](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/index.html) · [页面版本目录](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/catalog.html) · [本地首页](index.html)
+
+> GitHub Pages 由 `main` 分支自动部署。课程、用户、学习进度和代码运行结果均为演示数据，用于验证信息结构与交互方向。
 
 | 场景 | 页面 | 解决的问题 |
 | --- | --- | --- |

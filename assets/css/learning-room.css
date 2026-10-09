@@ -48,3 +48,9 @@
 .lesson-outline li small{grid-column:2;color:#8590a2;font-size:12px;line-height:18px}
 .outline-lesson-type{align-self:start;width:max-content;border-radius:5px;background:#eef3ff;color:#4f6fa7;padding:1px 5px;font-size:11px;line-height:18px;white-space:nowrap}
 @media(prefers-reduced-motion:reduce){.board-writing h1.typing::after,.board-writing>p.typing::after,.board-subtitle.typing::after{animation:none}}
+
+/* The lesson outline lives in the right rail so the board keeps its teaching width. */
+.keypoints-panel{padding:16px 14px 18px}
+.keypoints-summary{padding:14px;border-radius:12px;background:linear-gradient(135deg,#f4f7ff,#fafcff)}
+.keypoints-summary span{color:#5274ad;font-size:12px}.keypoints-summary strong{display:block;margin-top:4px;color:#17223a;font-size:16px;font-weight:500}.keypoints-summary p{margin:6px 0 0;color:#667085;font-size:13px;line-height:20px}
+.keypoint-list{display:grid;gap:8px;margin:14px 0 0;padding:0;list-style:none}.keypoint-list button{width:100%;display:grid;grid-template-columns:32px minmax(0,1fr);gap:1px 10px;padding:11px;border:1px solid transparent;border-radius:11px;background:#fff;text-align:left;cursor:pointer}.keypoint-list button:hover{border-color:#d8e3f7;background:#fafcff}.keypoint-list button.active{border-color:#bcd1f7;background:#f2f6ff}.keypoint-list button>span{grid-row:1/3;width:30px;height:30px;display:grid;place-items:center;border-radius:8px;background:#edf1f7;color:#607087;font-size:12px}.keypoint-list button.active>span{background:#2e53fa;color:#fff}.keypoint-list b{color:#26344b;font-size:14px;font-weight:500}.keypoint-list small{color:#8490a2;font-size:12px;line-height:18px}

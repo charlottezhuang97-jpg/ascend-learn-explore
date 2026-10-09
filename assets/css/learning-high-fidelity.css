@@ -36,3 +36,25 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid va
 .board-page-one{display:block}.board-page-copy{min-height:auto;padding:4px 6px 0;border:0;background:transparent}.board-page .board-writing{max-width:860px}.board-page .board-points{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin-top:18px}.board-page .board-points li{margin:0}.embedded-board-media{margin-top:18px}.board-image-card .training-architecture{grid-template-columns:100px 42px minmax(250px,1fr) 42px 130px;min-height:240px}.board-gif-card .gradient-demo{height:350px}.board-map-card .training-mindmap{min-height:420px}.board-page-one .embedded-board-media,.board-page-two .embedded-board-media,.board-page-three .embedded-board-media{opacity:0;transform:translateY(8px);pointer-events:none}.board-page.media-ready .embedded-board-media{opacity:1;transform:none;pointer-events:auto;transition:opacity .28s ease,transform .28s ease}
 @media(max-width:1100px){.board-page-one{display:block}.board-image-card .training-architecture{min-height:230px}}
 @media(prefers-reduced-motion:reduce){.board-page .embedded-board-media{opacity:1;transform:none;pointer-events:auto}}
+
+/* Denser lesson canvas: a lesson can expose several board pages without letting one diagram dominate. */
+.board-page{inset:62px 24px 64px}
+.board-page-intro{margin-bottom:10px}
+.board-page-intro h2{font-size:18px;line-height:26px}
+.embedded-board-media{margin-top:12px;padding:14px 16px}
+.embedded-board-media figcaption{margin-bottom:8px}
+.embedded-board-media figcaption strong{font-size:15px}
+.board-image-card .training-architecture{min-height:160px}
+.board-gif-card .gradient-demo{height:220px}
+.board-map-card .training-mindmap{min-height:280px}
+.board-page-one .board-points{margin-top:12px}
+.overlap-timeline{display:grid;grid-template-columns:48px minmax(0,1fr);gap:14px 12px;align-items:center;padding:18px;border-radius:12px;background:#f7f9fc}
+.timeline-label{color:#667085;font-size:13px;font-weight:600}
+.timeline-track{position:relative;height:48px;border-radius:9px;background:repeating-linear-gradient(90deg,#edf1f7 0,#edf1f7 1px,transparent 1px,transparent 12.5%);overflow:hidden}
+.timeline-track span{position:absolute;top:7px;height:34px;display:grid;place-items:center;border-radius:7px;font-size:12px;white-space:nowrap}
+.timeline-track .compute{left:2%;width:54%;background:#dce8ff;color:#285fb8}.timeline-track .compute.wide{width:61%}
+.timeline-track .communication{left:64%;width:23%;background:#d9f5ee;color:#13765c}.timeline-track .idle{right:2%;width:9%;background:#edf0f5;color:#7d8797}
+.timeline-track.overlap .compute{width:39%}.timeline-track.overlap .shift-one{left:30%;width:26%}.timeline-track.overlap .shift-two{left:48%;width:34%}.timeline-track.overlap .shift-three{left:73%;width:25%}
+.evidence-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.evidence-grid article{min-height:112px;padding:14px;border:1px solid #dfe6f1;border-radius:12px;background:#f9fbff}.evidence-grid article>span{display:inline-grid;width:28px;height:28px;place-items:center;border-radius:8px;background:#e8f0ff;color:#2f63b5;font-size:12px}.evidence-grid b{display:block;margin:10px 0 4px;font-size:14px}.evidence-grid p{margin:0;color:#667085;font-size:12px;line-height:18px}
+@media(max-width:1100px){.board-gif-card .gradient-demo{height:200px}.board-map-card .training-mindmap{min-height:260px}.evidence-grid{grid-template-columns:1fr 1fr}}
