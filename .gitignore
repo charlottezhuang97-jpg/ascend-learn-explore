@@ -1,0 +1,6 @@
+.pages-dist/
+.playwright-cli/
+.tmp-sheet-edit/
+.tmp-video-sheet/
+node_modules
+*.inspect.ndjson

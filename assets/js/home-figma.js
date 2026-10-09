@@ -79,6 +79,16 @@
       '多卡训练出现通信超时，需要定位 HCCL 问题',
       '程序运行报错或异常退出，需要从错误码开始排查',
       '我想定位训练或推理的性能瓶颈并验证优化结果'
+    ],
+    '真实任务反推': [
+      '我想把单卡图像分类模型改成双卡训练，并验证吞吐是否提升',
+      '请从一个真实开发任务反推我需要补齐的能力和学习步骤',
+      '我有一个可运行的单卡脚本，希望完成多卡训练验收'
+    ],
+    '诊断补救': [
+      'HCCL 初始化失败，训练无法启动，请根据错误码和日志定位知识缺口',
+      '我的分布式训练任务出现通信超时，需要补齐相关知识并重新验证',
+      '训练脚本运行失败，请从环境、配置和日志生成一条补救学习路径'
     ]
   };
 
@@ -91,6 +101,8 @@
       ['生成式AI应用开发与部署', '学习大模型、RAG 和智能体应用开发与部署。']
     ],
     ask: [
+      ['真实任务反推', '把单卡模型改成双卡训练，从目标任务反推能力与学习步骤。'],
+      ['诊断补救', '根据错误码、环境和日志定位知识缺口，补齐后回到原任务验证。'],
       ['环境问题', 'CANN 安装、环境变量、驱动与版本兼容。'],
       ['模型迁移', '模型转换失败、算子支持或推理精度异常。'],
       ['训练异常', 'OOM、loss 不收敛、混合精度与吞吐问题。'],
@@ -173,6 +185,8 @@
     const course = mode === 'course';
     courseTab.setAttribute('aria-selected', String(course));
     askTab.setAttribute('aria-selected', String(!course));
+    document.getElementById('courseFirstFloor').hidden = !course;
+    document.getElementById('problemFirstFloor').hidden = course;
     input.placeholder = course ? '今天你想学点什么？使用/获取快捷选项' : '输入正在解决的开发问题，使用/获取常见问题';
     quizHelper.hidden = !course;
     hint.textContent = course ? '' : '输入 / 可调出常见开发问题；也可描述报错、环境与预期结果。';
@@ -182,6 +196,38 @@
 
   courseTab.addEventListener('click', () => setMode('course'));
   askTab.addEventListener('click', () => setMode('ask'));
+  const problemSlides = Array.from(document.querySelectorAll('[data-problem-slide]'));
+  const problemPrev = document.getElementById('problemPrev');
+  const problemNext = document.getElementById('problemNext');
+  let problemSlideIndex = 0;
+  function renderProblemSlide() {
+    problemSlides.forEach((slide, index) => {
+      slide.hidden = index !== problemSlideIndex;
+      slide.setAttribute('aria-current', String(index === problemSlideIndex));
+    });
+    if (problemPrev) problemPrev.hidden = problemSlideIndex === 0 || problemSlides.length < 2;
+    if (problemNext) problemNext.hidden = problemSlides.length < 2;
+  }
+  problemPrev?.addEventListener('click', () => {
+    problemSlideIndex = Math.max(0, problemSlideIndex - 1);
+    renderProblemSlide();
+  });
+  problemNext?.addEventListener('click', () => {
+    problemSlideIndex = (problemSlideIndex + 1) % problemSlides.length;
+    renderProblemSlide();
+  });
+  renderProblemSlide();
+  document.querySelectorAll('[data-problem-preview]').forEach(button => button.addEventListener('click', () => {
+    input.value = button.dataset.problemPreview;
+    document.getElementById('top').scrollIntoView({behavior:'smooth', block:'start'});
+    input.focus();
+  }));
+  document.querySelectorAll('[data-problem-submit]').forEach(button => button.addEventListener('click', () => {
+    input.value = button.dataset.problemSubmit;
+    document.getElementById('top').scrollIntoView({behavior:'smooth', block:'start'});
+    requestAnimationFrame(() => form.requestSubmit());
+  }));
+  if (new URLSearchParams(location.search).get('tab') === 'ask') setMode('ask');
   input.addEventListener('input', () => {
     const isShortcutQuery = input.value.trim() === '/' || input.value.trim() === '／';
     setQuickMenu(isShortcutQuery);
@@ -229,7 +275,7 @@
       input.focus();
       return;
     }
-    if (mode === 'course' && window.openCourseFlow) {
+    if (window.openCourseFlow) {
       window.openCourseFlow(value);
       return;
     }

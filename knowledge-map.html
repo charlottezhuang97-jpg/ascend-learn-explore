@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>知识地图中心 · Ascend Learn</title>
+  <link rel="stylesheet" href="assets/css/knowledge-experience.css?v=1">
+</head>
+<body>
+<main class="km-app">
+  <header class="km-topbar">
+    <a class="km-brand" href="index.html"><img src="assets/images/figma-home/nav-logo.png" alt="Ascend"><span>知识地图中心</span></a>
+    <nav class="km-breadcrumb" aria-label="当前位置"><span>知识地图</span><span>/</span><b id="mapCrumb">全局知识版图</b></nav>
+    <div class="km-top-actions"><a class="km-btn" href="ai-companion.html">AI 学伴</a><a class="km-btn primary" href="course-preview.html?course=training">继续学习</a><span class="km-avatar">CZ</span></div>
+  </header>
+  <section class="km-toolbar" aria-label="知识地图工具栏">
+    <div class="km-view-tabs" role="tablist"><button type="button" role="tab" data-view="map" aria-selected="true">知识版图</button><button type="button" role="tab" data-view="network" aria-selected="false">二维知识网络</button></div>
+    <span class="km-toolbar-divider"></span><button class="km-filter active">开发领域</button><button class="km-filter">任务目标</button><button class="km-filter">前沿主题</button><button class="km-filter">技术栈</button>
+    <div class="km-zoom"><button type="button" data-zoom="out" aria-label="缩小">−</button><output id="zoomValue">100%</output><button type="button" data-zoom="in" aria-label="放大">＋</button></div><button class="km-btn fit" type="button" id="fitCanvas">适应画布</button>
+  </section>
+  <section class="km-workspace">
+    <aside class="km-panel km-left">
+      <h2>视图控制</h2>
+      <div class="km-switch"><span>仅看我的路径</span><button type="button" aria-pressed="true" aria-label="仅看我的路径"></button></div>
+      <div class="km-switch"><span>显示跨领域关系</span><button type="button" aria-pressed="true" aria-label="显示跨领域关系"></button></div>
+      <div class="km-switch"><span>显示辅助知识</span><button type="button" aria-pressed="false" aria-label="显示辅助知识"></button></div>
+      <div class="km-section-label">节点状态</div><div class="km-legend"><span><i class="km-dot done"></i>已掌握</span><span><i class="km-dot current"></i>正在学习</span><span><i class="km-dot next"></i>待探索</span><span><i class="km-dot evidence"></i>已有实践证据</span></div>
+      <div class="km-section-label">关系类型</div><div class="km-legend"><span><i class="km-line-key"></i>前置关系</span><span><i class="km-line-key dash"></i>跨领域关系</span><span><i class="km-line-key support"></i>相关基础</span><span><i class="km-line-key recommend"></i>推荐学习路径</span></div>
+    </aside>
+    <section class="km-canvas-shell" id="canvasShell" aria-label="可拖拽缩放的知识地图画布">
+      <div class="km-canvas" id="knowledgeCanvas">
+        <section class="km-view" id="globalMap">
+          <svg class="map-connectors" viewBox="0 0 1180 720" aria-hidden="true"><path d="M565 390 C480 270 420 235 380 200"/><path d="M565 390 C690 280 770 220 830 170"/><path d="M565 390 C430 470 360 500 310 490"/><path d="M565 390 C690 440 750 470 820 460"/><path class="cross" d="M500 155 C650 100 760 105 840 125"/><circle cx="565" cy="390" r="7"/></svg>
+          <span class="theme-ribbon genai">生成式 AI · 跨领域主题</span><span class="theme-ribbon llm">大模型 · 跨领域主题</span>
+          <article class="territory training"><button type="button" data-domain="模型训练" aria-label="查看模型训练"><span class="km-domain-icon">▦</span><span class="domain-state">当前方向</span><h3>模型训练</h3><p>从单卡基线到多卡并行、通信与性能调优</p><span class="progress"><span></span></span></button></article>
+          <article class="territory inference"><button type="button" data-domain="模型推理"><span class="km-domain-icon">▶</span><span class="domain-state">3 个已掌握</span><h3>模型推理</h3><p>模型转换、推理适配、服务部署与性能验证</p><span class="progress"><span></span></span></button></article>
+          <article class="territory operator"><button type="button" data-domain="算子开发"><span class="km-domain-icon">⌘</span><span class="domain-state">待探索</span><h3>算子开发</h3><p>Ascend C 编程、算子实现、调试与性能优化</p><span class="progress"><span></span></span></button></article>
+          <article class="territory recommend"><button type="button" data-domain="推荐开发"><span class="km-domain-icon">▥</span><span class="domain-state">待探索</span><h3>推荐开发</h3><p>召回、排序、特征处理和推荐系统部署</p><span class="progress"><span></span></span></button></article>
+          <div class="km-core"><div><b>CANN 技术栈</b><span>连接四个开发领域的底层能力</span></div></div>
+          <div class="support-satellite data"><b>数据工程</b>辅助训练数据准备与治理</div><div class="support-satellite ops"><b>部署运维</b>辅助服务监控与环境管理</div>
+        </section>
+        <section class="km-view" id="networkMap" hidden>
+          <svg class="network-svg" viewBox="0 0 1180 720" aria-hidden="true"><rect class="cluster training" x="55" y="60" width="1010" height="360" rx="24"/><rect class="cluster inference" x="55" y="465" width="520" height="210" rx="24"/><rect class="cluster operator" x="630" y="465" width="245" height="190" rx="24"/><rect class="cluster recommend" x="890" y="465" width="235" height="190" rx="24"/><path class="edge support" d="M255 289H300"/><path class="edge" d="M444 289H490M634 289H680M824 289H870"/><path class="edge" d="M562 163V250"/><path class="edge cross" d="M752 328C750 430 770 455 760 520"/><path class="edge support" d="M372 328V505"/><path class="edge cross" d="M815 328C830 430 960 430 960 505"/></svg>
+          <div class="cluster-title ct-training">▦ 模型训练 · 8 个知识点</div><div class="cluster-title ct-inference">▶ 模型推理 · 3 个知识点</div><div class="cluster-title ct-operator">⌘ 算子开发</div><div class="cluster-title ct-recommend">▥ 推荐开发</div>
+          <button class="net-node n1 done" data-node="训练基础"><b>训练基础</b><small>✓ 已掌握</small></button><button class="net-node n2 done" data-node="数据并行"><b>数据并行</b><small>✓ 已掌握</small></button><button class="net-node n3 current" data-node="梯度同步"><b>梯度同步</b><small>● 正在学习</small></button><button class="net-node n4" data-node="HCCL 通信"><b>HCCL 通信</b><small>○ 待探索</small></button><button class="net-node n5" data-node="性能调优"><b>性能调优</b><small>○ 待探索</small></button><button class="net-node n6" data-node="模型并行"><b>模型并行</b><small>○ 待探索</small></button><button class="net-node n7" data-node="训练产物"><b>训练产物</b><small>○ 待探索</small></button><button class="net-node n8" data-node="通信算子"><b>通信算子</b><small>○ 待探索</small></button><button class="net-node n9" data-node="召回排序优化"><b>召回排序优化</b><small>○ 待探索</small></button><button class="net-node n10" data-node="模型转换"><b>模型转换</b><small>○ 待探索</small></button>
+        </section>
+      </div>
+      <div class="km-canvas-hint">按住拖动画布 · 鼠标滚轮缩放 · 点击领域下钻</div>
+    </section>
+    <aside class="km-panel km-inspector" id="inspector">
+      <div class="km-inspector-head"><div><h2 id="inspectorTitle">模型训练</h2><p id="inspectorMeta">当前学习方向 · 68%</p></div><button type="button" aria-label="关闭详情">×</button></div><span class="km-status" id="inspectorStatus">正在学习</span>
+      <section class="km-info"><h3>为什么要学</h3><p id="inspectorReason">掌握训练任务拆分、设备协同和稳定调优，是完成大模型训练的关键基础。</p></section>
+      <section class="km-info"><h3>当前定位</h3><div class="km-resource"><i>●</i><div><b id="currentNode">梯度同步</b><small>已完成数据并行，下一步学习 HCCL 通信</small></div><span>›</span></div></section>
+      <section class="km-info"><h3>关联课程</h3><a class="km-resource" href="course-preview.html?course=training"><i>▶</i><div><b>大模型分布式训练</b><small>第 3 讲 · 梯度同步</small></div><span>›</span></a></section>
+      <section class="km-info"><h3>能力证据</h3><p>完成“双卡梯度同步”实战后，将形成可复用的训练记录。</p></section>
+      <div class="km-inspector-actions"><a class="km-btn primary" href="course-preview.html?course=training">继续学习</a><a class="km-btn" href="ai-companion.html">让 AI 学伴分析</a></div>
+    </aside>
+  </section>
+</main>
+<script src="assets/js/knowledge-map.js?v=1"></script>
+</body></html>

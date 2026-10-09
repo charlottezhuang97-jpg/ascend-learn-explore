@@ -69,6 +69,10 @@
 @media(max-width:700px){.course-flow.conversation .flow-main{width:calc(100% - 32px);padding-top:32px}.course-flow.conversation .flow-goal{margin-bottom:32px;font-size:16px}.flow-step{margin-bottom:20px}.flow-step-title h2{font-size:16px;line-height:24px}.flow-step-count{font-size:14px}.flow-process-source{gap:6px}.flow-process-source-title{max-width:40vw}.course-flow.conversation .flow-options{grid-template-columns:1fr}.course-flow.conversation .flow-option{width:100%;min-height:160px;height:auto}.assistant-turn{margin-top:20px}.compose-shell{padding:15px}.paper-area{padding:4px}.paper-sheet{min-height:360px}.preview-hero{grid-template-columns:1fr}.preview-cover{min-height:140px}.preview-unit-list{padding:16px}.preview-action-panel{bottom:14px;max-width:calc(100vw - 32px)}.course-flow.conversation.outline-expanded .outline-stage{padding:14px}.course-flow.conversation.outline-expanded .outline-board{min-height:50dvh;max-height:50dvh}}
 @media(prefers-reduced-motion:reduce){.paper-caret{animation:none}.preview-unit{animation:none}}
 
+/* 第一步可信资料：复用语义文本、8px/12px 间距与 12px 卡片圆角 */
+.flow-trust-notice{display:grid;gap:12px;margin-top:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:16px}.flow-trust-copy{display:grid;gap:8px}.flow-trust-copy strong{color:var(--ink);font-size:14px;line-height:20px;font-weight:600}.flow-trust-copy p{margin:0;color:var(--body);font-size:14px;line-height:22px;font-weight:400}.flow-evidence-tags{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.flow-evidence-tag{display:grid;gap:2px;border-radius:8px;background:var(--subtle);padding:10px 12px}.flow-evidence-tag b{color:var(--ink);font-size:14px;line-height:20px;font-weight:400}.flow-evidence-tag small{color:var(--body);font-size:12px;line-height:18px}.flow-search-step .flow-process-tech{margin-top:12px}
+@media(max-width:700px){.flow-evidence-tags{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 /* AI 对话场景：标题、辅助说明与内容的纵向节奏 */
 .course-flow.conversation .flow-step-title h2{font-weight:500}
 .course-flow.conversation .flow-step-title+.flow-intro{margin-top:8px;margin-bottom:12px}

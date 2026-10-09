@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>课程预览页 UX 审查建议图</title>
+<style>
+@font-face{font-family:Harmony;src:url('../../assets/fonts/HarmonyOS_Sans_SC_Regular.woff2') format('woff2');font-weight:400}
+*{box-sizing:border-box} body{margin:0;background:#e9edf5;color:#111827;font-family:Harmony,'HarmonyOS Sans SC','PingFang SC',sans-serif}
+.board{width:2400px;height:1400px;padding:42px 48px 46px;background:linear-gradient(135deg,#f7f9fd 0%,#edf2fa 100%);overflow:hidden}
+.top{height:82px;display:flex;align-items:flex-start;justify-content:space-between}.kicker{font-size:16px;color:#4f71aa;font-weight:700;letter-spacing:.08em}.title{font-size:32px;line-height:1.25;margin-top:8px;font-weight:700}.meta{font-size:15px;color:#64748b;margin-top:28px}.columns{height:1190px;display:grid;grid-template-columns:700px 350px 1210px;gap:22px;position:relative}.panel{min-width:0;position:relative;z-index:2}.panel-head{height:42px;display:flex;align-items:center;justify-content:space-between;font-size:18px;font-weight:700}.badge{padding:6px 11px;border-radius:999px;background:#e7efff;color:#3d63a1;font-size:13px}.before-wrap{background:#fff;border:1px solid #dfe6f1;border-radius:20px;padding:14px;box-shadow:0 18px 50px rgba(34,53,84,.08)}.before-wrap img{display:block;width:100%;height:auto;border-radius:12px}.before-note{margin-top:14px;padding:14px 16px;border-radius:12px;background:#f5f7fb;color:#536179;font-size:14px;line-height:1.6}.issues{display:flex;flex-direction:column;gap:10px;padding-top:1px}.issue{height:146px;border:1px solid #d9e2f0;background:rgba(255,255,255,.92);border-radius:16px;padding:17px 17px 14px;box-shadow:0 8px 24px rgba(41,58,88,.06);position:relative}.issue b{display:block;font-size:16px;line-height:1.25;margin-bottom:8px}.issue p{margin:0;font-size:13px;line-height:1.55;color:#667085}.num{position:absolute;right:12px;top:12px;width:28px;height:28px;border-radius:50%;background:#315da8;color:#fff;font-size:14px;font-weight:700;display:grid;place-items:center}.after-shell{height:1050px;background:#f4f6fa;border:1px solid #dce4ef;border-radius:20px;overflow:hidden;box-shadow:0 18px 50px rgba(34,53,84,.1)}
+.appbar{height:58px;background:#fff;border-bottom:1px solid #e5eaf2;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:13px}.exit{display:flex;gap:8px;align-items:center;font-weight:600}.avatar{width:32px;height:32px;border-radius:50%;background:#2f2530;border:2px solid #ff80b6;color:#fff;display:grid;place-items:center;font-weight:700}.appbody{height:992px;display:grid;grid-template-columns:244px 1fr}.side{padding:16px 14px;background:#f7f8fb;border-right:1px solid #e2e8f1;overflow:hidden}.cover{height:188px;border-radius:12px;background:radial-gradient(circle at 55% 45%,#dbe5ff,#a8b8ff 35%,#e6edff 68%);position:relative;overflow:hidden}.cover:after{content:'TRAIN';position:absolute;left:54px;top:62px;width:115px;height:76px;border-radius:14px;transform:skewY(-8deg);background:linear-gradient(135deg,#fff,#6685ef);box-shadow:0 12px 32px rgba(70,95,188,.32);color:white;display:grid;place-items:center;font-weight:700;letter-spacing:.12em}.publisher{font-size:11px;color:#728096;margin-top:14px}.course-name{font-size:18px;font-weight:700;margin-top:4px}.course-desc{font-size:12px;line-height:1.55;color:#5f6b7d;margin:8px 0 13px}.tabs{display:flex;gap:5px;border-top:1px solid #e0e5ed;padding-top:10px}.tab{padding:8px 10px;border-radius:8px;color:#7a8698;font-size:12px}.tab.on{background:#edf2fb;color:#172338;font-weight:700}.unit{padding:10px;border-radius:10px;margin-top:6px;font-size:12px;color:#637087;display:flex;gap:10px}.unit strong{width:24px;height:24px;border-radius:7px;background:#e9edf4;display:grid;place-items:center;flex:none}.unit.on{background:#e6eefb;color:#315da8}.unit.on strong{background:#5578b7;color:#fff}.main{padding:20px 24px 28px;overflow:hidden}.summary{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}.eyebrow{display:inline-block;background:#e7efff;color:#3f64a1;border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700}.summary h1{font-size:24px;margin:10px 0 7px;line-height:1.25}.summary p{font-size:13px;color:#667085;margin:0;line-height:1.55}.stats{display:flex;gap:7px;margin-top:13px}.chip{font-size:11px;color:#536179;background:#fff;border:1px solid #dde4ee;border-radius:999px;padding:5px 9px}.actions{display:flex;gap:9px;align-items:center}.btn{height:40px;border-radius:10px;padding:0 17px;border:1px solid #1d2939;background:#fff;color:#1d2939;font-size:13px;font-weight:700}.btn.primary{background:#111827;color:#fff}.maplink{font-size:11px;color:#315da8;margin-top:9px;text-align:right}.card{background:#fff;border:1px solid #dfe6f0;border-radius:14px;margin-top:15px;padding:15px 17px}.card-head{display:flex;justify-content:space-between;gap:14px}.card-title{font-size:15px;font-weight:700}.card-sub{font-size:11px;color:#738095;margin-top:4px}.path{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}.stage{min-height:96px;padding:11px;border:1px solid #dfe5ed;border-radius:10px;background:#fafbfd;position:relative}.stage.current{border:2px solid #172338;background:#fff}.stage.result{background:#edf2ff}.stage small{display:inline-block;padding:3px 7px;background:#eef1f6;color:#6f7b8d;border-radius:999px;font-size:9px}.stage.current small{background:#172338;color:#fff}.stage b{display:block;font-size:13px;margin-top:10px}.stage span{display:block;font-size:10px;color:#6d7788;margin-top:5px;line-height:1.35}.why{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;color:#536179;font-size:9.5px;line-height:1.35}.why div:before{content:'→';color:#315da8;margin-right:4px}.outcome{margin-top:11px;padding:10px 12px;border-left:3px solid #172338;background:#f6f7f9;font-size:11px;color:#5b6574}.outcome b{color:#111827;margin-right:8px}.content-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:15px;margin-top:15px}.outline,.practice{background:#fff;border:1px solid #dfe6f0;border-radius:14px;padding:15px}.section-title{font-size:15px;font-weight:700}.section-note{font-size:11px;color:#748095;margin-top:4px}.lesson{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #edf0f5}.lesson:last-child{border-bottom:0}.lesson-n{width:27px;height:27px;background:#edf2fb;color:#5578b7;border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:700}.lesson b{font-size:12px}.lesson p{margin:4px 0 0;font-size:10px;color:#7a8494}.time{font-size:10px;color:#8b95a5}.practice{background:#f8f9fc}.practice-tag{font-size:10px;color:#315da8}.practice h3{font-size:14px;margin:8px 0}.practice p{font-size:10.5px;color:#667085;line-height:1.5}.deliver{margin-top:10px;padding:9px;background:#fff;border-radius:9px;font-size:10px;color:#536179}.unlock{margin-top:11px;font-size:10px;color:#315da8}.community{margin-top:15px;background:#fff;border:1px solid #dfe6f0;border-radius:14px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between}.community b{font-size:13px}.community p{margin:4px 0 0;font-size:10.5px;color:#748095}.ghost{font-size:11px;color:#315da8}.pin{position:absolute;width:28px;height:28px;border-radius:50%;background:#315da8;color:#fff;border:3px solid #fff;display:grid;place-items:center;font-weight:700;font-size:12px;box-shadow:0 4px 14px rgba(49,93,168,.38);z-index:5}.p1{right:25px;top:125px}.p2{left:480px;top:250px}.p3{left:34px;top:500px}.p4{right:30px;top:580px}.p5{left:535px;top:806px}.p6{left:90px;top:92px}.footnote{position:absolute;bottom:0;left:0;right:0;height:73px;padding:17px 20px;background:#111827;color:#dce6f5;border-radius:14px;font-size:13px;line-height:1.5}.footnote b{color:#fff}.arrows{position:absolute;left:0;top:42px;width:2304px;height:1050px;z-index:4;pointer-events:none}.arrows path{fill:none;stroke:#315da8;stroke-width:2;stroke-dasharray:6 7;opacity:.6}.arrows circle{fill:#315da8}
+</style>
+</head>
+<body>
+<main class="board">
+  <header class="top">
+    <div><div class="kicker">UX INTERACTION AUDIT · 课程预览页</div><div class="title">从“展示完整链路”转为“帮助用户做学习决策”</div></div>
+    <div class="meta">桌面 Web · 建议示意图 · 保留现有设计系统</div>
+  </header>
+  <section class="columns">
+    <div class="panel">
+      <div class="panel-head"><span>修改前</span><span class="badge">当前截图</span></div>
+      <div class="before-wrap"><img src="course-preview-current.png" alt="修改前课程预览页" /></div>
+      <div class="before-note">页面已经清楚表达“学习路径—实战—社区贡献”，但三段内容同时争夺注意力，且关键决策信息与主行动没有形成明确闭环。</div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><span>关键改动</span><span class="badge">6 项</span></div>
+      <div class="issues">
+        <div class="issue"><span class="num">1</span><b>主行动不明确</b><p>把“开始学习”设为唯一主按钮，“加入学习计划”降为次按钮，并与标题和投入信息放在同一决策区。</p></div>
+        <div class="issue"><span class="num">2</span><b>路径信息重复且过密</b><p>保留一条紧凑主线，用“基础→学习→实战→验证→成果”表达因果，减少大卡与解释文字的重复。</p></div>
+        <div class="issue"><span class="num">3</span><b>课程内容出现太晚</b><p>把单元、讲次、时长前置，让用户在决定开始前能快速判断课程量级和内容是否匹配。</p></div>
+        <div class="issue"><span class="num">4</span><b>实战与课程关系不直观</b><p>明确实战的解锁条件、任务产出与验证结果，让用户理解为什么学完这部分就要进入实践。</p></div>
+        <div class="issue"><span class="num">5</span><b>社区共建过早占据大区块</b><p>先压缩为完成实战后的成果出口，待达成条件后再展开贡献流程。</p></div>
+        <div class="issue"><span class="num">6</span><b>左、右两套进度缺少映射</b><p>左侧只承担课程目录，右侧承担决策和当前单元详情；统一选中状态与名称，减少认知切换。</p></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><span>修改后建议</span><span class="badge">同设计系统升级</span></div>
+      <div class="after-shell">
+        <div class="appbar"><div class="exit">×&nbsp; 退出课程</div><div class="avatar">C</div></div>
+        <div class="appbody">
+          <aside class="side">
+            <div class="cover"></div><div class="publisher">策划自 · MindSpore 官方课程</div><div class="course-name">大模型分布式训练</div>
+            <div class="course-desc">面向需要完成模型训练、扩展多卡并行并解决吞吐问题的开发者。</div>
+            <div class="tabs"><div class="tab on">☷ 单元</div><div class="tab">▧ 资料</div><div class="tab">✎ 练习</div></div>
+            <div class="unit on"><strong>1</strong><span>分布式训练全景<br><small>先理解多设备训练的完整结构</small></span></div>
+            <div class="unit"><strong>2</strong><span>模型与数据并行</span></div><div class="unit"><strong>3</strong><span>通信与梯度同步</span></div><div class="unit"><strong>4</strong><span>混合精度与吞吐优化</span></div><div class="unit"><strong>5</strong><span>训练稳定性调试</span></div>
+          </aside>
+          <div class="main">
+            <div class="summary">
+              <div><span class="eyebrow">第 1 单元 · 共 6 单元</span><h1>建立分布式训练的全局认识</h1><p>先理解任务如何拆分到多个设备，再完成模型并行、数据并行与性能调优。</p><div class="stats"><span class="chip">6 单元</span><span class="chip">18 讲</span><span class="chip">约 12 小时</span><span class="chip">2 个实战</span></div></div>
+              <div><div class="actions"><button class="btn primary">▶ 开始学习</button><button class="btn">＋ 加入学习计划</button></div><div class="maplink">在完整知识地图中查看 ↗</div></div>
+            </div>
+            <div class="card"><div class="card-head"><div><div class="card-title">完成这门课，你会经过这条关键路径</div><div class="card-sub">每一步都会为下一步解锁所需的基础</div></div></div>
+              <div class="path"><div class="stage"><small>基础</small><b>单卡训练</b><span>先建立可运行基线</span></div><div class="stage current"><small>学习</small><b>任务拆分</b><span>理解模型与数据并行</span></div><div class="stage"><small>协同</small><b>梯度同步</b><span>掌握通信与设备协作</span></div><div class="stage"><small>实战</small><b>双卡训练</b><span>定位吞吐与收敛问题</span></div><div class="stage result"><small>成果</small><b>能力证明</b><span>沉淀脚本和诊断记录</span></div></div>
+              <div class="why"><div>有基线，才能比较并行收益</div><div>确定策略，才能设计通信</div><div>指标稳定，才能进入实战</div><div>验证通过，形成可复用成果</div></div>
+              <div class="outcome"><b>学完可做到</b>独立配置、运行并诊断一次分布式训练任务。</div>
+            </div>
+            <div class="content-grid">
+              <section class="outline"><div class="section-title">本单元内容</div><div class="section-note">3 个关键步骤 · 预计 85 分钟</div>
+                <div class="lesson"><span class="lesson-n">1</span><div><b>为什么要拆分训练任务</b><p>建立单卡基线，理解并行的收益与边界</p></div><span class="time">20 分钟</span></div>
+                <div class="lesson"><span class="lesson-n">2</span><div><b>模型并行与数据并行如何选择</b><p>比较显存、通信和收敛差异</p></div><span class="time">30 分钟</span></div>
+                <div class="lesson"><span class="lesson-n">3</span><div><b>完成一次双卡训练</b><p>把学习结果带入真实任务验证</p></div><span class="time">35 分钟</span></div>
+              </section>
+              <aside class="practice"><div class="practice-tag">课程实战 · 完成步骤 2 后解锁</div><h3>双卡图像分类训练</h3><p>把单卡脚本改为双卡训练，对比吞吐、收敛与设备利用率。</p><div class="deliver">产出：训练脚本、指标对比、异常诊断记录</div><div class="unlock">为什么现在做：先掌握并行策略，才能判断性能问题来自哪里 →</div></aside>
+            </div>
+            <div class="community"><div><b>完成实战后，可把验证经验回填社区</b><p>AI 帮你整理草稿；确认内容和可见范围后再发布。</p></div><span class="ghost">查看共建示例 ↗</span></div>
+          </div>
+        </div>
+        <span class="pin p1">1</span><span class="pin p2">2</span><span class="pin p3">3</span><span class="pin p4">4</span><span class="pin p5">5</span><span class="pin p6">6</span>
+      </div>
+      <div class="footnote"><b>建议图说明：</b>这是一张交互与信息架构建议图，不是最终高保真稿。延续了原页面的蓝灰色、圆角卡片、轻边框和双栏结构。</div>
+    </div>
+    <svg class="arrows" viewBox="0 0 2304 1050" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M1035 110 C1100 110 1160 160 1955 163"/><circle cx="1955" cy="163" r="4"/>
+      <path d="M1035 266 C1110 266 1210 300 1590 312"/><circle cx="1590" cy="312" r="4"/>
+      <path d="M1035 422 C1120 422 1190 545 1285 560"/><circle cx="1285" cy="560" r="4"/>
+      <path d="M1035 578 C1120 578 1830 610 2180 638"/><circle cx="2180" cy="638" r="4"/>
+      <path d="M1035 734 C1120 734 1510 855 1645 864"/><circle cx="1645" cy="864" r="4"/>
+      <path d="M1035 890 C1105 890 1160 160 1225 135"/><circle cx="1225" cy="135" r="4"/>
+    </svg>
+  </section>
+</main>
+</body>
+</html>

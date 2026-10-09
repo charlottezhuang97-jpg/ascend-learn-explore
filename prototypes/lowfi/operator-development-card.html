@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <base href="../../">
+  <script src="assets/js/artifact-status.js" data-status="lowfi" defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>算子开发场景卡低保真</title>
+  <style>
+    :root {
+      --ink:#182230; --muted:#667085; --subtle:#98a2b3; --line:#e1e5ec;
+      --blue:#2e53fa; --blue-soft:#f1f4ff; --green:#067647; --green-soft:#ecfdf3;
+      --amber:#9a6700; --amber-soft:#fff8e7; --white:#fff; --canvas:#f4f5f7;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--canvas); color:var(--ink); font-family:Inter,"HarmonyOS Sans SC","PingFang SC",Arial,sans-serif; }
+    .page { width:min(1320px,calc(100% - 64px)); margin:0 auto; padding:46px 0 72px; }
+    .kicker { color:var(--blue); font-size:14px; font-weight:700; }
+    h1 { margin:8px 0; font-size:32px; }
+    .intro { margin:0; color:var(--muted); line-height:1.6; }
+    .states { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px; margin-top:30px; }
+    .state-label { display:flex; align-items:center; gap:8px; margin:0 0 10px 4px; color:var(--muted); font-size:13px; font-weight:700; }
+    .state-label::before { content:""; width:7px; height:7px; border-radius:50%; background:#98a2b3; }
+    .state-label.hover::before { background:var(--blue); }
+    .card {
+      position:relative; min-height:480px; padding:24px; overflow:hidden;
+      border:1px solid var(--line); border-radius:22px; background:var(--white);
+      box-shadow:0 4px 14px rgba(16,24,40,.04); transition:.18s ease;
+    }
+    .card:hover,.card.is-hover { transform:translateY(-5px); border-color:#aebeff; box-shadow:0 18px 38px rgba(46,83,250,.12); }
+    .topline,.title-row,.bottom,.hover-actions { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .chips { display:flex; flex-wrap:wrap; gap:7px; }
+    .chip {
+      display:inline-flex; align-items:center; min-height:26px; padding:4px 9px;
+      border:1px solid var(--line); border-radius:999px; background:#fafbfc;
+      color:#475467; font-size:12px;
+    }
+    .chip.type { border-color:#cad5ff; background:var(--blue-soft); color:var(--blue); font-weight:700; }
+    .chip.online { border-color:#abefc6; background:var(--green-soft); color:var(--green); font-weight:700; }
+    .sample { color:var(--subtle); font-size:11px; }
+    h2 { margin:15px 0 7px; font-size:24px; }
+    .description { margin:0; color:#475467; font-size:14px; line-height:1.65; }
+    .audience-grid { display:grid; grid-template-columns:1fr 1.25fr; gap:10px; margin-top:16px; }
+    .audience { min-height:62px; padding:10px 11px; border:1px solid var(--line); border-radius:10px; background:#fbfcfd; }
+    .audience small { display:block; margin-bottom:5px; color:var(--muted); font-size:11px; }
+    .audience span { display:block; color:#344054; font-size:12px; line-height:1.45; }
+    .route-block { margin-top:13px; padding:14px 14px 12px; border-radius:14px; background:#f8f9fb; }
+    .route-title { margin-bottom:13px; color:var(--muted); font-size:12px; font-weight:700; }
+    .route { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); position:relative; }
+    .route::before { content:""; position:absolute; left:8%; right:8%; top:13px; height:2px; background:#cbd2df; }
+    .step { position:relative; z-index:1; padding:0 3px; text-align:center; }
+    .dot {
+      width:27px; height:27px; margin:0 auto 7px; display:grid; place-items:center;
+      border:2px solid #aab4c4; border-radius:50%; background:#fff; color:#667085;
+      font-size:10px; font-weight:800;
+    }
+    .step:last-child .dot { border-color:var(--blue); background:var(--blue); color:#fff; }
+    .step span { display:block; color:#344054; font-size:11px; line-height:1.3; }
+    .cost-block { margin-top:15px; }
+    .section-label { margin-bottom:8px; color:var(--muted); font-size:12px; font-weight:700; }
+    .cost-line { display:flex; flex-wrap:wrap; align-items:center; gap:7px; }
+    .metric { color:#344054; font-size:13px; }
+    .metric + .metric::before { content:"·"; margin-right:7px; color:#c0c6d1; }
+    .practice { padding:4px 8px; border-radius:6px; background:var(--amber-soft); color:var(--amber); font-size:11px; font-weight:700; }
+    .cert { padding:4px 8px; border-radius:6px; background:var(--blue-soft); color:var(--blue); font-size:11px; font-weight:700; }
+    .environment {
+      margin-top:14px; padding:12px 13px; border:1px solid var(--line); border-radius:11px;
+      background:#fbfcfd; color:#475467; font-size:12px; line-height:1.5;
+    }
+    .environment strong { color:var(--ink); }
+    .bottom {
+      position:absolute; left:24px; right:24px; bottom:21px; padding-top:14px;
+      border-top:1px solid var(--line); color:var(--muted); font-size:12px;
+    }
+    .social { display:flex; gap:15px; }
+    .arrow { width:34px; height:34px; display:grid; place-items:center; border-radius:50%; background:#101828; color:#fff; font-size:17px; }
+    .hover-panel {
+      display:none; position:absolute; left:0; right:0; bottom:0; padding:17px 24px 20px;
+      border-top:1px solid #cbd5ff; background:linear-gradient(180deg,#f8faff 0%,#fff 100%);
+      box-shadow:0 -14px 30px rgba(46,83,250,.08);
+    }
+    .card.is-hover .bottom,.card:hover .bottom { display:none; }
+    .card.is-hover .hover-panel,.card:hover .hover-panel { display:block; }
+    .fit-title { margin:0 0 9px; font-size:13px; font-weight:800; }
+    .hover-actions { margin-top:12px; }
+    .link { color:#475467; font-size:12px; }
+    .buttons { display:flex; gap:8px; }
+    button { border:1px solid var(--line); border-radius:9px; padding:9px 12px; background:#fff; color:var(--ink); font-weight:700; }
+    button.primary { border-color:var(--blue); background:var(--blue); color:#fff; }
+    .legend {
+      margin-top:26px; padding:17px 19px; border:1px solid var(--line); border-radius:14px;
+      background:#fff; color:#475467; font-size:13px; line-height:1.65;
+    }
+    .legend b { color:var(--ink); }
+    @media(max-width:900px) { .states { grid-template-columns:1fr; } .page { width:min(650px,calc(100% - 32px)); } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="kicker">首页第二楼层 · 开发场景卡</div>
+    <h1>算子开发</h1>
+    <p class="intro">默认态先帮助用户判断角色和场景是否匹配；悬浮后再展开课程、实验、认证与环境成本。</p>
+
+    <section class="states">
+      <div>
+        <p class="state-label">默认状态</p>
+        <article class="card">
+          <div class="topline">
+            <div class="chips"><span class="chip type">CANN</span><span class="chip online">HiDevLab 在线环境</span></div>
+            <span class="sample">示例数据</span>
+          </div>
+          <div class="title-row"><div><h2>算子开发：从编程模型到工程化调优</h2><p class="description">面向自定义算子开发与性能优化，建立从计算表达、并行编程到CPU/NPU孪生调试的完整能力。</p></div></div>
+          <div class="audience-grid">
+            <div class="audience"><small>适合角色</small><span>算子开发、AI框架、性能优化工程师</span></div>
+            <div class="audience"><small>典型场景</small><span>不支持算子、自定义融合计算、NPU算子性能瓶颈</span></div>
+          </div>
+          <div class="route-block">
+            <div class="route-title">知识递进路线</div>
+            <div class="route">
+              <div class="step"><div class="dot">1</div><span>编程模型</span></div>
+              <div class="step"><div class="dot">2</div><span>编程范式</span></div>
+              <div class="step"><div class="dot">3</div><span>SIMD编程</span></div>
+              <div class="step"><div class="dot">4</div><span>矩阵计算进阶</span></div>
+              <div class="step"><div class="dot">5</div><span>算子工程化</span></div>
+              <div class="step"><div class="dot">6</div><span>孪生调试与性能调优</span></div>
+            </div>
+          </div>
+          <div class="bottom"><div class="social"><span>★ 4.8</span><span>2,360人学习</span></div><span class="arrow">→</span></div>
+        </article>
+      </div>
+
+      <div>
+        <p class="state-label hover">悬浮状态</p>
+        <article class="card is-hover">
+          <div class="topline">
+            <div class="chips"><span class="chip type">CANN</span><span class="chip online">HiDevLab 在线环境</span></div>
+            <span class="sample">示例数据</span>
+          </div>
+          <div class="title-row"><div><h2>算子开发：从编程模型到工程化调优</h2><p class="description">面向自定义算子开发与性能优化，建立从计算表达、并行编程到CPU/NPU孪生调试的完整能力。</p></div></div>
+          <div class="audience-grid">
+            <div class="audience"><small>适合角色</small><span>算子开发、AI框架、性能优化工程师</span></div>
+            <div class="audience"><small>典型场景</small><span>不支持算子、自定义融合计算、NPU算子性能瓶颈</span></div>
+          </div>
+          <div class="route-block">
+            <div class="route-title">知识递进路线</div>
+            <div class="route">
+              <div class="step"><div class="dot">1</div><span>编程模型</span></div>
+              <div class="step"><div class="dot">2</div><span>编程范式</span></div>
+              <div class="step"><div class="dot">3</div><span>SIMD编程</span></div>
+              <div class="step"><div class="dot">4</div><span>矩阵计算进阶</span></div>
+              <div class="step"><div class="dot">5</div><span>算子工程化</span></div>
+              <div class="step"><div class="dot">6</div><span>孪生调试与性能调优</span></div>
+            </div>
+          </div>
+          <div class="hover-panel">
+            <p class="fit-title">学习成本与所需环境</p>
+            <div class="cost-line">
+              <span class="metric">约12小时</span><span class="metric">6单元</span><span class="metric">18讲</span><span class="metric">5实验</span>
+              <span class="practice">强实践</span><span class="cert">可衔接认证</span>
+            </div>
+            <div class="environment"><strong>所需环境：</strong>{Ascend NPU型号} · {CANN版本} · {OS版本}；支持HiDevLab免配置在线实验。</div>
+            <div class="hover-actions"><span class="link">★ 4.8 · 2,360人学习</span><div class="buttons"><button>查看路线</button><button class="primary">AI为我规划</button></div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+    <aside class="legend"><b>信息顺序：</b>默认态先呈现开发类型、用户角色、典型场景与知识递进路线；悬浮态再呈现时长、单元、讲次、实验、实践强度、认证和精确环境。HiDevLab支持作为高价值条件在默认态用标签提示，人数与评分保持低优先级。示例数字和环境占位符需由业务数据替换。</aside>
+  </main>
+</body>
+</html>

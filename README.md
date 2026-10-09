@@ -5,24 +5,35 @@
 ## 当前 Demo
 
 - [打开当前 Demo 首页](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/index.html)
+- [打开页面版本目录](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/catalog.html)
 - [本地首页](index.html)
 
 > GitHub Pages 由 `main` 分支自动部署。Demo 中的课程、用户、学习进度和代码运行结果均为演示数据，用于验证信息结构与交互方向。
 
-## 六个核心场景
+## 当前探索方案
 
-这是当前方案的六个核心页面，分别对应从发现、规划到学习执行的完整链路。
+当前持续维护的页面只保留发现、预览、学习执行和个人学习分析链路。页面状态的唯一清单是 [`page-registry.json`](page-registry.json)。
 
 | 场景 | 页面 | 解决的问题 |
 | --- | --- | --- |
 | 首页发现与目标输入 | [index.html](index.html) | 今天想学什么，或正在解决什么开发问题？ |
-| 搜索与资源查找 | [find.html](find.html) | 已经有关键词时，如何找到课程、路径、文档和认证资源？ |
-| 开发场景与知识路线 | [paths.html](paths.html) | 某类开发任务应该按什么知识顺序学习？ |
-| 课程详情与学习方式选择 | [detail.html](detail.html) | 这门课是否适合我，应该选择白板还是视频？ |
+| 课程预览与学习路线 | [course-preview.html](course-preview.html) | 课程为什么这样组织、每个阶段包含哪些单元、如何验证学习结果？ |
 | 沉浸式课程学习 | [learn.html](learn.html) | 如何完成当前课节、实践代码并获得 AI 辅助？ |
-| 开发者认证 | [certification.html](certification.html) | 学习路径和认证准备之间如何衔接？ |
+| AI 学伴 | [ai-companion.html](ai-companion.html) | 如何查看个人能力、学习建议和计划？ |
+| 知识地图 | [knowledge-map.html](knowledge-map.html) | 如何理解全局知识结构与自己的学习位置？ |
 
-补充页面：[自主学习课程](courses.html)、[讲师指导培训](training.html)、[算子开发场景卡低保真](prototypes/operator-development-card-lowfi.html)、[AI 分身高保真与智能助手唤出关系](ai-companion.html)、[AI 分身统一入口低保真](ai-companion-lowfi.html)、[AI 分身六触点与知识地图视窗低保真](ai-companion-touchpoints-lowfi.html)、[知识地图与社区回填低保真](knowledge-community-lowfi.html)。
+## 页面版本管理
+
+仓库按用途管理页面，避免把讨论稿误认为当前方案：
+
+| 目录 | 用途 | 发布方式 |
+| --- | --- | --- |
+| 根目录中的当前页面 | 当前探索方案 | 保留稳定公开链接 |
+| [`prototypes/lowfi/`](prototypes/lowfi/) | 低保真结构与交互讨论 | 发布到 `/prototypes/lowfi/`，页面带“低保真原型”标识 |
+| [`outputs/ux-audit/`](outputs/ux-audit/) | 高保真探索、UX 审查与对照稿 | 发布到 `/lab/ux-audit/` |
+| [`archive/legacy-v1/`](archive/legacy-v1/) | 已停止维护的旧版页面 | 发布到 `/archive/legacy-v1/`，页面带“历史版本”标识 |
+
+旧的根路径仍会跳转到归档后的页面，已经分享的链接不会直接失效。新增页面必须先登记到 [`page-registry.json`](page-registry.json)，再决定是否进入 Pages 发布白名单。
 
 ## 主要产品链路
 
@@ -85,16 +96,18 @@ Token → 组件 → 场景模式 → 状态 → 验收
 
 ## 本地查看
 
-这是静态原型，可以直接打开 `index.html`，也可以在项目根目录启动任意静态文件服务器后访问：
+这是静态原型，可以直接打开 `index.html`。页面目录通过读取 JSON 生成，建议在项目根目录启动静态文件服务器后访问：
 
 ```text
 /index.html
-/find.html
-/paths.html
-/detail.html
+/course-preview.html
 /learn.html
-/certification.html
+/ai-companion.html
+/knowledge-map.html
+/catalog.html
 ```
+
+GitHub Pages 只发布 [`scripts/build-pages.sh`](scripts/build-pages.sh) 明确列出的页面和资源，不再把工作表、临时文件、构建脚本与全部输出目录直接暴露到站点。
 
 ## Contributors
 

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-10-09",
+  "statuses": {
+    "current": "当前探索方案，参与主链路演示并持续维护",
+    "review": "过渡页面，保留用于对照，待决定是否并入当前方案",
+    "lowfi": "低保真原型，仅用于结构和交互讨论",
+    "exploration": "高保真或审查探索，不代表当前正式方案",
+    "legacy": "历史版本，停止维护，仅作回溯"
+  },
+  "pages": [
+    {"id":"home","title":"首页","status":"current","source":"index.html","publicPath":"index.html","description":"目标输入、规划课程、解决问题与 AI 学伴入口"},
+    {"id":"course-preview","title":"课程预览","status":"current","source":"course-preview.html","publicPath":"course-preview.html?course=training","description":"阶段、单元、真实环境复现、同行学习与社区经验链路"},
+    {"id":"learn","title":"沉浸式学习","status":"current","source":"learn.html","publicPath":"learn.html?course=training","description":"白板、视频、IDE 与 AI 学伴协作学习"},
+    {"id":"ai-companion","title":"AI 学伴","status":"current","source":"ai-companion.html","publicPath":"ai-companion.html","description":"个人能力同心环、学习建议与计划"},
+    {"id":"knowledge-map","title":"知识地图","status":"current","source":"knowledge-map.html","publicPath":"knowledge-map.html","description":"知识版图与二维知识网络探索"},
+
+    {"id":"find-v1","title":"查找学习资源","status":"legacy","source":"archive/legacy-v1/find.html","publicPath":"archive/legacy-v1/find.html","description":"早期全站导航与资源查找方案"},
+    {"id":"paths-v1","title":"学习路径","status":"legacy","source":"archive/legacy-v1/paths.html","publicPath":"archive/legacy-v1/paths.html","description":"早期学习路径列表方案"},
+    {"id":"detail-v1","title":"课程详情","status":"legacy","source":"archive/legacy-v1/detail.html","publicPath":"archive/legacy-v1/detail.html","description":"已由课程预览页替代的旧详情方案"},
+    {"id":"courses-v1","title":"自主学习课程","status":"legacy","source":"archive/legacy-v1/courses.html","publicPath":"archive/legacy-v1/courses.html","description":"旧版课程库页面"},
+    {"id":"training-v1","title":"讲师指导培训","status":"legacy","source":"archive/legacy-v1/training.html","publicPath":"archive/legacy-v1/training.html","description":"旧版培训页面"},
+    {"id":"certification-v1","title":"开发者认证","status":"legacy","source":"archive/legacy-v1/certification.html","publicPath":"archive/legacy-v1/certification.html","description":"早期认证页面"},
+
+    {"id":"companion-entry-lowfi","title":"AI 学伴统一入口","status":"lowfi","source":"prototypes/lowfi/ai-companion.html","publicPath":"prototypes/lowfi/ai-companion.html","description":"首页卡片、气泡与统一入口结构"},
+    {"id":"companion-touchpoints-lowfi","title":"AI 学伴触点与知识地图","status":"lowfi","source":"prototypes/lowfi/ai-companion-touchpoints.html","publicPath":"prototypes/lowfi/ai-companion-touchpoints.html","description":"六个触点及知识地图视窗规则"},
+    {"id":"knowledge-community-lowfi","title":"知识地图与社区回填","status":"lowfi","source":"prototypes/lowfi/knowledge-community.html","publicPath":"prototypes/lowfi/knowledge-community.html","description":"地图下钻、实践任务与社区贡献"},
+    {"id":"whiteboard-ide-lowfi","title":"白板、IDE 与 AI 学伴","status":"lowfi","source":"prototypes/lowfi/whiteboard-ide-companion.html","publicPath":"prototypes/lowfi/whiteboard-ide-companion.html","description":"学习页八个关键交互状态"},
+    {"id":"operator-card-lowfi","title":"算子开发场景卡","status":"lowfi","source":"prototypes/lowfi/operator-development-card.html","publicPath":"prototypes/lowfi/operator-development-card.html","description":"算子开发首页卡片结构探索"},
+
+    {"id":"course-preview-highfi-v2","title":"课程预览高保真 V2","status":"exploration","source":"outputs/ux-audit/course-preview-highfi-v2.html","publicPath":"lab/ux-audit/course-preview-highfi-v2.html","description":"课程预览视觉探索稿"},
+    {"id":"course-preview-audit","title":"课程预览审查建议图","status":"exploration","source":"outputs/ux-audit/course-preview-audit-suggestion.html","publicPath":"lab/ux-audit/course-preview-audit-suggestion.html","description":"UX 审查后的对照建议"},
+    {"id":"course-path-mapping-lowfi","title":"阶段与单元映射","status":"lowfi","source":"outputs/ux-audit/course-path-unit-mapping-lowfi.html","publicPath":"lab/ux-audit/course-path-unit-mapping-lowfi.html","description":"左侧阶段与右侧内容单卡单线映射探索"},
+    {"id":"content-generation-touchpoints","title":"内容生成触点","status":"lowfi","source":"outputs/ux-audit/content-generation-touchpoints-lowfi.html","publicPath":"lab/ux-audit/content-generation-touchpoints-lowfi.html","description":"搜索、AI 对话与课程预览的内容生成策略"}
+  ]
+}

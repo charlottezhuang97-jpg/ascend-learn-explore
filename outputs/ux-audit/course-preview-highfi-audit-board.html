@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>课程预览 UX 审查对比</title>
+<style>
+@font-face{font-family:Harmony;src:url('../../assets/fonts/HarmonyOS_Sans_SC_Regular.woff2')}*{box-sizing:border-box}body{margin:0;background:#e9edf3;color:#101828;font-family:Harmony,'HarmonyOS Sans','PingFang SC',sans-serif}.board{width:2400px;height:1400px;padding:44px}.head{height:108px;display:flex;justify-content:space-between;align-items:start}.head h1{margin:0;font-size:38px}.head p{margin:10px 0 0;color:rgba(0,0,0,.6);font-size:18px}.badge{border-radius:999px;background:#dce8fb;padding:10px 18px;color:#456a9e;font-size:16px}.grid{height:1190px;display:grid;grid-template-columns:1fr 360px 1fr;gap:22px}.panel{overflow:hidden;border:1px solid #d7dee8;border-radius:18px;background:#fff;box-shadow:0 12px 36px rgba(34,50,74,.08)}.panel-head{height:66px;display:flex;justify-content:space-between;align-items:center;padding:0 22px;border-bottom:1px solid #e3e7ed}.panel-head strong{font-size:20px}.panel-head span{color:#728096;font-size:14px}.shot{width:100%;height:calc(100% - 66px);object-fit:cover;object-position:top left}.issues{display:flex;flex-direction:column;gap:13px}.issues h2{margin:0 0 2px;font-size:21px}.issue{flex:1;border:1px solid #d8e0eb;border-radius:14px;background:#fff;padding:17px;box-shadow:0 4px 18px rgba(33,48,72,.05)}.issue b{display:flex;align-items:center;gap:10px;font-size:16px}.num{width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:#17263c;color:#fff}.issue p{margin:9px 0 0;color:rgba(0,0,0,.6);font-size:14px;line-height:21px}.arrow{color:#2e53fa}.note{margin-top:5px;color:#748095;font-size:13px;line-height:19px}
+</style></head><body><main class="board"><header class="head"><div><h1>课程预览页 · UX 审查与修改建议</h1><p>移除封面与上传材料，用低温点阵底纹标识课程；聚焦“理解路线并开始阶段 1”。</p></div><span class="badge">ux-audit · 9 层审查</span></header><section class="grid">
+<article class="panel"><div class="panel-head"><strong>审查对象 · 高保真 V1</strong><span>功能完整，但总览阅读负担偏高</span></div><img class="shot" src="course-preview-highfi-v1.png" alt="高保真审查对象"></article>
+<aside class="issues"><h2>关键修改</h2>
+<div class="issue"><b><span class="num">1</span>收敛个性化说明</b><p>大面积说明卡抢占路线任务。<span class="arrow">→</span> 压缩成辅助条，只保留调整结论与依据入口。</p></div>
+<div class="issue"><b><span class="num">2</span>四卡改为单线</b><p>四阶段同时横向展开，需要逐卡阅读。<span class="arrow">→</span> 纵向串联，仅展开阶段 1。</p></div>
+<div class="issue"><b><span class="num">3</span>建立左右映射</b><p>总览不预选目录；点击阶段后，左右同步高亮并定位对应单元。</p><div class="note">点击、滚动与焦点反馈需实机验证。</div></div>
+<div class="issue"><b><span class="num">4</span>合并辅助证据</b><p>同行人数、复现案例和版本信息合并为“同行与课程可信度”。</p></div>
+<div class="issue"><b><span class="num">5</span>延后社区行动</b><p>回馈社区在阶段 4 验收后解锁；发布前始终由用户确认。</p></div>
+</aside>
+<article class="panel"><div class="panel-head"><strong>修改建议 · 高保真 V2</strong><span>单线阶段、渐进展开、主次更清晰</span></div><img class="shot" src="course-preview-highfi-v2.png" alt="高保真修改建议"></article>
+</section></main></body></html>

@@ -5,149 +5,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f5f6fa">
   <title>课程预览 · 昇腾开发者学习中心</title>
-  <link rel="stylesheet" href="assets/css/course-preview.css?v=learning-route-2">
+  <link rel="stylesheet" href="assets/css/course-preview.css?v=stage-map-3">
 </head>
 <body>
   <header class="preview-header">
     <a class="exit-course" href="index.html" aria-label="退出课程并返回首页"><span aria-hidden="true">×</span>退出课程</a>
-    <div class="header-actions" aria-label="课程工具">
-      <span class="course-avatar" aria-label="当前用户">C</span>
-    </div>
+    <strong class="preview-header-title" data-course-title>大模型分布式训练</strong>
+    <span class="course-avatar" aria-label="当前用户">C</span>
   </header>
 
   <div class="preview-layout">
-    <aside class="course-sidebar" aria-label="课程导航">
-      <div class="course-cover"><img src="assets/images/figma-home/continue-course.png" alt="课程封面"></div>
-      <div class="cover-actions"><button type="button" aria-label="分享课程">↗</button><button type="button" aria-label="添加到日历">▣</button></div>
-      <div class="course-author"><span class="author-mark">⌁</span><span><small>策划自</small><b data-course-author>Ascend 学习中心</b></span></div>
-      <h1 data-course-title>Ascend C 算子开发</h1>
-      <p class="course-summary" data-course-summary>面向需要开发自定义算子、解决算子不支持和性能不足问题的开发者。</p>
-      <button class="show-more" type="button">显示更多</button>
-      <nav class="sidebar-tabs" role="tablist" aria-label="课程内容">
-        <button type="button" role="tab" aria-selected="true" data-panel="units">☷ 单元</button>
-        <button type="button" role="tab" aria-selected="false" data-panel="materials">▧ 资料</button>
-        <button type="button" role="tab" aria-selected="false" data-panel="practices">✎ 练习</button>
-      </nav>
-      <ol class="unit-list" id="unitList" aria-label="课程单元"></ol>
-      <div class="sidebar-panel" id="materials" hidden><b>课程资料</b><p>讲义、示例工程和官方文档会随课节解锁。</p></div>
-      <div class="sidebar-panel" id="practices" hidden><b>课程练习</b><p>完成当前课节后，可进入配套实验和单元测验。</p></div>
+    <aside class="course-sidebar route-sidebar" aria-label="课程学习阶段">
+      <div class="sidebar-course-type">课程</div>
+      <h1 data-course-title>大模型分布式训练</h1>
+      <p class="course-summary" data-course-summary>完成从全局认识、设备协同到稳定调优与实战验收的完整链路。</p>
+      <div class="sidebar-section-label"><span>学习阶段</span><i></i></div>
+      <ol class="stage-nav" id="stageNav" aria-label="学习阶段目录"></ol>
     </aside>
 
     <main class="preview-main">
-      <section class="unit-intro" aria-labelledby="unitTitle">
-        <span class="unit-badge" data-unit-count>第 1 单元，共 6 单元</span>
-        <h2 id="unitTitle" data-unit-title>单元 1：理解算子在计算图中的作用</h2>
-        <p data-unit-intro>从计算图、算子接口和执行路径入手，建立自定义算子开发的整体认知。</p>
-      </section>
-
-      <section class="course-route-card" aria-labelledby="courseRouteTitle">
-        <div class="course-route-heading">
-          <div><span class="route-kicker">学习关键路径</span><h3 id="courseRouteTitle">完成这门课要经过哪些关键步骤</h3><p><span data-map-path>算子开发 / 入门路线</span> · 每一步都会产出下一步需要的基础</p></div>
-          <a href="knowledge-community-lowfi.html">在完整知识地图中查看 <span aria-hidden="true">↗</span></a>
+      <section class="preview-hero" aria-labelledby="coursePreviewTitle">
+        <div class="hero-copy">
+          <span class="unit-badge">课程预览</span>
+          <p data-unit-intro>分布式训练通过多设备协同处理模型与数据，提升训练效率；本课程将带你掌握并行策略、通信同步、训练调优与任务验证。</p>
+          <div class="preview-meta" aria-label="课程信息"></div>
         </div>
-        <ol class="course-route" id="courseRoute" aria-label="课程学习关键步骤"></ol>
-        <div class="route-explanation"><b>学习结果</b><span data-route-outcome>完成一次可运行、可验证的算子开发闭环，并保存为能力证明。</span></div>
-        <div class="practice-bridge" aria-labelledby="practiceBridgeTitle">
-          <div class="practice-bridge-heading"><span class="route-kicker">课程与实战</span><h3 id="practiceBridgeTitle">学会方法后，马上用一个真实任务验证</h3></div>
-          <div class="practice-flow">
-            <div class="practice-flow-step"><span>1</span><b>课程学习</b><small data-practice-learning>先理解任务边界并完成代码练习</small></div>
-            <div class="practice-flow-link"><span aria-hidden="true">→</span><small data-practice-unlock>完成核心课节后解锁</small></div>
-            <div class="practice-flow-step task"><span>2</span><b data-practice-title>完成首个算子开发任务</b><small data-practice-description>把所学方法用于真实输入、运行和验证</small></div>
-            <div class="practice-flow-link"><span aria-hidden="true">→</span><small>验证通过后沉淀</small></div>
-            <div class="practice-flow-step evidence"><span>3</span><b>能力证明</b><small data-practice-evidence>保存代码、运行结果与问题记录</small></div>
-          </div>
-          <a class="practice-link" href="#lessonPractice">查看课程中的实战节点 <span aria-hidden="true">↓</span></a>
+        <div class="hero-actions" aria-label="课程操作">
+          <a class="start-button" href="learn.html">▶ <span>开始学习</span></a>
+          <button class="plan-button" id="planButton" type="button">＋ <span>加入计划</span></button>
         </div>
       </section>
 
-      <section class="community-contribution-card" aria-labelledby="communityContributionTitle">
-        <div class="contribution-heading">
-          <div><span class="route-kicker">学习成果 · 社区共建</span><h3 id="communityContributionTitle">完成实战后，把验证过的经验回填社区</h3><p>AI 只整理草稿；你确认内容与可见范围后才会发布。</p></div>
-          <a href="knowledge-community-lowfi.html">查看社区共建示例 <span aria-hidden="true">↗</span></a>
+      <div class="preview-columns">
+        <div class="learning-column">
+          <section class="outcome-card" aria-label="课程完成成果">
+            <div class="outcome-mark" aria-hidden="true"><span>✓</span></div>
+            <div class="outcome-copy"><span>完成后，你将收获</span><h3 data-outcome-title>独立完成一次可验证的分布式训练</h3><p data-route-outcome>保存训练脚本、指标对比与异常诊断记录，沉淀为可复用的能力证明。</p></div>
+            <div class="outcome-illustration" aria-hidden="true"><span class="illus-sheet"></span><span class="illus-check">✓</span></div>
+          </section>
+
+          <section class="stage-roadmap" aria-labelledby="roadmapTitle">
+            <div class="roadmap-heading"><div><span class="eyebrow">课程路线</span><h3 id="roadmapTitle">先完成当前阶段，再进入下一阶段学习</h3></div><span class="roadmap-count" data-stage-count>4 个阶段 · 6 个单元</span></div>
+            <ol class="course-route" id="courseRoute" aria-label="阶段与课程单元对应关系"></ol>
+          </section>
         </div>
-        <div class="contribution-flow" aria-label="社区贡献形成过程">
-          <div><span>01</span><b>完成真实任务</b><small data-contribution-source>代码、运行日志与指标成为事实依据</small></div>
-          <i aria-hidden="true">→</i>
-          <div><span>02</span><b>AI 整理草稿</b><small data-contribution-draft>生成可复用的实践记录和排障说明</small></div>
-          <i aria-hidden="true">→</i>
-          <div><span>03</span><b>确认后发布</b><small data-contribution-result>进入对应知识节点，帮助同路线学习者</small></div>
-        </div>
-        <footer><span>默认仅自己可见</span><span>发布前检查敏感信息</span><button type="button" disabled>完成实战后可回填</button></footer>
-      </section>
 
-      <section class="prerequisite-card" aria-labelledby="prerequisiteTitle">
-        <div class="prerequisite-heading">
-          <div><span class="prerequisite-kicker">开始前准备</span><h3 id="prerequisiteTitle">建议先完成以下前置学习</h3></div>
-          <span class="prerequisite-count" data-prerequisite-count>2 个步骤</span>
-        </div>
-        <ol class="prerequisite-list" id="prerequisiteList" aria-label="前置学习步骤"></ol>
-      </section>
+        <aside class="support-column" aria-label="课程与学习者信息">
+          <section class="peer-card" aria-labelledby="peerTitle">
+            <div class="panel-heading"><div><span class="panel-icon people-icon" aria-hidden="true">♧</span><h3 id="peerTitle">和你目标相近的人</h3></div><button class="more-button" type="button" aria-label="更多同行学习者">···</button></div>
+            <div class="peer-list" id="peerList"></div>
+            <div class="peer-footer"><span class="peer-community-icon" aria-hidden="true">♧</span><b><span data-peer-total>1000+</span> 人在学习相似课程</b><a href="courses.html">查看更多课程 <span aria-hidden="true">›</span></a></div>
+          </section>
 
-      <button type="button" class="material-card" aria-label="上传资料扩展课程">
-        <span class="material-files" aria-hidden="true"><i>W</i><i>X</i><i>PDF</i></span>
-        <span><b>上传材料，扩展这门课程</b><small>上传新的 PDF，或直接描述你想添加、修改的内容</small></span>
-        <span class="material-arrow" aria-hidden="true">›</span>
-      </button>
+          <section class="proof-card" aria-labelledby="proofTitle">
+            <div class="panel-heading"><div><span class="panel-icon proof-icon" aria-hidden="true">▣</span><h3 id="proofTitle">已在真实环境完成复现</h3></div></div>
+            <p class="proof-intro" data-proof-intro>已在 Ascend 910B、MindSpore 2.4 环境复现双卡训练流程。</p>
+            <div class="proof-metrics" id="proofMetrics"></div>
+            <a class="proof-link" href="prototypes/lowfi/knowledge-community.html">查看验证范围 <span aria-hidden="true">›</span></a>
+          </section>
 
-      <section class="learning-status" aria-label="学习状态说明">
-        <div class="status-legend"><span class="mastered">✓ 已掌握</span><span class="skilled">◔ 熟练</span><span class="familiar">◔ 熟悉</span><span class="tried">○ 已尝试</span><span class="not-started">○ 未开始</span><span>▣ 项目</span><span>♙ 测验</span></div>
-        <div class="unit-progress"><div class="progress-dots" aria-label="单元进度"><span class="current"></span><span></span><span></span><span></span><span></span><span></span></div><button type="button" class="next-unit">▶ 下一步：开始第一个课节 <span>›</span></button></div>
-      </section>
-
-      <section class="lesson-timeline" aria-label="当前单元课节">
-        <article class="lesson-card active-card" tabindex="0">
-          <div class="timeline-marker" aria-hidden="true">▧</div>
-          <div class="lesson-main">
-            <p class="lesson-kicker">课程 · 讲次 1</p>
-            <h3>理解算子在计算图中的作用</h3>
-            <p class="lesson-description">明确算子的任务边界、输入输出和调度位置，建立从模型到自定义算子的基础认知。</p>
-            <div class="lesson-rows">
-              <div><span><b>课节 1</b><em>▻ 课程</em> 算子开发的任务边界</span></div>
-              <div><span><b>课节 2</b><em>▧ 文档</em> 从计算图到自定义算子</span></div>
-            </div>
-          </div>
-          <aside class="lesson-hover-panel" aria-label="讲次操作">
-            <span class="panel-label">继续此讲次</span>
-            <strong>从课节 1 开始</strong>
-            <a href="learn.html" class="panel-primary">▶ 开始学习</a>
-            <button type="button" class="panel-secondary">＋ 加入计划</button>
-          </aside>
-        </article>
-
-        <article class="lesson-card" id="lessonPractice" tabindex="0">
-          <div class="timeline-marker" aria-hidden="true">▧</div>
-          <div class="lesson-main">
-            <p class="lesson-kicker">课程 · 讲次 2</p>
-            <h3>编程模型与编程范式</h3>
-            <p class="lesson-description">理解 Ascend C 的编程模型和基础语法，为后续的向量、矩阵计算做好准备。</p>
-            <div class="lesson-rows compact"><div><span><b>课节 3</b><em>▻ 课程</em> Kernel 结构与执行模型</span></div><div><span><b>课节 4</b><em>⌁ 实践</em> 编写第一个算子工程</span></div></div>
-          </div>
-          <aside class="lesson-hover-panel" aria-label="讲次操作"><span class="panel-label">尚未开始</span><strong>预计 2 小时</strong><a href="learn.html" class="panel-primary">▶ 预览课节</a><button type="button" class="panel-secondary">＋ 加入计划</button></aside>
-        </article>
-
-        <article class="lesson-card" tabindex="0">
-          <div class="timeline-marker" aria-hidden="true">▧</div>
-          <div class="lesson-main">
-            <p class="lesson-kicker">课程 · 讲次 3</p>
-            <h3>SIMD 编程与矩阵计算</h3>
-            <p class="lesson-description">从数据搬运、向量化计算和矩阵运算三个角度，学习优化算子性能的方法。</p>
-            <div class="lesson-rows compact"><div><span><b>课节 5</b><em>▻ 课程</em> 向量计算与数据搬运</span></div><div><span><b>课节 6</b><em>♙ 测验</em> SIMD 编程随堂测试</span></div></div>
-          </div>
-          <aside class="lesson-hover-panel" aria-label="讲次操作"><span class="panel-label">尚未开始</span><strong>预计 2.5 小时</strong><a href="learn.html" class="panel-primary">▶ 预览课节</a><button type="button" class="panel-secondary">＋ 加入计划</button></aside>
-        </article>
-
-        <article class="lesson-card" tabindex="0">
-          <div class="timeline-marker medal" aria-hidden="true">♙</div>
-          <div class="lesson-main"><p class="lesson-kicker">单元测验</p><h3>算子开发基础能力测验</h3><p class="lesson-description">验证你是否能正确理解算子接口、计算图映射和基础编程模型。</p></div>
-          <aside class="lesson-hover-panel" aria-label="测验操作"><span class="panel-label">完成前置课节后解锁</span><strong>预计 20 分钟</strong><button type="button" class="panel-secondary locked">🔒 待解锁</button></aside>
-        </article>
-      </section>
+          <section class="community-card" aria-labelledby="communityTitle">
+            <span class="eyebrow">完成单元 6 后，可整理为社区经验</span>
+            <h3 id="communityTitle">完成任务后，把经验变成可复用内容</h3>
+            <p>AI 会根据代码、日志和指标生成草稿；默认仅自己可见，你确认并选择公开范围后才会发布。</p>
+            <ol class="contribution-flow" aria-label="社区贡献流程"><li><span class="flow-icon">▤</span><b>完成真实任务</b></li><li class="flow-arrow" aria-hidden="true">→</li><li><span class="flow-icon sparkle">✧</span><b>AI 整理草稿</b></li><li class="flow-arrow" aria-hidden="true">→</li><li><span class="flow-icon send">➤</span><b>确认后发布</b></li></ol>
+          </section>
+        </aside>
+      </div>
     </main>
   </div>
-
-  <div class="course-preview-actions" aria-label="课程操作">
-    <button type="button" class="plan-button" id="planButton">＋ 加入学习计划</button>
-  </div>
-  <script src="assets/js/course-preview.js"></script>
+  <script src="assets/js/course-preview.js?v=stage-map-3"></script>
 </body>
 </html>

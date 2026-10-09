@@ -22,7 +22,7 @@ AI 分身是“智能助手”的个人学习子能力。智能助手是全站�
 
 AI 分身使用同一个身份、状态和数据源，在六类触点中以不同信息密度出现：
 
-对应低保真总览：[`../../ai-companion-touchpoints-lowfi.html`](../../ai-companion-touchpoints-lowfi.html)。
+对应低保真总览：[`../../prototypes/lowfi/ai-companion-touchpoints.html`](../../prototypes/lowfi/ai-companion-touchpoints.html)。
 
 | 触点 | 用户此时的问题 | 默认形态 | 主要功能 |
 | --- | --- | --- | --- |

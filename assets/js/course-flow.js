@@ -180,6 +180,25 @@
   function createSearchEvidence() {
     const entry = createStep('正在搜索相关资料', 1, 'active', 'searchStep');
     entry.classList.add('flow-search-step');
+    const trustNotice = element('div', 'flow-trust-notice');
+    const trustCopy = element('div', 'flow-trust-copy');
+    trustCopy.append(
+      element('strong', '', '结合可信资料，正在补齐你的学习内容'),
+      element('p', '', 'AI 会对齐官方版本、可运行样例与已验证知识点，再组织成适合当前目标的课程内容。')
+    );
+    trustNotice.append(trustCopy);
+    const evidenceTags = element('div', 'flow-evidence-tags');
+    [
+      ['官方文档', '版本已核对'],
+      ['Sample 仓库', '示例可运行'],
+      ['课程知识点', '结构化拆解'],
+      ['社区案例', '方案已复现']
+    ].forEach(([label, state]) => {
+      const tag = element('span', 'flow-evidence-tag');
+      tag.append(element('b', '', label), element('small', '', state));
+      evidenceTags.append(tag);
+    });
+    trustNotice.append(evidenceTags);
     const tech = element('div', 'flow-process-tech');
     ['Ascend C', '模型训练', '算子开发'].forEach(name => tech.append(element('span', '', name)));
     const sources = [
@@ -216,7 +235,7 @@
       more.textContent = expanded ? '查看更多资料' : '收起资料';
       morePanel.hidden = expanded;
     });
-    entry.append(tech, sourceList, more, morePanel);
+    entry.append(trustNotice, tech, sourceList, more, morePanel);
     return entry;
   }
 

@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="assets/css/course-outline.css?v=outline-toolbar-1">
   <link rel="stylesheet" href="assets/css/course-conversation.css?v=ai-dialog-rhythm-2">
   <link rel="stylesheet" href="assets/css/home-figma.css">
+  <link rel="stylesheet" href="assets/css/knowledge-experience.css?v=1">
 </head>
 <body>
   <header class="site-nav">
@@ -69,7 +70,7 @@
       </div>
     </section>
 
-    <section class="dlc-section dlc-continue" aria-labelledby="continueTitle">
+    <section class="dlc-section dlc-continue" id="courseFirstFloor" aria-labelledby="continueTitle">
       <h2 class="dlc-section-title" id="continueTitle">继续学习</h2>
       <a class="continue-card" href="course-preview.html?course=training">
         <span class="continue-topic">生成式AI与模型</span>
@@ -81,6 +82,31 @@
         </div>
         <div class="continue-progress"><strong>继续学习 →</strong><div class="continue-bar"><span></span></div><span>1%</span></div>
       </a>
+    </section>
+
+    <section class="dlc-section problem-first-floor" id="problemFirstFloor" aria-labelledby="problemFloorTitle" hidden>
+      <div class="problem-floor-heading"><div><span>解决问题</span><h2 id="problemFloorTitle">从真实开发任务或错误开始</h2><p>AI 会判断是推荐现有课程、组合学习步骤，还是生成短时补救内容。</p></div></div>
+      <div class="problem-example-carousel" id="problemCarousel" aria-live="polite">
+        <button type="button" class="problem-carousel-btn problem-carousel-prev" id="problemPrev" aria-label="查看上一个案例">‹</button>
+        <div class="problem-example-track">
+          <article class="problem-example-card" data-problem-slide>
+            <div class="problem-example-top"><span class="problem-example-tag">真实任务反推</span><span class="problem-example-index">案例 01</span></div>
+            <h3>把单卡模型改成双卡训练</h3>
+            <p>从“完成双卡训练并验证吞吐提升”反推需要补齐的能力和实践步骤。</p>
+            <div class="problem-example-flow"><span>目标任务</span><i>→</i><span>能力缺口</span><i>→</i><span>学习步骤</span><i>→</i><span>验收成果</span></div>
+            <div class="problem-example-actions"><button type="button" class="problem-secondary" data-problem-preview="我想了解如何把单卡模型改成双卡训练">查看案例</button><button type="button" class="problem-primary" data-problem-submit="我想把自己的单卡训练任务改成双卡训练，并验证吞吐是否提升">换成我的任务</button></div>
+          </article>
+          <article class="problem-example-card" data-problem-slide hidden>
+            <div class="problem-example-top"><span class="problem-example-tag">诊断补救</span><span class="problem-example-index">案例 02</span></div>
+            <h3>HCCL 初始化失败，训练无法启动</h3>
+            <p>根据错误码、运行环境和日志定位知识缺口，生成补充学习并返回原任务复验。</p>
+            <div class="problem-example-flow"><span>错误现象</span><i>→</i><span>诊断依据</span><i>→</i><span>补充学习</span><i>→</i><span>重新验证</span></div>
+            <div class="problem-example-actions"><button type="button" class="problem-secondary" data-problem-preview="我想查看 HCCL 初始化失败的诊断案例">查看案例</button><button type="button" class="problem-primary" data-problem-submit="我的 HCCL 初始化失败，训练无法启动，我想输入错误码和日志进行诊断">输入我的错误</button></div>
+          </article>
+        </div>
+        <button type="button" class="problem-carousel-btn problem-carousel-next" id="problemNext" aria-label="查看下一个案例">›</button>
+      </div>
+      <p class="problem-floor-note">如果现有课程完整覆盖，AI 优先推荐课程；只有无法覆盖时才组合或生成新内容。</p>
     </section>
 
     <section class="dlc-section dlc-scenes" id="scenes" aria-labelledby="scenesTitle">
@@ -140,14 +166,20 @@
     </div>
   </section>
 
-    <section class="course-flow conversation" id="courseFlow" role="dialog" aria-modal="true" aria-labelledby="flowHeading" hidden>
+  <section class="course-flow conversation" id="courseFlow" role="dialog" aria-modal="true" aria-labelledby="flowHeading" hidden>
     <header class="flow-header"><div class="flow-brand"><img src="assets/images/logo.png" alt=""><span>学习方案探索</span></div><button class="flow-close" id="flowClose" type="button" aria-label="关闭并返回首页">返回首页 ×</button></header>
     <div class="flow-main"><div class="flow-goal" id="flowGoal"></div><div id="flowStage"></div><p class="flow-note">探索版交互示例：选择结果仅在当前页面使用，尚未接入 AI 生成或实时资料检索。</p></div>
   </section>
+
+  <button class="home-companion-fab" id="homeCompanionFab" type="button" aria-label="打开 AI 学伴" aria-expanded="false">✦</button>
+  <aside class="home-companion-panel" id="homeCompanionPanel" aria-hidden="true" aria-label="AI 学伴">
+    <iframe title="AI 学伴个人学习分析" src="ai-companion.html?embedded=1"></iframe>
+  </aside>
 
   <script src="assets/js/home-figma.js"></script>
   <script src="assets/js/course-outline.js?v=outline-toolbar-1"></script>
   <script src="assets/js/course-compose.js?v=lesson-types-2"></script>
   <script src="assets/js/course-flow.js?v=stream-flow-4"></script>
+  <script src="assets/js/home-companion.js?v=1"></script>
 </body>
 </html>
