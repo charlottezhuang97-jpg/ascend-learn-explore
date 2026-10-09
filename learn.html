@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>白板学习 · Ascend Developer</title>
-  <link rel="stylesheet" href="assets/css/learning-room.css?v=board-keypoints-5">
+  <link rel="stylesheet" href="assets/css/learning-room.css?v=canvas-keypoints-6">
   <link rel="stylesheet" href="assets/css/video-learning.css?v=ide-recovery-1">
-  <link rel="stylesheet" href="assets/css/learning-high-fidelity.css?v=board-keypoints-5">
+  <link rel="stylesheet" href="assets/css/learning-high-fidelity.css?v=canvas-keypoints-6">
 </head>
 <body>
   <main class="learning-room" id="learningRoom" aria-label="沉浸式课程学习">
@@ -82,6 +82,16 @@
             <p>完成这四项检查后，再把代码、日志和指标整理成可复用的实践记录。</p>
           </figure>
         </section>
+        <nav class="canvas-keypoints" aria-label="本节课堂要点">
+          <span class="canvas-keypoints-label">课堂要点</span>
+          <ol>
+            <li><button type="button" data-board-jump="0"><span>01</span><b>数据如何拆分</b><small>同一模型，不同数据切片</small></button></li>
+            <li><button type="button" data-board-jump="1"><span>02</span><b>梯度为何同步</b><small>AllReduce 保证参数一致</small></button></li>
+            <li><button type="button" data-board-jump="2"><span>03</span><b>知识如何串联</b><small>并行、通信、调优和稳定性</small></button></li>
+            <li><button type="button" data-board-jump="3"><span>04</span><b>怎样减少等待</b><small>计算通信重叠提升吞吐</small></button></li>
+            <li><button type="button" data-board-jump="4"><span>05</span><b>如何完成验收</b><small>保留四类可验证证据</small></button></li>
+          </ol>
+        </nav>
         <div class="selection-tip" id="selectionTip" hidden><button type="button" id="addNote">＋ 加入我的笔记</button></div>
         <div class="board-subtitle" id="boardSubtitle" aria-live="off">这一节我们先建立直觉：模型计算会被拆分成不同类型的任务，再由对应的计算单元协同完成。</div>
       </section>
@@ -102,14 +112,10 @@
       </aside>
       <footer class="board-footer"><button type="button" id="toggleLessonOutline" aria-expanded="false" aria-controls="lessonOutline">☷ 本节大纲</button><button type="button">◖ 声音</button><span>长按画布中的文字，可加入我的笔记</span></footer>
     </section>
-    <aside class="companion" aria-label="本节课辅助内容">
+    <aside class="companion" aria-label="本节课学习辅助">
       <header><strong>本节课</strong><button type="button" aria-label="收起辅助面板">×</button></header>
-      <nav class="companion-tabs" aria-label="本节课辅助内容"><button type="button" class="active" data-tab="keypoints">本节要点</button><button type="button" data-tab="chat">AI 学伴</button><button type="button" data-tab="notes">我的笔记 <span id="noteCount">0</span></button></nav>
-      <section class="companion-content keypoints-panel" id="keypointsPanel">
-        <div class="keypoints-summary"><span>课节 1 · 5 页板书</span><strong>数据并行与梯度同步</strong><p>从任务拆分到训练验收，沿着一条完整因果链理解分布式训练。</p></div>
-        <ol class="keypoint-list"><li><button type="button" data-board-jump="0"><span>01</span><b>数据如何拆分</b><small>同一模型，不同数据切片</small></button></li><li><button type="button" data-board-jump="1"><span>02</span><b>梯度为何同步</b><small>AllReduce 保证参数一致</small></button></li><li><button type="button" data-board-jump="2"><span>03</span><b>知识如何串联</b><small>并行、通信、调优和稳定性</small></button></li><li><button type="button" data-board-jump="3"><span>04</span><b>怎样减少等待</b><small>计算通信重叠提升吞吐</small></button></li><li><button type="button" data-board-jump="4"><span>05</span><b>如何完成验收</b><small>保留四类可验证证据</small></button></li></ol>
-      </section>
-      <section class="companion-content" id="chatPanel" hidden>
+      <nav class="companion-tabs" aria-label="学习辅助内容"><button type="button" class="active" data-tab="chat">AI 学伴</button><button type="button" data-tab="notes">我的笔记 <span id="noteCount">0</span></button></nav>
+      <section class="companion-content" id="chatPanel">
         <p class="companion-label">✎ 课程开篇</p>
         <p>你好，欢迎来到这一课。今天我们会理解昇腾处理器如何组织计算任务，并建立 NPU 与 CPU 协作的基本直觉。</p>
         <p>有不理解的概念，随时问我；也可以在画布上长按选词，把内容加入笔记。</p>
@@ -175,6 +181,6 @@ import acl
       <button type="button" class="enter-learning" id="enterLearning">进入白板学习</button>
     </div>
   </section>
-  <script src="assets/js/learning-room.js?v=board-keypoints-5"></script>
+  <script src="assets/js/learning-room.js?v=canvas-keypoints-6"></script>
 </body>
 </html>

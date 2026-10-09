@@ -193,13 +193,11 @@
   });
 
   const tabs = document.querySelectorAll('.companion-tabs button');
-  const keypoints = document.getElementById('keypointsPanel');
   const chat = document.getElementById('chatPanel');
   const notes = document.getElementById('notesPanel');
   tabs.forEach(tab => tab.addEventListener('click', () => {
     const target = tab.dataset.tab;
     tabs.forEach(item => item.classList.toggle('active', item === tab));
-    keypoints.hidden = target !== 'keypoints';
     chat.hidden = target !== 'chat';
     notes.hidden = target !== 'notes';
   }));
