@@ -1,20 +1,35 @@
 const courses = {
   training: {
-    title: '大模型分布式训练',
-    summary: '完成从全局认识、设备协同到稳定调优与实战验收的完整链路。',
+    title: '昇腾算力与 MindSpore 框架：大语言模型开发与深度调优全栈指南',
+    summary: '从昇腾计算栈与 MindSpore 机制出发，完成大模型分布式训练、适配、微调、诊断与深度调优。',
     previewTitle: '完成一次可验证的分布式训练',
     outcomeTitle: '独立完成一次可验证的分布式训练',
-    intro: '分布式训练通过多设备协同处理模型与数据，提升训练效率；本课程将带你掌握并行策略、通信同步、训练调优与任务验证。',
-    meta: ['8 单元', '约 14 小时', '3 个实战', '适合：有单卡训练经验'],
+    intro: '沿着“理解计算栈—搭建训练工程—启动规模化训练—完成模型适配—诊断并优化”的链路，逐步完成可复现的大语言模型训练任务。',
+    meta: ['10 单元', '50 课节', '约 20 小时', '适合：有 Python 与深度学习基础'],
     outcome: '保存训练脚本、指标对比与异常诊断记录，沉淀为可复用的能力证明。',
     stages: [
-      {title:'建立训练基线', unitRange:'单元 1–2', reason:'先得到可重复的单卡结果，再判断扩展训练是否真正带来收益。', units:[['课程','单元 1：分布式训练任务全景','28 分钟'],['实践','单元 2：建立单卡性能基线','36 分钟']]},
-      {title:'选择并行策略', unitRange:'单元 3–4', reason:'理解数据并行与模型切分的边界后，才能为当前模型选择合适的扩展方式。', units:[['课程','单元 3：数据并行与模型切分','34 分钟'],['课程','单元 4：通信域与梯度同步','31 分钟']]},
-      {title:'完成设备协同', unitRange:'单元 5–6', reason:'先让集合通信稳定工作，再用混合精度与计算通信重叠提升吞吐。', units:[['实践','单元 5：HCCL 双卡通信配置','42 分钟'],['课程','单元 6：混合精度与通信重叠','38 分钟']]},
-      {title:'稳定并优化训练', unitRange:'单元 7', reason:'对齐 Loss、显存与吞吐指标，定位扩展效率下降的原因。', units:[['测验','单元 7：稳定性与性能诊断','30 分钟']]},
-      {title:'实战验收', unitRange:'单元 8', reason:'把配置、协同和调优方法放进真实任务中，留下可复现的训练证据。', units:[['实践','单元 8：双卡图像分类训练验收','55 分钟']]}
+      {title:'建立训练基线',unitRange:'单元 1–2',reason:'先理解昇腾计算栈与 MindSpore 的运行方式，再建立后续训练可比较的共同基线。',units:[
+        {number:1,title:'昇腾计算架构与 CANN 软件栈深度解构',description:'看懂训练任务如何从框架下发到 NPU，并明确各层的职责边界。',lessons:[['课程','昇腾 NPU 与 Da Vinci 计算架构','22 分钟'],['课程','CANN 软件栈与训练任务执行链','24 分钟'],['实践','追踪一次训练任务的下发路径','32 分钟'],['课程','片上内存、数据搬运与算力单元','26 分钟'],['测验','架构与软件栈理解测验','12 分钟']]},
+        {number:2,title:'MindSpore 核心机制：动静统一与图模式切换',description:'理解网络、计算图与自动微分的关系，建立可复现的单卡运行基线。',lessons:[['课程','动态图、静态图与动静统一','24 分钟'],['课程','Cell、计算图与执行生命周期','26 分钟'],['实践','把动态图训练脚本切换为图模式','36 分钟'],['课程','自动微分与参数更新链路','23 分钟'],['测验','MindSpore 运行机制测验','12 分钟']]}
+      ]},
+      {title:'搭建训练工程',unitRange:'单元 3–4',reason:'先用 MindFormers 组织可维护的训练配置，再为模型规模选择匹配的并行组合。',units:[
+        {number:3,title:'MindFormers 生态：模块化配置与 YAML 控制流',description:'用统一配置组织模型、数据、训练器与运行环境。',lessons:[['课程','MindFormers 组件与训练入口','22 分钟'],['课程','YAML 配置的继承与覆盖规则','24 分钟'],['实践','搭建可复用的大模型训练配置','38 分钟'],['课程','Tokenizer、数据集与 Checkpoint 装配','26 分钟'],['测验','MindFormers 工程配置测验','13 分钟']]},
+        {number:4,title:'分布式并行策略：从 DP 到混合并行',description:'理解数据、张量、流水线与序列并行的适用边界。',lessons:[['课程','数据并行与梯度同步','25 分钟'],['课程','张量并行、流水线并行与序列并行','30 分钟'],['实践','为 7B 模型计算并行切分方案','40 分钟'],['课程','混合并行配置与通信代价','28 分钟'],['测验','并行策略选择测验','14 分钟']]}
+      ]},
+      {title:'启动规模化训练',unitRange:'单元 5–6',reason:'先跑通 MindSpeed-LLM 多卡启动，再用稳定的数据流水线持续供给训练任务。',units:[
+        {number:5,title:'MindSpeed-LLM 与大规模分布式启动实战',description:'完成多机多卡参数配置、集合通信初始化与首轮训练启动。',lessons:[['课程','MindSpeed-LLM 工程结构与启动器','24 分钟'],['课程','Rank Table、通信域与启动参数','28 分钟'],['实践','启动双机八卡训练任务','46 分钟'],['实践','从 HCCL 日志确认设备协同','34 分钟'],['测验','分布式启动流程测验','13 分钟']]},
+        {number:6,title:'LLM 数据工程：MindRecord 与二进制索引格式',description:'把原始语料转成可切分、可复现并能持续供给训练的数据集。',lessons:[['课程','大模型语料处理流水线','24 分钟'],['课程','MindRecord 与二进制索引格式','27 分钟'],['实践','转换并校验一份训练语料','42 分钟'],['课程','数据分片、打乱与流式读取','26 分钟'],['测验','训练数据工程测验','13 分钟']]}
+      ]},
+      {title:'完成模型适配与微调',unitRange:'单元 7–8',reason:'先完成异构框架权重对齐，再选择全量微调或 LoRA 获得目标任务能力。',units:[
+        {number:7,title:'异构算力适配：权重转换、精度对齐与校验',description:'把已有模型可靠迁移到昇腾环境，并留下精度一致性的证据。',lessons:[['课程','异构迁移中的结构与算子差异','25 分钟'],['课程','权重映射、切分与合并规则','28 分钟'],['实践','转换并加载一份模型权重','44 分钟'],['课程','Logits、Loss 与精度对齐方法','27 分钟'],['测验','异构适配与校验测验','14 分钟']]},
+        {number:8,title:'大模型微调实战：从 SFT 到高效 LoRA 适配',description:'围绕目标数据集完成微调配置、运行、评估与结果保存。',lessons:[['课程','SFT 数据组织与训练目标','24 分钟'],['课程','LoRA 原理与关键超参数','26 分钟'],['实践','配置一组 LoRA 微调任务','36 分钟'],['实践','运行微调并比较基础模型结果','45 分钟'],['测验','SFT 与 LoRA 方案测验','14 分钟']]}
+      ]},
+      {title:'诊断并优化训练',unitRange:'单元 9–10',reason:'先用日志和指标定位故障与收敛问题，再结合 Profiling 提升 NPU 利用率。',units:[
+        {number:9,title:'工程诊断：分布式训练故障排查与收敛优化',description:'从启动、通信、数值和收敛四层定位训练失败的真正原因。',lessons:[['课程','分布式训练故障分层诊断法','25 分钟'],['课程','Loss 异常、溢出与梯度问题','28 分钟'],['实践','定位一次 HCCL 初始化失败','42 分钟'],['课程','收敛曲线与超参数联合分析','27 分钟'],['测验','训练故障诊断测验','14 分钟']]},
+        {number:10,title:'深度调优：NPU 性能分析与硬件利用率提升',description:'用 Profiling 数据定位空闲、等待与通信瓶颈，完成可验证的性能优化。',lessons:[['课程','吞吐、时延、显存与利用率指标','24 分钟'],['课程','MindSpore Profiler 与时间线分析','28 分钟'],['实践','读取并标注一份性能时间线','38 分钟'],['实践','优化计算通信重叠与数据供给','46 分钟'],['测验','性能调优与课程结业测验','16 分钟']]}
+      ]}
     ],
-    peers:[['NPU_Leo','选择并行策略',35,'male'],['林深见鹿','完成设备协同',60,'female-left'],['KernelCat','稳定并优化训练',78,'female-right']],
+    peers:[['NPU_Leo','搭建训练工程',35,'male'],['林深见鹿','启动规模化训练',60,'female-left'],['KernelCat','诊断并优化训练',78,'female-right']],
     peerTotal:'1000+',
     proofIntro:'已在 Ascend 910B、MindSpore 2.4 环境复现双卡训练流程。',
     proof:[['18','个真实复现案例','▤'],['12','项关键指标已核验','▥']],
@@ -60,7 +75,6 @@ setText('[data-preview-title]',course.previewTitle);
 setText('[data-outcome-title]',course.outcomeTitle||course.previewTitle);
 setText('[data-unit-intro]',course.intro);
 setText('[data-route-outcome]',course.outcome);
-setText('[data-stage-count]',`${course.stages.length} 个阶段 · ${course.stages.reduce((count,stage)=>count+stage.units.length,0)} 个单元`);
 setText('[data-peer-total]',course.peerTotal);
 setText('[data-proof-intro]',course.proofIntro);
 
@@ -73,16 +87,27 @@ const route=document.querySelector('#courseRoute');
 course.stages.forEach((stage,index)=>{
   const selected=index===0;
   const navItem=document.createElement('li');
-  const unitButtons=stage.units.map((unit,unitIndex)=>`<li><button type="button" data-unit-nav="${index}-${unitIndex}"><span class="unit-doc" aria-hidden="true"></span>${escapeHtml(unit[1])}</button></li>`).join('');
-  navItem.innerHTML=`<button type="button" data-stage-index="${index}" aria-expanded="${selected}" ${selected?'aria-current="step"':''}><span class="stage-number">${index+1}</span><span><strong>${escapeHtml(stage.title)}</strong><small>${escapeHtml(stage.unitRange)}</small></span><span class="stage-chevron" aria-hidden="true">⌄</span></button><ol class="stage-units" ${selected?'':'hidden'}>${unitButtons}</ol>`;
+  navItem.innerHTML=`<button type="button" data-stage-index="${index}" aria-controls="courseRoute" aria-pressed="${selected}" ${selected?'aria-current="step"':''}><span class="stage-number">${index+1}</span><span><strong>${escapeHtml(stage.title)}</strong><small>${escapeHtml(stage.unitRange)}</small></span><span class="stage-chevron" aria-hidden="true">›</span></button>`;
   nav.append(navItem);
-
-  const units=stage.units.map(([kind,title,duration],unitIndex)=>`<div class="stage-unit" data-kind="${escapeHtml(kind)}"><span class="unit-kind-icon" aria-hidden="true"></span><span class="kind-label">${escapeHtml(kind)}</span><span class="unit-title">${escapeHtml(title)}</span><span class="unit-duration">${escapeHtml(duration)}</span><a class="unit-play" href="learn.html?course=${encodeURIComponent(courseKey)}&unit=${index+1}-${unitIndex+1}" aria-label="开始${escapeHtml(title)}">▶</a></div>`).join('');
-  const routeItem=document.createElement('li');
-  routeItem.className=`${selected?'is-current is-open':''}`;
-  routeItem.innerHTML=`<div class="stage-entry"><button class="stage-toggle" type="button" data-route-index="${index}" aria-expanded="${selected}"><span class="roadmap-node">${index+1}</span><span class="stage-summary"><strong>${escapeHtml(stage.title)}</strong><small>${escapeHtml(stage.unitRange)}</small></span><span class="stage-chevron" aria-hidden="true">⌄</span></button><div class="stage-detail"><small class="stage-reason">${escapeHtml(stage.reason)}</small>${units}</div></div>`;
-  route.append(routeItem);
 });
+
+const normalizeUnit=(raw,fallbackNumber)=>Array.isArray(raw)
+  ? {number:fallbackNumber,title:raw[1].replace(/^单元\s*\d+[：:]\s*/,''),description:'完成本单元内容并进入对应课节学习。',lessons:[raw]}
+  : raw;
+
+const renderStage=index=>{
+  const stage=course.stages[index];
+  const previousUnits=course.stages.slice(0,index).reduce((count,item)=>count+item.units.length,0);
+  const units=stage.units.map((unit,unitIndex)=>normalizeUnit(unit,previousUnits+unitIndex+1));
+  setText('[data-active-stage-title]',`阶段 ${index+1} · ${stage.title}`);
+  setText('[data-stage-reason]',stage.reason);
+  const lessonTotal=units.reduce((count,unit)=>count+unit.lessons.length,0);
+  setText('[data-stage-count]',`${units.length} 个单元 · ${lessonTotal} 个课节`);
+  route.innerHTML=units.map(unit=>{
+    const lessons=unit.lessons.map(([kind,title,duration],lessonIndex)=>`<li class="stage-unit lesson-row" data-kind="${escapeHtml(kind)}"><span class="unit-kind-icon" aria-hidden="true"></span><span class="kind-label">${escapeHtml(kind)}</span><span class="unit-title">${escapeHtml(title)}</span><span class="unit-duration">${escapeHtml(duration)}</span><a class="unit-play" href="learn.html?course=${encodeURIComponent(courseKey)}&unit=${unit.number}-${lessonIndex+1}" aria-label="开始课节：${escapeHtml(title)}">▶</a></li>`).join('');
+    return `<li class="unit-card"><div class="unit-card-head"><span class="unit-card-number">${unit.number}</span><div><span class="unit-card-kicker">单元 ${unit.number}</span><h4>${escapeHtml(unit.title)}</h4><p>${escapeHtml(unit.description)}</p></div><span class="unit-card-meta">${unit.lessons.length} 个课节</span></div><ol class="lesson-list" aria-label="单元 ${unit.number} 的课节">${lessons}</ol></li>`;
+  }).join('');
+};
 
 const avatarMap={
   male:['assets/images/avatars/avatar-male.png','avatar-single'],
@@ -97,39 +122,18 @@ const activateStage=index=>{
   document.querySelectorAll('[data-stage-index]').forEach(button=>{
     const active=Number(button.dataset.stageIndex)===index;
     button.toggleAttribute('aria-current',active);
-    button.setAttribute('aria-expanded',String(active));
-    const unitList=button.nextElementSibling;
-    if(unitList)unitList.hidden=!active;
+    button.setAttribute('aria-pressed',String(active));
   });
-  document.querySelectorAll('#courseRoute>li').forEach((item,itemIndex)=>{
-    const active=itemIndex===index;
-    item.classList.toggle('is-current',active);
-    item.classList.toggle('is-open',active);
-    item.querySelector('[data-route-index]')?.setAttribute('aria-expanded',String(active));
-  });
+  renderStage(index);
 };
 
 document.querySelectorAll('[data-stage-index]').forEach(button=>button.addEventListener('click',()=>{
   const index=Number(button.dataset.stageIndex);
-  const wasOpen=button.getAttribute('aria-expanded')==='true';
-  if(wasOpen){button.setAttribute('aria-expanded','false');button.nextElementSibling.hidden=true;}
-  else activateStage(index);
-  document.querySelectorAll('#courseRoute>li')[index]?.scrollIntoView({behavior:'smooth',block:'nearest'});
-}));
-document.querySelectorAll('[data-route-index]').forEach(button=>button.addEventListener('click',()=>{
-  const index=Number(button.dataset.routeIndex);
-  const item=button.closest('li');
-  const wasOpen=button.getAttribute('aria-expanded')==='true';
-  if(wasOpen){button.setAttribute('aria-expanded','false');item.classList.remove('is-open');return;}
   activateStage(index);
-  item.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(window.innerWidth<980)document.querySelector('.stage-roadmap')?.scrollIntoView({behavior:'smooth',block:'start'});
 }));
-document.querySelectorAll('[data-unit-nav]').forEach(button=>button.addEventListener('click',()=>{
-  const [stageIndex,unitIndex]=button.dataset.unitNav.split('-').map(Number);
-  activateStage(stageIndex);
-  const item=document.querySelectorAll('#courseRoute>li')[stageIndex];
-  item?.querySelectorAll('.stage-unit')[unitIndex]?.scrollIntoView({behavior:'smooth',block:'center'});
-}));
+
+renderStage(0);
 
 document.querySelector('#planButton')?.addEventListener('click',event=>{
   const button=event.currentTarget;

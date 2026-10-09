@@ -21,3 +21,34 @@
 
 /* Pre-cropped portrait assets stay centered inside every circular avatar well. */
 .peer-avatar .avatar-single,.course-avatar .avatar-single{width:100%;height:100%;object-fit:contain;object-position:center;transform:none}
+
+/* 课程预览四级层级：左侧仅切换阶段，右侧展示当前阶段的单元与课节。 */
+.preview-header-title{max-width:min(62vw,860px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.route-sidebar h1{text-wrap:balance}
+.stage-nav button[aria-current] .stage-chevron{color:#0878ed;transform:translateX(2px)}
+.roadmap-heading{align-items:flex-start}
+.roadmap-heading>div{min-width:0}
+.roadmap-stage-reason{max-width:720px;margin:4px 0 0;color:#718097;font-size:12px;line-height:18px}
+.course-route{gap:12px}
+.course-route:before{display:none}
+.unit-card{overflow:hidden;border:1px solid #dce6f2;border-radius:13px;background:#f9fbfe;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.unit-card-head{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:11px;align-items:center;padding:12px 13px;border-bottom:1px solid #e5edf7;background:linear-gradient(105deg,#f2f8ff,#fff 72%)}
+.unit-card-number{width:38px;height:38px;display:grid;place-items:center;border-radius:10px;background:#e3efff;color:#0878ed;font-size:16px;font-weight:700}
+.unit-card-kicker{display:block;color:#5682bd;font-size:11px;line-height:16px;font-weight:600}
+.unit-card h4{margin:1px 0 2px;color:#17243a;font-size:15px;line-height:21px;font-weight:700}
+.unit-card-head p{margin:0;color:#73839a;font-size:12px;line-height:18px}
+.unit-card-meta{align-self:start;border-radius:99px;background:#fff;padding:4px 9px;color:#607696;font-size:11px;line-height:17px;white-space:nowrap}
+.lesson-list{display:grid;gap:5px;margin:0;padding:9px 10px 11px;list-style:none}
+.unit-card .stage-unit{background:#fff}
+.unit-card .unit-title{overflow:visible;white-space:normal;text-overflow:clip;line-height:18px}
+.unit-card .stage-unit:last-child{border-color:#e4dafb;background:#fcfaff}
+
+@media(max-width:640px){
+  .preview-header-title{max-width:45vw}
+  .stage-nav{grid-template-columns:1fr}
+  .unit-card-head{grid-template-columns:34px minmax(0,1fr);gap:8px;padding:10px}
+  .unit-card-number{width:32px;height:32px;border-radius:8px;font-size:14px}
+  .unit-card-meta{grid-column:2;margin-top:3px;justify-self:start}
+  .unit-card h4{font-size:14px;line-height:20px}
+  .lesson-list{padding:7px}
+}
