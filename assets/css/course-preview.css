@@ -42,6 +42,7 @@
 .unit-card .stage-unit{background:#fff}
 .unit-card .unit-title{overflow:visible;white-space:normal;text-overflow:clip;line-height:18px}
 .unit-card .stage-unit:last-child{border-color:#e4dafb;background:#fcfaff}
+.preview-hero:after{display:none}
 
 @media(max-width:640px){
   .preview-header-title{max-width:45vw}
