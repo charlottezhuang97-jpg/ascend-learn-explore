@@ -20,3 +20,27 @@
 .ac-foundation{padding:8px 12px}.ac-foundation-grid{position:relative;grid-template-columns:1fr 1fr;gap:20px}.ac-foundation-grid:before{position:absolute;left:50%;top:3px;grid-column:auto}.ac-foundation-item:last-child{grid-column:auto;grid-row:auto}
 @media(max-width:520px){.ac-radar svg{width:244px;height:244px;top:25px}.ac-levels{top:33px}.ac-person{top:126px}}
 .ac-content{padding:10px 10px 12px}.ac-card+.ac-card{margin-top:8px}.ac-radar{height:312px}.ac-foundation{margin-bottom:10px;padding-top:6px;padding-bottom:6px}.ac-analysis{padding:8px 16px}.ac-metric{min-height:26px}.ac-next{padding:9px 16px}.ac-next p{margin-bottom:5px}.ac-map-link{height:32px;line-height:30px}
+
+/* 能力同心环：每个领域固定对应一个象限，层级标签与四条环带垂直居中。 */
+.ac-ring-track,.ac-ring-fill{stroke-width:16}
+.ac-levels{top:38px;gap:0}
+.ac-levels span{height:18px;line-height:18px}
+.ac-domain.recommend i{color:var(--ac-orange)}
+
+/* 分析区与建议区使用同一标题层级，并让指标数字共用右对齐列。 */
+.ac-analysis-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.ac-analysis h2,.ac-next h2{font-size:16px;line-height:22px;font-weight:600}
+.ac-analysis h2{margin:0}
+.ac-analysis-head button{height:26px;padding:0 9px;border:1px solid #dce3ef;border-radius:7px;background:#fff;color:#52627f;font-size:12px;line-height:24px}
+.ac-analysis-head button:hover,.ac-analysis-head button:focus-visible{border-color:#a9bde0;color:var(--ac-blue);outline:2px solid rgba(46,83,250,.14);outline-offset:1px}
+.ac-analysis-head button:disabled{cursor:default;color:#7182a2;background:#f3f6fb}
+.ac-metric{grid-template-columns:24px 96px 28px minmax(0,1fr);column-gap:0}
+.ac-metric>strong{width:28px;text-align:right;font-variant-numeric:tabular-nums}
+.ac-metric>span{padding-left:14px}
+.ac-metric>.ac-gap-label{grid-column:2/4}
+
+@media(max-width:520px){
+  .ac-levels{top:41px}
+  .ac-metric{grid-template-columns:24px 92px 28px minmax(0,1fr)}
+  .ac-metric>span{padding-left:10px}
+}
