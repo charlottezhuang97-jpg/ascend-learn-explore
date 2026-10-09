@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>白板学习 · Ascend Developer</title>
   <link rel="stylesheet" href="assets/css/learning-room.css?v=canvas-keypoints-6">
-  <link rel="stylesheet" href="assets/css/video-learning.css?v=ide-recovery-1">
   <link rel="stylesheet" href="assets/css/learning-high-fidelity.css?v=canvas-keypoints-6">
+  <link rel="stylesheet" href="assets/css/video-learning.css?v=workspace-dock-2">
 </head>
 <body>
   <main class="learning-room" id="learningRoom" aria-label="沉浸式课程学习">
@@ -135,28 +135,60 @@
         <button type="button" class="video-tool" aria-label="AI 学伴">✦</button>
         <button type="button" class="video-tool" aria-label="学习设置">⚙</button>
       </div>
-      <button type="button" class="ide-collapse" id="ideCollapse" aria-expanded="true">收起 IDE ›</button>
+      <button type="button" class="layout-reset" id="resetWorkspaceLayout">↺ 恢复默认布局</button>
     </header>
-    <section class="video-dock" id="videoDock" aria-label="视频、代码和 IDE 工作区">
-      <section class="video-column dock-card" aria-label="视频学习区">
-        <div class="dock-card-title"><span>视频讲解</span><small>课节 1 · 18:40</small></div>
+    <section class="video-dock" id="videoDock" aria-label="视频和 IDE 核心工作区，附带可移动辅助面板">
+      <section class="video-column dock-card fixed-workspace" aria-label="固定视频学习区">
+        <div class="dock-card-title"><span>视频讲解 <em>固定区域</em></span><small>课节 1 · 18:40</small></div>
         <div class="media-origin"><span>来自板书 01 · 数据流</span><button type="button" id="returnToBoard">返回板书</button></div>
         <div class="video-player"><div class="video-meta">▶ 昇腾处理器的逻辑结构拆解 <span id="videoCurrentTime">08:24 / 18:40</span></div><div class="video-stage"><p>昇腾 AI 处理器架构</p><strong>Da Vinci 计算直觉</strong><button type="button" aria-label="播放视频">▶</button></div><div class="video-timeline"><span class="video-played" id="videoPlayed"></span><button type="button" class="marker key" data-seek="03:20" aria-label="跳转到 03:20 输入搬运" title="03:20 输入搬运"></button><button type="button" class="marker code" data-seek="05:05" aria-label="跳转到 05:05 结果写回" title="05:05 结果写回"></button><button type="button" class="marker practice" data-seek="08:24" aria-label="跳转到 08:24 实践节点" title="08:24 实践节点"></button></div><div class="timeline-legend"><span>● 重要知识点</span><span>● 代码示例</span><span>● 实践节点</span></div></div>
-        <nav class="video-resource-tabs" aria-label="视频辅助内容"><button type="button" class="active" data-resource="examples">代码全览 <span>3</span></button><button type="button" data-resource="errors">常见错误码 <span>5</span></button><button type="button" data-resource="quiz">随堂测试 <span>3</span></button><button type="button" data-resource="docs">相关文档 <span>3</span></button></nav>
-        <section class="video-resource-content" id="videoResourceContent"><strong>代码全览</strong><p>按视频章节查看本节的环境检查、设备初始化与版本确认代码。</p></section>
       </section>
-      <div class="dock-resizer" data-resize="video" role="separator" aria-label="调整视频区域宽度；可用左右方向键" aria-orientation="vertical" tabindex="0"></div>
-      <section class="video-code-panel dock-card" aria-label="随视频联动的代码片段">
-        <header><strong>视频中的代码</strong><span>08:24</span></header><p class="code-panel-lead">点击时间点定位视频；当前讲解：确认 CANN 与设备环境。</p>
-        <article class="video-code-card selected" data-code="import acl&#10;&#10;ret = acl.init()&#10;assert ret == 0, 'ACL init failed'&#10;&#10;ret = acl.rt.set_device(0)&#10;print(acl.rt.get_version())"><div><span>08:24</span><strong>检查 CANN 环境</strong></div><pre>import acl&#10;&#10;ret = acl.init()&#10;assert ret == 0, 'ACL init failed'</pre><footer><button type="button" data-action="copy">复制</button><button type="button" data-action="explain">AI 解读</button><button type="button" data-action="insert">置入 IDE</button></footer><p class="code-explanation" hidden>初始化 ACL 后再选择设备，可确保后续计算任务在正确的昇腾运行环境中执行。</p></article>
-        <article class="video-code-card" data-code="device_count = acl.rt.get_device_count()&#10;print(f'发现 {device_count} 个设备')"><div><span>10:12</span><strong>确认可用设备</strong></div><pre>device_count = acl.rt.get_device_count()&#10;print(device_count)</pre><footer><button type="button" data-action="copy">复制</button><button type="button" data-action="explain">AI 解读</button><button type="button" data-action="insert">置入 IDE</button></footer><p class="code-explanation" hidden>用设备数量确认运行时能否识别当前环境中的 NPU。</p></article>
-        <article class="video-code-card" data-code="acl.rt.reset_device(0)&#10;acl.finalize()"><div><span>15:36</span><strong>释放运行资源</strong></div><pre>acl.rt.reset_device(0)&#10;acl.finalize()</pre><footer><button type="button" data-action="copy">复制</button><button type="button" data-action="explain">AI 解读</button><button type="button" data-action="insert">置入 IDE</button></footer><p class="code-explanation" hidden>任务结束后释放设备和运行时，避免资源被后续任务占用。</p></article>
-      </section>
-      <div class="dock-resizer" data-resize="code" role="separator" aria-label="调整代码区域宽度；可用左右方向键" aria-orientation="vertical" tabindex="0"></div>
-      <section class="video-ide dock-card" id="videoIde" aria-label="IDE 实践区"><header><strong>⌘ IDE 实践</strong><div><button type="button" id="runCode">▶ 运行</button><button type="button">■ 停止</button><button type="button">保存</button></div></header><div class="ide-body"><aside><strong>› scripts</strong><strong>› src</strong><strong>› ascendc</strong><strong class="file active">◻ check_env.py</strong><strong class="file">◻ README.md</strong></aside><section><div class="ide-tabs"><span>check_env.py ×</span><span>README.md ×</span></div><textarea id="ideEditor" spellcheck="false" aria-describedby="ideOutput"># 检查 CANN 环境
+      <div class="dock-resizer" data-resize="video" role="separator" aria-label="调整视频与 IDE 的宽度；可用左右方向键" aria-orientation="vertical" tabindex="0"></div>
+      <section class="video-ide dock-card fixed-workspace" id="videoIde" aria-label="固定 IDE 实践区">
+        <header class="ide-toolbar">
+          <div class="ide-environment"><span class="ide-brand" aria-hidden="true">H</span><div><strong>HiDevLab 在线环境</strong><small><i></i> Ascend 910B · CANN 8.0 · 已连接</small></div><em>固定区域</em></div>
+          <div class="ide-actions"><button type="button" class="primary" id="runCode">▶ 运行</button><button type="button">■ 停止</button><button type="button">保存</button></div>
+        </header>
+        <div class="ide-body">
+          <nav class="ide-activity" aria-label="IDE 功能"><button type="button" class="active" aria-label="资源管理器" title="资源管理器">▱</button><button type="button" aria-label="搜索" title="搜索">⌕</button><button type="button" aria-label="源代码管理" title="源代码管理">⑂</button><button type="button" aria-label="运行与调试" title="运行与调试">▷</button><button type="button" aria-label="扩展" title="扩展">▦</button></nav>
+          <aside class="ide-explorer"><header><span>资源管理器</span><button type="button" aria-label="更多资源管理器操作">…</button></header><strong class="folder open">⌄ TRAINING-LAB</strong><strong class="folder">› scripts</strong><strong class="folder open">⌄ src</strong><strong class="folder nested">› ascendc</strong><strong class="file active">PY check_env.py</strong><strong class="file">MD README.md</strong></aside>
+          <section class="ide-editor-area"><div class="ide-tabs"><span class="active">PY&nbsp; check_env.py ×</span><span>MD&nbsp; README.md ×</span></div><div class="ide-editor-shell"><div class="ide-gutter" aria-hidden="true">1<br>2<br>3<br>4</div><textarea id="ideEditor" spellcheck="false" aria-describedby="ideOutput"># 检查 CANN 环境
 import acl
 
-# 在此置入视频中的代码片段</textarea><div class="ide-output" id="ideOutput">问题　输出　调试控制台　终端<br><small>尚未运行代码。</small></div></section></div></section>
+# 在此置入视频中的代码片段</textarea></div><div class="ide-output" id="ideOutput"><nav aria-label="IDE 底部面板"><button type="button">问题</button><button type="button" class="active">输出</button><button type="button">调试控制台</button><button type="button">终端</button></nav><small>尚未运行代码。</small></div></section>
+        </div>
+        <footer class="ide-statusbar"><span>main*</span><span>0 错误　0 警告</span><span>Python 3.11　UTF-8　Ascend NPU</span></footer>
+      </section>
+
+      <section class="workspace-dock-zone dock-zone-left" data-dock-zone="left" aria-label="左侧辅助面板停靠区">
+        <header class="dock-zone-title"><span>学习辅助</span><small>可拖拽面板到另一侧</small></header>
+        <div class="dock-zone-content">
+          <section class="video-code-panel dock-card movable-panel" data-panel-id="code" aria-label="随视频联动的代码片段">
+            <header class="tool-panel-head" draggable="true" data-drag-handle tabindex="0" aria-label="拖动视频中的代码面板"><div><span class="drag-grip" aria-hidden="true">⠿</span><strong>视频中的代码</strong><span id="codePanelTime">08:24</span></div><button type="button" data-move-panel aria-label="将视频中的代码移到右侧辅助区">移到右侧</button></header>
+            <p class="code-panel-lead">点击时间点定位视频；当前讲解：确认 CANN 与设备环境。</p>
+            <div class="code-card-grid">
+              <article class="video-code-card selected" data-code="import acl&#10;&#10;ret = acl.init()&#10;assert ret == 0, 'ACL init failed'&#10;&#10;ret = acl.rt.set_device(0)&#10;print(acl.rt.get_version())"><div><span>08:24</span><strong>检查 CANN 环境</strong></div><pre>import acl&#10;&#10;ret = acl.init()&#10;assert ret == 0, 'ACL init failed'</pre><footer><button type="button" data-action="copy">复制</button><button type="button" data-action="explain">AI 解读</button><button type="button" data-action="insert">置入 IDE</button></footer><p class="code-explanation" hidden>初始化 ACL 后再选择设备，可确保后续计算任务在正确的昇腾运行环境中执行。</p></article>
+              <article class="video-code-card" data-code="device_count = acl.rt.get_device_count()&#10;print(f'发现 {device_count} 个设备')"><div><span>10:12</span><strong>确认可用设备</strong></div><pre>device_count = acl.rt.get_device_count()&#10;print(device_count)</pre><footer><button type="button" data-action="copy">复制</button><button type="button" data-action="explain">AI 解读</button><button type="button" data-action="insert">置入 IDE</button></footer><p class="code-explanation" hidden>用设备数量确认运行时能否识别当前环境中的 NPU。</p></article>
+              <article class="video-code-card" data-code="acl.rt.reset_device(0)&#10;acl.finalize()"><div><span>15:36</span><strong>释放运行资源</strong></div><pre>acl.rt.reset_device(0)&#10;acl.finalize()</pre><footer><button type="button" data-action="copy">复制</button><button type="button" data-action="explain">AI 解读</button><button type="button" data-action="insert">置入 IDE</button></footer><p class="code-explanation" hidden>任务结束后释放设备和运行时，避免资源被后续任务占用。</p></article>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="workspace-dock-zone dock-zone-right" data-dock-zone="right" aria-label="右侧辅助面板停靠区">
+        <header class="dock-zone-title"><span>课程与任务</span><small>可拖拽面板到另一侧</small></header>
+        <div class="dock-zone-content">
+          <section class="resource-tool-panel dock-card movable-panel" data-panel-id="resources" aria-label="课程资源面板">
+            <header class="tool-panel-head" draggable="true" data-drag-handle tabindex="0" aria-label="拖动课程资源面板"><div><span class="drag-grip" aria-hidden="true">⠿</span><strong>课程资源</strong></div><button type="button" data-move-panel aria-label="将课程资源移到左侧辅助区">移到左侧</button></header>
+            <nav class="video-resource-tabs" aria-label="视频辅助内容"><button type="button" class="active" data-resource="examples">代码全览 <span>3</span></button><button type="button" data-resource="errors">常见错误码 <span>5</span></button><button type="button" data-resource="quiz">随堂测试 <span>3</span></button><button type="button" data-resource="docs">相关文档 <span>3</span></button></nav>
+            <section class="video-resource-content" id="videoResourceContent"><strong>代码全览</strong><p>按视频章节查看本节的环境检查、设备初始化与版本确认代码。</p></section>
+          </section>
+          <section class="task-tool-panel dock-card movable-panel" data-panel-id="task" aria-label="当前任务与 AI 学伴面板">
+            <header class="tool-panel-head" draggable="true" data-drag-handle tabindex="0" aria-label="拖动当前任务与 AI 学伴面板"><div><span class="drag-grip" aria-hidden="true">⠿</span><strong>当前任务与 AI 学伴</strong></div><button type="button" data-move-panel aria-label="将当前任务与 AI 学伴移到左侧辅助区">移到左侧</button></header>
+            <div class="task-panel-content"><div><span>本节任务</span><strong>完成环境检查并识别可用 NPU</strong><small>运行 check_env.py，保留版本与设备数量。</small></div><button type="button" id="openWorkspaceCompanion">问问 AI 学伴</button></div>
+          </section>
+        </div>
+      </section>
     </section>
     <aside class="ai-fix-panel" id="aiFixPanel" aria-label="AI 修复建议" aria-hidden="true">
       <header><div><span>AI 学伴</span><strong>建议修复 E-DEMO-102</strong></div><button type="button" id="closeFixPanel" aria-label="关闭修复建议">×</button></header>
@@ -181,6 +213,6 @@ import acl
       <button type="button" class="enter-learning" id="enterLearning">进入白板学习</button>
     </div>
   </section>
-  <script src="assets/js/learning-room.js?v=canvas-keypoints-6"></script>
+  <script src="assets/js/learning-room.js?v=workspace-dock-2"></script>
 </body>
 </html>

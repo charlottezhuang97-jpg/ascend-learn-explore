@@ -87,6 +87,7 @@ Token → 组件 → 场景模式 → 状态 → 验收
 - [学习方案设计系统](design-system/README.md)
 - [前端还原规范](docs/前端还原规范.md)
 - [产品结构 PRD](docs/产品结构PRD.md)
+- [产品待办](docs/product-todos.md)
 - [设计 Token](design-system/tokens/design-tokens.json)
 - [产品结构工作簿](outputs/product-structure-prd/开发者学习平台产品结构.xlsx)
 

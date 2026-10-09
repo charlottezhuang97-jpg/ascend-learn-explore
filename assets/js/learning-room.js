@@ -93,7 +93,7 @@
     const percent = Math.min(100, ((minutes * 60 + seconds) / 1120) * 100);
     videoCurrentTime.textContent = `${time} / 18:40`;
     videoPlayed.style.width = `${percent}%`;
-    document.querySelector('.video-code-panel>header span').textContent = time;
+    document.getElementById('codePanelTime').textContent = time;
     document.querySelector('.code-panel-lead').textContent = `已从板书 01 定位到 ${time}；可继续查看对应代码和文档。`;
     referenceDrawer.classList.remove('open');
     referenceDrawer.setAttribute('aria-hidden', 'true');
@@ -356,46 +356,92 @@
     if (action === 'insert') { editor.value = `${editor.value.trim()}\n\n# 来自视频 ${card.querySelector('span').textContent}\n${code}\n`; editor.focus(); }
     if (action === 'copy') { navigator.clipboard?.writeText(code); event.target.textContent = '已复制'; window.setTimeout(() => { event.target.textContent = '复制'; }, 1000); }
   }));
-  document.getElementById('ideCollapse').addEventListener('click', event => {
-    videoRoom.classList.toggle('ide-collapsed');
-    event.currentTarget.setAttribute('aria-expanded', String(!videoRoom.classList.contains('ide-collapsed')));
-    event.currentTarget.textContent = videoRoom.classList.contains('ide-collapsed') ? '展开 IDE ‹' : '收起 IDE ›';
-  });
-
   const videoDock = document.getElementById('videoDock');
   const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-  const paneWidth = name => {
-    const raw = getComputedStyle(videoRoom).getPropertyValue(name).trim();
-    return raw.endsWith('%') ? parseFloat(raw) / 100 * videoDock.clientWidth : parseFloat(raw);
-  };
-  function resizePane(kind, clientX) {
-    const bounds = videoDock.getBoundingClientRect();
-    const minVideo = 320;
-    const minCode = 250;
-    const minIde = 360;
-    if (kind === 'video') {
-      const maxVideo = bounds.width - paneWidth('--code-width') - minIde - 16;
-      const width = clamp(clientX - bounds.left, minVideo, maxVideo);
-      videoRoom.style.setProperty('--video-width', `${width}px`);
-    } else {
-      const videoWidth = videoDock.querySelector('.video-column').getBoundingClientRect().width;
-      const maxCode = bounds.width - videoWidth - minIde - 16;
-      const width = clamp(clientX - bounds.left - videoWidth - 8, minCode, maxCode);
-      videoRoom.style.setProperty('--code-width', `${width}px`);
-    }
+  const workspaceLayoutKey = 'ascend-video-workbench-layout-v2';
+  const workspaceWidthKey = 'ascend-video-workbench-video-width-v2';
+  const defaultPanelLayout = { code: 'left', resources: 'right', task: 'right' };
+  const dockZoneContent = zone => videoDock.querySelector(`[data-dock-zone="${zone}"] .dock-zone-content`);
+  const currentPanelZone = panel => panel.closest('[data-dock-zone]')?.dataset.dockZone;
+  function savePanelLayout() {
+    const layout = {};
+    videoDock.querySelectorAll('[data-panel-id]').forEach(panel => { layout[panel.dataset.panelId] = currentPanelZone(panel); });
+    window.localStorage.setItem(workspaceLayoutKey, JSON.stringify(layout));
   }
-  document.querySelectorAll('.dock-resizer').forEach(resizer => {
+  function updatePanelMoveAction(panel) {
+    const current = currentPanelZone(panel);
+    const target = current === 'left' ? 'right' : 'left';
+    const button = panel.querySelector('[data-move-panel]');
+    const name = panel.querySelector('.tool-panel-head strong')?.textContent || '面板';
+    button.textContent = `移到${target === 'left' ? '左侧' : '右侧'}`;
+    button.setAttribute('aria-label', `将${name}移到${target === 'left' ? '左侧' : '右侧'}辅助区`);
+  }
+  function movePanel(panel, zone, announce = true) {
+    const target = dockZoneContent(zone);
+    if (!panel || !target || currentPanelZone(panel) === zone) return;
+    target.append(panel);
+    updatePanelMoveAction(panel);
+    savePanelLayout();
+    if (announce) showToast(`${panel.querySelector('.tool-panel-head strong')?.textContent || '面板'}已移到${zone === 'left' ? '左侧' : '右侧'}辅助区`);
+  }
+  function restorePanelLayout(layout = defaultPanelLayout) {
+    Object.entries({ ...defaultPanelLayout, ...layout }).forEach(([id, zone]) => {
+      const panel = videoDock.querySelector(`[data-panel-id="${id}"]`);
+      if (!panel) return;
+      const target = zone === 'left' ? 'left' : 'right';
+      dockZoneContent(target)?.append(panel);
+      updatePanelMoveAction(panel);
+    });
+  }
+  try {
+    restorePanelLayout(JSON.parse(window.localStorage.getItem(workspaceLayoutKey) || '{}'));
+  } catch {
+    restorePanelLayout();
+  }
+  videoDock.querySelectorAll('[data-move-panel]').forEach(button => button.addEventListener('click', event => {
+    event.stopPropagation();
+    const panel = button.closest('[data-panel-id]');
+    movePanel(panel, currentPanelZone(panel) === 'left' ? 'right' : 'left');
+  }));
+  videoDock.querySelectorAll('[data-drag-handle]').forEach(handle => {
+    handle.addEventListener('dragstart', event => {
+      if (event.target.closest('button')) { event.preventDefault(); return; }
+      const panel = handle.closest('[data-panel-id]');
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', panel.dataset.panelId);
+      panel.classList.add('dragging-panel');
+    });
+    handle.addEventListener('dragend', () => {
+      handle.closest('[data-panel-id]').classList.remove('dragging-panel');
+      videoDock.querySelectorAll('[data-dock-zone]').forEach(zone => zone.classList.remove('drag-over'));
+    });
+  });
+  videoDock.querySelectorAll('[data-dock-zone]').forEach(zone => {
+    zone.addEventListener('dragover', event => { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', event => { if (!zone.contains(event.relatedTarget)) zone.classList.remove('drag-over'); });
+    zone.addEventListener('drop', event => {
+      event.preventDefault();
+      zone.classList.remove('drag-over');
+      movePanel(videoDock.querySelector(`[data-panel-id="${event.dataTransfer.getData('text/plain')}"]`), zone.dataset.dockZone);
+    });
+  });
+
+  function resizeVideoPane(clientX, persist = true) {
+    const bounds = videoDock.getBoundingClientRect();
+    const width = clamp(clientX - bounds.left, 340, Math.max(340, bounds.width - 568));
+    videoRoom.style.setProperty('--video-width', `${width}px`);
+    if (persist) window.localStorage.setItem(workspaceWidthKey, String(width));
+  }
+  const savedVideoWidth = Number(window.localStorage.getItem(workspaceWidthKey));
+  if (savedVideoWidth > 0 && window.innerWidth > 920) resizeVideoPane(videoDock.getBoundingClientRect().left + savedVideoWidth, false);
+  videoDock.querySelectorAll('.dock-resizer').forEach(resizer => {
     resizer.addEventListener('pointerdown', event => {
-      if (videoRoom.classList.contains('ide-collapsed') && resizer.dataset.resize === 'code') {
-        document.getElementById('ideCollapse').click();
-        return;
-      }
       resizer.classList.add('dragging');
       resizer.setPointerCapture(event.pointerId);
     });
     resizer.addEventListener('pointermove', event => {
       if (!resizer.classList.contains('dragging')) return;
-      resizePane(resizer.dataset.resize, event.clientX);
+      resizeVideoPane(event.clientX);
     });
     const stopResize = event => {
       resizer.classList.remove('dragging');
@@ -408,9 +454,21 @@
       event.preventDefault();
       const step = event.shiftKey ? 40 : 16;
       const direction = event.key === 'ArrowLeft' ? -1 : 1;
-      const bounds = resizer.getBoundingClientRect();
-      resizePane(resizer.dataset.resize, bounds.left + direction * step);
+      const videoWidth = videoDock.querySelector('.video-column').getBoundingClientRect().width;
+      resizeVideoPane(videoDock.getBoundingClientRect().left + videoWidth + direction * step);
     });
+  });
+  document.getElementById('resetWorkspaceLayout').addEventListener('click', () => {
+    restorePanelLayout(defaultPanelLayout);
+    videoRoom.style.removeProperty('--video-width');
+    window.localStorage.removeItem(workspaceLayoutKey);
+    window.localStorage.removeItem(workspaceWidthKey);
+    showToast('已恢复默认布局');
+  });
+  document.getElementById('openWorkspaceCompanion').addEventListener('click', () => {
+    setView('board');
+    document.querySelector('.companion-tabs [data-tab="chat"]')?.click();
+    showToast('已打开本节 AI 学伴');
   });
   document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
