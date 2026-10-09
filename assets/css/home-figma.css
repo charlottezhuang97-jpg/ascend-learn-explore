@@ -119,3 +119,8 @@ body{background:var(--home-bg)}
 @media(max-width:1100px){.contribution-stage{min-height:620px}.card-a{left:7%}.card-b{left:9%;top:355px}.card-c{left:calc(50% - 150px);top:185px}.card-d{right:7%;top:355px}.card-e{right:7%}.contribution-flow{flex-wrap:wrap}}
 @media(max-width:700px){.community-contribution{padding-top:64px}.community-heading .dlc-section-title{font-size:28px;line-height:38px}.contribution-stage{min-height:930px}.contribution-card,.card-c{width:calc(100% - 44px);height:160px;left:22px;right:auto}.card-a{top:28px}.card-b{top:208px}.card-c{top:388px}.card-d{top:568px}.card-e{top:748px}.contribution-card:hover,.contribution-card:focus-within{transform:scale(1.02)}.contribution-flow i{display:none}.contribution-flow span{width:100%;justify-content:center}}
 @media(prefers-reduced-motion:reduce){.contribution-card{animation:none}.contribution-card-inner{transition:none}}
+
+/* Match the two first-floor title scales and keep pre-cropped portraits centered. */
+.problem-floor-heading h2{font-size:40px;line-height:50px;font-weight:600}
+.contribution-front .portrait{background:#fff;object-fit:contain;object-position:center}
+@media(max-width:860px){.problem-floor-heading h2{font-size:32px;line-height:42px}}

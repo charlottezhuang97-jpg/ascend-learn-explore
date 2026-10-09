@@ -85,9 +85,9 @@ course.stages.forEach((stage,index)=>{
 });
 
 const avatarMap={
-  male:['assets/images/avatars/course-peer-male.png','avatar-single'],
-  'female-left':['assets/images/avatars/course-peers-female.png','avatar-double avatar-left'],
-  'female-right':['assets/images/avatars/course-peers-female.png','avatar-double avatar-right']
+  male:['assets/images/avatars/avatar-male.png','avatar-single'],
+  'female-left':['assets/images/avatars/avatar-female.png','avatar-single'],
+  'female-right':['assets/images/avatars/avatar-female.png','avatar-single']
 };
 const peerList=document.querySelector('#peerList');
 peerList.innerHTML=course.peers.map(([name,stage,progress,avatarKey])=>{const [src,className]=avatarMap[avatarKey]||avatarMap.male;return `<article class="peer-row"><span class="peer-avatar"><img src="${src}" class="${className}" alt="${escapeHtml(name)} 的头像"></span><div><b class="peer-name">${escapeHtml(name)}</b><p class="peer-stage">课程进度 ${Number(progress)}% · 正在学习“${escapeHtml(stage)}”</p><div class="peer-progress" role="progressbar" aria-label="${escapeHtml(name)} 的课程进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Number(progress)}"><span class="peer-progress-track"><span class="peer-progress-fill" style="width:${Number(progress)}%"></span></span></div></div></article>`;}).join('');
