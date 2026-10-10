@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <base href="../../">
+  <script src="assets/js/artifact-status.js" data-status="lowfi" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>白板学习状态与上下文操作 · 低保真</title>
+  <link rel="stylesheet" href="assets/css/whiteboard-learning-state-lowfi.css">
+</head>
+<body>
+  <header class="prototype-review">
+    <strong>低保真原型 · 白板学习状态</strong><span>验证本节大纲、能力变化、闭环证据与要点上下文操作</span>
+    <nav class="demo-states" aria-label="演示状态">
+      <button type="button" data-demo="default" aria-pressed="false">默认学习</button>
+      <button type="button" data-demo="outline" aria-pressed="true">展开本节大纲</button>
+      <button type="button" data-demo="hover" aria-pressed="false">悬浮／点击要点</button>
+      <button type="button" data-demo="visual" aria-pressed="false">可视化解析</button>
+    </nav>
+  </header>
+
+  <main class="prototype-shell">
+    <header class="lesson-bar">
+      <button class="close-course" type="button" aria-label="退出课程">×</button>
+      <div class="lesson-name"><span>课节 4</span><strong>数据并行与梯度同步</strong></div>
+      <div class="lesson-progress" aria-label="当前学习状态"><span id="topProgress">板书 2 / 5</span><span id="topState">已理解 1 · 学习中 1 · 待验证 1</span></div>
+      <nav class="lesson-tools" aria-label="白板工具"><button class="active" type="button">白板</button><button type="button">视频</button><button type="button">−</button><button type="button">100%</button><button type="button">＋</button></nav>
+    </header>
+
+    <div class="workspace">
+      <section class="whiteboard" aria-label="课程白板画布">
+        <div class="board-meta"><span>板书 02 · 梯度同步</span><button type="button">对应视频 08:20–11:10</button><button type="button">分布式并行指南 §3.2</button></div>
+        <div class="board-copy">
+          <span class="eyebrow">知识点 02 · 梯度同步</span>
+          <h1>局部梯度如何变成一致更新</h1>
+          <p>每张 NPU 独立完成反向传播，再通过 AllReduce 汇总梯度，保证所有设备使用同一份全局梯度更新参数。</p>
+          <div class="board-columns">
+            <article class="text-block"><h2>从局部计算到全局一致</h2><ol><li>各设备计算自己的局部梯度</li><li>AllReduce 聚合并平均梯度</li><li>每张设备同步更新模型参数</li></ol></article>
+            <article class="diagram-block"><h2>两张设备的同步示意</h2><div class="mini-diagram"><div>NPU 0<br><small>局部梯度 g₀</small></div><i>→</i><div class="active">AllReduce<br><small>(g₀ + g₁) / 2</small></div><i>→</i><div>NPU 1<br><small>一致更新</small></div></div></article>
+          </div>
+        </div>
+
+        <aside class="keypoint-rail" aria-label="本节课程要点">
+          <span class="rail-label">课程要点 · 悬浮或点击查看</span>
+          <button class="keypoint done" type="button" data-point="split" data-index="01"><b>数据如何拆分</b><small>同一模型，不同数据切片</small></button>
+          <button class="keypoint current" type="button" data-point="sync" data-index="02"><b>梯度为何同步</b><small>AllReduce 保证参数一致</small></button>
+          <button class="keypoint" type="button" data-point="relation" data-index="03"><b>知识如何串联</b><small>并行、通信、调优相互影响</small></button>
+          <button class="keypoint" type="button" data-point="wait" data-index="04"><b>怎样减少等待</b><small>计算通信重叠提升吞吐</small></button>
+          <button class="keypoint" type="button" data-point="evidence" data-index="05"><b>如何形成证据</b><small>完成双卡训练实践验证</small></button>
+        </aside>
+
+        <article class="keypoint-popover hidden" id="pointPopover" aria-live="polite">
+          <div class="popover-top"><span>当前要点 · 02</span><button type="button" id="closePoint" aria-label="关闭要点卡片">×</button></div>
+          <h2 id="pointTitle">梯度为何需要同步？</h2><p id="pointDescription">如果每张设备只使用自己的局部梯度，模型参数会逐步分叉；同步保证下一轮从相同参数开始。</p>
+          <div class="popover-actions"><button class="primary" type="button" id="askPoint">向 AI 提问</button><button type="button" id="visualizePoint">看可视化解析</button><button type="button" id="viewSuggestion">查看学习建议</button></div>
+          <div class="understood"><span>理解状态由你确认，不会自动点亮</span><button type="button" id="markUnderstood">标记为已理解</button></div>
+        </article>
+
+        <button class="outline-toggle" type="button" id="outlineToggle" aria-expanded="true">☷ 本节大纲 · 1 / 5</button>
+        <aside class="outline-drawer" id="outlineDrawer" aria-label="本节大纲">
+          <header class="outline-head"><div><h2>本节大纲</h2><p>学习状态、课程收获与能力闭环</p></div><button type="button" id="closeOutline" aria-label="收起本节大纲">×</button></header>
+          <div class="outline-body">
+            <section class="outline-section"><div class="outline-label"><b>学习状态</b><span id="outlineStatus">正在学习 · 1 / 5 已理解</span></div><div class="outline-progress"><i id="outlineProgressBar"></i></div></section>
+            <section class="outline-section"><div class="outline-label"><b>本节会学到</b><span>5 个知识点</span></div><div class="knowledge-list"><div class="knowledge-item done"><i>✓</i><b>数据如何拆分</b><small>已理解</small></div><div class="knowledge-item current" id="currentKnowledge"><i>02</i><b>梯度为何同步</b><small id="currentKnowledgeState">学习中</small></div><div class="knowledge-item"><i>03</i><b>知识如何串联</b><small>未开始</small></div><div class="knowledge-item"><i>04</i><b>怎样减少等待</b><small>未开始</small></div><div class="knowledge-item"><i>05</i><b>如何形成证据</b><small>待实践</small></div></div></section>
+            <section class="outline-section"><div class="outline-label"><b>完成后你将获得</b><span>学习结果</span></div><div class="outcome-card"><b>能解释一次数据并行训练如何保持参数一致</b><p>可判断数据拆分、局部梯度和 AllReduce 分别解决什么问题。</p></div><div class="ability-preview"><div class="micro-rings" aria-label="能力同心环变化预览"><i class="r1"></i><i class="r2"></i><i class="r3"></i></div><div><b>能力同心环将点亮</b><small>模型训练 · “掌握”层增加 1 个知识点；实践层仍需验证。</small></div></div></section>
+            <section class="outline-section"><div class="outline-label"><b>能力闭环</b><span>还缺 1 项证据</span></div><div class="closure-grid"><div><span>知识理解</span><b>1 / 5</b><small>继续完成板书</small></div><div><span>实践证据</span><b>0 / 1</b><small>尚未完成</small></div></div><p class="closure-next">下一步：完成“双卡 AllReduce 梯度一致性验证”，才能点亮能力同心环的实践层。</p></section>
+          </div>
+        </aside>
+
+        <article class="visual-card hidden" id="visualCard" aria-label="要点可视化解析">
+          <header class="visual-head"><div><h2>可视化解析 · 梯度同步</h2><p>把抽象的 AllReduce 拆成三个可观察步骤</p></div><button type="button" id="closeVisual" aria-label="关闭可视化解析">×</button></header>
+          <div class="visual-body"><div class="visual-flow"><div><b>各自反向传播</b><small>NPU 0 得到 g₀<br>NPU 1 得到 g₁</small></div><div><b>聚合与平均</b><small>AllReduce<br>(g₀ + g₁) / 2</small></div><div><b>一致更新</b><small>两张设备使用<br>相同全局梯度</small></div></div><p class="visual-explain">关键判断：同步的不是训练数据，而是每张设备计算出的局部梯度。</p><div class="visual-actions"><span>建议后续实践：双卡梯度一致性验证 · 约 20 分钟</span><button type="button" id="addPlan">＋ 加入我的计划</button></div></div>
+        </article>
+        <p class="board-caption">讲解字幕：AllReduce 让每张设备在下一轮训练前重新回到同一组参数。</p>
+        <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
+      </section>
+
+      <aside class="companion-panel" aria-label="AI 学伴">
+        <header class="companion-head"><h2>AI 学伴</h2><span>已带入板书 02</span></header>
+        <nav class="companion-tabs" aria-label="学习辅助"><button type="button" data-tab="chat" aria-selected="true">AI 学伴</button><button type="button" data-tab="notes" aria-selected="false">我的笔记 0</button><button type="button" data-tab="plan" aria-selected="false">我的计划 <span id="planCount">0</span></button></nav>
+        <div class="companion-content" id="companionContent"><div class="context-note">当前上下文：课节 4 · 板书 02 · 梯度同步</div><div class="assistant-card"><span>跟随讲解</span><h3>这一页需要区分两个动作</h3><p>各设备先独立计算局部梯度，再通过 AllReduce 获得一致的全局梯度。</p></div><div class="quick-questions"><button type="button" data-quick="为什么不直接同步参数？">为什么不直接同步参数？</button><button type="button" data-quick="AllReduce 和参数服务器有什么区别？">AllReduce 和参数服务器有什么区别？</button></div></div>
+        <form class="companion-input" id="companionForm"><input aria-label="向 AI 学伴提问" placeholder="针对当前要点提问…"><button type="submit" aria-label="发送问题">↑</button></form>
+      </aside>
+    </div>
+  </main>
+  <script>
+    (()=>{
+      const drawer=document.getElementById('outlineDrawer');
+      const popover=document.getElementById('pointPopover');
+      const visual=document.getElementById('visualCard');
+      const toast=document.getElementById('toast');
+      const content=document.getElementById('companionContent');
+      const demoButtons=[...document.querySelectorAll('[data-demo]')];
+      const tabButtons=[...document.querySelectorAll('[data-tab]')];
+      const pointCopy={split:['数据如何拆分？','数据并行保留同一份模型，只把 mini-batch 拆成不同数据切片。'],sync:['梯度为何需要同步？','如果每张设备只使用自己的局部梯度，模型参数会逐步分叉；同步保证下一轮从相同参数开始。'],relation:['知识如何串联？','数据并行决定计算分工，集合通信保证一致更新，性能调优再减少等待。'],wait:['怎样减少同步等待？','可以让部分梯度通信与其余反向计算重叠，降低设备空闲时间。'],evidence:['如何形成能力证据？','完成双卡训练并对比同步前后的梯度，才能证明你能把概念用于真实任务。']};
+      let activePoint='sync',planAdded=false,understood=false,toastTimer;
+      function showToast(message){toast.textContent=message;toast.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.add('hidden'),2200)}
+      function openDrawer(open=true){drawer.classList.toggle('hidden',!open);document.getElementById('outlineToggle').setAttribute('aria-expanded',String(open))}
+      function showPoint(key='sync'){
+        activePoint=key;const [title,description]=pointCopy[key];
+        document.getElementById('pointTitle').textContent=title;document.getElementById('pointDescription').textContent=description;
+        const button=document.querySelector(`[data-point="${key}"]`);const rect=button.getBoundingClientRect();const boardRect=document.querySelector('.whiteboard').getBoundingClientRect();
+        popover.style.top=`${Math.max(76,Math.min(rect.top-boardRect.top-18,boardRect.height-300))}px`;
+        popover.classList.remove('hidden');
+      }
+      function openVisual(){visual.classList.remove('hidden');popover.classList.add('hidden')}
+      function setTab(tab){
+        tabButtons.forEach(button=>button.setAttribute('aria-selected',String(button.dataset.tab===tab)));
+        if(tab==='chat') content.innerHTML='<div class="context-note">当前上下文：课节 4 · 板书 02 · 梯度同步</div><div class="assistant-card"><span>跟随讲解</span><h3>这一页需要区分两个动作</h3><p>各设备先独立计算局部梯度，再通过 AllReduce 获得一致的全局梯度。</p></div><div class="quick-questions"><button type="button" data-quick="为什么不直接同步参数？">为什么不直接同步参数？</button><button type="button" data-quick="AllReduce 和参数服务器有什么区别？">AllReduce 和参数服务器有什么区别？</button></div>';
+        if(tab==='notes') content.innerHTML='<div class="empty-state">长按或选择画布内容后，可以加入我的笔记。</div>';
+        if(tab==='plan') content.innerHTML=planAdded?'<article class="plan-item"><b>双卡 AllReduce 梯度一致性验证</b><small>来自：课节 4 · 梯度同步 · 预计 20 分钟</small></article>':'<div class="empty-state">查看要点解析后，可以把相关实践加入计划。</div>';
+      }
+      function askQuestion(question='为什么梯度需要同步？'){
+        setTab('chat');content.innerHTML=`<div class="context-note">已带入：要点“${pointCopy[activePoint][0]}”与当前板书</div><div class="assistant-card"><span>你的问题</span><h3>${question}</h3><p>每张设备看到的数据不同，所以局部梯度也不同。AllReduce 先聚合这些梯度，再让所有设备使用同一结果更新参数，避免模型副本逐步分叉。</p></div><div class="quick-questions"><button type="button" id="answerVisual">用图解释这一步</button></div>`;
+        document.getElementById('answerVisual').addEventListener('click',openVisual);
+      }
+      document.getElementById('outlineToggle').addEventListener('click',()=>openDrawer(drawer.classList.contains('hidden')));
+      document.getElementById('closeOutline').addEventListener('click',()=>openDrawer(false));
+      document.querySelectorAll('[data-point]').forEach(button=>{
+        button.addEventListener('mouseenter',()=>showPoint(button.dataset.point));button.addEventListener('focus',()=>showPoint(button.dataset.point));button.addEventListener('click',()=>showPoint(button.dataset.point));
+      });
+      document.getElementById('closePoint').addEventListener('click',()=>popover.classList.add('hidden'));
+      document.getElementById('askPoint').addEventListener('click',()=>askQuestion());
+      document.getElementById('visualizePoint').addEventListener('click',openVisual);
+      document.getElementById('viewSuggestion').addEventListener('click',openVisual);
+      document.getElementById('closeVisual').addEventListener('click',()=>visual.classList.add('hidden'));
+      document.getElementById('addPlan').addEventListener('click',event=>{planAdded=true;document.getElementById('planCount').textContent='1';event.currentTarget.textContent='✓ 已加入我的计划';event.currentTarget.disabled=true;setTab('plan');showToast('已加入我的计划，可在 AI 学伴中查看')});
+      document.getElementById('markUnderstood').addEventListener('click',event=>{understood=true;document.querySelector('[data-point="sync"]').classList.add('done');document.getElementById('currentKnowledge').classList.add('done');document.getElementById('currentKnowledge').classList.remove('current');document.getElementById('currentKnowledgeState').textContent='已理解';document.getElementById('outlineStatus').textContent='正在学习 · 2 / 5 已理解';document.getElementById('outlineProgressBar').style.width='48%';document.getElementById('topState').textContent='已理解 2 · 待学习 2 · 待验证 1';document.getElementById('outlineToggle').textContent='☷ 本节大纲 · 2 / 5';event.currentTarget.textContent='✓ 已标记理解';event.currentTarget.disabled=true;showToast('理解状态已更新；实践证据仍待完成')});
+      tabButtons.forEach(button=>button.addEventListener('click',()=>setTab(button.dataset.tab)));
+      content.addEventListener('click',event=>{const question=event.target.dataset.quick;if(question)askQuestion(question)});
+      document.getElementById('companionForm').addEventListener('submit',event=>{event.preventDefault();const input=event.currentTarget.querySelector('input');if(input.value.trim())askQuestion(input.value.trim());input.value=''});
+      demoButtons.forEach(button=>button.addEventListener('click',()=>{
+        demoButtons.forEach(item=>item.setAttribute('aria-pressed',String(item===button)));const state=button.dataset.demo;
+        openDrawer(state==='outline');popover.classList.add('hidden');visual.classList.add('hidden');
+        if(state==='hover')showPoint('sync');if(state==='visual')openVisual();
+      }));
+      openDrawer(true);
+    })();
+  </script>
+</body>
+</html>
