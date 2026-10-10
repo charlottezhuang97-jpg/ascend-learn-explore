@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <base href="../../">
+  <script src="assets/js/artifact-status.js" data-status="lowfi" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>开发贡献榜 · 低保真</title>
+  <link rel="stylesheet" href="assets/css/developer-leaderboard-lowfi.css">
+</head>
+<body>
+  <header class="prototype-bar"><strong>低保真原型 · 独立开发贡献榜</strong><span>验证贡献闭环、榜单层级与积分解释</span><a href="prototypes/lowfi/developer-contribution-home-floor.html">← 返回首页第三楼层</a></header>
+  <main class="board-page shell">
+    <section class="board-hero">
+      <div class="board-title wire-card"><span class="kicker">开发者社区</span><h1>开发贡献榜</h1><p>记录能够被复现、帮助他人解决问题并持续维护的开发经验。每一笔积分都可以追溯到具体证据与社区影响。</p></div>
+      <aside class="my-summary wire-card"><span>我的本周贡献</span><strong>第 18 名 · 214 分</strong><small>距离前 10 名还差 72 分</small></aside>
+    </section>
+
+    <section class="loop-card wire-card" aria-labelledby="loopTitle">
+      <header class="section-head"><div><h2 id="loopTitle">一条经验如何进入榜单</h2><p>示例：NPU_Leo 的“HCCL 初始化失败排查记录”</p></div><a href="docs/product-todos.md">查看规则待办</a></header>
+      <div class="loop">
+        <article class="loop-step"><span class="step-no">01</span><b>经验回填</b><p>带入代码、日志、环境与关键指标，用户确认来源和公开范围。</p><span class="step-state">已发布</span></article>
+        <article class="loop-step"><span class="step-no">02</span><b>审核验证</b><p>基础审核通过，已有 12 名开发者在相同环境完成复现。</p><span class="step-state">验证通过</span></article>
+        <article class="loop-step"><span class="step-no">03</span><b>获得积分</b><p>证据完整 +80、复现验证 +72、解决问题 +34，共获得 186 分。</p><span class="step-state">积分已入账</span></article>
+        <article class="loop-step"><span class="step-no">04</span><b>进入榜单</b><p>计入模型训练领域榜与本周榜，后续维护还能继续获得积分。</p><span class="step-state">本周第 7 名</span></article>
+      </div>
+    </section>
+
+    <div class="board-layout">
+      <section class="ranking-card wire-card" aria-labelledby="rankingTitle">
+        <header class="section-head"><div><h2 id="rankingTitle">榜单</h2><p id="rankingDescription">本周新获得的有效贡献积分</p></div><span class="period-note" id="periodNote">10 月 5 日—10 月 11 日</span></header>
+        <nav class="scope-tabs" aria-label="榜单类型" role="tablist">
+          <button class="scope-button" type="button" data-scope="week" role="tab" aria-selected="true">周榜</button>
+          <button class="scope-button" type="button" data-scope="total" role="tab" aria-selected="false">长期榜</button>
+          <button class="scope-button" type="button" data-scope="domain" role="tab" aria-selected="false">领域榜</button>
+        </nav>
+        <div class="board-filters">
+          <nav class="domain-filter" id="boardDomainFilter" aria-label="领域榜筛选">
+            <button class="filter-button" type="button" data-board-domain="all" aria-pressed="true">全部领域</button>
+            <button class="filter-button" type="button" data-board-domain="operator" aria-pressed="false">算子开发</button>
+            <button class="filter-button" type="button" data-board-domain="training" aria-pressed="false">模型训练</button>
+            <button class="filter-button" type="button" data-board-domain="inference" aria-pressed="false">模型推理</button>
+            <button class="filter-button" type="button" data-board-domain="recommendation" aria-pressed="false">推荐开发</button>
+          </nav>
+        </div>
+        <table class="rank-table">
+          <thead><tr><th>排名</th><th>贡献者</th><th>领域</th><th>主要得分原因</th><th>积分</th></tr></thead>
+          <tbody id="rankingBody"></tbody>
+        </table>
+      </section>
+
+      <aside class="side-stack">
+        <section class="side-card wire-card"><h2>积分如何计算</h2><div class="score-rule"><b>证据完整</b><span>最高 +80</span><small>包含代码、环境、日志和关键指标。</small></div><div class="score-rule"><b>他人复现</b><span>每次 +6</span><small>在可比环境完成验证，上限按周期控制。</small></div><div class="score-rule"><b>解决问题</b><span>每次 +4</span><small>帮助开发者通过任务或解决真实故障。</small></div><div class="score-rule"><b>课程／官方引用</b><span>最高 +120</span><small>经验被学习路径、文档或官方案例采用。</small></div><div class="score-rule"><b>持续维护</b><span>最高 +60</span><small>补充版本差异、修复过期步骤或回应复现。</small></div><p class="integrity-note">发帖量、点赞量和浏览量不直接换算积分；重复、失效或无法说明来源的内容不进入榜单。</p></section>
+        <section class="side-card wire-card"><h2>我的积分动态</h2><div class="activity"><b>HCCL 网卡配置补充</b><p>3 名开发者完成复现</p><span>+18 分 · 今天</span></div><div class="activity"><b>双卡训练排错记录</b><p>帮助 5 人解决相同错误</p><span>+20 分 · 昨天</span></div><div class="activity"><b>版本 2.4 适配更新</b><p>维护审核通过</p><span>+36 分 · 10 月 7 日</span></div></section>
+      </aside>
+    </div>
+  </main>
+  <script>
+    (()=>{
+      const people=[
+        {name:'NPU_Leo',initials:'NL',domain:'training',domainLabel:'模型训练',week:486,total:3680,reason:'12 人完成复现 · 解决 38 个问题',detail:'证据完整 +80 · 复现 +72 · 问题解决 +152',change:'↑ 2'},
+        {name:'林深见鹿',initials:'林',domain:'operator',domainLabel:'算子开发',week:438,total:4210,reason:'帮助 86 人通过实践 · 课程引用 2 次',detail:'问题解决 +248 · 课程引用 +120',change:'—'},
+        {name:'KernelCat',initials:'KC',domain:'inference',domainLabel:'模型推理',week:392,total:3196,reason:'复现成功率 94% · 新增 3 组环境数据',detail:'复现 +144 · 环境证据 +80 · 持续维护 +42',change:'↑ 1'},
+        {name:'YunTao',initials:'YT',domain:'recommendation',domainLabel:'推荐开发',week:351,total:2940,reason:'9 人完成复现 · 定位 21 次性能问题',detail:'复现 +54 · 问题解决 +84 · 指标证据 +80',change:'↑ 4'},
+        {name:'Chen Wei',initials:'CW',domain:'operator',domainLabel:'算子开发',week:328,total:4750,reason:'7 人完成复现 · 修正过期参数',detail:'复现 +42 · 持续维护 +60 · 问题解决 +76',change:'↓ 1'},
+        {name:'小柚子',initials:'XY',domain:'training',domainLabel:'模型训练',week:306,total:2724,reason:'社区验证 32 次 · 补充精度对齐清单',detail:'复现 +126 · 证据完整 +80 · 维护 +44',change:'↑ 3'},
+        {name:'Moore Zhang',initials:'MZ',domain:'inference',domainLabel:'模型推理',week:284,total:3928,reason:'帮助 41 人完成服务部署验证',detail:'问题解决 +164 · 复现 +66',change:'↓ 2'},
+        {name:'Recsys_W',initials:'RW',domain:'recommendation',domainLabel:'推荐开发',week:263,total:2518,reason:'特征流水线案例被引用 18 次',detail:'内容引用 +120 · 复现 +48 · 维护 +36',change:'—'}
+      ];
+      let scope='week',domain='all';
+      const scopeButtons=[...document.querySelectorAll('[data-scope]')];
+      const domainButtons=[...document.querySelectorAll('[data-board-domain]')];
+      const descriptions={week:['本周新获得的有效贡献积分','10 月 5 日—10 月 11 日'],total:['持续积累的全部有效贡献积分','自加入社区以来'],domain:['当前领域中的有效贡献积分','按所选领域排名']};
+      function render(){
+        const [description,period]=descriptions[scope];
+        document.getElementById('rankingDescription').textContent=description;
+        document.getElementById('periodNote').textContent=period;
+        const filtered=people.filter(person=>domain==='all'||person.domain===domain).sort((a,b)=>(scope==='total'?b.total-a.total:b.week-a.week));
+        document.getElementById('rankingBody').innerHTML=filtered.map((person,index)=>`<tr><td class="rank">${index+1}<small class="rank-change ${person.change.includes('↓')?'down':''}">${person.change}</small></td><td><div class="person"><span class="avatar">${person.initials}</span><span><b>${person.name}</b><small>代表贡献可查看</small></span></div></td><td><span class="domain-tag">${person.domainLabel}</span></td><td class="reason">${person.reason}<small>${person.detail}</small></td><td class="points"><b>${scope==='total'?person.total:person.week}</b><small>积分</small></td></tr>`).join('');
+      }
+      scopeButtons.forEach(button=>button.addEventListener('click',()=>{scope=button.dataset.scope;scopeButtons.forEach(item=>item.setAttribute('aria-selected',String(item===button)));if(scope==='domain'&&domain==='all'){domain='operator';domainButtons.forEach(item=>item.setAttribute('aria-pressed',String(item.dataset.boardDomain===domain)));}render();}));
+      domainButtons.forEach(button=>button.addEventListener('click',()=>{domain=button.dataset.boardDomain;domainButtons.forEach(item=>item.setAttribute('aria-pressed',String(item===button)));if(domain!=='all'){scope='domain';scopeButtons.forEach(item=>item.setAttribute('aria-selected',String(item.dataset.scope===scope)));}render();}));
+      render();
+    })();
+  </script>
+</body>
+</html>

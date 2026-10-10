@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <base href="../../">
+  <script src="assets/js/artifact-status.js" data-status="lowfi" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>首页开发贡献榜楼层 · 低保真</title>
+  <link rel="stylesheet" href="assets/css/developer-leaderboard-lowfi.css">
+</head>
+<body>
+  <header class="prototype-bar"><strong>低保真原型 · 首页第三楼层</strong><span>验证领域筛选、得分原因与独立榜单入口</span><a href="catalog.html">返回页面目录</a></header>
+  <main class="home-context shell">
+    <nav class="home-nav wire-card" aria-label="首页导航示意"><b>ASCEND LEARN</b><span>首页</span><span>学习</span><span>知识地图</span><span>社区</span><i aria-hidden="true"></i></nav>
+    <section class="home-hero placeholder" aria-label="首页目标输入区域占位"><b></b><span></span></section>
+    <div class="prior-floors" aria-label="首页前两个楼层占位">
+      <section class="prior-floor placeholder"><b>第一楼层 · 继续学习／真实问题</b><p>根据首页 Tab 展示当前主任务。</p></section>
+      <section class="prior-floor placeholder"><b>第二楼层 · 推荐路线与场景</b><p>按目标呈现课程或问题解决路径。</p></section>
+    </div>
+
+    <section class="floor wire-card" aria-labelledby="floorTitle">
+      <header class="floor-head">
+        <div><span class="kicker">首页第三楼层 · 社区贡献</span><h1 id="floorTitle">开发贡献榜</h1><p>看看同领域开发者如何把已经验证的经验带回社区。排名强调复现、帮助与持续维护，不按发帖数量或浏览量直接累加。</p><div class="flow-mini" aria-label="贡献闭环"><span>经验回填</span><i>→</i><span>审核验证</span><i>→</i><span>获得积分</span><i>→</i><span>进入榜单</span></div></div>
+      </header>
+
+      <nav class="domain-filter" aria-label="按开发领域筛选">
+        <button class="filter-button" type="button" data-domain="all" aria-pressed="true">全部领域</button>
+        <button class="filter-button" type="button" data-domain="operator" aria-pressed="false">算子开发</button>
+        <button class="filter-button" type="button" data-domain="training" aria-pressed="false">模型训练</button>
+        <button class="filter-button" type="button" data-domain="inference" aria-pressed="false">模型推理</button>
+        <button class="filter-button" type="button" data-domain="recommendation" aria-pressed="false">推荐开发</button>
+      </nav>
+
+      <div class="preview-list" id="previewList" aria-live="polite">
+        <article class="preview-row" data-domain="training"><div class="rank">1</div><div class="person"><span class="avatar">NL</span><span><b>NPU_Leo</b><small>双卡训练排错记录</small></span></div><span class="domain-tag">模型训练</span><div class="reason">12 人完成复现 · 解决 38 个同类问题<small>主要得分：复现证据完整、持续补充版本差异</small></div><div class="points"><b>+486</b><small>本周积分</small></div></article>
+        <article class="preview-row" data-domain="operator"><div class="rank">2</div><div class="person"><span class="avatar">林</span><span><b>林深见鹿</b><small>尾块 Tiling 实践</small></span></div><span class="domain-tag">算子开发</span><div class="reason">帮助 86 人通过实践 · 被课程引用 2 次<small>主要得分：问题解决、内容被学习路径采用</small></div><div class="points"><b>+438</b><small>本周积分</small></div></article>
+        <article class="preview-row" data-domain="inference"><div class="rank">3</div><div class="person"><span class="avatar">KC</span><span><b>KernelCat</b><small>MindIE 压测清单</small></span></div><span class="domain-tag">模型推理</span><div class="reason">复现成功率 94% · 新增 3 组环境数据<small>主要得分：真实环境验证、指标信息完整</small></div><div class="points"><b>+392</b><small>本周积分</small></div></article>
+        <article class="preview-row" data-domain="recommendation"><div class="rank">4</div><div class="person"><span class="avatar">YT</span><span><b>YunTao</b><small>特征交叉性能记录</small></span></div><span class="domain-tag">推荐开发</span><div class="reason">9 人完成复现 · 帮助定位 21 次性能问题<small>主要得分：可复现方案、性能指标对比</small></div><div class="points"><b>+351</b><small>本周积分</small></div></article>
+        <article class="preview-row" data-domain="operator"><div class="rank">5</div><div class="person"><span class="avatar">CW</span><span><b>Chen Wei</b><small>Vector API 边界排错</small></span></div><span class="domain-tag">算子开发</span><div class="reason">7 人完成复现 · 修正 1 处过期参数<small>主要得分：版本维护、他人验证</small></div><div class="points"><b>+328</b><small>本周积分</small></div></article>
+        <article class="preview-row" data-domain="training"><div class="rank">6</div><div class="person"><span class="avatar">XY</span><span><b>小柚子</b><small>MindSpore 迁移记录</small></span></div><span class="domain-tag">模型训练</span><div class="reason">社区验证 32 次 · 补充精度对齐清单<small>主要得分：验证次数、迁移步骤完整</small></div><div class="points"><b>+306</b><small>本周积分</small></div></article>
+      </div>
+      <p class="empty" id="previewEmpty">该领域暂时没有已通过验证的贡献。</p>
+
+      <footer class="floor-footer"><p id="filterSummary">展示本周全部领域前 6 名；每条排名都说明得分原因。</p><a class="primary-link" href="prototypes/lowfi/developer-leaderboard.html">查看更多，进入开发贡献榜 →</a></footer>
+    </section>
+  </main>
+  <script>
+    (()=>{
+      const buttons=[...document.querySelectorAll('[data-domain]')].filter(node=>node.matches('button'));
+      const rows=[...document.querySelectorAll('.preview-row')];
+      const labels={all:'全部领域',operator:'算子开发',training:'模型训练',inference:'模型推理',recommendation:'推荐开发'};
+      buttons.forEach(button=>button.addEventListener('click',()=>{
+        const domain=button.dataset.domain;
+        buttons.forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+        let count=0;
+        rows.forEach(row=>{const show=domain==='all'||row.dataset.domain===domain;row.hidden=!show;if(show)count+=1;});
+        document.getElementById('previewEmpty').style.display=count?'none':'block';
+        document.getElementById('filterSummary').textContent=`展示本周${labels[domain]}已验证贡献，共 ${count} 条；每条排名都说明得分原因。`;
+      }));
+    })();
+  </script>
+</body>
+</html>

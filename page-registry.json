@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-09",
+  "updatedAt": "2026-10-10",
   "statuses": {
     "current": "当前探索方案，参与主链路演示并持续维护",
     "review": "过渡页面，保留用于对照，待决定是否并入当前方案",
@@ -27,6 +27,8 @@
     {"id":"knowledge-community-lowfi","title":"知识地图与社区回填","status":"lowfi","source":"prototypes/lowfi/knowledge-community.html","publicPath":"prototypes/lowfi/knowledge-community.html","description":"地图下钻、实践任务与社区贡献"},
     {"id":"whiteboard-ide-lowfi","title":"白板、IDE 与 AI 学伴","status":"lowfi","source":"prototypes/lowfi/whiteboard-ide-companion.html","publicPath":"prototypes/lowfi/whiteboard-ide-companion.html","description":"学习页八个关键交互状态"},
     {"id":"operator-card-lowfi","title":"算子开发场景卡","status":"lowfi","source":"prototypes/lowfi/operator-development-card.html","publicPath":"prototypes/lowfi/operator-development-card.html","description":"算子开发首页卡片结构探索"},
+    {"id":"developer-contribution-floor-lowfi","title":"首页开发贡献榜楼层","status":"lowfi","source":"prototypes/lowfi/developer-contribution-home-floor.html","publicPath":"prototypes/lowfi/developer-contribution-home-floor.html","description":"首页第三楼层的领域筛选、得分原因与开发榜入口"},
+    {"id":"developer-leaderboard-lowfi","title":"独立开发贡献榜","status":"lowfi","source":"prototypes/lowfi/developer-leaderboard.html","publicPath":"prototypes/lowfi/developer-leaderboard.html","description":"经验回填、审核验证、积分与周榜／长期榜／领域榜闭环"},
 
     {"id":"course-preview-highfi-v2","title":"课程预览高保真 V2","status":"exploration","source":"outputs/ux-audit/course-preview-highfi-v2.html","publicPath":"lab/ux-audit/course-preview-highfi-v2.html","description":"课程预览视觉探索稿"},
     {"id":"course-preview-audit","title":"课程预览审查建议图","status":"exploration","source":"outputs/ux-audit/course-preview-audit-suggestion.html","publicPath":"lab/ux-audit/course-preview-audit-suggestion.html","description":"UX 审查后的对照建议"},
