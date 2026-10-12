@@ -22,8 +22,9 @@
     {"id":"training-v1","title":"讲师指导培训","status":"legacy","source":"archive/legacy-v1/training.html","publicPath":"archive/legacy-v1/training.html","description":"旧版培训页面"},
     {"id":"certification-v1","title":"开发者认证","status":"legacy","source":"archive/legacy-v1/certification.html","publicPath":"archive/legacy-v1/certification.html","description":"早期认证页面"},
 
-    {"id":"companion-entry-lowfi","title":"AI 学伴统一入口","status":"lowfi","source":"prototypes/lowfi/ai-companion.html","publicPath":"prototypes/lowfi/ai-companion.html","description":"首页卡片、气泡与统一入口结构"},
-    {"id":"companion-touchpoints-lowfi","title":"AI 学伴触点与知识地图","status":"lowfi","source":"prototypes/lowfi/ai-companion-touchpoints.html","publicPath":"prototypes/lowfi/ai-companion-touchpoints.html","description":"六个触点及知识地图视窗规则"},
+    {"id":"companion-unified-lowfi","title":"AI 学伴统一交互","status":"lowfi","source":"prototypes/lowfi/ai-companion-unified.html","publicPath":"prototypes/lowfi/ai-companion-unified.html","description":"气泡、完整学伴、课程预览、白板、IDE、主动提醒与知识地图的统一交互"},
+    {"id":"companion-entry-lowfi","title":"AI 学伴统一入口（旧版）","status":"legacy","source":"prototypes/lowfi/ai-companion.html","publicPath":"prototypes/lowfi/ai-companion.html","description":"早期首页卡片、气泡与完整学伴中心方案，已合并到统一交互"},
+    {"id":"companion-touchpoints-lowfi","title":"AI 学伴触点与知识地图（旧版）","status":"legacy","source":"prototypes/lowfi/ai-companion-touchpoints.html","publicPath":"prototypes/lowfi/ai-companion-touchpoints.html","description":"早期六触点和三地图视窗方案，已合并到统一交互"},
     {"id":"knowledge-community-lowfi","title":"知识地图与社区回填","status":"lowfi","source":"prototypes/lowfi/knowledge-community.html","publicPath":"prototypes/lowfi/knowledge-community.html","description":"地图下钻、实践任务与社区贡献"},
     {"id":"whiteboard-ide-lowfi","title":"白板、IDE 与 AI 学伴（旧版）","status":"legacy","source":"prototypes/lowfi/whiteboard-ide-companion.html","publicPath":"prototypes/lowfi/whiteboard-ide-companion.html","description":"早期八状态方案，已由白板模式主要交互低保真替代"},
     {"id":"whiteboard-learning-state-lowfi","title":"白板学习状态与上下文操作","status":"lowfi","source":"prototypes/lowfi/whiteboard-learning-state.html","publicPath":"prototypes/lowfi/whiteboard-learning-state.html","description":"本节大纲、能力变化、闭环证据与要点提问／可视化／计划操作"},
