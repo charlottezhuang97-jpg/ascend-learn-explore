@@ -80,7 +80,7 @@ setText('[data-proof-intro]',course.proofIntro);
 
 const escapeHtml = value => String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const meta=document.querySelector('.preview-meta');
-if(meta)meta.replaceChildren(...course.meta.map(value=>{const chip=document.createElement('span');chip.textContent=value;return chip;}));
+if(meta)meta.replaceChildren(...[`${course.stages.length} 课程模块`,...course.meta].map(value=>{const chip=document.createElement('span');chip.textContent=value;return chip;}));
 
 const nav=document.querySelector('#stageNav');
 const route=document.querySelector('#courseRoute');
@@ -99,7 +99,7 @@ const renderStage=index=>{
   const stage=course.stages[index];
   const previousUnits=course.stages.slice(0,index).reduce((count,item)=>count+item.units.length,0);
   const units=stage.units.map((unit,unitIndex)=>normalizeUnit(unit,previousUnits+unitIndex+1));
-  setText('[data-active-stage-title]',`阶段 ${index+1} · ${stage.title}`);
+  setText('[data-active-stage-title]',`模块 ${index+1} · ${stage.title}`);
   setText('[data-stage-reason]',stage.reason);
   const lessonTotal=units.reduce((count,unit)=>count+unit.lessons.length,0);
   setText('[data-stage-count]',`${units.length} 个单元 · ${lessonTotal} 个课节`);
