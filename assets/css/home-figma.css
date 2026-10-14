@@ -124,34 +124,12 @@ body{background:var(--home-bg)}
 .problem-floor-heading h2{font-size:40px;line-height:50px;font-weight:600}
 .contribution-front .portrait{background:#fff;object-fit:contain;object-position:center}
 @media(max-width:860px){.problem-floor-heading h2{font-size:32px;line-height:42px}}
-/* Personal knowledge overview: the home entry summarizes, while the full map owns exploration. */
-.personal-knowledge-overview{padding-top:74px;padding-bottom:26px}
-.personal-knowledge-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:22px}
-.personal-knowledge-heading>div>span{display:block;margin-bottom:7px;color:#2e53fa;font-size:14px;font-weight:600}
-.personal-knowledge-heading h2{margin:0;color:#101828;font-size:32px;line-height:42px;font-weight:600}
-.personal-knowledge-heading p{margin:8px 0 0;color:rgba(0,0,0,.6);font-size:14px}
-.personal-knowledge-heading>a{flex:0 0 auto;border:1px solid #d7dfeb;border-radius:10px;background:#fff;padding:10px 14px;color:#244fae;font-size:14px}
-.personal-knowledge-card{display:grid;grid-template-columns:280px minmax(0,1fr) 260px;gap:0;overflow:hidden;border:1px solid #dfe5ee;border-radius:16px;background:#fff;box-shadow:0 1px 3px rgba(16,24,40,.08)}
-.knowledge-summary,.knowledge-next{padding:24px}
-.knowledge-summary{border-right:1px solid #e6ebf2}
-.knowledge-summary>span,.knowledge-next>span{color:#6b7d96;font-size:12px}
-.knowledge-summary h3,.knowledge-next h3{margin:5px 0;color:#172033;font-size:20px;line-height:28px}
-.knowledge-summary p,.knowledge-next p{margin:0;color:#6c788b;font-size:13px;line-height:20px}
-.knowledge-summary-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}
-.knowledge-summary-stats span{color:#7b8798;font-size:11px}
-.knowledge-summary-stats b{display:block;color:#172033;font-size:18px}
-.knowledge-route-preview{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:center;padding:24px 28px}
-.knowledge-route-preview .route-line{position:absolute;left:10%;right:10%;top:50%;border-top:1px dashed #aeb9c8}
-.knowledge-route-preview article{position:relative;z-index:1;min-height:70px;border:1px solid #d8e0eb;border-radius:10px;background:#fff;padding:12px}
-.knowledge-route-preview article.current{border:2px solid #2e53fa;background:#f4f7ff;transform:translateY(-8px)}
-.knowledge-route-preview article.evidence{border-style:dashed;transform:translateY(8px)}
-.knowledge-route-preview article.done{background:#eef1f5}
-.knowledge-route-preview b,.knowledge-route-preview small{display:block}
-.knowledge-route-preview b{font-size:13px}
-.knowledge-route-preview small{margin-top:4px;color:#778397;font-size:11px}
-.knowledge-next{border-left:1px solid #e6ebf2;background:#f8faff}
-.knowledge-next a{display:inline-block;margin-top:15px;color:#2e53fa;font-size:13px;font-weight:600}
+/* Keep the full map one click away from the continue-learning floor. */
+.dlc-continue .dlc-section-title{margin-bottom:8px}
+.continue-map-link-row{display:flex;justify-content:flex-end;margin:0 8px 14px}
+.continue-map-link-row a{display:inline-flex;align-items:center;gap:6px;border:1px solid #d7dfeb;border-radius:10px;background:#fff;padding:9px 13px;color:#244fae;font-size:13px;line-height:18px}
+.continue-map-link-row a:hover{border-color:#2e53fa;color:#2e53fa}
+.continue-map-link-row a:focus-visible{outline:2px solid #2e53fa;outline-offset:3px}
 .dlc-account-entry{display:flex;align-items:center}
 .dlc-account-entry:focus-visible{outline:2px solid #2e53fa;outline-offset:4px}
-@media(max-width:1000px){.personal-knowledge-card{grid-template-columns:1fr 1.4fr}.knowledge-next{grid-column:1/-1;border-top:1px solid #e6ebf2;border-left:0}.knowledge-summary{border-right:1px solid #e6ebf2}}
-@media(max-width:700px){.personal-knowledge-heading{align-items:flex-start;flex-direction:column}.personal-knowledge-heading h2{font-size:28px;line-height:38px}.personal-knowledge-card{grid-template-columns:1fr}.knowledge-summary{border-right:0;border-bottom:1px solid #e6ebf2}.knowledge-route-preview{grid-template-columns:1fr 1fr}.knowledge-route-preview .route-line{display:none}.knowledge-route-preview article.current,.knowledge-route-preview article.evidence{transform:none}}
+@media(max-width:700px){.continue-map-link-row a{font-size:12px;padding:8px 10px}}
