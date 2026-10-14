@@ -35,7 +35,7 @@
       <nav class="dlc-nav-links" aria-label="全局导航">
         <a href="#top">开发者</a><a href="#top">主页</a><a href="#scenes">开发</a><a href="#top">文档</a><a href="#growth">活动</a><a class="active" href="#top" aria-current="page">学习</a><a href="#growth">论坛</a><a href="#growth">博客</a><a href="#growth">开发者计划</a>
       </nav>
-      <img class="dlc-nav-actions" src="assets/images/figma-home/nav-actions.png" alt="搜索、下载、支持、积分兑换与账户入口">
+      <a class="dlc-account-entry" href="prototypes/lowfi/personal-center-knowledge-assets.html" aria-label="进入个人中心"><img class="dlc-nav-actions" src="assets/images/figma-home/nav-actions.png" alt="搜索、下载、支持、积分兑换与账户入口"></a>
     </div>
   </header>
 
@@ -107,6 +107,15 @@
         <button type="button" class="problem-carousel-btn problem-carousel-next" id="problemNext" aria-label="查看下一个案例">›</button>
       </div>
       <p class="problem-floor-note">如果现有课程完整覆盖，AI 优先推荐课程；只有无法覆盖时才组合或生成新内容。</p>
+    </section>
+
+    <section class="dlc-section personal-knowledge-overview" aria-labelledby="personalKnowledgeTitle">
+      <div class="personal-knowledge-heading"><div><span>个人知识全局视图</span><h2 id="personalKnowledgeTitle">看见已掌握的知识与下一步方向</h2><p>知识地图汇总课程进度、测验结果和实践证据，形成跨课程的个人学习路线。</p></div><a href="knowledge-map.html">打开我的知识地图 →</a></div>
+      <div class="personal-knowledge-card">
+        <div class="knowledge-summary"><span>当前学习方向</span><h3>模型训练</h3><p>已探索 24 个知识点 · 已形成 6 条实践证据</p><div class="knowledge-summary-stats"><span><b>68%</b>当前方向</span><span><b>4</b>覆盖领域</span><span><b>2</b>能力缺口</span></div></div>
+        <div class="knowledge-route-preview" aria-label="个人学习路线预览"><span class="route-line"></span><article class="done"><b>计算图基础</b><small>已掌握</small></article><article class="current"><b>梯度同步</b><small>正在学习</small></article><article><b>HCCL 通信</b><small>下一知识点</small></article><article class="evidence"><b>双卡训练</b><small>待形成证据</small></article></div>
+        <aside class="knowledge-next"><span>推荐下一步</span><h3>完成双卡梯度同步实践</h3><p>补齐多设备通信的真实运行证据。</p><a href="knowledge-map.html">查看推荐路线</a></aside>
+      </div>
     </section>
 
     <section class="dlc-section dlc-scenes" id="scenes" aria-labelledby="scenesTitle">

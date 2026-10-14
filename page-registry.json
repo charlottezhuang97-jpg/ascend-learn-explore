@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-12",
+  "updatedAt": "2026-10-14",
   "statuses": {
     "current": "当前探索方案，参与主链路演示并持续维护",
     "review": "过渡页面，保留用于对照，待决定是否并入当前方案",
@@ -10,7 +10,7 @@
   },
   "pages": [
     {"id":"home","title":"首页","status":"current","source":"index.html","publicPath":"index.html","description":"目标输入、规划课程、解决问题与 AI 学伴入口"},
-    {"id":"course-preview","title":"课程预览","status":"current","source":"course-preview.html","publicPath":"course-preview.html?course=training","description":"阶段、单元、真实环境复现、同行学习与社区经验链路"},
+    {"id":"course-preview","title":"课程预览","status":"current","source":"course-preview.html","publicPath":"course-preview.html?course=training","description":"课程模块、单元、课程覆盖区域、真实环境复现与社区经验链路"},
     {"id":"learn","title":"沉浸式学习","status":"current","source":"learn.html","publicPath":"learn.html?course=training","description":"白板、视频、IDE 与 AI 学伴协作学习"},
     {"id":"ai-companion","title":"AI 学伴","status":"current","source":"ai-companion.html","publicPath":"ai-companion.html","description":"个人能力同心环、学习建议与计划"},
     {"id":"knowledge-map","title":"知识地图","status":"current","source":"knowledge-map.html","publicPath":"knowledge-map.html","description":"知识版图与二维知识网络探索"},
@@ -23,6 +23,8 @@
     {"id":"certification-v1","title":"开发者认证","status":"legacy","source":"archive/legacy-v1/certification.html","publicPath":"archive/legacy-v1/certification.html","description":"早期认证页面"},
 
     {"id":"companion-unified-lowfi","title":"AI 学伴统一交互","status":"lowfi","source":"prototypes/lowfi/ai-companion-unified.html","publicPath":"prototypes/lowfi/ai-companion-unified.html","description":"气泡、完整学伴、课程预览、白板、IDE、主动提醒与知识地图的统一交互"},
+    {"id":"course-completion-highlight-lowfi","title":"课程完成与本次点亮结果","status":"lowfi","source":"prototypes/lowfi/course-completion-highlight.html","publicPath":"prototypes/lowfi/course-completion-highlight.html","description":"课程完成后的新增知识点、实践证据、能力变化与知识地图定位"},
+    {"id":"personal-center-assets-lowfi","title":"个人中心与长期知识资产","status":"lowfi","source":"prototypes/lowfi/personal-center-knowledge-assets.html","publicPath":"prototypes/lowfi/personal-center-knowledge-assets.html","description":"个人长期知识资产、实践证据、学习路线与贡献记录"},
     {"id":"companion-entry-lowfi","title":"AI 学伴统一入口（旧版）","status":"legacy","source":"prototypes/lowfi/ai-companion.html","publicPath":"prototypes/lowfi/ai-companion.html","description":"早期首页卡片、气泡与完整学伴中心方案，已合并到统一交互"},
     {"id":"companion-touchpoints-lowfi","title":"AI 学伴触点与知识地图（旧版）","status":"legacy","source":"prototypes/lowfi/ai-companion-touchpoints.html","publicPath":"prototypes/lowfi/ai-companion-touchpoints.html","description":"早期六触点和三地图视窗方案，已合并到统一交互"},
     {"id":"knowledge-community-lowfi","title":"知识地图与社区回填","status":"lowfi","source":"prototypes/lowfi/knowledge-community.html","publicPath":"prototypes/lowfi/knowledge-community.html","description":"地图下钻、实践任务与社区贡献"},
