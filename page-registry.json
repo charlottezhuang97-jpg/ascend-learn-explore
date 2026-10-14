@@ -6,7 +6,8 @@
     "review": "过渡页面，保留用于对照，待决定是否并入当前方案",
     "lowfi": "低保真原型，仅用于结构和交互讨论",
     "exploration": "高保真或审查探索，不代表当前正式方案",
-    "legacy": "历史版本，停止维护，仅作回溯"
+    "legacy": "历史版本，已被当前页面替代，仅作回溯",
+    "archive": "归档方案，停止讨论或内容已合并，保留原链接回溯"
   },
   "pages": [
     {"id":"home","title":"首页","status":"current","source":"index.html","publicPath":"index.html","description":"目标输入、继续学习与通往全屏个人知识地图的入口"},
@@ -27,17 +28,17 @@
     {"id":"personal-center-assets-lowfi","title":"个人中心与长期知识资产","status":"lowfi","source":"prototypes/lowfi/personal-center-knowledge-assets.html","publicPath":"prototypes/lowfi/personal-center-knowledge-assets.html","description":"个人长期知识资产、实践证据、学习路线与贡献记录"},
     {"id":"companion-entry-lowfi","title":"AI 学伴统一入口（旧版）","status":"legacy","source":"prototypes/lowfi/ai-companion.html","publicPath":"prototypes/lowfi/ai-companion.html","description":"早期首页卡片、气泡与完整学伴中心方案，已合并到统一交互"},
     {"id":"companion-touchpoints-lowfi","title":"AI 学伴触点与知识地图（旧版）","status":"legacy","source":"prototypes/lowfi/ai-companion-touchpoints.html","publicPath":"prototypes/lowfi/ai-companion-touchpoints.html","description":"早期六触点和三地图视窗方案，已合并到统一交互"},
-    {"id":"knowledge-community-lowfi","title":"知识地图与社区回填","status":"lowfi","source":"prototypes/lowfi/knowledge-community.html","publicPath":"prototypes/lowfi/knowledge-community.html","description":"地图下钻、实践任务与社区贡献"},
+    {"id":"knowledge-community-lowfi","title":"知识地图与社区回填","status":"archive","source":"prototypes/lowfi/knowledge-community.html","publicPath":"prototypes/lowfi/knowledge-community.html","description":"已归档的地图下钻、实践任务与社区贡献探索"},
     {"id":"whiteboard-ide-lowfi","title":"白板、IDE 与 AI 学伴（旧版）","status":"legacy","source":"prototypes/lowfi/whiteboard-ide-companion.html","publicPath":"prototypes/lowfi/whiteboard-ide-companion.html","description":"早期八状态方案，已由白板模式主要交互低保真替代"},
-    {"id":"whiteboard-learning-state-lowfi","title":"白板学习状态与上下文操作","status":"lowfi","source":"prototypes/lowfi/whiteboard-learning-state.html","publicPath":"prototypes/lowfi/whiteboard-learning-state.html","description":"本节大纲、能力变化、闭环证据与要点提问／可视化／计划操作"},
-    {"id":"whiteboard-major-interactions-lowfi","title":"白板模式主要交互","status":"lowfi","source":"prototypes/lowfi/whiteboard-major-interactions.html","publicPath":"prototypes/lowfi/whiteboard-major-interactions.html","description":"完整大画布、悬浮 AI 学伴、课程要点、临时可视化解释与画布内固定 IDE"},
-    {"id":"operator-card-lowfi","title":"算子开发场景卡","status":"lowfi","source":"prototypes/lowfi/operator-development-card.html","publicPath":"prototypes/lowfi/operator-development-card.html","description":"算子开发首页卡片结构探索"},
+    {"id":"whiteboard-learning-state-lowfi","title":"白板学习状态与上下文操作（已合并）","status":"archive","source":"prototypes/lowfi/whiteboard-learning-state.html","publicPath":"prototypes/lowfi/whiteboard-learning-state.html","description":"学习状态、能力变化与闭环证据已合并到白板学习状态与主要交互"},
+    {"id":"whiteboard-major-interactions-lowfi","title":"白板学习状态与主要交互","status":"lowfi","source":"prototypes/lowfi/whiteboard-major-interactions.html","publicPath":"prototypes/lowfi/whiteboard-major-interactions.html","description":"本节状态、学习收获、能力闭环、板书操作、临时解释、悬浮 AI 学伴与画布内固定 IDE"},
+    {"id":"operator-card-lowfi","title":"算子开发场景卡","status":"archive","source":"prototypes/lowfi/operator-development-card.html","publicPath":"prototypes/lowfi/operator-development-card.html","description":"已归档的算子开发首页卡片结构探索"},
     {"id":"developer-contribution-floor-lowfi","title":"首页开发贡献榜楼层","status":"lowfi","source":"prototypes/lowfi/developer-contribution-home-floor.html","publicPath":"prototypes/lowfi/developer-contribution-home-floor.html","description":"首页第三楼层的领域筛选、得分原因与开发榜入口"},
     {"id":"developer-leaderboard-lowfi","title":"独立开发贡献榜","status":"lowfi","source":"prototypes/lowfi/developer-leaderboard.html","publicPath":"prototypes/lowfi/developer-leaderboard.html","description":"经验回填、审核验证、积分与周榜／长期榜／领域榜闭环"},
 
     {"id":"course-preview-highfi-v2","title":"课程预览高保真 V2","status":"exploration","source":"outputs/ux-audit/course-preview-highfi-v2.html","publicPath":"lab/ux-audit/course-preview-highfi-v2.html","description":"课程预览视觉探索稿"},
     {"id":"course-preview-audit","title":"课程预览审查建议图","status":"exploration","source":"outputs/ux-audit/course-preview-audit-suggestion.html","publicPath":"lab/ux-audit/course-preview-audit-suggestion.html","description":"UX 审查后的对照建议"},
-    {"id":"course-path-mapping-lowfi","title":"阶段与单元映射","status":"lowfi","source":"outputs/ux-audit/course-path-unit-mapping-lowfi.html","publicPath":"lab/ux-audit/course-path-unit-mapping-lowfi.html","description":"左侧阶段与右侧内容单卡单线映射探索"},
+    {"id":"course-path-mapping-lowfi","title":"阶段与单元映射","status":"archive","source":"outputs/ux-audit/course-path-unit-mapping-lowfi.html","publicPath":"lab/ux-audit/course-path-unit-mapping-lowfi.html","description":"已归档的左侧阶段与右侧内容单卡单线映射探索"},
     {"id":"content-generation-touchpoints","title":"内容生成触点","status":"lowfi","source":"outputs/ux-audit/content-generation-touchpoints-lowfi.html","publicPath":"lab/ux-audit/content-generation-touchpoints-lowfi.html","description":"搜索、AI 对话与课程预览的内容生成策略"}
   ]
 }

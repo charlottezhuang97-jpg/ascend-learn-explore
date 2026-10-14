@@ -22,13 +22,20 @@
       background: "#fff7ed",
       border: "#fdba74",
       color: "#9a3412"
+    },
+    archive: {
+      label: "已归档",
+      detail: "停止讨论，仅供回溯",
+      background: "#f2f4f7",
+      border: "#cbd2dc",
+      color: "#475467"
     }
   }[status];
 
   if (!config) return;
 
   const link = document.createElement("a");
-  link.href = "catalog.html";
+  link.href = new URL("../../catalog.html", script.src).href;
   link.setAttribute("aria-label", `${config.label}，${config.detail}。查看页面目录`);
   link.innerHTML = `<strong>${config.label}</strong><span>${config.detail}</span>`;
   Object.assign(link.style, {
