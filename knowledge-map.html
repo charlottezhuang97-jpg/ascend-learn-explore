@@ -108,15 +108,16 @@
             <ol><li>MindSpore 核心机制</li><li>MindFormers</li><li>推理开发部署</li><li>RAG 核心机制</li><li>RAG 应用开发部署</li><li>RAG 效果验证</li></ol>
             <p>实线表示必须先学，虚线表示支撑或可选依赖。课程和资料是附着在知识节点上的学习资源。</p>
           </div>
+          <div class="base-network">
           <svg class="knowledge-network-svg" viewBox="0 0 1180 720" aria-hidden="true">
             <rect class="region cann" x="28" y="92" width="350" height="565" rx="26"/>
             <rect class="region genai" x="397" y="92" width="420" height="565" rx="26"/>
             <rect class="region agent" x="836" y="92" width="316" height="565" rx="26"/>
-            <path class="edge required" d="M164 214L164 298M164 362L164 442M238 475C342 475 370 206 470 206M544 206L544 292M544 356L544 442M618 475C730 475 760 218 882 218M956 251L956 328M956 392L956 474M956 538L956 584"/>
-            <path class="edge required" d="M618 324C690 324 734 470 882 506"/>
-            <path class="edge support" d="M245 206C350 120 452 135 544 166M238 330C345 360 390 470 470 474M618 206C760 138 822 160 882 218M618 324C756 346 810 360 882 360"/>
-            <path class="edge cross" d="M238 475C352 558 390 582 470 582M618 582C732 582 772 560 882 506"/>
-            <path class="edge route" d="M544 206L544 324L544 474C694 474 760 224 956 218L956 360L956 506L956 616"/>
+            <path class="edge required" d="M164 240V297M164 363V442M164 508V550M544 240V291M544 357V441M719 357V441M994 240V270M994 336V366M994 432V462M994 528V558"/>
+            <path class="edge required" d="M238 475C350 475 378 207 470 207M618 324H645M719 357C694 402 653 474 618 474M618 474C744 474 790 303 920 303M618 474C670 500 690 532 719 550"/>
+            <path class="edge support" d="M238 330C350 350 392 474 470 474M618 207C744 150 830 183 920 207M793 324C840 324 868 303 920 303"/>
+            <path class="edge cross" d="M238 475C342 530 388 500 470 474M793 583C842 600 875 590 920 590"/>
+            <path class="edge route" d="M544 240V291M544 357V441M618 474C744 474 790 303 920 303M994 336V366M994 432V462M994 528V558"/>
           </svg>
 
           <div class="km-network-goal"><span>目标路线</span><b>构建并部署可验证的 RAG 应用</b><small>6 个知识节点 · 2 个实践 · 1 份验证证据</small></div>
@@ -141,6 +142,26 @@
           <button class="graph-node tool depth-explored g-agent-3" data-node="向量检索 API" data-domain="智能体" data-type="工具 / API" data-official-resources="1" data-trusted-resources="5" data-resource-label="课 1"><i></i><b>向量检索 API</b><small>了解</small></button>
           <button class="graph-node practice depth-explored route-node g-agent-4" data-node="RAG 应用开发部署" data-domain="智能体" data-type="实践任务" data-official-resources="2" data-trusted-resources="8" data-resource-label="课 2"><i></i><b>RAG 应用开发部署</b><small>待实践</small></button>
           <button class="graph-node evidence depth-explored route-node g-agent-5" data-node="RAG 效果验证" data-domain="智能体" data-type="验证证据"><i></i><b>RAG 效果验证</b><small>待形成</small></button>
+          </div>
+
+          <section class="domain-drilldown cann-drilldown" aria-label="CANN 领域下钻">
+            <div class="drill-main">
+              <header class="drill-header"><div><span>领域下钻 · 01</span><h2>CANN</h2><p>从算子开发到应用与算子调优，选择适合当前任务的开发方向。</p></div><button type="button" id="backToOverview">返回领域全景</button></header>
+              <svg class="drill-connectors" viewBox="0 0 820 500" aria-hidden="true"><path d="M236 208H300M520 208H584M236 378H300M520 378H584"/><path class="support" d="M140 242C140 330 140 330 140 344M680 242C680 330 680 330 680 344"/></svg>
+              <div class="drill-grid">
+                <button class="drill-card ascend" type="button" data-drill-node="Ascend C 算子开发" data-official-resources="6" data-trusted-resources="14"><span class="drill-index">01</span><span class="drill-resource">6 课节</span><h3>Ascend C 算子开发</h3><p>掌握 Tiling、核函数实现、编译调试与算子验证。</p><div><span>Tiling</span><span>核函数</span><span>调试验证</span></div></button>
+                <button class="drill-card catlass" type="button" data-drill-node="CATLASS 算子开发" data-official-resources="4" data-trusted-resources="9"><span class="drill-index">02</span><span class="drill-resource">4 课节</span><h3>CATLASS 算子开发</h3><p>使用模板化组件组合矩阵计算与数据搬运能力。</p><div><span>模板库</span><span>Tensor 布局</span><span>算子组合</span></div></button>
+                <button class="drill-card triton" type="button" data-drill-node="Triton 算子开发" data-official-resources="5" data-trusted-resources="12"><span class="drill-index">03</span><span class="drill-resource">5 课节</span><h3>Triton 算子开发</h3><p>从并行划分、内存访问到 NPU 迁移与性能验证。</p><div><span>Kernel</span><span>Block / Grid</span><span>NPU 迁移</span></div></button>
+                <button class="drill-card mindstudio" type="button" data-drill-node="应用 / 算子调优（MindStudio）" data-official-resources="5" data-trusted-resources="11"><span class="drill-index">04</span><span class="drill-resource">5 课节</span><h3>应用 / 算子调优</h3><p>使用 MindStudio 完成 Profiling、热点定位与前后对比。</p><div><span>MindStudio</span><span>Profiling</span><span>热点定位</span></div></button>
+              </div>
+            </div>
+            <aside class="drill-related" aria-label="其他关联领域">
+              <span class="drill-related-label">关联领域</span>
+              <button type="button" data-related-domain="生成式 AI 与大语言模型"><small>02</small><b>生成式 AI 与大语言模型</b><span>训练 · 推理 · 应用开发部署</span></button>
+              <button type="button" data-related-domain="智能体"><small>03</small><b>智能体</b><span>Agent · RAG 开发部署</span></button>
+              <p>当前下钻聚焦 CANN；关联领域仅保留上下文，不参与核心内容排布。</p>
+            </aside>
+          </section>
 
         </section>
       </div>

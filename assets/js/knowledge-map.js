@@ -46,6 +46,28 @@
     'RAG 应用开发部署':'把检索、生成、评测和部署连成可验证闭环，是当前学习目标的核心实践节点。',
     'RAG 效果验证':'使用命中率、忠实度和可追溯证据验证系统是否真正解决目标问题。'
   };
+  const drillCopy={
+    'Ascend C 算子开发':{
+      reason:'面向昇腾硬件直接完成 Tiling、核函数实现、编译调试与算子验证。',
+      trail:'昇腾计算架构 → Ascend C → Tiling 与核函数',
+      resource:'Ascend C 算子开发课程',meta:'官方课程 · 6 个关联课节'
+    },
+    'CATLASS 算子开发':{
+      reason:'使用模板化组件组合矩阵计算与数据搬运能力，降低高性能算子开发门槛。',
+      trail:'矩阵计算基础 → CATLASS 模板库 → 算子组合',
+      resource:'CATLASS 算子开发课程',meta:'官方课程 · 4 个关联课节'
+    },
+    'Triton 算子开发':{
+      reason:'使用 Triton 表达并行划分和内存访问，并完成面向 NPU 的迁移与验证。',
+      trail:'并行模型 → Triton Kernel → NPU 迁移',
+      resource:'Triton 算子开发课程',meta:'官方课程 · 5 个关联课节'
+    },
+    '应用 / 算子调优（MindStudio）':{
+      reason:'使用 MindStudio 定位应用与算子热点，并通过前后指标对比验证调优收益。',
+      trail:'Profiling → 热点定位 → 调优与复验',
+      resource:'MindStudio 应用与算子调优',meta:'官方课程 · 5 个关联课节'
+    }
+  };
 
   function render(){
     canvas.style.transform=`translate(${x}px,${y}px) scale(${scale})`;
@@ -66,10 +88,11 @@
     y=cy-(cy-y)*(scale/prev);
     render();
   }
-  function openView(key){
+  function openView(key,focus=''){
     tabs.forEach(tab=>tab.setAttribute('aria-selected',String(tab.dataset.view===key)));
     Object.entries(views).forEach(([viewKey,view])=>view.hidden=viewKey!==key);
-    document.querySelector('#mapCrumb').textContent=key==='map'?'领域全景':'分区聚类知识网络';
+    views.network.dataset.focus=key==='network'?focus:'';
+    document.querySelector('#mapCrumb').textContent=key==='map'?'领域全景':focus==='cann'?'CANN / 开发方向':'分区聚类知识网络';
     fit();
   }
   function updateInspector({name,domain,type,depth,copy,trail,statusText}){
@@ -130,7 +153,11 @@
     document.querySelectorAll('[data-resource-scope]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
     app.classList.toggle('resource-expanded',trusted);
     document.querySelectorAll('[data-official-resources]').forEach(node=>{
-      node.dataset.resourceLabel=trusted?`${node.dataset.trustedResources} 资源`:`课 ${node.dataset.officialResources}`;
+      if(node.classList.contains('drill-card')){
+        node.querySelector('.drill-resource').textContent=trusted?`${node.dataset.trustedResources} 个资源`:`${node.dataset.officialResources} 课节`;
+      }else{
+        node.dataset.resourceLabel=trusted?`${node.dataset.trustedResources} 资源`:`课 ${node.dataset.officialResources}`;
+      }
     });
     scopeNote.textContent=trusted
       ?'AI 可在官方课程之外检索经过来源、版本、复现和许可验证的可信资源。'
@@ -138,15 +165,40 @@
     scopeMeta.textContent=trusted
       ?'规划态：官方课程与通过验证的外部资源共同参与路线组合。'
       :'当前只检索经过产品配置与验证的官方课程。';
-    resourceTitle.textContent=trusted?'官方课程 + 可信资源组合':'昇腾算力与 MindSpore 框架';
-    resourceMeta.textContent=trusted?'课程、文档与复现实验 · 来源可追溯':'官方课程 · 7 个关联课节';
+    const selectedDrill=document.querySelector('[data-drill-node].selected-node');
+    if(selectedDrill){
+      const selectedCopy=drillCopy[selectedDrill.dataset.drillNode];
+      resourceTitle.textContent=trusted?`${selectedCopy.resource} + 可信资源`:selectedCopy.resource;
+      resourceMeta.textContent=trusted?'课程、文档与复现实验 · 来源可追溯':selectedCopy.meta;
+    }else{
+      resourceTitle.textContent=trusted?'官方课程 + 可信资源组合':'昇腾算力与 MindSpore 框架';
+      resourceMeta.textContent=trusted?'课程、文档与复现实验 · 来源可追溯':'官方课程 · 7 个关联课节';
+    }
   }));
 
   document.querySelectorAll('.knowledge-domain [data-domain]').forEach(button=>button.addEventListener('click',()=>{
     const domain=button.dataset.domain;
     const copy=domainCopy[domain];
     updateInspector({name:domain,domain:'领域分区',depth:copy.meta,copy:copy.reason,trail:copy.node,statusText:copy.status});
+    openView('network',domain==='CANN'?'cann':'');
+  }));
+
+  document.querySelector('#backToOverview').addEventListener('click',()=>openView('map'));
+  document.querySelectorAll('[data-related-domain]').forEach(button=>button.addEventListener('click',()=>{
+    const domain=button.dataset.relatedDomain;
+    const copy=domainCopy[domain];
     openView('network');
+    updateInspector({name:domain,domain:'领域分区',depth:copy.meta,copy:copy.reason,trail:copy.node,statusText:copy.status});
+  }));
+
+  document.querySelectorAll('[data-drill-node]').forEach(button=>button.addEventListener('click',()=>{
+    document.querySelectorAll('[data-drill-node]').forEach(item=>item.classList.remove('selected-node'));
+    button.classList.add('selected-node');
+    const copy=drillCopy[button.dataset.drillNode];
+    updateInspector({name:button.dataset.drillNode,domain:'CANN',type:'开发方向',depth:'领域下钻',copy:copy.reason,trail:copy.trail,statusText:'CANN 核心内容'});
+    resourceTitle.textContent=copy.resource;
+    resourceMeta.textContent=app.classList.contains('resource-expanded')?'官方课程与可信资源 · 来源可追溯':copy.meta;
+    evidenceCopy.textContent=`完成“${button.dataset.drillNode}”相关实践并提交运行指标后，将形成对应的能力证据。`;
   }));
 
   document.querySelectorAll('[data-node]').forEach(button=>button.addEventListener('click',()=>{
@@ -169,12 +221,18 @@
 
   document.querySelector('.km-inspector-head button').addEventListener('click',()=>{
     document.querySelectorAll('[data-node]').forEach(item=>item.classList.remove('selected-node'));
-    updateInspector({
-      name:'RAG 应用开发部署',domain:'智能体',type:'实践任务',depth:'待实践',
-      copy:'把检索、生成、评测和部署连成可验证闭环，是当前学习目标的核心实践节点。',
-      trail:'RAG 核心机制 → 向量检索 API',statusText:'推荐路线中的下一步'
-    });
+    document.querySelectorAll('[data-drill-node]').forEach(item=>item.classList.remove('selected-node'));
+    if(views.network.dataset.focus==='cann'){
+      const copy=domainCopy.CANN;
+      updateInspector({name:'CANN',domain:'领域分区',depth:copy.meta,copy:copy.reason,trail:copy.node,statusText:copy.status});
+    }else{
+      updateInspector({
+        name:'RAG 应用开发部署',domain:'智能体',type:'实践任务',depth:'待实践',
+        copy:'把检索、生成、评测和部署连成可验证闭环，是当前学习目标的核心实践节点。',
+        trail:'RAG 核心机制 → 向量检索 API',statusText:'推荐路线中的下一步'
+      });
+    }
   });
   addEventListener('resize',fit);
-  requestAnimationFrame(()=>openView(new URLSearchParams(location.search).get('view')==='network'?'network':'map'));
+  openView(new URLSearchParams(location.search).get('view')==='network'?'network':'map');
 })();
