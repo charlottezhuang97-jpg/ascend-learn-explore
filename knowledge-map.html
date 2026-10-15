@@ -41,7 +41,7 @@
       <div class="km-section-label">视图控制</div>
       <div class="km-switch"><span>高亮推荐路线</span><button type="button" data-layer="route" aria-pressed="true" aria-label="高亮推荐路线"></button></div>
       <div class="km-switch"><span>显示跨领域关系</span><button type="button" data-layer="cross" aria-pressed="true" aria-label="显示跨领域关系"></button></div>
-      <div class="km-switch"><span>显示资源节点</span><button type="button" data-layer="resource" aria-pressed="true" aria-label="显示资源节点"></button></div>
+      <div class="km-switch"><span>显示课程覆盖标记</span><button type="button" data-layer="resource" aria-pressed="true" aria-label="显示课程覆盖标记"></button></div>
 
       <div class="km-section-label">节点类型</div>
       <div class="km-legend km-type-legend">
@@ -100,8 +100,6 @@
           <div class="km-foundation">
             <span>共享基础</span><b>Python · 深度学习 · 数据工程 · 部署运维</b><small>以虚线依赖支撑多个领域，不强制形成单一路径</small>
           </div>
-          <div class="km-overview-resource official-resource"><span>官方课程</span><b>昇腾算力与 MindSpore 框架</b><small>覆盖 10 个单元 · 已核验</small></div>
-          <div class="km-overview-resource external-resource"><span>可信外部资源</span><b>社区实战 · 开源实验 · 技术文档</b><small>含来源、版本、复现与许可信息</small></div>
         </section>
 
         <section class="km-view km-network-view" id="networkMap" hidden aria-label="分区聚类知识网络">
@@ -119,7 +117,6 @@
             <path class="edge support" d="M245 206C350 120 452 135 544 166M238 330C345 360 390 470 470 474M618 206C760 138 822 160 882 218M618 324C756 346 810 360 882 360"/>
             <path class="edge cross" d="M238 475C352 558 390 582 470 582M618 582C732 582 772 560 882 506"/>
             <path class="edge route" d="M544 206L544 324L544 474C694 474 760 224 956 218L956 360L956 506L956 616"/>
-            <path class="resource-link" d="M544 582V632M1032 506L1084 506"/>
           </svg>
 
           <div class="km-network-goal"><span>目标路线</span><b>构建并部署可验证的 RAG 应用</b><small>6 个知识节点 · 2 个实践 · 1 份验证证据</small></div>
@@ -127,27 +124,24 @@
           <div class="graph-region-title genai"><span>02</span><div><b>生成式 AI 与大语言模型</b><small>训练 · 推理 · 应用开发部署</small></div></div>
           <div class="graph-region-title agent"><span>03</span><div><b>智能体</b><small>Agent · RAG 开发部署</small></div></div>
 
-          <button class="graph-node concept depth-mastered g-cann-1" data-node="昇腾计算架构" data-domain="CANN" data-type="概念知识"><i></i><b>昇腾计算架构</b><small>掌握</small></button>
-          <button class="graph-node tool depth-practiced g-cann-2" data-node="Ascend C" data-domain="CANN" data-type="工具 / API"><i></i><b>Ascend C</b><small>实践</small></button>
-          <button class="graph-node practice depth-practiced g-cann-3" data-node="算子调优" data-domain="CANN" data-type="实践任务"><i></i><b>算子调优</b><small>实践</small></button>
+          <button class="graph-node concept depth-mastered g-cann-1" data-node="昇腾计算架构" data-domain="CANN" data-type="概念知识" data-official-resources="1" data-trusted-resources="3" data-resource-label="课 1"><i></i><b>昇腾计算架构</b><small>掌握</small></button>
+          <button class="graph-node tool depth-practiced g-cann-2" data-node="Ascend C" data-domain="CANN" data-type="工具 / API" data-official-resources="2" data-trusted-resources="5" data-resource-label="课 2"><i></i><b>Ascend C</b><small>实践</small></button>
+          <button class="graph-node practice depth-practiced g-cann-3" data-node="算子调优" data-domain="CANN" data-type="实践任务" data-official-resources="2" data-trusted-resources="4" data-resource-label="课 2"><i></i><b>算子调优</b><small>实践</small></button>
           <button class="graph-node evidence depth-contributed g-cann-4" data-node="性能复现报告" data-domain="CANN" data-type="验证证据"><i></i><b>性能复现报告</b><small>贡献</small></button>
 
-          <button class="graph-node concept depth-mastered route-node g-gen-1" data-node="MindSpore 核心机制" data-domain="生成式 AI 与大语言模型" data-type="概念知识"><i></i><b>MindSpore 核心机制</b><small>掌握</small></button>
-          <button class="graph-node tool depth-mastered route-node g-gen-2" data-node="MindFormers" data-domain="生成式 AI 与大语言模型" data-type="工具 / API"><i></i><b>MindFormers</b><small>掌握</small></button>
-          <button class="graph-node concept depth-learning g-gen-3" data-node="分布式训练" data-domain="生成式 AI 与大语言模型" data-type="概念知识"><i></i><b>分布式训练</b><small>学习中</small></button>
-          <button class="graph-node practice depth-learning route-node g-gen-4" data-node="推理开发部署" data-domain="生成式 AI 与大语言模型" data-type="实践任务"><i></i><b>推理开发部署</b><small>学习中</small></button>
-          <button class="graph-node practice depth-explored g-gen-5" data-node="生成式 AI 应用开发" data-domain="生成式 AI 与大语言模型" data-type="实践任务"><i></i><b>生成式 AI 应用开发</b><small>了解</small></button>
+          <button class="graph-node concept depth-mastered route-node g-gen-1" data-node="MindSpore 核心机制" data-domain="生成式 AI 与大语言模型" data-type="概念知识" data-official-resources="2" data-trusted-resources="6" data-resource-label="课 2"><i></i><b>MindSpore 核心机制</b><small>掌握</small></button>
+          <button class="graph-node tool depth-mastered route-node g-gen-2" data-node="MindFormers" data-domain="生成式 AI 与大语言模型" data-type="工具 / API" data-official-resources="3" data-trusted-resources="7" data-resource-label="课 3"><i></i><b>MindFormers</b><small>掌握</small></button>
+          <button class="graph-node concept depth-learning g-gen-3" data-node="分布式训练" data-domain="生成式 AI 与大语言模型" data-type="概念知识" data-official-resources="2" data-trusted-resources="5" data-resource-label="课 2"><i></i><b>分布式训练</b><small>学习中</small></button>
+          <button class="graph-node practice depth-learning route-node g-gen-4" data-node="推理开发部署" data-domain="生成式 AI 与大语言模型" data-type="实践任务" data-official-resources="3" data-trusted-resources="8" data-resource-label="课 3"><i></i><b>推理开发部署</b><small>学习中</small></button>
+          <button class="graph-node practice depth-explored g-gen-5" data-node="生成式 AI 应用开发" data-domain="生成式 AI 与大语言模型" data-type="实践任务" data-official-resources="2" data-trusted-resources="6" data-resource-label="课 2"><i></i><b>生成式 AI 应用开发</b><small>了解</small></button>
           <button class="graph-node evidence depth-explored g-gen-6" data-node="部署验收记录" data-domain="生成式 AI 与大语言模型" data-type="验证证据"><i></i><b>部署验收记录</b><small>了解</small></button>
 
-          <button class="graph-node concept depth-explored g-agent-1" data-node="Agent 任务编排" data-domain="智能体" data-type="概念知识"><i></i><b>Agent 任务编排</b><small>了解</small></button>
-          <button class="graph-node concept depth-learning route-node g-agent-2" data-node="RAG 核心机制" data-domain="智能体" data-type="概念知识"><i></i><b>RAG 核心机制</b><small>学习中</small></button>
-          <button class="graph-node tool depth-explored g-agent-3" data-node="向量检索 API" data-domain="智能体" data-type="工具 / API"><i></i><b>向量检索 API</b><small>了解</small></button>
-          <button class="graph-node practice depth-explored route-node g-agent-4" data-node="RAG 应用开发部署" data-domain="智能体" data-type="实践任务"><i></i><b>RAG 应用开发部署</b><small>待实践</small></button>
+          <button class="graph-node concept depth-explored g-agent-1" data-node="Agent 任务编排" data-domain="智能体" data-type="概念知识" data-official-resources="1" data-trusted-resources="4" data-resource-label="课 1"><i></i><b>Agent 任务编排</b><small>了解</small></button>
+          <button class="graph-node concept depth-learning route-node g-agent-2" data-node="RAG 核心机制" data-domain="智能体" data-type="概念知识" data-official-resources="2" data-trusted-resources="7" data-resource-label="课 2"><i></i><b>RAG 核心机制</b><small>学习中</small></button>
+          <button class="graph-node tool depth-explored g-agent-3" data-node="向量检索 API" data-domain="智能体" data-type="工具 / API" data-official-resources="1" data-trusted-resources="5" data-resource-label="课 1"><i></i><b>向量检索 API</b><small>了解</small></button>
+          <button class="graph-node practice depth-explored route-node g-agent-4" data-node="RAG 应用开发部署" data-domain="智能体" data-type="实践任务" data-official-resources="2" data-trusted-resources="8" data-resource-label="课 2"><i></i><b>RAG 应用开发部署</b><small>待实践</small></button>
           <button class="graph-node evidence depth-explored route-node g-agent-5" data-node="RAG 效果验证" data-domain="智能体" data-type="验证证据"><i></i><b>RAG 效果验证</b><small>待形成</small></button>
 
-          <button class="graph-resource official-resource gr-official" data-node="官方课程资源" data-domain="资源层" data-type="官方课程"><i>课</i><b>官方课程组合</b><small>7 个课节 · 已核验</small></button>
-          <button class="graph-resource external-resource gr-doc" data-node="MindSpore 官方文档" data-domain="资源层" data-type="可信文档"><i>文</i><b>MindSpore 文档</b><small>版本 2.4 · 来源明确</small></button>
-          <button class="graph-resource external-resource gr-lab" data-node="社区 RAG 复现实验" data-domain="资源层" data-type="社区实践"><i>验</i><b>社区 RAG 复现实验</b><small>已复现 · 许可可用</small></button>
         </section>
       </div>
       <div class="km-canvas-hint">拖动画布 · 滚轮或 ± 缩放 · 方向键移动 · 点击节点查看资源</div>

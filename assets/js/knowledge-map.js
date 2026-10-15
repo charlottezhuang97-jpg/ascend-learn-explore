@@ -129,6 +129,9 @@
     const trusted=button.dataset.resourceScope==='trusted';
     document.querySelectorAll('[data-resource-scope]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
     app.classList.toggle('resource-expanded',trusted);
+    document.querySelectorAll('[data-official-resources]').forEach(node=>{
+      node.dataset.resourceLabel=trusted?`${node.dataset.trustedResources} 资源`:`课 ${node.dataset.officialResources}`;
+    });
     scopeNote.textContent=trusted
       ?'AI 可在官方课程之外检索经过来源、版本、复现和许可验证的可信资源。'
       :'AI 在官方课程与单元中重新组合路线，不改变知识结构。';
