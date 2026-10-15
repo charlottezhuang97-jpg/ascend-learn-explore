@@ -1,60 +1,169 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>知识地图中心 · Ascend Learn</title>
-  <link rel="stylesheet" href="assets/css/knowledge-experience.css?v=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>个人知识地图 · Ascend Learn</title>
+  <link rel="stylesheet" href="assets/css/knowledge-experience.css?v=2">
 </head>
 <body>
+<a class="km-skip-link" href="#canvasShell">跳到知识地图</a>
 <main class="km-app">
   <header class="km-topbar">
-    <a class="km-brand" href="index.html"><img src="assets/images/figma-home/nav-logo.png" alt="Ascend"><span>知识地图中心</span></a>
-    <nav class="km-breadcrumb" aria-label="当前位置"><span>知识地图</span><span>/</span><b id="mapCrumb">全局知识版图</b></nav>
-    <div class="km-top-actions"><a class="km-btn" href="ai-companion.html">AI 学伴</a><a class="km-btn primary" href="course-preview.html?course=training">继续学习</a><span class="km-avatar">CZ</span></div>
+    <a class="km-brand" href="index.html"><img src="assets/images/figma-home/nav-logo.png" alt="Ascend"><span>个人知识地图</span></a>
+    <nav class="km-breadcrumb" aria-label="当前位置"><span>知识地图</span><span>/</span><b id="mapCrumb">领域全景</b></nav>
+    <div class="km-top-actions"><a class="km-btn" href="ai-companion.html">AI 学伴</a><a class="km-btn primary" href="course-preview.html?course=training">继续学习</a><span class="km-avatar" aria-label="用户 charlottezhuang97">CZ</span></div>
   </header>
+
   <section class="km-toolbar" aria-label="知识地图工具栏">
-    <div class="km-view-tabs" role="tablist"><button type="button" role="tab" data-view="map" aria-selected="true">知识版图</button><button type="button" role="tab" data-view="network" aria-selected="false">二维知识网络</button></div>
-    <span class="km-toolbar-divider"></span><button class="km-filter active">开发领域</button><button class="km-filter">任务目标</button><button class="km-filter">前沿主题</button><button class="km-filter">技术栈</button>
-    <div class="km-zoom"><button type="button" data-zoom="out" aria-label="缩小">−</button><output id="zoomValue">100%</output><button type="button" data-zoom="in" aria-label="放大">＋</button></div><button class="km-btn fit" type="button" id="fitCanvas">适应画布</button>
+    <div class="km-view-tabs" role="tablist" aria-label="知识地图视图">
+      <button type="button" role="tab" data-view="map" aria-selected="true">领域全景</button>
+      <button type="button" role="tab" data-view="network" aria-selected="false">分区知识网络</button>
+    </div>
+    <span class="km-toolbar-divider"></span>
+    <div class="km-goal-summary"><span>当前目标</span><b>构建并部署可验证的 RAG 应用</b></div>
+    <div class="km-zoom"><button type="button" data-zoom="out" aria-label="缩小">−</button><output id="zoomValue">100%</output><button type="button" data-zoom="in" aria-label="放大">＋</button></div>
+    <button class="km-btn fit" type="button" id="fitCanvas">适应画布</button>
   </section>
+
   <section class="km-workspace">
     <aside class="km-panel km-left">
-      <h2>视图控制</h2>
-      <div class="km-switch"><span>仅看我的学习路线</span><button type="button" aria-pressed="true" aria-label="仅看我的学习路线"></button></div>
-      <div class="km-switch"><span>显示跨领域关系</span><button type="button" aria-pressed="true" aria-label="显示跨领域关系"></button></div>
-      <div class="km-switch"><span>显示辅助知识</span><button type="button" aria-pressed="false" aria-label="显示辅助知识"></button></div>
-      <div class="km-section-label">节点状态</div><div class="km-legend"><span><i class="km-dot done"></i>已掌握</span><span><i class="km-dot current"></i>正在学习</span><span><i class="km-dot next"></i>待探索</span><span><i class="km-dot evidence"></i>已有实践证据</span></div>
-      <div class="km-section-label">关系类型</div><div class="km-legend"><span><i class="km-line-key"></i>前置关系</span><span><i class="km-line-key dash"></i>跨领域关系</span><span><i class="km-line-key support"></i>相关基础</span><span><i class="km-line-key recommend"></i>推荐学习路径</span></div>
+      <h2>图谱图例</h2>
+      <p class="km-panel-intro">知识结构保持稳定，学习目标决定高亮路线，课程与资料作为资源挂到知识节点。</p>
+
+      <div class="km-section-label">资源检索范围</div>
+      <div class="km-resource-scope" role="group" aria-label="资源检索范围">
+        <button type="button" data-resource-scope="official" aria-pressed="true"><b>当前 · 官方课程</b><small>0–1 年里程碑</small></button>
+        <button type="button" data-resource-scope="trusted" aria-pressed="false"><b>规划 · 可信资源</b><small>1–3 年里程碑</small></button>
+      </div>
+      <p class="km-scope-note" id="scopeNote">AI 在官方课程与单元中重新组合路线，不改变知识结构。</p>
+
+      <div class="km-section-label">视图控制</div>
+      <div class="km-switch"><span>高亮推荐路线</span><button type="button" data-layer="route" aria-pressed="true" aria-label="高亮推荐路线"></button></div>
+      <div class="km-switch"><span>显示跨领域关系</span><button type="button" data-layer="cross" aria-pressed="true" aria-label="显示跨领域关系"></button></div>
+      <div class="km-switch"><span>显示资源节点</span><button type="button" data-layer="resource" aria-pressed="true" aria-label="显示资源节点"></button></div>
+
+      <div class="km-section-label">节点类型</div>
+      <div class="km-legend km-type-legend">
+        <span><i class="km-node-key concept"></i>概念知识</span>
+        <span><i class="km-node-key tool"></i>工具 / API</span>
+        <span><i class="km-node-key practice"></i>实践任务</span>
+        <span><i class="km-node-key evidence"></i>验证证据</span>
+        <span><i class="km-node-key resource"></i>课程 / 资源</span>
+      </div>
+
+      <div class="km-section-label">关系与状态</div>
+      <div class="km-legend">
+        <span><i class="km-line-key"></i>必须先学</span>
+        <span><i class="km-line-key dash"></i>支撑 / 可选依赖</span>
+        <span><i class="km-line-key recommend"></i>当前推荐路线</span>
+        <span><i class="km-depth-key"><em></em><em></em><em></em><em></em></i>了解 · 掌握 · 实践 · 贡献</span>
+      </div>
     </aside>
-    <section class="km-canvas-shell" id="canvasShell" aria-label="可拖拽缩放的知识地图画布">
+
+    <section class="km-canvas-shell" id="canvasShell" tabindex="0" aria-label="可拖拽和缩放的知识地图画布。也可使用方向键移动画布，加减号缩放。">
       <div class="km-canvas" id="knowledgeCanvas">
-        <section class="km-view" id="globalMap">
-          <svg class="map-connectors" viewBox="0 0 1180 720" aria-hidden="true"><path d="M565 390 C480 270 420 235 380 200"/><path d="M565 390 C690 280 770 220 830 170"/><path d="M565 390 C430 470 360 500 310 490"/><path d="M565 390 C690 440 750 470 820 460"/><path class="cross" d="M500 155 C650 100 760 105 840 125"/><circle cx="565" cy="390" r="7"/></svg>
-          <span class="theme-ribbon genai">生成式 AI · 跨领域主题</span><span class="theme-ribbon llm">大模型 · 跨领域主题</span>
-          <article class="territory training"><button type="button" data-domain="模型训练" aria-label="查看模型训练"><span class="km-domain-icon">▦</span><span class="domain-state">当前方向</span><h3>模型训练</h3><p>从单卡基线到多卡并行、通信与性能调优</p><span class="progress"><span></span></span></button></article>
-          <article class="territory inference"><button type="button" data-domain="模型推理"><span class="km-domain-icon">▶</span><span class="domain-state">3 个已掌握</span><h3>模型推理</h3><p>模型转换、推理适配、服务部署与性能验证</p><span class="progress"><span></span></span></button></article>
-          <article class="territory operator"><button type="button" data-domain="算子开发"><span class="km-domain-icon">⌘</span><span class="domain-state">待探索</span><h3>算子开发</h3><p>Ascend C 编程、算子实现、调试与性能优化</p><span class="progress"><span></span></span></button></article>
-          <article class="territory recommend"><button type="button" data-domain="推荐开发"><span class="km-domain-icon">▥</span><span class="domain-state">待探索</span><h3>推荐开发</h3><p>召回、排序、特征处理和推荐系统部署</p><span class="progress"><span></span></span></button></article>
-          <div class="km-core"><div><b>CANN 技术栈</b><span>连接四个开发领域的底层能力</span></div></div>
-          <div class="support-satellite data"><b>数据工程</b>辅助训练数据准备与治理</div><div class="support-satellite ops"><b>部署运维</b>辅助服务监控与环境管理</div>
+        <section class="km-view km-domain-overview" id="globalMap" aria-label="三大领域全景">
+          <svg class="domain-connectors" viewBox="0 0 1180 720" aria-hidden="true">
+            <path class="required" d="M214 322 C330 248 390 236 488 246"/>
+            <path class="required" d="M652 246 C760 230 834 260 936 322"/>
+            <path class="support" d="M318 470 C420 554 710 556 824 470"/>
+            <path class="route" d="M190 358 C418 286 552 298 700 360 C838 416 910 410 992 362"/>
+          </svg>
+          <div class="km-route-callout"><span>AI 推荐路线</span><b>MindSpore → 推理部署 → RAG → 验证证据</b><small>由当前目标动态组合，知识节点本身不随课程变化</small></div>
+
+          <article class="knowledge-domain cann">
+            <button type="button" data-domain="CANN" aria-label="查看 CANN 领域知识网络">
+              <span class="domain-index">01</span><span class="domain-state">9 个节点 · 实践中</span>
+              <h3>CANN</h3><p>昇腾计算架构、算子开发、应用与算子调优</p>
+              <div class="domain-tags"><span>昇腾计算架构</span><span>Ascend C</span><span>算子调优</span></div>
+              <span class="domain-progress"><i style="width:58%"></i></span>
+            </button>
+          </article>
+          <article class="knowledge-domain genai">
+            <button type="button" data-domain="生成式 AI 与大语言模型" aria-label="查看生成式 AI 与大语言模型领域知识网络">
+              <span class="domain-index">02</span><span class="domain-state">14 个节点 · 掌握中</span>
+              <h3>生成式 AI 与大语言模型</h3><p>训练开发、推理开发、生成式 AI 应用开发与部署</p>
+              <div class="domain-tags"><span>MindSpore</span><span>MindFormers</span><span>训练 / 推理</span></div>
+              <span class="domain-progress"><i style="width:46%"></i></span>
+            </button>
+          </article>
+          <article class="knowledge-domain agent">
+            <button type="button" data-domain="智能体" aria-label="查看智能体领域知识网络">
+              <span class="domain-index">03</span><span class="domain-state">7 个节点 · 待探索</span>
+              <h3>智能体</h3><p>Agent 应用开发部署、RAG 应用开发部署与效果验证</p>
+              <div class="domain-tags"><span>Agent</span><span>RAG</span><span>评测与防护</span></div>
+              <span class="domain-progress"><i style="width:22%"></i></span>
+            </button>
+          </article>
+
+          <div class="km-foundation">
+            <span>共享基础</span><b>Python · 深度学习 · 数据工程 · 部署运维</b><small>以虚线依赖支撑多个领域，不强制形成单一路径</small>
+          </div>
+          <div class="km-overview-resource official-resource"><span>官方课程</span><b>昇腾算力与 MindSpore 框架</b><small>覆盖 10 个单元 · 已核验</small></div>
+          <div class="km-overview-resource external-resource"><span>可信外部资源</span><b>社区实战 · 开源实验 · 技术文档</b><small>含来源、版本、复现与许可信息</small></div>
         </section>
-        <section class="km-view" id="networkMap" hidden>
-          <svg class="network-svg" viewBox="0 0 1180 720" aria-hidden="true"><rect class="cluster training" x="55" y="60" width="1010" height="360" rx="24"/><rect class="cluster inference" x="55" y="465" width="520" height="210" rx="24"/><rect class="cluster operator" x="630" y="465" width="245" height="190" rx="24"/><rect class="cluster recommend" x="890" y="465" width="235" height="190" rx="24"/><path class="edge support" d="M255 289H300"/><path class="edge" d="M444 289H490M634 289H680M824 289H870"/><path class="edge" d="M562 163V250"/><path class="edge cross" d="M752 328C750 430 770 455 760 520"/><path class="edge support" d="M372 328V505"/><path class="edge cross" d="M815 328C830 430 960 430 960 505"/></svg>
-          <div class="cluster-title ct-training">▦ 模型训练 · 8 个知识点</div><div class="cluster-title ct-inference">▶ 模型推理 · 3 个知识点</div><div class="cluster-title ct-operator">⌘ 算子开发</div><div class="cluster-title ct-recommend">▥ 推荐开发</div>
-          <button class="net-node n1 done" data-node="训练基础"><b>训练基础</b><small>✓ 已掌握</small></button><button class="net-node n2 done" data-node="数据并行"><b>数据并行</b><small>✓ 已掌握</small></button><button class="net-node n3 current" data-node="梯度同步"><b>梯度同步</b><small>● 正在学习</small></button><button class="net-node n4" data-node="HCCL 通信"><b>HCCL 通信</b><small>○ 待探索</small></button><button class="net-node n5" data-node="性能调优"><b>性能调优</b><small>○ 待探索</small></button><button class="net-node n6" data-node="模型并行"><b>模型并行</b><small>○ 待探索</small></button><button class="net-node n7" data-node="训练产物"><b>训练产物</b><small>○ 待探索</small></button><button class="net-node n8" data-node="通信算子"><b>通信算子</b><small>○ 待探索</small></button><button class="net-node n9" data-node="召回排序优化"><b>召回排序优化</b><small>○ 待探索</small></button><button class="net-node n10" data-node="模型转换"><b>模型转换</b><small>○ 待探索</small></button>
+
+        <section class="km-view km-network-view" id="networkMap" hidden aria-label="分区聚类知识网络">
+          <div class="km-sr-only">
+            <h2>当前推荐学习路线</h2>
+            <ol><li>MindSpore 核心机制</li><li>MindFormers</li><li>推理开发部署</li><li>RAG 核心机制</li><li>RAG 应用开发部署</li><li>RAG 效果验证</li></ol>
+            <p>实线表示必须先学，虚线表示支撑或可选依赖。课程和资料是附着在知识节点上的学习资源。</p>
+          </div>
+          <svg class="knowledge-network-svg" viewBox="0 0 1180 720" aria-hidden="true">
+            <rect class="region cann" x="28" y="92" width="350" height="565" rx="26"/>
+            <rect class="region genai" x="397" y="92" width="420" height="565" rx="26"/>
+            <rect class="region agent" x="836" y="92" width="316" height="565" rx="26"/>
+            <path class="edge required" d="M164 214L164 298M164 362L164 442M238 475C342 475 370 206 470 206M544 206L544 292M544 356L544 442M618 475C730 475 760 218 882 218M956 251L956 328M956 392L956 474M956 538L956 584"/>
+            <path class="edge required" d="M618 324C690 324 734 470 882 506"/>
+            <path class="edge support" d="M245 206C350 120 452 135 544 166M238 330C345 360 390 470 470 474M618 206C760 138 822 160 882 218M618 324C756 346 810 360 882 360"/>
+            <path class="edge cross" d="M238 475C352 558 390 582 470 582M618 582C732 582 772 560 882 506"/>
+            <path class="edge route" d="M544 206L544 324L544 474C694 474 760 224 956 218L956 360L956 506L956 616"/>
+            <path class="resource-link" d="M544 582V632M1032 506L1084 506"/>
+          </svg>
+
+          <div class="km-network-goal"><span>目标路线</span><b>构建并部署可验证的 RAG 应用</b><small>6 个知识节点 · 2 个实践 · 1 份验证证据</small></div>
+          <div class="graph-region-title cann"><span>01</span><div><b>CANN</b><small>算子开发 · 应用 / 算子调优</small></div></div>
+          <div class="graph-region-title genai"><span>02</span><div><b>生成式 AI 与大语言模型</b><small>训练 · 推理 · 应用开发部署</small></div></div>
+          <div class="graph-region-title agent"><span>03</span><div><b>智能体</b><small>Agent · RAG 开发部署</small></div></div>
+
+          <button class="graph-node concept depth-mastered g-cann-1" data-node="昇腾计算架构" data-domain="CANN" data-type="概念知识"><i></i><b>昇腾计算架构</b><small>掌握</small></button>
+          <button class="graph-node tool depth-practiced g-cann-2" data-node="Ascend C" data-domain="CANN" data-type="工具 / API"><i></i><b>Ascend C</b><small>实践</small></button>
+          <button class="graph-node practice depth-practiced g-cann-3" data-node="算子调优" data-domain="CANN" data-type="实践任务"><i></i><b>算子调优</b><small>实践</small></button>
+          <button class="graph-node evidence depth-contributed g-cann-4" data-node="性能复现报告" data-domain="CANN" data-type="验证证据"><i></i><b>性能复现报告</b><small>贡献</small></button>
+
+          <button class="graph-node concept depth-mastered route-node g-gen-1" data-node="MindSpore 核心机制" data-domain="生成式 AI 与大语言模型" data-type="概念知识"><i></i><b>MindSpore 核心机制</b><small>掌握</small></button>
+          <button class="graph-node tool depth-mastered route-node g-gen-2" data-node="MindFormers" data-domain="生成式 AI 与大语言模型" data-type="工具 / API"><i></i><b>MindFormers</b><small>掌握</small></button>
+          <button class="graph-node concept depth-learning g-gen-3" data-node="分布式训练" data-domain="生成式 AI 与大语言模型" data-type="概念知识"><i></i><b>分布式训练</b><small>学习中</small></button>
+          <button class="graph-node practice depth-learning route-node g-gen-4" data-node="推理开发部署" data-domain="生成式 AI 与大语言模型" data-type="实践任务"><i></i><b>推理开发部署</b><small>学习中</small></button>
+          <button class="graph-node practice depth-explored g-gen-5" data-node="生成式 AI 应用开发" data-domain="生成式 AI 与大语言模型" data-type="实践任务"><i></i><b>生成式 AI 应用开发</b><small>了解</small></button>
+          <button class="graph-node evidence depth-explored g-gen-6" data-node="部署验收记录" data-domain="生成式 AI 与大语言模型" data-type="验证证据"><i></i><b>部署验收记录</b><small>了解</small></button>
+
+          <button class="graph-node concept depth-explored g-agent-1" data-node="Agent 任务编排" data-domain="智能体" data-type="概念知识"><i></i><b>Agent 任务编排</b><small>了解</small></button>
+          <button class="graph-node concept depth-learning route-node g-agent-2" data-node="RAG 核心机制" data-domain="智能体" data-type="概念知识"><i></i><b>RAG 核心机制</b><small>学习中</small></button>
+          <button class="graph-node tool depth-explored g-agent-3" data-node="向量检索 API" data-domain="智能体" data-type="工具 / API"><i></i><b>向量检索 API</b><small>了解</small></button>
+          <button class="graph-node practice depth-explored route-node g-agent-4" data-node="RAG 应用开发部署" data-domain="智能体" data-type="实践任务"><i></i><b>RAG 应用开发部署</b><small>待实践</small></button>
+          <button class="graph-node evidence depth-explored route-node g-agent-5" data-node="RAG 效果验证" data-domain="智能体" data-type="验证证据"><i></i><b>RAG 效果验证</b><small>待形成</small></button>
+
+          <button class="graph-resource official-resource gr-official" data-node="官方课程资源" data-domain="资源层" data-type="官方课程"><i>课</i><b>官方课程组合</b><small>7 个课节 · 已核验</small></button>
+          <button class="graph-resource external-resource gr-doc" data-node="MindSpore 官方文档" data-domain="资源层" data-type="可信文档"><i>文</i><b>MindSpore 文档</b><small>版本 2.4 · 来源明确</small></button>
+          <button class="graph-resource external-resource gr-lab" data-node="社区 RAG 复现实验" data-domain="资源层" data-type="社区实践"><i>验</i><b>社区 RAG 复现实验</b><small>已复现 · 许可可用</small></button>
         </section>
       </div>
-      <div class="km-canvas-hint">按住拖动画布 · 鼠标滚轮缩放 · 点击领域下钻</div>
+      <div class="km-canvas-hint">拖动画布 · 滚轮或 ± 缩放 · 方向键移动 · 点击节点查看资源</div>
     </section>
+
     <aside class="km-panel km-inspector" id="inspector">
-      <div class="km-inspector-head"><div><h2 id="inspectorTitle">模型训练</h2><p id="inspectorMeta">当前学习方向 · 68%</p></div><button type="button" aria-label="关闭详情">×</button></div><span class="km-status" id="inspectorStatus">正在学习</span>
-      <section class="km-info"><h3>为什么要学</h3><p id="inspectorReason">掌握训练任务拆分、设备协同和稳定调优，是完成大模型训练的关键基础。</p></section>
-      <section class="km-info"><h3>当前定位</h3><div class="km-resource"><i>●</i><div><b id="currentNode">梯度同步</b><small>已完成数据并行，下一步学习 HCCL 通信</small></div><span>›</span></div></section>
-      <section class="km-info"><h3>关联课程</h3><a class="km-resource" href="course-preview.html?course=training"><i>▶</i><div><b>大模型分布式训练</b><small>第 3 讲 · 梯度同步</small></div><span>›</span></a></section>
-      <section class="km-info"><h3>能力证据</h3><p>完成“双卡梯度同步”实战后，将形成可复用的训练记录。</p></section>
-      <div class="km-inspector-actions"><a class="km-btn primary" href="course-preview.html?course=training">继续学习</a><a class="km-btn" href="ai-companion.html">让 AI 学伴分析</a></div>
+      <div class="km-inspector-head"><div><h2 id="inspectorTitle">RAG 应用开发部署</h2><p id="inspectorMeta">智能体 · 实践任务 · 待实践</p></div><button type="button" aria-label="回到当前目标详情">↺</button></div>
+      <span class="km-status" id="inspectorStatus">推荐路线中的下一步</span>
+      <section class="km-info"><h3>与目标的关系</h3><p id="inspectorReason">把检索、生成、评测和部署连成可验证闭环，是当前学习目标的核心实践节点。</p></section>
+      <section class="km-info"><h3>前置与支撑</h3><div class="km-resource"><i>↗</i><div><b id="currentNode">RAG 核心机制 → 向量检索 API</b><small>实线为必须先学，虚线为支撑或可选依赖</small></div><span>›</span></div></section>
+      <section class="km-info"><h3>关联学习资源</h3><p class="km-resource-meta" id="resourceScopeMeta">当前只检索经过产品配置与验证的官方课程。</p><a class="km-resource" href="course-preview.html?course=training"><i>课</i><div><b id="primaryResourceTitle">昇腾算力与 MindSpore 框架</b><small id="primaryResourceMeta">官方课程 · 7 个关联课节</small></div><span>›</span></a><div class="km-resource external-resource"><i>验</i><div><b>可信社区 RAG 复现实验</b><small>来源、版本、复现、许可均通过验证</small></div><span>›</span></div></section>
+      <section class="km-info"><h3>点亮与证据</h3><p id="evidenceCopy">完成实践并通过效果验证后，“RAG 应用开发部署”由了解进入实践，并形成一份可回填社区的验证证据。</p></section>
+      <div class="km-inspector-actions"><a class="km-btn primary" href="course-preview.html?course=training">按推荐路线学习</a><a class="km-btn" href="ai-companion.html">让 AI 重新规划</a></div>
     </aside>
   </section>
 </main>
-<script src="assets/js/knowledge-map.js?v=1"></script>
-</body></html>
+<script src="assets/js/knowledge-map.js?v=2"></script>
+</body>
+</html>
