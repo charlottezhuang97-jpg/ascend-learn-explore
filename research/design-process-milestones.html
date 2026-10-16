@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Ascend Learn Explore 的 UI/UX 设计推进框架与关键场景里程碑。">
+  <title>设计推进框架与场景里程碑 · Ascend Learn Explore</title>
+  <link rel="stylesheet" href="../assets/css/competitive-analysis.css">
+  <link rel="stylesheet" href="../assets/css/design-process-milestones.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <span class="brand">Ascend Learn Explore</span>
+      <span class="header-label">设计推进框架</span>
+      <a class="header-link" href="../catalog.html">返回页面目录</a>
+    </div>
+  </header>
+
+  <main class="page-shell" id="main">
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <span class="eyebrow">项目治理 · 场景阶段门</span>
+        <h1 id="page-title">先稳定问题和信息，再投入交互与视觉</h1>
+        <p>这套流程将双钻、用户中心设计与敏捷交付转换成适合当前学习方案的七道阶段门。每个场景只推进到证据足够的位置，允许回退，不要求所有场景同步做高保真。</p>
+        <div class="process-hero-note"><span>一次只解决一层问题</span><span>高保真不等于结构已稳定</span><span>测试贯穿所有阶段</span></div>
+      </div>
+      <dl class="hero-meta">
+        <div><dt>流程阶段</dt><dd>7 道阶段门</dd></div>
+        <div><dt>关键场景</dt><dd>10 个</dd></div>
+        <div><dt>状态日期</dt><dd>2026-10-16</dd></div>
+      </dl>
+    </section>
+
+    <nav class="scene-nav" aria-label="页面快速导航">
+      <a href="#framework">七阶段框架</a>
+      <a href="#milestones">场景里程碑</a>
+      <a href="#priorities">当前优先级</a>
+      <a href="#sources">方法来源</a>
+    </nav>
+
+    <section class="process-section" id="framework" aria-labelledby="framework-title">
+      <div class="section-heading">
+        <div><span class="section-kicker">统一工作方式</span><h2 id="framework-title">七阶段 UI/UX 推进框架</h2></div>
+        <p>前四阶段决定产品是否合理，低保真负责验证，视觉负责表达，最后才进入真实实现与持续度量。</p>
+      </div>
+      <div class="process-track" aria-label="从问题定义到持续验证的七个阶段">
+        <article class="process-stage"><span class="process-stage__number">01</span><h3>问题与证据</h3><p>明确用户、任务、场景、痛点、约束和成功指标。</p><dl><dt>通过条件</dt><dd>能用一句话说清问题，并有用户或业务证据。</dd></dl></article>
+        <article class="process-stage"><span class="process-stage__number">02</span><h3>信息模型</h3><p>定义核心对象、字段、关系、分类、来源、状态与证据规则。</p><dl><dt>通过条件</dt><dd>团队对“课程、节点、任务、贡献、认证”等名词含义一致。</dd></dl></article>
+        <article class="process-stage"><span class="process-stage__number">03</span><h3>信息架构</h3><p>确定内容分组、层级、入口、导航、页面边界和跨场景连接。</p><dl><dt>通过条件</dt><dd>用户能找到内容，并理解自己在哪里、下一步去哪里。</dd></dl></article>
+        <article class="process-stage"><span class="process-stage__number">04</span><h3>交互框架</h3><p>画任务流、关键状态、触点、反馈、错误、恢复与跨设备行为。</p><dl><dt>通过条件</dt><dd>核心任务能从进入到退出完整走通，异常状态有去向。</dd></dl></article>
+        <article class="process-stage"><span class="process-stage__number">05</span><h3>低保真验证</h3><p>用最少视觉表达页面结构和交互，测试最危险的假设。</p><dl><dt>通过条件</dt><dd>目标用户能理解概念并完成关键任务，主要分歧已收敛。</dd></dl></article>
+        <article class="process-stage"><span class="process-stage__number">06</span><h3>视觉与高保真</h3><p>套用设计系统，完成视觉层级、响应式、可访问性和内容细化。</p><dl><dt>通过条件</dt><dd>视觉不改变已验证结构，组件和状态符合统一规范。</dd></dl></article>
+        <article class="process-stage"><span class="process-stage__number">07</span><h3>实现与持续验证</h3><p>接入数据、完成验收、灰度验证并根据真实行为持续迭代。</p><dl><dt>通过条件</dt><dd>核心指标、错误、满意度与反馈可以被观察和回溯。</dd></dl></article>
+      </div>
+      <div class="principle-strip">
+        <div class="principle-item"><strong>不是瀑布</strong>测试可以让任何场景回到前一阶段，尤其是分类和关系发生变化时。</div>
+        <div class="principle-item"><strong>视觉不能替代决策</strong>已有高保真但信息模型未稳定的场景，应先冻结分类与对象关系。</div>
+        <div class="principle-item"><strong>按场景独立推进</strong>首页可以进入实现验证，同时认证场景仍停留在问题和信息模型阶段。</div>
+      </div>
+    </section>
+
+    <section class="scene" id="milestones" aria-labelledby="milestones-title">
+      <div class="section-heading">
+        <div><span class="section-kicker">当前盘点</span><h2 id="milestones-title">关键场景所处里程碑</h2></div>
+        <p>“当前”代表下一轮工作的主阶段；紫色代表已有探索稿，但它不能替代前置阶段的通过。</p>
+      </div>
+      <div class="milestone-wrap">
+        <table class="milestone-table">
+          <thead><tr><th>关键场景</th><th>01<br>问题证据</th><th>02<br>信息模型</th><th>03<br>信息架构</th><th>04<br>交互框架</th><th>05<br>低保真</th><th>06<br>高保真</th><th>07<br>实现验证</th><th>下一道阶段门</th></tr></thead>
+          <tbody>
+            <tr><td><span class="scene-name">首页发现与目标输入<small>当前方案已实现</small></span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark current">7</span></td><td><span class="next-gate"><strong>验证首页主任务</strong>确认目标输入、继续学习和知识地图入口的使用率。</span></td></tr>
+            <tr><td><span class="scene-name">AI 目标确认与课程生成<small>四步生成链路</small></span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark current">5</span></td><td><span class="stage-mark explore">探</span></td><td><span class="stage-mark next">→</span></td><td><span class="next-gate"><strong>验证四步是否必要</strong>测试用户能否理解来源、选择、生成与编辑的连续关系。</span></td></tr>
+            <tr><td><span class="scene-name">课程预览<small>课程模块—单元—课节</small></span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark current">6</span></td><td><span class="stage-mark next">→</span></td><td><span class="next-gate"><strong>完成视觉收敛</strong>统一课程覆盖、环境验证、学习内容和同目标用户的信息密度。</span></td></tr>
+            <tr><td><span class="scene-name">白板学习<small>板书与临时辅助层</small></span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark current">5</span></td><td><span class="stage-mark next">→</span></td><td><span class="stage-mark empty">·</span></td><td><span class="next-gate"><strong>对齐主要状态</strong>验证播放、暂停、选中板书、解释、提问和恢复的状态转换。</span></td></tr>
+            <tr><td><span class="scene-name">IDE 实践<small>画布内固定工作区</small></span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark current">4</span></td><td><span class="stage-mark explore">探</span></td><td><span class="stage-mark empty">·</span></td><td><span class="stage-mark empty">·</span></td><td><span class="next-gate"><strong>固定默认布局</strong>明确代码、终端、结果、学伴和可拖动面板的默认及恢复规则。</span></td></tr>
+            <tr><td><span class="scene-name">AI 学伴<small>跨场景统一入口</small></span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark current">4</span></td><td><span class="stage-mark explore">探</span></td><td><span class="stage-mark empty">·</span></td><td><span class="stage-mark empty">·</span></td><td><span class="next-gate"><strong>收敛上下文合同</strong>统一白板、IDE、预览和知识地图中学伴能读什么、能写到哪里。</span></td></tr>
+            <tr><td><span class="scene-name">知识版图<small>三大领域与分区网络</small></span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark current">2</span></td><td><span class="stage-mark next">→</span></td><td><span class="stage-mark empty">·</span></td><td><span class="stage-mark explore">探</span></td><td><span class="stage-mark explore">探</span></td><td><span class="stage-mark empty">·</span></td><td><span class="next-gate"><strong>先冻结知识模型</strong>确定领域、节点类型、依赖、课程覆盖、个人状态和证据关系。</span></td></tr>
+            <tr><td><span class="scene-name">开发者贡献与榜单<small>回填—验证—积分</small></span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark current">2</span></td><td><span class="stage-mark next">→</span></td><td><span class="stage-mark explore">探</span></td><td><span class="stage-mark explore">探</span></td><td><span class="stage-mark empty">·</span></td><td><span class="stage-mark empty">·</span></td><td><span class="next-gate"><strong>定义贡献对象</strong>明确经验、验证任务、复现结果、积分事件与榜单得分的关系。</span></td></tr>
+            <tr><td><span class="scene-name">认证挑战<small>能力验证，不是技术领域</small></span></td><td><span class="stage-mark current">1</span></td><td><span class="stage-mark next">→</span></td><td><span class="stage-mark empty">·</span></td><td><span class="stage-mark empty">·</span></td><td><span class="stage-mark empty">·</span></td><td><span class="stage-mark empty">·</span></td><td><span class="stage-mark empty">·</span></td><td><span class="next-gate"><strong>明确认证边界</strong>定义官方标准、身份可信、受控任务、徽章和贡献积分之间的关系。</span></td></tr>
+            <tr><td><span class="scene-name">个人中心与长期资产<small>知识、实践、认证与贡献</small></span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark done">✓</span></td><td><span class="stage-mark current">3</span></td><td><span class="stage-mark explore">探</span></td><td><span class="stage-mark empty">·</span></td><td><span class="stage-mark empty">·</span></td><td><span class="stage-mark empty">·</span></td><td><span class="next-gate"><strong>确定资产分组</strong>区分学习进度、能力证据、认证记录、社区贡献和公开档案。</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="legend" aria-label="里程碑图例"><span><i class="done"></i>前置阶段已通过</span><span><i class="current"></i>当前主阶段</span><span><i class="explore"></i>已有探索稿，尚未通过前置门</span><span><i class="next"></i>下一阶段</span></div>
+    </section>
+
+    <section class="scene" id="priorities" aria-labelledby="priorities-title">
+      <div class="section-heading">
+        <div><span class="section-kicker">减少并行负担</span><h2 id="priorities-title">建议接下来的四个工作包</h2></div>
+        <p>不要同时精修十个页面。先处理会影响多个场景的共用决策，再推进单页视觉。</p>
+      </div>
+      <div class="priority-grid">
+        <article class="priority-card"><span>工作包 01</span><h3>统一信息模型</h3><p>先冻结技术领域、课程、知识节点、任务、证据、贡献、认证和积分事件的定义与关系。</p></article>
+        <article class="priority-card"><span>工作包 02</span><h3>画三张跨场景结构图</h3><p>知识版图下钻、贡献验证闭环、认证挑战闭环分别完成信息架构和入口关系。</p></article>
+        <article class="priority-card"><span>工作包 03</span><h3>验证学习工作台</h3><p>集中验证白板、IDE 和 AI 学伴的默认布局、状态切换、上下文共享和恢复机制。</p></article>
+        <article class="priority-card"><span>工作包 04</span><h3>再收敛视觉</h3><p>只有通过低保真验证的课程预览和学习工作台进入高保真，其余视觉稿保留为探索。</p></article>
+      </div>
+    </section>
+
+    <section class="scene" id="sources" aria-labelledby="sources-title">
+      <div class="section-heading">
+        <div><span class="section-kicker">方法依据</span><h2 id="sources-title">本框架参考的公开方法</h2></div>
+        <p>框架并非照搬任一模型，而是把发散/收敛、用户中心设计与敏捷交付转换成适合当前产品的阶段门。</p>
+      </div>
+      <div class="source-list">
+        <a class="source-link" href="https://www.designcouncil.org.uk/resources/the-double-diamond/" target="_blank" rel="noreferrer"><strong>Design Council · Double Diamond ↗</strong><small>Discover、Define、Develop、Deliver，强调先理解问题再发展方案。</small></a>
+        <a class="source-link" href="https://www.nngroup.com/articles/design-thinking/" target="_blank" rel="noreferrer"><strong>Nielsen Norman Group · Design Thinking 101 ↗</strong><small>Empathize、Define、Ideate、Prototype、Test、Implement。</small></a>
+        <a class="source-link" href="https://www.w3.org/WAI/redesign/ucd" target="_blank" rel="noreferrer"><strong>W3C WAI · User-Centered Design Process ↗</strong><small>分析包含任务、信息架构和工作流；设计、评估、实现与部署持续迭代。</small></a>
+        <a class="source-link" href="https://www.nngroup.com/articles/ia-vs-navigation/" target="_blank" rel="noreferrer"><strong>Nielsen Norman Group · IA vs Navigation ↗</strong><small>信息架构先于界面导航，内容盘点和分类不应被视觉组件反向限制。</small></a>
+        <a class="source-link" href="https://www.gov.uk/service-manual/agile-delivery" target="_blank" rel="noreferrer"><strong>GOV.UK Service Manual · Agile Delivery ↗</strong><small>Discovery、Alpha、Beta、Live，并持续根据真实数据改进。</small></a>
+        <a class="source-link" href="https://assets.interaction-design.org/literature/topics/wireframe" target="_blank" rel="noreferrer"><strong>Interaction Design Foundation · Wireframing ↗</strong><small>低保真先验证结构、布局和功能，避免颜色和细节干扰判断。</small></a>
+      </div>
+      <p class="method-note"><strong>维护规则：</strong>每次更新场景状态，需要写清当前阶段、通过证据、下一道阶段门和负责人。已有高保真但前置信息发生变化时，将视觉稿标记为“探索”，不能继续当作已完成里程碑。</p>
+    </section>
+
+    <footer class="page-footer"><span>Ascend Learn Explore · 设计推进框架</span><span>状态基线：2026-10-16</span></footer>
+  </main>
+</body>
+</html>

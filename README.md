@@ -18,6 +18,11 @@
 | AI 学伴 | [ai-companion.html](ai-companion.html) | 如何查看个人能力、学习建议和计划？ |
 | 知识地图 | [knowledge-map.html](knowledge-map.html) | 如何理解全局知识结构与自己的学习位置？ |
 
+## 竞品分析
+
+- [竞品模式库（在线）](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/research/competitive-analysis.html) · [仓库页面](research/competitive-analysis.html)：按首页、课程预览、白板学习、在线 IDE、AI 学伴、知识版图和开发者贡献整理官方链接、页面截图、可借鉴模式与不建议照搬的部分。
+- [设计推进框架与场景里程碑（在线）](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/research/design-process-milestones.html) · [仓库页面](research/design-process-milestones.html)：使用七道阶段门管理各场景，从问题与证据、信息模型、信息架构推进到交互、低保真、高保真和持续验证。
+
 ## 页面版本管理
 
 仓库按用途管理页面，避免把讨论稿误认为当前方案：

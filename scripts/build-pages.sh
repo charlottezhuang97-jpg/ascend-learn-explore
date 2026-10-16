@@ -5,7 +5,7 @@ repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 dist="$repo_root/.pages-dist"
 
 rm -rf "$dist"
-mkdir -p "$dist" "$dist/archive/legacy-v1" "$dist/prototypes/lowfi" "$dist/lab"
+mkdir -p "$dist" "$dist/archive/legacy-v1" "$dist/prototypes/lowfi" "$dist/research" "$dist/lab"
 
 cp "$repo_root/index.html" "$repo_root/course-preview.html" "$repo_root/learn.html" "$repo_root/ai-companion.html" "$repo_root/knowledge-map.html" "$repo_root/catalog.html" "$repo_root/page-registry.json" "$dist/"
 cp -R "$repo_root/assets" "$dist/assets"
@@ -13,6 +13,7 @@ cp -R "$repo_root/design-system" "$dist/design-system"
 cp -R "$repo_root/docs" "$dist/docs"
 cp -R "$repo_root/archive/legacy-v1/." "$dist/archive/legacy-v1/"
 cp -R "$repo_root/prototypes/lowfi/." "$dist/prototypes/lowfi/"
+cp -R "$repo_root/research/." "$dist/research/"
 
 if [[ -d "$repo_root/outputs/ux-audit" ]]; then
   cp -R "$repo_root/outputs/ux-audit" "$dist/lab/ux-audit"
