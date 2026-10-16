@@ -78,6 +78,95 @@
   const ideMiniVideo = document.getElementById('ideMiniVideo');
   const miniVideoTime = document.getElementById('miniVideoTime');
   const fileVideoJump = document.getElementById('fileVideoJump');
+  const videoIde = document.getElementById('videoIde');
+  const miniVideoDragHandle = document.getElementById('miniVideoDragHandle');
+  const ideAssistPanel = document.getElementById('ideAssistPanel');
+  const openIdeAssist = document.getElementById('openIdeAssist');
+  const ideEditor = document.getElementById('ideEditor');
+  const ideGutter = document.getElementById('ideGutter');
+  const ideLineHighlight = document.getElementById('ideLineHighlight');
+  const ideFileContents = {
+    'data_parallel.py': `# 节点 1｜把 mini-batch 分给不同的 NPU
+import os
+import torch
+import torch.distributed as dist
+from torch.utils.data import DataLoader, DistributedSampler
+
+def make_loader(dataset, batch_size=32):
+    rank = int(os.environ.get('RANK', '0'))
+    world_size = int(os.environ.get('WORLD_SIZE', '4'))
+    dist.init_process_group(backend='hccl')
+    torch.npu.set_device(rank)
+
+    # 每张 NPU 只读取自己的那份数据
+    sampler = DistributedSampler(
+        dataset, num_replicas=world_size, rank=rank,
+        shuffle=True)
+    loader = DataLoader(dataset, batch_size=batch_size,
+                        sampler=sampler, drop_last=True)
+    return loader, sampler
+
+# 训练时记得在每个 epoch 调用 sampler.set_epoch(epoch)`,
+    'gradient_sync.py': `# 节点 2｜聚合各设备算出的局部梯度
+import torch
+import torch.distributed as dist
+
+def train_one_step(model, batch, optimizer):
+    inputs, targets = batch
+    inputs = inputs.npu(non_blocking=True)
+    targets = targets.npu(non_blocking=True)
+
+    optimizer.zero_grad(set_to_none=True)
+    predictions = model(inputs)
+    loss = torch.nn.functional.cross_entropy(
+        predictions, targets)
+    loss.backward()  # 每张 NPU 先得到局部梯度
+
+    # AllReduce 求和，再按设备数取平均
+    for parameter in model.parameters():
+        if parameter.grad is not None:
+            dist.all_reduce(parameter.grad,
+                            op=dist.ReduceOp.SUM)
+            parameter.grad /= dist.get_world_size()
+
+    optimizer.step()  # 各设备执行相同的参数更新
+    return float(loss.detach())`,
+    'check_env.py': `# 实践节点｜检查 CANN 环境与可用设备
+import acl
+
+def check_runtime():
+    ret = acl.init()
+    assert ret == 0, 'ACL 初始化失败'
+
+    count, ret = acl.rt.get_device_count()
+    assert ret == 0, '无法读取设备数量'
+    print(f'发现 {count} 个可用 NPU')
+
+    if count > 0:
+        ret = acl.rt.set_device(0)
+        assert ret == 0, '设备 0 初始化失败'
+        print('设备 0 已就绪')
+
+    return count
+
+if __name__ == '__main__':
+    check_runtime()`,
+    'README.md': `# 数据并行与梯度同步
+
+本节演示两个视频节点对应的代码：
+
+1. data_parallel.py：按 rank 拆分 mini-batch。
+2. gradient_sync.py：对局部梯度执行 AllReduce。
+
+练习时先理解拆分，再观察同步前后的梯度。`
+  };
+  const videoCodeNodes = {
+    '03:20': {file: 'data_parallel.py', line: 14, topic: '数据并行：按 rank 拆分批次', subtitle: '每张 NPU 只读取自己的数据切片；重点看 DistributedSampler 如何按 rank 拆分。'},
+    '05:05': {file: 'gradient_sync.py', line: 19, topic: '梯度同步：执行 AllReduce', subtitle: '每张 NPU 先算出局部梯度，再用 AllReduce 汇总并平均。'},
+    '08:24': {file: 'check_env.py', line: 8, topic: 'IDE 实践：确认可用 NPU', subtitle: '进入实践前，先检查 CANN 运行环境与可用 NPU。'}
+  };
+  let currentIdeFile = 'data_parallel.py';
+  let currentHighlightedLine = 14;
   const toastNode = document.getElementById('learningToast');
   let toastTimer;
   function showToast(message) {
@@ -99,14 +188,17 @@
     videoRoom.classList.toggle('ide-mode', !teacher);
     backToTeacher.hidden = teacher;
     ideMiniVideo.hidden = teacher;
+    if (teacher) setIdeAssistOpen(false, false);
   }
   document.getElementById('enterIdePractice').addEventListener('click', () => {
     setVideoPerspective('ide');
-    document.getElementById('ideEditor').focus();
+    if (timelineCurrentTime.textContent === '00:00') seekVideo('03:20');
+    ideEditor.focus();
   });
   document.getElementById('enterIdeFromBackdrop').addEventListener('click', () => {
     setVideoPerspective('ide');
-    document.getElementById('ideEditor').focus();
+    if (timelineCurrentTime.textContent === '00:00') seekVideo('03:20');
+    ideEditor.focus();
   });
   backToTeacher.addEventListener('click', () => {
     setVideoPerspective('teacher');
@@ -127,6 +219,101 @@
     ideMiniVideo.hidden = false;
     document.getElementById('closeMiniVideo').focus();
   });
+  function clampMiniVideoPosition(left, top) {
+    const parentRect = videoIde.getBoundingClientRect();
+    const videoRect = ideMiniVideo.getBoundingClientRect();
+    const minLeft = 8;
+    const minTop = 62;
+    const reservedRight = ideAssistPanel.hidden ? 8 : ideAssistPanel.offsetWidth + 8;
+    return {
+      left: Math.max(minLeft, Math.min(left, parentRect.width - videoRect.width - reservedRight)),
+      top: Math.max(minTop, Math.min(top, parentRect.height - videoRect.height - 36))
+    };
+  }
+  function moveMiniVideo(left, top) {
+    const next = clampMiniVideoPosition(left, top);
+    ideMiniVideo.style.left = `${next.left}px`;
+    ideMiniVideo.style.top = `${next.top}px`;
+  }
+  let miniVideoDrag = null;
+  miniVideoDragHandle.addEventListener('pointerdown', event => {
+    if (event.button !== 0) return;
+    const parentRect = videoIde.getBoundingClientRect();
+    const videoRect = ideMiniVideo.getBoundingClientRect();
+    miniVideoDrag = {pointerId:event.pointerId, startX:event.clientX, startY:event.clientY, left:videoRect.left-parentRect.left, top:videoRect.top-parentRect.top};
+    ideMiniVideo.classList.add('is-dragging');
+    miniVideoDragHandle.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  });
+  miniVideoDragHandle.addEventListener('pointermove', event => {
+    if (!miniVideoDrag || miniVideoDrag.pointerId !== event.pointerId) return;
+    moveMiniVideo(miniVideoDrag.left + event.clientX - miniVideoDrag.startX, miniVideoDrag.top + event.clientY - miniVideoDrag.startY);
+  });
+  function stopMiniVideoDrag(event) {
+    if (!miniVideoDrag || miniVideoDrag.pointerId !== event.pointerId) return;
+    miniVideoDrag = null;
+    ideMiniVideo.classList.remove('is-dragging');
+    if (miniVideoDragHandle.hasPointerCapture?.(event.pointerId)) miniVideoDragHandle.releasePointerCapture(event.pointerId);
+  }
+  miniVideoDragHandle.addEventListener('pointerup', stopMiniVideoDrag);
+  miniVideoDragHandle.addEventListener('pointercancel', stopMiniVideoDrag);
+  miniVideoDragHandle.addEventListener('keydown', event => {
+    if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home'].includes(event.key)) return;
+    event.preventDefault();
+    if (event.key === 'Home') {
+      moveMiniVideo(57, 77);
+      showToast('悬浮视频已回到默认位置');
+      return;
+    }
+    const step = event.shiftKey ? 32 : 12;
+    const left = parseFloat(ideMiniVideo.style.left) || ideMiniVideo.offsetLeft;
+    const top = parseFloat(ideMiniVideo.style.top) || ideMiniVideo.offsetTop;
+    moveMiniVideo(left + (event.key === 'ArrowLeft' ? -step : event.key === 'ArrowRight' ? step : 0), top + (event.key === 'ArrowUp' ? -step : event.key === 'ArrowDown' ? step : 0));
+  });
+  window.addEventListener('resize', () => {
+    if (!ideMiniVideo.hidden && ideMiniVideo.style.left) moveMiniVideo(parseFloat(ideMiniVideo.style.left), parseFloat(ideMiniVideo.style.top));
+  });
+  function setIdeAssistOpen(open, returnFocus = true) {
+    ideAssistPanel.hidden = !open;
+    openIdeAssist.setAttribute('aria-expanded', String(open));
+    if (open) {
+      if (!ideMiniVideo.hidden) moveMiniVideo(parseFloat(ideMiniVideo.style.left) || ideMiniVideo.offsetLeft, parseFloat(ideMiniVideo.style.top) || ideMiniVideo.offsetTop);
+      document.querySelector('[data-ide-assist-tab="ai"]')?.focus();
+    }
+    else if (returnFocus) openIdeAssist.focus();
+  }
+  openIdeAssist.addEventListener('click', () => setIdeAssistOpen(ideAssistPanel.hidden));
+  document.getElementById('closeIdeAssist').addEventListener('click', () => setIdeAssistOpen(false));
+  document.querySelectorAll('[data-ide-assist-tab]').forEach(button => button.addEventListener('click', () => {
+    const ai = button.dataset.ideAssistTab === 'ai';
+    document.getElementById('ideAssistAi').hidden = !ai;
+    document.getElementById('ideAssistResources').hidden = ai;
+    document.querySelectorAll('[data-ide-assist-tab]').forEach(item => {
+      const active = item === button;
+      item.classList.toggle('active', active);
+      item.setAttribute('aria-selected', String(active));
+    });
+  }));
+  function askIdeCompanion(question) {
+    const messages = document.getElementById('ideAssistMessages');
+    messages.insertAdjacentHTML('beforeend', `<div class="ide-assist-message user"><span>你</span><p>${question.replace(/[<>&]/g, character => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[character]))}</p></div><div class="ide-assist-message assistant"><span>AI 学伴</span><p>结合当前视频节点来看：数据拆分决定每张 NPU 处理哪些样本，AllReduce 则保证各设备最终使用同一份平均梯度更新模型。你可以切换 03:20 和 05:05，对照代码中的高亮行理解两者的衔接。</p></div>`);
+    messages.scrollTop = messages.scrollHeight;
+  }
+  document.querySelectorAll('[data-assist-question]').forEach(button => button.addEventListener('click', () => askIdeCompanion(button.dataset.assistQuestion)));
+  document.getElementById('ideAssistForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const input = document.getElementById('ideAssistInput');
+    const question = input.value.trim();
+    if (!question) return;
+    askIdeCompanion(question);
+    input.value = '';
+  });
+  document.querySelectorAll('[data-assist-resource]').forEach(button => button.addEventListener('click', () => {
+    const resourceMap = {code:'examples', errors:'errors', quiz:'quiz', docs:'docs'};
+    const resourceButton = document.querySelector(`[data-resource="${resourceMap[button.dataset.assistResource]}"]`);
+    resourceButton?.click();
+    showToast(`已打开${button.querySelector('strong').textContent}`);
+  }));
   if (isTrainingCourse) {
     overlay.hidden = true;
     setView('video');
@@ -141,6 +328,20 @@
     timelineCurrentTime.textContent = time;
     miniVideoTime.textContent = time;
     videoPlayed.style.width = `${percent}%`;
+    const node = videoCodeNodes[time];
+    if (node) {
+      openIdeFile(node.file, node.line);
+      document.getElementById('ideLiveSubtitle').textContent = node.subtitle;
+      document.querySelector('.mini-video-caption span:last-child').textContent = node.subtitle;
+      document.getElementById('ideAssistTime').textContent = time;
+      document.getElementById('ideAssistTopic').textContent = node.topic;
+      document.getElementById('ideAssistFile').textContent = `${node.file} · 第 ${node.line} 行`;
+    }
+    document.querySelectorAll('.timeline-marker').forEach(marker => {
+      const active = marker.dataset.seek === time;
+      marker.classList.toggle('is-current', active);
+      marker.setAttribute('aria-current', active ? 'true' : 'false');
+    });
     document.getElementById('codePanelTime').textContent = time;
     document.querySelector('.code-panel-lead').textContent = `已从板书 01 定位到 ${time}；可继续查看对应代码和文档。`;
     referenceDrawer.classList.remove('open');
@@ -298,7 +499,53 @@
     document.querySelectorAll('.video-resource-tabs button').forEach(item => item.classList.toggle('active', item === button));
     renderResource(button.dataset.resource);
   }));
-  const editor = document.getElementById('ideEditor');
+  const editor = ideEditor;
+  function updateCodeGutter() {
+    ideGutter.innerHTML = ideEditor.value.split('\n').map((_, index) => `<span>${index + 1}</span>`).join('');
+  }
+  function updateLineHighlight() {
+    const computed = getComputedStyle(ideEditor);
+    const lineHeight = parseFloat(computed.lineHeight) || 22.1;
+    const topPadding = parseFloat(computed.paddingTop) || 16;
+    ideLineHighlight.style.top = `${topPadding + (currentHighlightedLine - 1) * lineHeight - ideEditor.scrollTop}px`;
+    ideLineHighlight.style.height = `${lineHeight}px`;
+    ideLineHighlight.hidden = currentHighlightedLine < 1 || currentHighlightedLine > ideEditor.value.split('\n').length;
+  }
+  function openIdeFile(file, line = 0) {
+    if (currentIdeFile !== file) ideFileContents[currentIdeFile] = ideEditor.value;
+    currentIdeFile = file;
+    ideEditor.value = ideFileContents[file];
+    currentHighlightedLine = line;
+    ideEditor.scrollTop = 0;
+    document.querySelectorAll('[data-ide-file]').forEach(button => {
+      const active = button.dataset.ideFile === file;
+      button.classList.toggle('active', active);
+      if (button.getAttribute('role') === 'tab') button.setAttribute('aria-selected', String(active));
+    });
+    ideEditor.setAttribute('aria-label', `${file} 代码编辑器`);
+    updateCodeGutter();
+    updateLineHighlight();
+    if (line) {
+      const lineHeight = parseFloat(getComputedStyle(ideEditor).lineHeight) || 22.1;
+      const lineTop = (line - 1) * lineHeight;
+      if (lineTop > ideEditor.clientHeight - lineHeight * 3) ideEditor.scrollTop = Math.max(0, lineTop - ideEditor.clientHeight / 2);
+      updateLineHighlight();
+    }
+  }
+  document.querySelectorAll('[data-ide-file]').forEach(button => button.addEventListener('click', () => {
+    openIdeFile(button.dataset.ideFile);
+    ideEditor.focus();
+  }));
+  ideEditor.addEventListener('input', () => {
+    ideFileContents[currentIdeFile] = ideEditor.value;
+    updateCodeGutter();
+    updateLineHighlight();
+  });
+  ideEditor.addEventListener('scroll', () => {
+    ideGutter.scrollTop = ideEditor.scrollTop;
+    updateLineHighlight();
+  });
+  openIdeFile('data_parallel.py', 14);
   const ideOutput = document.getElementById('ideOutput');
   const aiFixPanel = document.getElementById('aiFixPanel');
   const aiFixNudge = document.getElementById('aiFixNudge');
@@ -316,7 +563,10 @@
     if (returnFocus) document.getElementById('runCode').focus();
   }
   function locateError() {
+    openIdeFile('check_env.py');
     if (!editor.value.includes('CopyOut')) editor.value = `${editor.value.trim()}\n\n# 结果写回\nCopyOut()\n`;
+    updateCodeGutter();
+    updateLineHighlight();
     const start = editor.value.indexOf('CopyOut');
     editor.focus();
     editor.setSelectionRange(start, start + editor.value.slice(start).split('\n')[0].length);
@@ -334,7 +584,13 @@
     ideOutput.innerHTML = '<b>问题　输出　调试控制台　终端</b><div class="ide-success" role="status"><div><strong>运行成功</strong><span>结果已写回，E-DEMO-102 已解除。</span></div></div>';
     showToast('重新运行成功，修复结果已验证');
   }
-  document.getElementById('runCode').addEventListener('click', () => fixApplied ? showRunSuccess() : showIdeError());
+  document.getElementById('runCode').addEventListener('click', () => {
+    if (currentIdeFile !== 'check_env.py') {
+      ideOutput.innerHTML = `<b>问题　输出　调试控制台　终端</b><div class="ide-success" role="status"><div><strong>课堂示例 · ${currentIdeFile}</strong><span>这是视频讲解用的示例代码；请选择 check_env.py 完成环境检查实践。</span></div></div>`;
+      return;
+    }
+    fixApplied ? showRunSuccess() : showIdeError();
+  });
   ideOutput.addEventListener('click', event => {
     const action = event.target.dataset.ideAction;
     if (action === 'locate') locateError();
@@ -360,9 +616,12 @@
     showToast('修复代码已复制，当前文件未修改');
   });
   document.getElementById('applyFix').addEventListener('click', () => {
+    openIdeFile('check_env.py');
     previousCode = editor.value;
     if (editor.value.includes('CopyOut()')) editor.value = editor.value.replace('CopyOut()', 'CopyOut(output, result_length)');
     else editor.value = `${editor.value.trim()}\n\n# AI 建议：补充结果写回长度\nCopyOut(output, result_length)\n`;
+    updateCodeGutter();
+    updateLineHighlight();
     fixApplied = true;
     closeFixPanel(false);
     showPendingVerification();
@@ -513,13 +772,15 @@
     showToast('已恢复默认布局');
   });
   document.getElementById('openWorkspaceCompanion').addEventListener('click', () => {
-    setView('board');
-    document.querySelector('.companion-tabs [data-tab="chat"]')?.click();
-    showToast('已打开本节 AI 学伴');
+    setVideoPerspective('ide');
+    setIdeAssistOpen(true);
+    document.querySelector('[data-ide-assist-tab="ai"]')?.click();
+    showToast('AI 学伴已在 IDE 右侧展开');
   });
   document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
-    if (aiFixPanel.classList.contains('open')) closeFixPanel();
+    if (!ideAssistPanel.hidden) setIdeAssistOpen(false);
+    else if (aiFixPanel.classList.contains('open')) closeFixPanel();
     else if (referenceDrawer.classList.contains('open')) {
       referenceDrawer.classList.remove('open');
       referenceDrawer.setAttribute('aria-hidden', 'true');
