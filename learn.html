@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="assets/css/learning-room.css?v=canvas-keypoints-6">
   <link rel="stylesheet" href="assets/css/learning-high-fidelity.css?v=canvas-keypoints-6">
   <link rel="stylesheet" href="assets/css/video-learning.css?v=workspace-dock-2">
+  <link rel="stylesheet" href="assets/css/video-teacher.css?v=teacher-focus-1">
 </head>
 <body>
   <main class="learning-room" id="learningRoom" aria-label="沉浸式课程学习">
@@ -124,10 +125,11 @@
       <form class="companion-input" id="companionForm"><button type="button" aria-label="添加资料">＋</button><input aria-label="向 AI 学伴提问" placeholder="输入问题…"><button type="submit" aria-label="发送问题">↑</button></form>
     </aside>
   </main>
-  <main class="video-workspace" id="videoWorkspace" aria-label="视频学习工作台" hidden>
+  <main class="video-workspace teacher-mode" id="videoWorkspace" aria-label="视频学习工作台" hidden>
     <header class="video-header">
       <a class="room-close" href="index.html" aria-label="关闭课程">×</a>
       <div class="lesson-title"><span>课节 1</span><strong id="videoLessonTitle">昇腾处理器的逻辑结构拆解</strong></div>
+      <button type="button" class="back-to-teacher" id="backToTeacher" hidden>← 回到老师讲解</button>
       <div class="video-header-tools" aria-label="学习辅助功能">
         <nav class="learning-mode-tabs" aria-label="学习形式"><button type="button" data-view="board">白板</button><button type="button" class="active" data-view="video">视频</button></nav>
         <button type="button" class="video-tool" aria-label="视频播放速度">1.0×</button>
@@ -138,10 +140,14 @@
       <button type="button" class="layout-reset" id="resetWorkspaceLayout">↺ 恢复默认布局</button>
     </header>
     <section class="video-dock" id="videoDock" aria-label="视频和 IDE 核心工作区，附带可移动辅助面板">
-      <section class="video-column dock-card fixed-workspace" aria-label="固定视频学习区">
-        <div class="dock-card-title"><span>视频讲解 <em>固定区域</em></span><small>课节 1 · 18:40</small></div>
-        <div class="media-origin"><span>来自板书 01 · 数据流</span><button type="button" id="returnToBoard">返回板书</button></div>
-        <div class="video-player"><div class="video-meta">▶ 昇腾处理器的逻辑结构拆解 <span id="videoCurrentTime">08:24 / 18:40</span></div><div class="video-stage"><p>昇腾 AI 处理器架构</p><strong>Da Vinci 计算直觉</strong><button type="button" aria-label="播放视频">▶</button></div><div class="video-timeline"><span class="video-played" id="videoPlayed"></span><button type="button" class="marker key" data-seek="03:20" aria-label="跳转到 03:20 输入搬运" title="03:20 输入搬运"></button><button type="button" class="marker code" data-seek="05:05" aria-label="跳转到 05:05 结果写回" title="05:05 结果写回"></button><button type="button" class="marker practice" data-seek="08:24" aria-label="跳转到 08:24 实践节点" title="08:24 实践节点"></button></div><div class="timeline-legend"><span>● 重要知识点</span><span>● 代码示例</span><span>● 实践节点</span></div></div>
+      <div class="teacher-step-heading"><span class="step-number">1</span><div><strong>老师讲解</strong><span>观看视频，理解概念后进入 IDE 实践</span></div></div>
+      <button type="button" class="teacher-backdrop-target" id="enterIdeFromBackdrop" aria-label="切换到 IDE 实践视角"></button>
+      <section class="video-column" aria-label="老师讲解视频">
+        <div class="video-player">
+          <div class="video-meta"><span>课节 1 · <span id="videoCurrentTime">00:00 / 18:40</span></span><button type="button" id="returnToBoard">返回板书</button></div>
+          <div class="video-stage"><img src="assets/images/video-teacher-cover.png" alt="课程视频封面：悬浮的多媒体卡片与点击播放的手势"><button type="button" id="teacherPlay" aria-label="播放老师讲解视频"></button><p class="teacher-subtitle">从运行环境开始，理解本节实践会用到的代码与设备。</p></div>
+          <button type="button" class="enter-ide-practice" id="enterIdePractice">进入 IDE 实践 <span aria-hidden="true">→</span></button>
+        </div>
       </section>
       <div class="dock-resizer" data-resize="video" role="separator" aria-label="调整视频与 IDE 的宽度；可用左右方向键" aria-orientation="vertical" tabindex="0"></div>
       <section class="video-ide dock-card fixed-workspace" id="videoIde" aria-label="固定 IDE 实践区">
@@ -189,6 +195,11 @@ import acl
           </section>
         </div>
       </section>
+      <div class="teacher-timeline" aria-label="课程播放进度与学习节点">
+        <span class="timeline-time" id="timelineCurrentTime">00:00</span>
+        <div class="teacher-timeline-track"><span class="video-played" id="videoPlayed"></span><button type="button" class="timeline-marker key" data-seek="03:20" aria-label="重点：03:20 输入搬运" title="重点 · 03:20 输入搬运"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 15h6M8 18h4M10 2a5 5 0 0 0-3 9c.8.6 1 1.5 1 2h4c0-.5.2-1.4 1-2a5 5 0 0 0-3-9Z"/></svg></button><button type="button" class="timeline-marker code" data-seek="05:05" aria-label="代码：05:05 结果写回" title="代码 · 05:05 结果写回"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 5-5 5 5 5m6-10 5 5-5 5m-2-12-2 14"/></svg></button><button type="button" class="timeline-marker practice" data-seek="08:24" aria-label="实践：08:24 环境检查" title="实践 · 08:24 环境检查"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 18V3m0 1c3-2 5 2 8 0v9c-3 2-5-2-8 0"/></svg></button></div>
+        <span class="timeline-duration">18:40</span>
+      </div>
     </section>
     <aside class="ai-fix-panel" id="aiFixPanel" aria-label="AI 修复建议" aria-hidden="true">
       <header><div><span>AI 学伴</span><strong>建议修复 E-DEMO-102</strong></div><button type="button" id="closeFixPanel" aria-label="关闭修复建议">×</button></header>

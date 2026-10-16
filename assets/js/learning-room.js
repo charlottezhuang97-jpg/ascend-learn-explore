@@ -73,6 +73,8 @@
   const referenceDrawer = document.getElementById('referenceDrawer');
   const videoCurrentTime = document.getElementById('videoCurrentTime');
   const videoPlayed = document.getElementById('videoPlayed');
+  const timelineCurrentTime = document.getElementById('timelineCurrentTime');
+  const backToTeacher = document.getElementById('backToTeacher');
   const toastNode = document.getElementById('learningToast');
   let toastTimer;
   function showToast(message) {
@@ -85,13 +87,40 @@
     const video = view === 'video';
     boardRoom.hidden = video;
     videoRoom.hidden = !video;
+    if (video) setVideoPerspective('teacher');
     document.querySelectorAll('.learning-mode-tabs button').forEach(button => button.classList.toggle('active', button.dataset.view === view));
+  }
+  function setVideoPerspective(perspective) {
+    const teacher = perspective === 'teacher';
+    videoRoom.classList.toggle('teacher-mode', teacher);
+    videoRoom.classList.toggle('ide-mode', !teacher);
+    backToTeacher.hidden = teacher;
+  }
+  document.getElementById('enterIdePractice').addEventListener('click', () => {
+    setVideoPerspective('ide');
+    document.getElementById('ideEditor').focus();
+  });
+  document.getElementById('enterIdeFromBackdrop').addEventListener('click', () => {
+    setVideoPerspective('ide');
+    document.getElementById('ideEditor').focus();
+  });
+  backToTeacher.addEventListener('click', () => {
+    setVideoPerspective('teacher');
+    document.getElementById('teacherPlay').focus();
+  });
+  document.getElementById('teacherPlay').addEventListener('click', () => {
+    showToast('当前使用封面图示意；接入课程视频后即可播放');
+  });
+  if (isTrainingCourse) {
+    overlay.hidden = true;
+    setView('video');
   }
   function seekVideo(time) {
     setView('video');
     const [minutes, seconds] = time.split(':').map(Number);
     const percent = Math.min(100, ((minutes * 60 + seconds) / 1120) * 100);
     videoCurrentTime.textContent = `${time} / 18:40`;
+    timelineCurrentTime.textContent = time;
     videoPlayed.style.width = `${percent}%`;
     document.getElementById('codePanelTime').textContent = time;
     document.querySelector('.code-panel-lead').textContent = `已从板书 01 定位到 ${time}；可继续查看对应代码和文档。`;
