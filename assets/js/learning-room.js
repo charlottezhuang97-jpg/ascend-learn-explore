@@ -75,6 +75,9 @@
   const videoPlayed = document.getElementById('videoPlayed');
   const timelineCurrentTime = document.getElementById('timelineCurrentTime');
   const backToTeacher = document.getElementById('backToTeacher');
+  const ideMiniVideo = document.getElementById('ideMiniVideo');
+  const miniVideoTime = document.getElementById('miniVideoTime');
+  const fileVideoJump = document.getElementById('fileVideoJump');
   const toastNode = document.getElementById('learningToast');
   let toastTimer;
   function showToast(message) {
@@ -95,6 +98,7 @@
     videoRoom.classList.toggle('teacher-mode', teacher);
     videoRoom.classList.toggle('ide-mode', !teacher);
     backToTeacher.hidden = teacher;
+    ideMiniVideo.hidden = teacher;
   }
   document.getElementById('enterIdePractice').addEventListener('click', () => {
     setVideoPerspective('ide');
@@ -111,16 +115,31 @@
   document.getElementById('teacherPlay').addEventListener('click', () => {
     showToast('当前使用封面图示意；接入课程视频后即可播放');
   });
+  document.getElementById('miniVideoPlay').addEventListener('click', () => {
+    showToast('当前使用封面图示意；接入课程视频后即可播放');
+  });
+  document.getElementById('closeMiniVideo').addEventListener('click', () => {
+    ideMiniVideo.hidden = true;
+    fileVideoJump.focus();
+  });
+  fileVideoJump.addEventListener('click', () => {
+    seekVideo('08:24');
+    ideMiniVideo.hidden = false;
+    document.getElementById('closeMiniVideo').focus();
+  });
   if (isTrainingCourse) {
     overlay.hidden = true;
     setView('video');
   }
   function seekVideo(time) {
+    const keepIdePerspective = videoRoom.classList.contains('ide-mode') && !videoRoom.hidden;
     setView('video');
+    if (keepIdePerspective) setVideoPerspective('ide');
     const [minutes, seconds] = time.split(':').map(Number);
     const percent = Math.min(100, ((minutes * 60 + seconds) / 1120) * 100);
     videoCurrentTime.textContent = `${time} / 18:40`;
     timelineCurrentTime.textContent = time;
+    miniVideoTime.textContent = time;
     videoPlayed.style.width = `${percent}%`;
     document.getElementById('codePanelTime').textContent = time;
     document.querySelector('.code-panel-lead').textContent = `已从板书 01 定位到 ${time}；可继续查看对应代码和文档。`;
@@ -130,7 +149,6 @@
   }
   document.querySelectorAll('.learning-mode-tabs button').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
   document.getElementById('boardToVideo').addEventListener('click', event => seekVideo(event.currentTarget.dataset.time));
-  document.getElementById('returnToBoard').addEventListener('click', () => { setView('board'); showToast('已返回板书 01'); });
   document.getElementById('openDocument').addEventListener('click', () => {
     referenceDrawer.classList.add('open');
     referenceDrawer.setAttribute('aria-hidden', 'false');

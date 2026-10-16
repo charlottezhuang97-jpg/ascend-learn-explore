@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="assets/css/learning-room.css?v=canvas-keypoints-6">
   <link rel="stylesheet" href="assets/css/learning-high-fidelity.css?v=canvas-keypoints-6">
   <link rel="stylesheet" href="assets/css/video-learning.css?v=workspace-dock-2">
-  <link rel="stylesheet" href="assets/css/video-teacher.css?v=teacher-focus-1">
+  <link rel="stylesheet" href="assets/css/video-teacher.css?v=teacher-focus-2">
 </head>
 <body>
   <main class="learning-room" id="learningRoom" aria-label="沉浸式课程学习">
@@ -140,13 +140,11 @@
       <button type="button" class="layout-reset" id="resetWorkspaceLayout">↺ 恢复默认布局</button>
     </header>
     <section class="video-dock" id="videoDock" aria-label="视频和 IDE 核心工作区，附带可移动辅助面板">
-      <div class="teacher-step-heading"><span class="step-number">1</span><div><strong>老师讲解</strong><span>观看视频，理解概念后进入 IDE 实践</span></div></div>
       <button type="button" class="teacher-backdrop-target" id="enterIdeFromBackdrop" aria-label="切换到 IDE 实践视角"></button>
       <section class="video-column" aria-label="老师讲解视频">
         <div class="video-player">
-          <div class="video-meta"><span>课节 1 · <span id="videoCurrentTime">00:00 / 18:40</span></span><button type="button" id="returnToBoard">返回板书</button></div>
+          <div class="video-meta"><span>课节 1 · <span id="videoCurrentTime">00:00 / 18:40</span></span><button type="button" class="enter-ide-practice" id="enterIdePractice">查看 IDE 实践 <span aria-hidden="true">→</span></button></div>
           <div class="video-stage"><img src="assets/images/video-teacher-cover.png" alt="课程视频封面：悬浮的多媒体卡片与点击播放的手势"><button type="button" id="teacherPlay" aria-label="播放老师讲解视频"></button><p class="teacher-subtitle">从运行环境开始，理解本节实践会用到的代码与设备。</p></div>
-          <button type="button" class="enter-ide-practice" id="enterIdePractice">进入 IDE 实践 <span aria-hidden="true">→</span></button>
         </div>
       </section>
       <div class="dock-resizer" data-resize="video" role="separator" aria-label="调整视频与 IDE 的宽度；可用左右方向键" aria-orientation="vertical" tabindex="0"></div>
@@ -157,14 +155,16 @@
         </header>
         <div class="ide-body">
           <nav class="ide-activity" aria-label="IDE 功能"><button type="button" class="active" aria-label="资源管理器" title="资源管理器">▱</button><button type="button" aria-label="搜索" title="搜索">⌕</button><button type="button" aria-label="源代码管理" title="源代码管理">⑂</button><button type="button" aria-label="运行与调试" title="运行与调试">▷</button><button type="button" aria-label="扩展" title="扩展">▦</button></nav>
-          <aside class="ide-explorer"><header><span>资源管理器</span><button type="button" aria-label="更多资源管理器操作">…</button></header><strong class="folder open">⌄ TRAINING-LAB</strong><strong class="folder">› scripts</strong><strong class="folder open">⌄ src</strong><strong class="folder nested">› ascendc</strong><strong class="file active">PY check_env.py</strong><strong class="file">MD README.md</strong></aside>
+          <aside class="ide-explorer"><header><span>资源管理器</span><button type="button" aria-label="更多资源管理器操作">…</button></header><strong class="folder open">⌄ TRAINING-LAB</strong><strong class="folder">› scripts</strong><strong class="folder open">⌄ src</strong><strong class="folder nested">› ascendc</strong><div class="ide-file-row"><strong class="file active">PY check_env.py</strong><button type="button" class="file-video-jump" id="fileVideoJump" aria-label="查看 check_env.py 对应视频：08 分 24 秒" aria-describedby="fileVideoTooltip"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="12" rx="2"/><path d="m8 7 5 3-5 3z"/></svg></button><span class="file-video-tooltip" id="fileVideoTooltip" role="tooltip">视频：08 分 24 秒</span></div><strong class="file">MD README.md</strong></aside>
           <section class="ide-editor-area"><div class="ide-tabs"><span class="active">PY&nbsp; check_env.py ×</span><span>MD&nbsp; README.md ×</span></div><div class="ide-editor-shell"><div class="ide-gutter" aria-hidden="true">1<br>2<br>3<br>4</div><textarea id="ideEditor" spellcheck="false" aria-describedby="ideOutput"># 检查 CANN 环境
 import acl
 
 # 在此置入视频中的代码片段</textarea></div><div class="ide-output" id="ideOutput"><nav aria-label="IDE 底部面板"><button type="button">问题</button><button type="button" class="active">输出</button><button type="button">调试控制台</button><button type="button">终端</button></nav><small>尚未运行代码。</small></div></section>
         </div>
         <footer class="ide-statusbar"><span>main*</span><span>0 错误　0 警告</span><span>Python 3.11　UTF-8　Ascend NPU</span></footer>
+        <div class="ide-mini-video" id="ideMiniVideo" aria-label="悬浮讲解视频" hidden><button type="button" class="mini-video-close" id="closeMiniVideo" aria-label="关闭悬浮视频">×</button><button type="button" class="mini-video-poster" id="miniVideoPlay" aria-label="播放悬浮讲解视频"><img src="assets/images/video-teacher-cover.png" alt="课程视频封面"></button><div class="mini-video-caption"><span id="miniVideoTime">08:24</span><span>先检查运行环境，再确认设备是否可用。</span></div></div>
       </section>
+      <div class="ide-live-subtitle" id="ideLiveSubtitle">这一段我们先检查运行环境，再确认设备是否可用。</div>
 
       <section class="workspace-dock-zone dock-zone-left" data-dock-zone="left" aria-label="左侧辅助面板停靠区">
         <header class="dock-zone-title"><span>学习辅助</span><small>可拖拽面板到另一侧</small></header>
@@ -224,6 +224,6 @@ import acl
       <button type="button" class="enter-learning" id="enterLearning">进入白板学习</button>
     </div>
   </section>
-  <script src="assets/js/learning-room.js?v=workspace-dock-2"></script>
+  <script src="assets/js/learning-room.js?v=teacher-focus-2"></script>
 </body>
 </html>
