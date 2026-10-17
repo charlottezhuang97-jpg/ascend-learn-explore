@@ -26,8 +26,8 @@
       </div>
       <dl class="hero-meta">
         <div><dt>覆盖场景</dt><dd>7 个</dd></div>
-        <div><dt>参考产品</dt><dd>9 个</dd></div>
-        <div><dt>本次采集</dt><dd>2026-10-16</dd></div>
+        <div><dt>参考产品</dt><dd>10 个</dd></div>
+        <div><dt>本次采集</dt><dd>2026-10-17</dd></div>
       </dl>
     </section>
 
@@ -50,12 +50,12 @@
         <table class="comparison-table">
           <thead><tr><th>场景</th><th>主参考</th><th>最强模式</th><th>对当前方案的机会</th></tr></thead>
           <tbody>
-            <tr><td>首页学习入口</td><td><a href="https://learn.microsoft.com/en-us/training/" target="_blank" rel="noreferrer">Microsoft Learn ↗</a></td><td>按目标、角色和时长降低选择成本</td><td>“继续学习”旁直接进入个人知识地图，保留当前任务上下文</td></tr>
-            <tr><td>课程预览</td><td><a href="https://www.deeplearning.ai/courses?types=short_course" target="_blank" rel="noreferrer">DeepLearning.AI ↗</a></td><td>结果、难度、时长与课程形态同时可见</td><td>先回答为什么学，再展开课程模块—单元—课节</td></tr>
-            <tr><td>白板学习</td><td><a href="https://brilliant.org/courses/?welcome=true" target="_blank" rel="noreferrer">Brilliant ↗</a></td><td>解释与交互反馈紧贴当前知识对象</td><td>板书保持原位，临时解释层围绕选中内容出现并可收起</td></tr>
+            <tr><td>首页学习入口</td><td><a href="https://www.nvidia.com/en-us/training/" target="_blank" rel="noreferrer">NVIDIA DLI ↗</a> + <a href="https://agent.hyperknow.io/" target="_blank" rel="noreferrer">Hyperknow ↗</a></td><td>DLI 建立开发者训练入口；Hyperknow 在同一输入框切换课程生成与即时协助</td><td>首页保留一个目标输入区，用“学习 / 解决问题”明确分流，继续学习与知识地图作为后续入口</td></tr>
+            <tr><td>课程预览</td><td><a href="https://agent.hyperknow.io/" target="_blank" rel="noreferrer">Hyperknow ↗</a></td><td>左侧资源导航，右侧展开选中单元内的讲次、项目与评估</td><td>区分单元、资料、练习三类资源，让用户先定位内容类型，再判断当前单元的学习动作</td></tr>
+            <tr><td>白板学习</td><td><a href="https://agent.hyperknow.io/" target="_blank" rel="noreferrer">Hyperknow ↗</a></td><td>板书画布、课程要点、文字/语音交流和对话历史保持同一学习上下文</td><td>画布保持主视角，AI 学伴作为右侧浮窗；开始前选择交流方式，学习中可暂停、提问与恢复</td></tr>
             <tr><td>在线 IDE</td><td><a href="https://hidevlab.huawei.com/online-develop-intro" target="_blank" rel="noreferrer">HiDevLab ↗</a></td><td>环境、镜像、算力与数据保留规则前置</td><td>IDE 固定在画布工作区，AI 学伴贴合右侧，运行上下文自动带入</td></tr>
             <tr><td>AI 学伴</td><td><a href="https://www.khanacademy.org/khan-labs" target="_blank" rel="noreferrer">Khanmigo ↗</a></td><td>通过追问引导理解，而不是直接给答案</td><td>问答、可视化解释、笔记和计划共享当前板书上下文</td></tr>
-            <tr><td>知识版图</td><td><a href="https://roadmap.sh/" target="_blank" rel="noreferrer">roadmap.sh ↗</a></td><td>从领域全景逐步下钻到可行动节点</td><td>三大领域岛屿 + 分区知识网络 + 状态与推荐路线叠加</td></tr>
+            <tr><td>知识版图</td><td><a href="https://hyperskill.org/knowledge-map/428" target="_blank" rel="noreferrer">JetBrains Academy · Hyperskill ↗</a></td><td>按领域和先修关系组织知识，并同时显示已学、待学与项目覆盖状态</td><td>三大领域下钻到非线性知识网络，明确“我在哪里、已经完成什么、下一步探索什么”</td></tr>
             <tr><td>开发者贡献</td><td><a href="https://www.kaggle.com/benchmarks" target="_blank" rel="noreferrer">Kaggle Benchmarks ↗</a></td><td>贡献内容可以复现、比较、排行并追溯</td><td>经验贴升级为带环境、指标、证据和审核状态的贡献资产</td></tr>
           </tbody>
         </table>
@@ -65,28 +65,28 @@
     <section class="scene" id="entry" aria-labelledby="entry-title">
       <div class="scene-heading">
         <span class="scene-index">01</span>
-        <div><span class="section-kicker">首页学习入口</span><h2 id="entry-title">先让用户知道下一步，再让他浏览全部内容</h2><p>首页同时承担继续任务、发现内容与进入个人知识全景的职责。</p></div>
-        <p class="scene-question"><strong>当前问题：</strong>如何让“继续学习”和“打开我的知识地图”互相补充，而不是做成两个并列的大楼层？</p>
+        <div><span class="section-kicker">首页学习入口</span><h2 id="entry-title">用一个目标输入区承接两种意图：学习与解决问题</h2><p>DLI 提供开发者训练的直接对标；Hyperknow 提供同一输入区切换“课程生成 / 即时协助”的交互启发。</p></div>
+        <p class="scene-question"><strong>当前问题：</strong>怎样让用户先表达“我想学什么”或“我正在解决什么”，同时仍能继续已有课程和进入个人知识地图？</p>
       </div>
       <div class="competitor-grid">
         <article class="competitor-card">
-          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/microsoft-learn.webp" alt="Microsoft Learn 培训首页截图"><figcaption class="capture-date">采集于 2026-10-16</figcaption></figure>
+          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/nvidia-dli-training.jpg" alt="NVIDIA Deep Learning Institute 培训与实践场景官方图片"><figcaption class="capture-date">官方页面图 · 2026-10-17</figcaption></figure>
           <div class="competitor-content">
-            <div class="competitor-title-row"><h3>Microsoft Learn</h3><a href="https://learn.microsoft.com/en-us/training/" target="_blank" rel="noreferrer">打开官网 ↗</a></div>
-            <span class="competitor-type">直接参考 · 开发者学习平台</span>
-            <p class="observation">首页用“具体训练内容”和“职业目标”两条入口解释学习意图，课程卡直接显示类型、时长、角色和难度。</p>
-            <div class="takeaway-block"><h4>可借鉴</h4><ul><li>把任务入口写成用户目标，而不是产品栏目。</li><li>继续学习卡保留进度和最近位置；知识地图按钮作为视角切换。</li><li>用课程模块、学习路线、计划等明确类型，降低概念混淆。</li></ul></div>
-            <p class="avoid-note"><strong>不照搬：</strong>内容类型过多时容易把首页变成资源目录，我们仍以当前任务为主。</p>
+            <div class="competitor-title-row"><h3>NVIDIA Deep Learning Institute</h3><a href="https://www.nvidia.com/en-us/training/" target="_blank" rel="noreferrer">打开官网 ↗</a></div>
+            <span class="competitor-type">直接竞品 · 开发者训练与认证</span>
+            <p class="observation">DLI 将自学课程、讲师工作坊、学习路径和认证放在统一训练入口，并强调专家课程、真实案例、云端 GPU 实验环境和可获得的证书。</p>
+            <div class="takeaway-block"><h4>可借鉴</h4><ul><li>首屏先说清训练面向的开发者能力，而不是罗列资源数量。</li><li>把自学、实操环境、专家指导和能力证明连接成完整闭环。</li><li>课程入口同时展示领域、学习方式和最终可获得的实践结果。</li></ul></div>
+            <p class="avoid-note"><strong>不照搬：</strong>DLI 的入口更像训练目录；我们的首要任务是先理解用户目标，再从课程与问题解决链路中选择合适响应。</p>
           </div>
         </article>
         <article class="competitor-card">
-          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/roadmap-sh.webp" alt="roadmap.sh 开发者路线首页截图"><figcaption class="capture-date">采集于 2026-10-16</figcaption></figure>
+          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/hyperknow-home.jpg" alt="Hyperknow 首页课程生成与即时协助切换截图"><figcaption class="capture-date">研究截图 · 2026-10-17</figcaption></figure>
           <div class="competitor-content">
-            <div class="competitor-title-row"><h3>roadmap.sh</h3><a href="https://roadmap.sh/" target="_blank" rel="noreferrer">打开官网 ↗</a></div>
-            <span class="competitor-type">补充参考 · 路线与知识导航</span>
-            <p class="observation">用一句目标描述和角色路线列表帮助用户快速选择，同时把路线、项目创意与学习内容分成不同入口。</p>
-            <div class="takeaway-block"><h4>可借鉴</h4><ul><li>知识地图入口应承诺“看清位置和下一步”，而非泛泛的“查看更多”。</li><li>首页只展示当前推荐方向，复杂网络放到全屏地图。</li><li>允许目标驱动检索已有课程组合。</li></ul></div>
-            <p class="avoid-note"><strong>不照搬：</strong>线性路线不能代表昇腾密集且互相依赖的知识网络。</p>
+            <div class="competitor-title-row"><h3>Hyperknow</h3><a href="https://agent.hyperknow.io/" target="_blank" rel="noreferrer">打开产品 ↗</a></div>
+            <span class="competitor-type">交互参考 · 双意图目标输入</span>
+            <p class="observation">首页在同一输入框上方区分“打造课程”和“即时协助”，用户不必先理解产品结构，只需先选择想系统学习还是立刻获得帮助。</p>
+            <div class="takeaway-block"><h4>转译到当前方案</h4><ul><li>将模式转译为“学习 / 解决问题”，两个标签共用同一目标输入框。</li><li>学习模式组织课程与长期计划；解决问题模式接收任务、报错、环境和期望结果。</li><li>输入区下方保留继续学习，知识地图入口放在继续学习标题后作为全局视角切换。</li></ul></div>
+            <p class="avoid-note"><strong>不照搬：</strong>不使用“自学 / 即时协助”这类实现视角文案；用户关心的是目标类型，不是系统将采用哪一种生成方式。</p>
           </div>
         </article>
       </div>
@@ -95,28 +95,28 @@
     <section class="scene" id="preview" aria-labelledby="preview-title">
       <div class="scene-heading">
         <span class="scene-index">02</span>
-        <div><span class="section-kicker">课程预览</span><h2 id="preview-title">先建立课程价值，再展开课程模块与课节</h2><p>预览页需要同时回答适不适合、会学到什么、如何验证和从哪里开始。</p></div>
-        <p class="scene-question"><strong>当前问题：</strong>如何呈现课程模块—单元—课节层级，同时保持用户对最终能力和验证结果的理解？</p>
+        <div><span class="section-kicker">课程预览</span><h2 id="preview-title">左侧定位课程资源，右侧展开选中单元的完整内容</h2><p>Hyperknow 把课程入口、单元导航和单元内部讲次放在同一预览页，用户能先看全局，再判断从哪里开始。</p></div>
+        <p class="scene-question"><strong>当前问题：</strong>如何让用户看懂课程由哪些单元组成，并区分单元、资料、练习三类学习资源及其完成状态？</p>
       </div>
       <div class="competitor-grid">
         <article class="competitor-card">
-          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/deeplearning-ai.webp" alt="DeepLearning.AI 课程目录截图"><figcaption class="capture-date">采集于 2026-10-16</figcaption></figure>
+          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/hyperknow-course-preview.jpg" alt="Hyperknow 课程预览左侧单元导航与右侧详细内容截图"><figcaption class="capture-date">研究截图 · 2026-10-17</figcaption></figure>
           <div class="competitor-content">
-            <div class="competitor-title-row"><h3>DeepLearning.AI</h3><a href="https://www.deeplearning.ai/courses?types=short_course" target="_blank" rel="noreferrer">打开官网 ↗</a></div>
-            <span class="competitor-type">直接参考 · AI 课程平台</span>
-            <p class="observation">课程目录把类型、难度、讲师、合作方和学习结果放在同一个判断面，先帮助用户筛选，再进入详情。</p>
-            <div class="takeaway-block"><h4>可借鉴</h4><ul><li>课程首屏明确适用基础、预计时长、实践数量和最终产出。</li><li>课程模块用用户能理解的阶段性结果命名。</li><li>课程来源和环境验证信息与课程结构分区呈现。</li></ul></div>
-            <p class="avoid-note"><strong>不照搬：</strong>营销式大图会挤压复杂课程结构，当前预览页继续去除装饰性 Banner。</p>
+            <div class="competitor-title-row"><h3>Hyperknow · 课程预览</h3><a href="https://agent.hyperknow.io/" target="_blank" rel="noreferrer">打开产品 ↗</a></div>
+            <span class="competitor-type">直接参考 · 课程资源与单元详情</span>
+            <p class="observation">左侧先在“单元 / 资料 / 练习”三类资源间切换；单元列表承担全局导航。选中单元后，右侧沿时间线展开讲次、项目与综合评估，并保留下一步动作。</p>
+            <div class="takeaway-block"><h4>可借鉴</h4><ul><li>左侧负责资源类型和单元定位，右侧只讲清当前单元内部结构。</li><li>讲次、项目、测验使用不同图标和状态，避免把所有内容都叫“课节”。</li><li>已掌握、熟练、熟悉、已尝试、未开始等状态形成课程级进度语言。</li><li>下一步入口跟随当前进度，而不是固定跳回第一项。</li></ul></div>
+            <p class="avoid-note"><strong>不照搬：</strong>上传材料属于课程编辑能力，不应默认占据普通学习者的预览主链路；课程封面也不应挤压结构空间。</p>
           </div>
         </article>
         <article class="competitor-card">
-          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/microsoft-learn.webp" alt="Microsoft Learn 首页中培训入口截图"><figcaption class="capture-date">采集于 2026-10-16</figcaption></figure>
+          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/nvidia-dli-training.jpg" alt="NVIDIA DLI 实践训练与认证场景官方图片"><figcaption class="capture-date">官方页面图 · 2026-10-17</figcaption></figure>
           <div class="competitor-content">
-            <div class="competitor-title-row"><h3>Microsoft Learn 内容层级</h3><a href="https://learn.microsoft.com/en-us/training/support/learn-content-types" target="_blank" rel="noreferrer">查看层级说明 ↗</a></div>
-            <span class="competitor-type">结构参考 · 计划 / 路线 / 模块 / 单元</span>
-            <p class="observation">官方明确区分 Plan、Learning Path、Module 和 Unit，每一级对应不同的结果与内容粒度。</p>
-            <div class="takeaway-block"><h4>可借鉴</h4><ul><li>左侧固定课程模块，右侧选中模块后展开单元和课节。</li><li>课节类型只保留课程、实践、测验三个可行动标签。</li><li>课程要点属于课节内部，进入画布后再呈现。</li></ul></div>
-            <p class="avoid-note"><strong>不照搬：</strong>“学习阶段”容易被理解为覆盖整条学习路径，当前统一使用“课程模块”。</p>
+            <div class="competitor-title-row"><h3>NVIDIA DLI · 结果与实践承诺</h3><a href="https://www.nvidia.com/en-us/training/" target="_blank" rel="noreferrer">查看培训体系 ↗</a></div>
+            <span class="competitor-type">补充参考 · 实践环境与能力证明</span>
+            <p class="observation">DLI 将实操实验、云端 GPU 环境、真实案例和部分课程证书作为学习价值的一部分，课程预览不只介绍知识目录。</p>
+            <div class="takeaway-block"><h4>转译到当前方案</h4><ul><li>课程首屏说明适用基础、预计时长、实践数量和环境要求。</li><li>选中单元时同时显示会完成的任务、会留下的证据和将点亮的能力。</li><li>真实环境复现信息与课程结构并列，但保持为辅助判断区。</li></ul></div>
+            <p class="avoid-note"><strong>不照搬：</strong>认证与课程完成不能混为一谈；证书、能力点亮和真实任务证据需要分别表达。</p>
           </div>
         </article>
       </div>
@@ -125,28 +125,28 @@
     <section class="scene" id="whiteboard" aria-labelledby="whiteboard-title">
       <div class="scene-heading">
         <span class="scene-index">03</span>
-        <div><span class="section-kicker">白板学习</span><h2 id="whiteboard-title">板书是主内容，解释和操作围绕知识对象短暂出现</h2><p>画布承载老师编排的文字、图片、GIF、思维导图与 IDE，AI 生成内容需要保持可区分。</p></div>
-        <p class="scene-question"><strong>当前问题：</strong>怎样让用户随时暂停、提问、查看可视化解释，又不破坏板书的自然排版和课程节奏？</p>
+        <div><span class="section-kicker">白板学习</span><h2 id="whiteboard-title">板书是主内容，AI 交流围绕当前板书持续发生</h2><p>Hyperknow 将手写板书、示意图、课程要点、文字/语音交流和对话历史放在同一学习上下文中。</p></div>
+        <p class="scene-question"><strong>当前问题：</strong>怎样让用户决定板书的进行与停止状态，并能对任何不理解的内容随时提问，同时不遮挡老师原始板书？</p>
       </div>
       <div class="competitor-grid">
         <article class="competitor-card">
-          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/brilliant.webp" alt="Brilliant 互动课程目录截图"><figcaption class="capture-date">采集于 2026-10-16</figcaption></figure>
+          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/hyperknow-whiteboard-entry.jpg" alt="Hyperknow 白板学习开始前选择文字或语音加文字交流方式的截图"><figcaption class="capture-date">研究截图 · 2026-10-17</figcaption></figure>
           <div class="competitor-content">
-            <div class="competitor-title-row"><h3>Brilliant</h3><a href="https://brilliant.org/courses/?welcome=true" target="_blank" rel="noreferrer">打开官网 ↗</a></div>
-            <span class="competitor-type">体验参考 · 互动理解</span>
-            <p class="observation">把解释、可视化模型、问题与即时反馈连续组织，让用户通过操作构建理解。</p>
-            <div class="takeaway-block"><h4>可借鉴</h4><ul><li>一次只围绕一个知识对象提供反馈和下一步。</li><li>可视化解释在原内容附近出现，保持来源关联。</li><li>完成状态以理解和实践证据表达，不只记录播放进度。</li></ul></div>
-            <p class="avoid-note"><strong>不照搬：</strong>昇腾课程需要保留完整工程上下文，不能切成过多脱离环境的小游戏。</p>
+            <div class="competitor-title-row"><h3>Hyperknow · 交流方式选择</h3><a href="https://agent.hyperknow.io/" target="_blank" rel="noreferrer">打开产品 ↗</a></div>
+            <span class="competitor-type">交互参考 · 仅文字 / 语音 + 文字</span>
+            <p class="observation">正式开始前先选择与“老师”的交流方式。语音模式下，用户开口后讲解会暂停，先回答问题，再从暂停位置继续。</p>
+            <div class="takeaway-block"><h4>可借鉴</h4><ul><li>将语音/文字作为交流偏好，而不是两套学习页面。</li><li>语音提问触发“暂停—回答—恢复”，使板书状态始终可感知。</li><li>学习中允许随时切换输入方式，避免开始前的选择成为限制。</li></ul></div>
+            <p class="avoid-note"><strong>不照搬：</strong>不把交流方式做成阻断式必选步骤；可给出推荐默认值，并允许直接进入后再调整。</p>
           </div>
         </article>
         <article class="competitor-card">
-          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/khanmigo.webp" alt="Khanmigo AI 学习助手官网截图"><figcaption class="capture-date">采集于 2026-10-16</figcaption></figure>
+          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/hyperknow-whiteboard-session.jpg" alt="Hyperknow 板书画布、课程要点与右侧对话历史截图"><figcaption class="capture-date">研究截图 · 2026-10-17</figcaption></figure>
           <div class="competitor-content">
-            <div class="competitor-title-row"><h3>Khanmigo</h3><a href="https://www.khanacademy.org/khan-labs" target="_blank" rel="noreferrer">打开官网 ↗</a></div>
-            <span class="competitor-type">交互参考 · 上下文追问</span>
-            <p class="observation">学习助手强调引导思考，并将对话绑定到正在学习的内容，而非提供无上下文的通用聊天。</p>
-            <div class="takeaway-block"><h4>可借鉴</h4><ul><li>选中板书后出现“问一下、用图解释、换个说法”。</li><li>临时解释层标注 AI 来源，用浅色描图纸视觉与原板书区分。</li><li>恢复播放后自动收起；主动保存后进入学伴的笔记或计划。</li></ul></div>
-            <p class="avoid-note"><strong>不照搬：</strong>不让学伴长期占据画布主区域，右侧使用可收起浮窗。</p>
+            <div class="competitor-title-row"><h3>Hyperknow · 板书与对话历史</h3><a href="https://agent.hyperknow.io/" target="_blank" rel="noreferrer">打开产品 ↗</a></div>
+            <span class="competitor-type">结构参考 · 画布主视角 + 右侧上下文</span>
+            <p class="observation">板书自然铺在大画布上，混合手写文字、表格、公式、图解与选择题；右侧保留与板书对应的对话历史，画布边缘弱化展示课程要点和当前进度。</p>
+            <div class="takeaway-block"><h4>转译到当前方案</h4><ul><li>老师原始板书保持黑色/深灰自然排版，不额外框成卡片。</li><li>课程要点收进课节标题后的大纲按钮；AI 学伴中只弱展示链路进度和当前要点。</li><li>选中板书后出现“问一下、用图解释、换个说法”；临时解释层用浅蓝半透明描图纸视觉并连接原句。</li><li>提问、语音、笔记和计划都属于右侧 AI 学伴的子功能；学伴可悬浮、收起，并在 IDE 出现时贴合 IDE 右侧。</li></ul></div>
+            <p class="avoid-note"><strong>不照搬：</strong>右侧对话历史不固定占用过宽空间；画布始终是学习主区域，学伴宽度和出现时机随任务切换。</p>
           </div>
         </article>
       </div>
@@ -215,28 +215,29 @@
     <section class="scene" id="knowledge" aria-labelledby="knowledge-title">
       <div class="scene-heading">
         <span class="scene-index">06</span>
-        <div><span class="section-kicker">知识版图</span><h2 id="knowledge-title">领域全景、分区网络和推荐路线是同一张图的不同层级</h2><p>知识网络并非线性课程清单；课程只是覆盖知识节点并形成实践证据的资源。</p></div>
-        <p class="scene-question"><strong>当前问题：</strong>如何同时表达领域归属、非线性依赖、个人状态、课程覆盖和下一条推荐路线？</p>
+        <div><span class="section-kicker">知识版图</span><h2 id="knowledge-title">知识关系与个人进度叠在同一张图上</h2><p>Hyperskill 将主题按领域和先修关系组织，同时显示课程需要覆盖什么、项目已经覆盖什么，以及用户已学与待学的数量。</p></div>
+        <p class="scene-question"><strong>当前问题：</strong>怎样让用户一眼看见自己处于哪个领域和阶段，哪些已经完成，哪些是当前任务，下一步还能探索什么？</p>
       </div>
       <div class="competitor-grid">
         <article class="competitor-card">
-          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/roadmap-sh.webp" alt="roadmap.sh 开发者路线截图"><figcaption class="capture-date">采集于 2026-10-16</figcaption></figure>
+          <figure class="competitor-shot competitor-shot--contain"><img src="../assets/images/competitive-analysis/hyperskill-knowledge-map.svg" alt="Hyperskill 官方知识地图树状主题关系示意"><figcaption class="capture-date">官方知识地图示意 · 2026-10-17</figcaption></figure>
           <div class="competitor-content">
-            <div class="competitor-title-row"><h3>roadmap.sh</h3><a href="https://roadmap.sh/" target="_blank" rel="noreferrer">打开官网 ↗</a></div>
-            <span class="competitor-type">直接参考 · 知识路线</span>
-            <p class="observation">从角色或技能入口进入路线，节点之间有建议顺序，同时允许用户跳转和标记完成。</p>
-            <div class="takeaway-block"><h4>可借鉴</h4><ul><li>先显示 CANN、生成式 AI 与大语言模型、智能体三大领域。</li><li>点击领域后放大对应分区，其他领域退到背景。</li><li>高亮当前推荐路线，节点深浅表达了解、掌握、实践、贡献。</li></ul></div>
-            <p class="avoid-note"><strong>不照搬：</strong>不把所有节点强行排成树；实线、虚线与跨区连接表达不同依赖。</p>
+            <div class="competitor-title-row"><h3>JetBrains Academy · Hyperskill</h3><a href="https://hyperskill.org/knowledge-map/428" target="_blank" rel="noreferrer">打开知识地图 ↗</a></div>
+            <span class="competitor-type">直接参考 · 领域、先修关系与学习状态</span>
+            <p class="observation">知识地图由数千主题按领域组织，并用先修关系连接。页面区分课程需要学习、已经学习和项目已覆盖的主题；展开分类后可以查看某个主题的前置与后续依赖。</p>
+            <div class="takeaway-block"><h4>可借鉴</h4><ul><li>领域、知识节点、课程覆盖与个人状态使用不同图形编码，避免混成一层。</li><li>用户选择课程或项目后，只高亮相关节点和先修关系。</li><li>顶部持续显示“待学习 / 已学习 / 实践覆盖”概览，让当前位置可量化。</li><li>当前节点同时展示必须先学和可以继续探索的相邻节点。</li></ul></div>
+            <p class="research-link"><a href="https://www.figma.com/board/qxgb5n2xIun8fcpGR9WH3o/%E5%AD%A6%E4%B9%A0-%E6%80%BB%E4%BD%93%E6%A1%86%E6%9E%B6-%E7%AB%9E%E5%93%81%E5%88%86%E6%9E%90?node-id=0-1&amp;t=GqCwFUXahO1D7Nef-1" target="_blank" rel="noreferrer">查看知识地图竞品分析原始板 ↗</a></p>
+            <p class="avoid-note"><strong>不照搬：</strong>昇腾知识并不完全是单棵先修树；跨领域支撑关系、工具节点、实践任务和验证证据需要保留网络结构。</p>
           </div>
         </article>
         <article class="competitor-card">
-          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/microsoft-learn.webp" alt="Microsoft Learn 训练首页截图，用于说明课程与路线关系"><figcaption class="capture-date">采集于 2026-10-16</figcaption></figure>
+          <figure class="competitor-shot"><img src="../assets/images/competitive-analysis/roadmap-sh.webp" alt="roadmap.sh 开发者路线截图，用于补充推荐路线表达"><figcaption class="capture-date">采集于 2026-10-16</figcaption></figure>
           <div class="competitor-content">
-            <div class="competitor-title-row"><h3>Microsoft Learn</h3><a href="https://learn.microsoft.com/en-us/training/paths" target="_blank" rel="noreferrer">浏览学习路线 ↗</a></div>
-            <span class="competitor-type">补充参考 · 路线与内容映射</span>
-            <p class="observation">路线由模块组合，内容可以按目标重新编排；同一模块可服务不同路线。</p>
-            <div class="takeaway-block"><h4>可借鉴</h4><ul><li>知识节点与课程资源分层建模，避免“课程就是知识图谱”。</li><li>短期用官方课程按目标重组路线。</li><li>中期引入可信外部资源，并显示来源、版本和验证状态。</li></ul></div>
-            <p class="avoid-note"><strong>不照搬：</strong>官方课程不作为独立知识区域，只作为节点的覆盖与学习资源。</p>
+            <div class="competitor-title-row"><h3>roadmap.sh</h3><a href="https://roadmap.sh/" target="_blank" rel="noreferrer">打开官网 ↗</a></div>
+            <span class="competitor-type">补充参考 · 推荐路线与完成标记</span>
+            <p class="observation">roadmap.sh 把复杂知识压缩成可执行的推荐顺序，并允许用户跳转和标记完成，补足 Hyperskill 知识关系明确但全局导航较重的问题。</p>
+            <div class="takeaway-block"><h4>转译到当前方案</h4><ul><li>全景层先显示 CANN、生成式 AI 与大语言模型、智能体三大领域岛屿。</li><li>点击领域后下钻并放大对应分区，其他领域退到背景。</li><li>节点深浅表达了解、掌握、实践、贡献；高亮线只表示本次推荐路线。</li><li>课程作为覆盖知识节点的资源，不单独成为一个知识区域。</li></ul></div>
+            <p class="avoid-note"><strong>不照搬：</strong>不把推荐路线当成唯一正确顺序；实线表示必学依赖，虚线表示支撑或可选关系。</p>
           </div>
         </article>
       </div>
@@ -274,19 +275,20 @@
 
     <section class="decision-section" aria-labelledby="decision-title">
       <div class="section-heading">
-        <div><span class="section-kicker">归纳</span><h2 id="decision-title">当前方案应坚持的四个设计决定</h2></div>
+        <div><span class="section-kicker">归纳</span><h2 id="decision-title">当前方案应坚持的五个设计决定</h2></div>
         <p>这些决定来自跨竞品共同模式，并结合昇腾知识密集、实践依赖环境和社区贡献需要复现的特点。</p>
       </div>
       <div class="decision-grid">
-        <article class="decision-item"><span>01 · 任务优先</span><h3>首页以“继续学习”为主</h3><p>知识地图是继续卡片后的视角切换按钮，复杂内容进入全屏页面。</p></article>
-        <article class="decision-item"><span>02 · 层级清晰</span><h3>课程预览统一使用课程模块</h3><p>课程模块—单元—课节—课程要点逐级展开，避免与跨课程学习路线混淆。</p></article>
-        <article class="decision-item"><span>03 · 上下文连续</span><h3>白板、IDE 和 AI 学伴共享上下文</h3><p>AI 解释、笔记和计划围绕当前板书与代码出现，不写回老师原始板书。</p></article>
-        <article class="decision-item"><span>04 · 贡献可验证</span><h3>积分来自可复现影响</h3><p>经验回填经过审核、环境复现和引用后计分，榜单明确展示每一笔得分原因。</p></article>
+        <article class="decision-item"><span>01 · 双意图入口</span><h3>首页区分“学习 / 解决问题”</h3><p>两种意图共用一个目标输入区；继续学习和知识地图承接已有学习状态。</p></article>
+        <article class="decision-item"><span>02 · 资源分层</span><h3>课程预览先定位类型，再展开单元</h3><p>左侧区分单元、资料、练习并完成导航；右侧呈现选中单元的讲次、项目与综合评估。</p></article>
+        <article class="decision-item"><span>03 · 上下文连续</span><h3>板书、语音、对话和 IDE 共享当前上下文</h3><p>画布保持主视角，AI 解释、笔记和计划围绕当前板书与代码出现，不写回老师原始板书。</p></article>
+        <article class="decision-item"><span>04 · 位置可感知</span><h3>知识版图同时表达关系与个人进度</h3><p>领域、先修关系、课程覆盖、已完成状态和本次推荐路线分层编码，让用户知道自己在哪里。</p></article>
+        <article class="decision-item"><span>05 · 贡献可验证</span><h3>积分来自可复现影响</h3><p>经验回填经过审核、环境复现和引用后计分，榜单明确展示每一笔得分原因。</p></article>
       </div>
       <p class="method-note"><strong>研究说明：</strong>截图仅用于内部产品研究与界面比较，版权归各产品所有。页面表现与功能会变化，判断以采集日期和官方链接为准。后续新增竞品时，应先确定它补充哪个场景和哪条判断，再增加卡片，避免堆积无结论的截图。</p>
     </section>
 
-    <footer class="page-footer"><span>Ascend Learn Explore · 竞品模式库</span><span>最近更新：2026-10-16</span></footer>
+    <footer class="page-footer"><span>Ascend Learn Explore · 竞品模式库</span><span>最近更新：2026-10-17</span></footer>
   </main>
 </body>
 </html>

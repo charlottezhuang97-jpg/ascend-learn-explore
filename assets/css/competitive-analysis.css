@@ -374,6 +374,13 @@ button:focus-visible {
   transition: transform 180ms ease;
 }
 
+.competitor-shot--contain img {
+  padding: 28px;
+  object-fit: contain;
+  object-position: center;
+  background: #f8f9fc;
+}
+
 .competitor-card:hover .competitor-shot img {
   transform: scale(1.015);
 }
@@ -463,6 +470,21 @@ button:focus-visible {
   background: #fff8eb;
   color: #7a4e00;
   font-size: 12px;
+}
+
+.research-link {
+  margin: 14px 0 0;
+}
+
+.research-link a {
+  color: var(--action-link);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.research-link a:hover {
+  text-decoration: underline;
 }
 
 .decision-grid {
