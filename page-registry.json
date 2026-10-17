@@ -37,7 +37,7 @@
     {"id":"developer-leaderboard-lowfi","title":"独立开发贡献榜","status":"lowfi","source":"prototypes/lowfi/developer-leaderboard.html","publicPath":"prototypes/lowfi/developer-leaderboard.html","description":"经验回填、审核验证、积分与周榜／长期榜／领域榜闭环"},
 
     {"id":"competitive-analysis","title":"竞品模式库","status":"exploration","source":"research/competitive-analysis.html","publicPath":"research/competitive-analysis.html","description":"按首页、课程预览、白板、IDE、AI 学伴、知识版图与开发者贡献整理官方链接、截图和可借鉴模式"},
-    {"id":"design-process-milestones","title":"设计推进框架与场景里程碑","status":"exploration","source":"research/design-process-milestones.html","publicPath":"research/design-process-milestones.html","description":"以七道 UI/UX 阶段门标注首页、预览、白板、IDE、学伴、知识版图、贡献、认证与个人资产的当前进度"},
+    {"id":"project-progress","title":"项目进展","status":"exploration","source":"research/project-progress.html","publicPath":"research/project-progress.html","description":"以七道 UI/UX 阶段门标注首页、预览、白板、IDE、学伴、知识版图、贡献、认证与个人资产的当前进度"},
     {"id":"course-preview-highfi-v2","title":"课程预览高保真 V2","status":"exploration","source":"outputs/ux-audit/course-preview-highfi-v2.html","publicPath":"lab/ux-audit/course-preview-highfi-v2.html","description":"课程预览视觉探索稿"},
     {"id":"course-preview-audit","title":"课程预览审查建议图","status":"exploration","source":"outputs/ux-audit/course-preview-audit-suggestion.html","publicPath":"lab/ux-audit/course-preview-audit-suggestion.html","description":"UX 审查后的对照建议"},
     {"id":"course-path-mapping-lowfi","title":"阶段与单元映射","status":"archive","source":"outputs/ux-audit/course-path-unit-mapping-lowfi.html","publicPath":"lab/ux-audit/course-path-unit-mapping-lowfi.html","description":"已归档的左侧阶段与右侧内容单卡单线映射探索"},

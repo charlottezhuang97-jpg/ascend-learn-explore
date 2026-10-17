@@ -21,7 +21,10 @@
 ## 竞品分析
 
 - [竞品模式库（在线）](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/research/competitive-analysis.html) · [仓库页面](research/competitive-analysis.html)：按首页、课程预览、白板学习、在线 IDE、AI 学伴、知识版图和开发者贡献整理官方链接、页面截图、可借鉴模式与不建议照搬的部分。
-- [设计推进框架与场景里程碑（在线）](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/research/design-process-milestones.html) · [仓库页面](research/design-process-milestones.html)：使用七道阶段门管理各场景，从问题与证据、信息模型、信息架构推进到交互、低保真、高保真和持续验证。
+
+## 项目进展
+
+- [项目进展（在线）](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/research/project-progress.html) · [仓库页面](research/project-progress.html)：使用七道阶段门管理各场景，从问题与证据、信息模型、信息架构推进到交互、低保真、高保真和持续验证，并标注各关键场景当前所处的里程碑。
 
 ## 页面版本管理
 
