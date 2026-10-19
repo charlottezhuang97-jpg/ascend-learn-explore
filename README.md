@@ -6,7 +6,7 @@
 
 当前持续维护的页面只保留发现、预览、学习执行和个人学习分析链路。页面状态的唯一清单是 [`page-registry.json`](page-registry.json)。
 
-在线入口：[当前方案首页](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/index.html) · [页面版本目录](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/catalog.html) · [本地首页](index.html)
+在线入口：[当前方案首页](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/index.html) · [设计资产目录（设计稿 / 竞品）](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/catalog.html) · [本地首页](index.html)
 
 > GitHub Pages 由 `main` 分支自动部署。课程、用户、学习进度和代码运行结果均为演示数据，用于验证信息结构与交互方向。
 
@@ -20,7 +20,7 @@
 
 ## 竞品分析
 
-- [竞品模式库（在线）](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/research/competitive-analysis.html) · [仓库页面](research/competitive-analysis.html)：按首页、课程预览、白板学习、在线 IDE、AI 学伴、知识版图和开发者贡献整理官方链接、页面截图、可借鉴模式与不建议照搬的部分。
+- [竞品模式库（在线）](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/research/competitive-analysis.html) · [仓库页面](research/competitive-analysis.html)：可从设计资产目录顶部“竞品”进入，按首页、课程预览、白板学习、在线 IDE、AI 学伴、知识版图和开发者贡献整理官方链接、页面截图、可借鉴模式与不建议照搬的部分。
 
 ## 项目进展
 
