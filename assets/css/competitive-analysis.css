@@ -397,6 +397,10 @@ button:focus-visible {
   gap: 12px;
 }
 
+.practice-sequence--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .practice-step {
   min-width: 0;
 }

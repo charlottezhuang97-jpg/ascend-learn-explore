@@ -26,7 +26,7 @@
       </div>
       <dl class="hero-meta">
         <div><dt>覆盖场景</dt><dd>7 个</dd></div>
-        <div><dt>参考产品</dt><dd>12 个</dd></div>
+        <div><dt>参考产品</dt><dd>13 个</dd></div>
         <div><dt>本次采集</dt><dd>2026-10-17</dd></div>
       </dl>
     </section>
@@ -54,7 +54,7 @@
             <tr><td>课程预览</td><td><a href="https://agent.hyperknow.io/" target="_blank" rel="noreferrer">Hyperknow ↗</a></td><td>左侧资源导航，右侧展开选中单元内的讲次、项目与评估</td><td>区分单元、资料、练习三类资源，让用户先定位内容类型，再判断当前单元的学习动作</td></tr>
             <tr><td>白板学习</td><td><a href="https://agent.hyperknow.io/" target="_blank" rel="noreferrer">Hyperknow ↗</a></td><td>板书画布、课程要点、文字/语音交流和对话历史保持同一学习上下文</td><td>画布保持主视角，AI 学伴作为右侧浮窗；开始前选择交流方式，学习中可暂停、提问与恢复</td></tr>
             <tr><td>在线 IDE</td><td><a href="https://hidevlab.huawei.com/online-develop-intro" target="_blank" rel="noreferrer">HiDevLab ↗</a> + <a href="https://hyperskill.org/" target="_blank" rel="noreferrer">Hyperskill ↗</a></td><td>环境规则前置，并把课程任务、代码实践与自动检查串成一条链路</td><td>课程要点直接触发练习；IDE 固定在画布工作区，运行结果回写进度，AI 学伴贴合右侧</td></tr>
-            <tr><td>AI 学伴</td><td><a href="https://www.khanacademy.org/khan-labs" target="_blank" rel="noreferrer">Khanmigo ↗</a></td><td>通过追问引导理解，而不是直接给答案</td><td>问答、可视化解释、笔记和计划共享当前板书上下文</td></tr>
+            <tr><td>AI 学伴</td><td><a href="https://www.khanacademy.org/khan-labs" target="_blank" rel="noreferrer">Khanmigo ↗</a> + LearnKata</td><td>基于当前内容提供实时帮助，并把对话、测验、笔记、闪卡和文件总结连接起来</td><td>学伴贯穿课前预习、学习中即时帮助和课后总结，始终共享当前板书、资料与代码上下文</td></tr>
             <tr><td>知识版图</td><td><a href="https://hyperskill.org/knowledge-map/428" target="_blank" rel="noreferrer">JetBrains Academy · Hyperskill ↗</a></td><td>按领域和先修关系组织知识，并同时显示已学、待学与项目覆盖状态</td><td>三大领域下钻到非线性知识网络，明确“我在哪里、已经完成什么、下一步探索什么”</td></tr>
             <tr><td>开发者贡献</td><td><a href="https://www.kaggle.com/benchmarks" target="_blank" rel="noreferrer">Kaggle Benchmarks ↗</a></td><td>贡献内容可以复现、比较、排行并追溯</td><td>经验贴升级为带环境、指标、证据和审核状态的贡献资产</td></tr>
           </tbody>
@@ -262,8 +262,8 @@
     <section class="scene" id="companion" aria-labelledby="companion-title">
       <div class="scene-heading">
         <span class="scene-index">05</span>
-        <div><span class="section-kicker">AI 学伴</span><h2 id="companion-title">学伴负责解释、诊断与组织，不替代用户完成学习</h2><p>同一学伴在首页、课程预览、白板、IDE 和知识地图中共享个人状态与当前上下文。</p></div>
-        <p class="scene-question"><strong>当前问题：</strong>怎样统一问答、能力缺口、推荐路线、笔记和计划，又不让面板显得过重？</p>
+        <div><span class="section-kicker">AI 学伴</span><h2 id="companion-title">学伴贯穿预习、实时帮助与总结复盘</h2><p>同一学伴在首页、课程预览、白板、IDE 和知识地图中共享个人状态与当前上下文，在学习前后也能继续组织知识。</p></div>
+        <p class="scene-question"><strong>当前问题：</strong>怎样让学伴在课前帮助建立预期、学习中理解当前内容、课后完成总结，同时统一能力缺口、笔记和计划？</p>
       </div>
       <div class="competitor-grid">
         <article class="competitor-card">
@@ -284,6 +284,22 @@
             <p class="observation">导师能看见用户正在处理的问题，并通过逐步提示定位卡点，减少重复描述上下文。</p>
             <div class="takeaway-block"><h4>可借鉴</h4><ul><li>学伴标题区展示当前课节与进行中的课程要点。</li><li>笔记和计划作为右上角子功能唤出。</li><li>完整知识地图与长期资产通过链接进入独立页面。</li></ul></div>
             <p class="avoid-note"><strong>不照搬：</strong>能力同心环属于全局诊断，不应长期占据白板中的对话区域。</p>
+          </div>
+        </article>
+        <article class="competitor-card competitor-card--wide">
+          <figure class="competitor-shot competitor-shot--sequence">
+            <div class="practice-sequence practice-sequence--two" aria-label="LearnKata 基于当前课程和资料提供实时学习帮助">
+              <div class="practice-step"><span>01 · 围绕当前课程即时协助</span><img src="../assets/images/competitive-analysis/learnkata-companion-actions.png" alt="LearnKata 课程右侧 AI 学伴提供解释、总结、思维导图、测验、闪卡和笔记能力"></div>
+              <div class="practice-step"><span>02 · 结合资料继续理解</span><img src="../assets/images/competitive-analysis/learnkata-companion-files.png" alt="LearnKata 同屏打开课程资料并保留右侧 AI 学伴"></div>
+            </div>
+            <figcaption class="capture-date">用户研究截图 · 2026-10-19</figcaption>
+          </figure>
+          <div class="competitor-content">
+            <div class="competitor-title-row"><h3>LearnKata · 上下文学习助手</h3><a href="https://www.figma.com/board/qxgb5n2xIun8fcpGR9WH3o/%E5%AD%A6%E4%B9%A0-%E6%80%BB%E4%BD%93%E6%A1%86%E6%9E%B6-%E7%AB%9E%E5%93%81%E5%88%86%E6%9E%90?node-id=171-736&amp;t=GqCwFUXahO1D7Nef-1" target="_blank" rel="noreferrer">查看竞品画布 ↗</a></div>
+            <span class="competitor-type">直接参考 · 实时帮助与学习加工</span>
+            <p class="observation">AI 学伴固定在课程和资料旁边，能够引用当前空间中的文件继续对话，并把实时解释延伸为总结、思维导图、测验、闪卡和笔记。它既解决当下疑问，也帮助用户把内容加工成后续可复习的学习资产。</p>
+            <div class="takeaway-block"><h4>转译到当前方案</h4><ul><li><strong>课前预习：</strong>进入课节前生成学习目标、必要前置知识、概念关系和预计实践任务，帮助用户建立认知框架。</li><li><strong>学习中实时帮助：</strong>学伴自动携带当前板书、课程要点、资料页码、代码与日志，提供解释、换种说法、可视化解析和针对性追问。</li><li><strong>课后总结：</strong>根据实际学习过程生成本节摘要、已掌握内容、仍有疑问、实践证据和建议下一步，并由用户确认后写入笔记或计划。</li><li>测验、笔记、闪卡和计划作为学伴右上角子功能唤出，主面板默认仍服务当前问题。</li></ul></div>
+            <p class="avoid-note"><strong>不照搬：</strong>不把所有学习工具同时铺在面板中；根据学习前、学习中、学习后的时机推荐最相关动作，避免右侧功能过载。</p>
           </div>
         </article>
       </div>
