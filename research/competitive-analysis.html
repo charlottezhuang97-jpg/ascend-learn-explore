@@ -53,7 +53,7 @@
             <tr><td>首页学习入口</td><td><a href="https://www.nvidia.com/en-us/training/" target="_blank" rel="noreferrer">NVIDIA DLI ↗</a> + <a href="https://agent.hyperknow.io/" target="_blank" rel="noreferrer">Hyperknow ↗</a></td><td>DLI 建立开发者训练入口；Hyperknow 在同一输入框切换课程生成与即时协助</td><td>首页保留一个目标输入区，用“学习 / 解决问题”明确分流，继续学习与知识地图作为后续入口</td></tr>
             <tr><td>课程预览</td><td><a href="https://agent.hyperknow.io/" target="_blank" rel="noreferrer">Hyperknow ↗</a></td><td>左侧资源导航，右侧展开选中单元内的讲次、项目与评估</td><td>区分单元、资料、练习三类资源，让用户先定位内容类型，再判断当前单元的学习动作</td></tr>
             <tr><td>白板学习</td><td><a href="https://agent.hyperknow.io/" target="_blank" rel="noreferrer">Hyperknow ↗</a></td><td>板书画布、课程要点、文字/语音交流和对话历史保持同一学习上下文</td><td>画布保持主视角，AI 学伴作为右侧浮窗；开始前选择交流方式，学习中可暂停、提问与恢复</td></tr>
-            <tr><td>在线 IDE</td><td><a href="https://hidevlab.huawei.com/online-develop-intro" target="_blank" rel="noreferrer">HiDevLab ↗</a></td><td>环境、镜像、算力与数据保留规则前置</td><td>IDE 固定在画布工作区，AI 学伴贴合右侧，运行上下文自动带入</td></tr>
+            <tr><td>在线 IDE</td><td><a href="https://hidevlab.huawei.com/online-develop-intro" target="_blank" rel="noreferrer">HiDevLab ↗</a> + <a href="https://hyperskill.org/" target="_blank" rel="noreferrer">Hyperskill ↗</a></td><td>环境规则前置，并把课程任务、代码实践与自动检查串成一条链路</td><td>课程要点直接触发练习；IDE 固定在画布工作区，运行结果回写进度，AI 学伴贴合右侧</td></tr>
             <tr><td>AI 学伴</td><td><a href="https://www.khanacademy.org/khan-labs" target="_blank" rel="noreferrer">Khanmigo ↗</a></td><td>通过追问引导理解，而不是直接给答案</td><td>问答、可视化解释、笔记和计划共享当前板书上下文</td></tr>
             <tr><td>知识版图</td><td><a href="https://hyperskill.org/knowledge-map/428" target="_blank" rel="noreferrer">JetBrains Academy · Hyperskill ↗</a></td><td>按领域和先修关系组织知识，并同时显示已学、待学与项目覆盖状态</td><td>三大领域下钻到非线性知识网络，明确“我在哪里、已经完成什么、下一步探索什么”</td></tr>
             <tr><td>开发者贡献</td><td><a href="https://www.kaggle.com/benchmarks" target="_blank" rel="noreferrer">Kaggle Benchmarks ↗</a></td><td>贡献内容可以复现、比较、排行并追溯</td><td>经验贴升级为带环境、指标、证据和审核状态的贡献资产</td></tr>
@@ -215,8 +215,8 @@
     <section class="scene" id="ide" aria-labelledby="ide-title">
       <div class="scene-heading">
         <span class="scene-index">04</span>
-        <div><span class="section-kicker">在线 IDE</span><h2 id="ide-title">固定工作区与可恢复环境，比堆叠工具栏更重要</h2><p>IDE 进入白板后应成为稳定工作区，运行结果、终端和 AI 学伴围绕实践任务协作。</p></div>
-        <p class="scene-question"><strong>当前问题：</strong>如何兼顾代码、终端、运行结果与课程上下文，并支持用户自由调整面板？</p>
+        <div><span class="section-kicker">在线 IDE</span><h2 id="ide-title">固定工作区承接“边学边实践”，比堆叠工具栏更重要</h2><p>IDE 进入白板后成为稳定工作区，把当前课程任务、代码、运行检查和 AI 学伴连接成连续实践。</p></div>
+        <p class="scene-question"><strong>当前问题：</strong>如何让课程内容直接触发对应练习，并在代码、终端、运行结果与课程上下文之间保持连续？</p>
       </div>
       <div class="competitor-grid">
         <article class="competitor-card">
@@ -237,6 +237,23 @@
             <p class="observation">以仓库配置创建一致环境，让用户在浏览器或本地编辑器中恢复同一工程上下文。</p>
             <div class="takeaway-block"><h4>可借鉴</h4><ul><li>环境配置和课程版本绑定，支持中断后恢复。</li><li>主区域默认代码编辑，底部终端/日志，右侧 AI 学伴。</li><li>允许拖拽重排，但保留“一键恢复课程布局”。</li></ul></div>
             <p class="avoid-note"><strong>不照搬：</strong>通用 IDE 的扩展和账户功能会增加噪声，学习模式需做任务化裁剪。</p>
+          </div>
+        </article>
+        <article class="competitor-card competitor-card--wide">
+          <figure class="competitor-shot competitor-shot--sequence">
+            <div class="practice-sequence" aria-label="Hyperskill 从课程进入 IDE、完成任务和通过检查的实践链路">
+              <div class="practice-step"><span>01 · 从课程进入练习</span><img src="../assets/images/competitive-analysis/hyperskill-practice-entry.png" alt="Hyperskill 课程内通过 Solve in IDE 进入练习"></div>
+              <div class="practice-step"><span>02 · 任务与代码同屏</span><img src="../assets/images/competitive-analysis/hyperskill-practice-ide.png" alt="JetBrains IDE 左侧代码编辑、右侧阶段任务与检查界面"></div>
+              <div class="practice-step"><span>03 · 验证后回写完成</span><img src="../assets/images/competitive-analysis/hyperskill-practice-completion.png" alt="JetBrains Academy 项目通过检查后的完成反馈"></div>
+            </div>
+            <figcaption class="capture-date">用户研究截图 · 2026-10-19</figcaption>
+          </figure>
+          <div class="competitor-content">
+            <div class="competitor-title-row"><h3>JetBrains Academy · Hyperskill 实践链路</h3><a href="https://www.figma.com/board/qxgb5n2xIun8fcpGR9WH3o/%E5%AD%A6%E4%B9%A0-%E6%80%BB%E4%BD%93%E6%A1%86%E6%9E%B6-%E7%AB%9E%E5%93%81%E5%88%86%E6%9E%90?node-id=178-1044&amp;t=GqCwFUXahO1D7Nef-1" target="_blank" rel="noreferrer">查看竞品画布 ↗</a></div>
+            <span class="competitor-type">直接参考 · 边学边实践与自动验证</span>
+            <p class="observation">课程内的当前任务可以直接在 IDE 中打开。IDE 同时保留代码、阶段说明、目标、检查与提交状态；完成验证后把结果带回项目进度，让“理解—尝试—反馈—继续学习”成为一条不中断的链路。</p>
+            <div class="takeaway-block"><h4>转译到当前方案</h4><ul><li>板书讲到可实践的课程要点时，出现“进入练习”，打开与当前知识点绑定的预置工程。</li><li>IDE 固定区继承当前课节、文件、依赖、运行命令和验证条件；AI 学伴主动贴合右侧并继续使用同一上下文。</li><li>运行后给出“尝试中 / 需调整 / 已通过”，日志和关键指标自动成为学习证据。</li><li>练习通过后点亮对应课程要点和能力状态，并提供“回到板书继续”而不是把用户留在工具里。</li></ul></div>
+            <p class="avoid-note"><strong>不照搬：</strong>不要求用户跳到外部桌面 IDE，也不暴露完整通用开发工具；课程画布内保留精简、可恢复的实践区。</p>
           </div>
         </article>
       </div>
@@ -358,7 +375,7 @@
       <p class="method-note"><strong>研究说明：</strong>截图仅用于内部产品研究与界面比较，版权归各产品所有。页面表现与功能会变化，判断以采集日期和官方链接为准。后续新增竞品时，应先确定它补充哪个场景和哪条判断，再增加卡片，避免堆积无结论的截图。</p>
     </section>
 
-    <footer class="page-footer"><span>Ascend Learn Explore · 竞品模式库</span><span>最近更新：2026-10-18</span></footer>
+    <footer class="page-footer"><span>Ascend Learn Explore · 竞品模式库</span><span>最近更新：2026-10-19</span></footer>
   </main>
 </body>
 </html>
