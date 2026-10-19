@@ -20,10 +20,11 @@
     <div id="catalog" aria-live="polite"></div>
     <section class="rules"><h2>维护规则</h2><ol><li>当前方案保留稳定入口，参与首页到学习页的主链路。</li><li>低保真放入 <code>prototypes/lowfi/</code>，高保真与审查产物放入 <code>outputs/</code>。</li><li>历史版本记录已被正式页面替代的旧链路；归档方案记录停止讨论或已合并的独立探索，均保留原公开链接。</li><li>新增页面时先登记到 <code>page-registry.json</code>，再决定是否进入 GitHub Pages 发布白名单。</li></ol></section>
   </main>
+  <script src="assets/js/page-registry-data.js"></script>
   <script>
     const labels={current:'当前方案',lowfi:'低保真原型',exploration:'设计探索',legacy:'历史版本',archive:'归档方案'};
     const descriptions={current:'参与主链路并持续维护',lowfi:'仅用于结构和交互讨论',exploration:'高保真与审查对照稿',legacy:'已被当前页面替代的历史链路',archive:'已停止讨论或内容已合并，仅保留原链接回溯'};
-    let pages=[];
+    const pages=(window.PAGE_REGISTRY?.pages||[]).filter(page=>page.collection!=='competitive');
     const catalog=document.querySelector('#catalog');
     const summary=document.querySelector('#summary');
     function render(filter='all'){
@@ -35,12 +36,13 @@
         return `<section class="group ${status==='archive'?'archive-group':''}"><div class="group-head"><div><h2>${labels[status]}</h2><p>${descriptions[status]}</p></div><span>${items.length} 个页面</span></div><div class="cards">${items.map(page=>`<a class="card" href="${page.publicPath}"><div class="card-head"><span class="badge ${status}">${labels[status]}</span><code>${page.id}</code></div><h3>${page.title}</h3><p>${page.description}</p><span class="open">打开页面 <b aria-hidden="true">↗</b></span></a>`).join('')}</div></section>`;
       }).join('')||'<div class="empty">这个分类暂时没有页面</div>';
     }
-    fetch('page-registry.json').then(response=>response.json()).then(data=>{
-      pages=data.pages.filter(page=>page.collection!=='competitive');
+    if(pages.length){
       const counts=['current','lowfi','exploration','legacy','archive'].map(status=>`${labels[status]} ${pages.filter(page=>page.status===status).length}`);
       summary.innerHTML=counts.map(item=>`<span>${item}</span>`).join('');
       render();
-    }).catch(()=>{catalog.innerHTML='<div class="empty">页面清单读取失败，请通过静态服务器访问目录。</div>'});
+    }else{
+      catalog.innerHTML='<div class="empty">页面清单读取失败，请刷新页面后重试。</div>';
+    }
     document.querySelector('.filters').addEventListener('click',event=>{
       const button=event.target.closest('button[data-filter]');if(!button)return;
       document.querySelectorAll('.filters button').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));

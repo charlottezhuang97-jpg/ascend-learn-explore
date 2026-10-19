@@ -4,6 +4,8 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 dist="$repo_root/.pages-dist"
 
+node "$repo_root/scripts/build-page-registry-data.mjs"
+
 rm -rf "$dist"
 mkdir -p "$dist" "$dist/archive/legacy-v1" "$dist/prototypes/lowfi" "$dist/research" "$dist/lab"
 

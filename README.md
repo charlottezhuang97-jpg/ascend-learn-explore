@@ -4,7 +4,7 @@
 
 ## 当前探索方案
 
-当前持续维护的页面只保留发现、预览、学习执行和个人学习分析链路。页面状态的唯一清单是 [`page-registry.json`](page-registry.json)。
+当前持续维护的页面只保留发现、预览、学习执行和个人学习分析链路。页面状态的唯一清单是 [`page-registry.json`](page-registry.json)。修改清单后运行 `node scripts/build-page-registry-data.mjs`，生成供本地双击目录页读取的脚本数据；Pages 构建也会自动执行这一步。
 
 在线入口：[当前方案首页](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/index.html) · [设计资产目录（设计稿 / 竞品）](https://charlottezhuang97-jpg.github.io/ascend-learn-explore/catalog.html) · [本地首页](index.html)
 
