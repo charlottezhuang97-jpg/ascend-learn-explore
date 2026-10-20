@@ -19,8 +19,6 @@
     const videoLink = document.getElementById('boardToVideo');
     videoLink.dataset.time = '06:20'; videoLink.lastChild.textContent = '对应视频 06:20–09:40';
     document.getElementById('openDocument').lastChild.textContent = '分布式并行指南 §3.2';
-    document.querySelector('#lessonOutline h2').textContent = '理解数据并行与梯度同步';
-    document.querySelector('#lessonOutline>p').textContent = '跟踪一个训练批次如何拆分、计算局部梯度并通过 AllReduce 完成一致更新。';
     document.querySelector('#chatPanel .companion-label').textContent = '✎ 数据并行';
     document.querySelectorAll('#chatPanel>p')[1].textContent = '这节课会沿着一个训练批次，观察四张 NPU 如何独立计算局部梯度，再通过 AllReduce 保持模型参数一致。';
     document.querySelectorAll('#chatPanel>p')[2].textContent = '你可以切换图解、GIF 动态演示和思维导图；每种形式都定位到视频 06:20–09:40 和分布式并行指南 §3.2。';
@@ -452,6 +450,7 @@ if __name__ == '__main__':
   document.querySelectorAll('[data-board-jump]').forEach(button => button.addEventListener('click', () => {
     setView('board');
     renderBoardPage(Number(button.dataset.boardJump));
+    setOutlineOpen(false);
   }));
   const board = document.getElementById('whiteboard');
   const tip = document.getElementById('selectionTip');

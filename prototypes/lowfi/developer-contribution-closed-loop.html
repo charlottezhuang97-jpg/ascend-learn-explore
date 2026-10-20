@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <base href="../../">
+  <script src="assets/js/artifact-status.js" data-status="lowfi" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>开发者贡献闭环 · 最新低保真</title>
+  <link rel="stylesheet" href="assets/css/developer-contribution-closed-loop-lowfi.css">
+</head>
+<body>
+  <header class="prototype-bar"><strong>最新低保真 · 开发者贡献闭环</strong><span>竞品依据：Kaggle Benchmarks 的可验证结果 + GitHub Discussions 的社区沉淀</span><nav class="prototype-nav" aria-label="状态导航"><a href="#home-entry">首页入口</a><a href="#contribution-detail">贡献验证</a><a href="#leaderboard">开发榜</a><a href="catalog.html">返回目录</a></nav></header>
+  <main class="shell">
+    <section class="page-intro">
+      <article class="intro-copy"><span class="eyebrow">设计结论</span><h1>把“经验贴”转成可复现、可比较、可持续维护的开发资产</h1><p>首页负责发现优质贡献，独立页面负责把经验结构化、指定环境复现、比较结果并解释积分。浏览量和发帖量不直接决定排名。</p></article>
+      <aside class="decision-card"><span>分类原则</span><h2>认证是贡献类型，不是技术领域</h2><p>技术领域回答“贡献属于哪里”，贡献类型回答“用户贡献了什么”。两组筛选并存，避免把认证与 CANN、生成式 AI 等领域混在一层。</p><div class="dimension-row"><i>领域：CANN</i><i>领域：生成式 AI 与大语言模型</i><i>领域：智能体</i><i>类型：认证成果</i></div></aside>
+    </section>
+
+    <section class="loop-strip" aria-label="开发者贡献完整闭环">
+      <article class="loop-step"><span>01</span><b>经验回填</b><small>问题、代码、日志、环境与指标</small></article>
+      <article class="loop-step"><span>02</span><b>结构化任务</b><small>把经验转为目标、数据与断言</small></article>
+      <article class="loop-step"><span>03</span><b>指定环境复现</b><small>NPU、CANN、镜像与依赖可追溯</small></article>
+      <article class="loop-step"><span>04</span><b>产生可比结果</b><small>基线、当前结果与差异说明</small></article>
+      <article class="loop-step"><span>05</span><b>发布贡献</b><small>审核通过后进入领域资产库</small></article>
+      <article class="loop-step"><span>06</span><b>积分与开发榜</b><small>按复现、引用、帮助和维护计分</small></article>
+    </section>
+
+    <section class="screen" id="home-entry">
+      <header class="screen-caption"><span>01</span><div><h2>首页第三楼层 · 先发现可信贡献</h2><p>领域和贡献类型双维筛选；每张卡直接显示验证状态、证据和得分原因。</p></div></header>
+      <div class="screen-body"><section class="home-floor">
+        <header class="floor-head"><div><span class="eyebrow">社区实践</span><h3>开发者贡献</h3><p>看看同领域开发者解决了什么真实问题，以及这些结论由谁、在什么环境中完成复现。</p></div><div class="summary-pill">本周新增 28 条 · 已验证 17 条</div></header>
+        <div class="filter-block">
+          <span class="filter-label">技术领域</span><nav class="filter-row" aria-label="技术领域筛选"><button type="button" data-domain="all" aria-pressed="true">全部</button><button type="button" data-domain="cann" aria-pressed="false">CANN</button><button type="button" data-domain="genai" aria-pressed="false">生成式 AI 与大语言模型</button><button type="button" data-domain="agent" aria-pressed="false">智能体</button></nav>
+          <span class="filter-label">贡献类型</span><nav class="filter-row" aria-label="贡献类型筛选"><button type="button" data-type="all" aria-pressed="true">全部</button><button type="button" data-type="practice" aria-pressed="false">实践经验</button><button type="button" data-type="benchmark" aria-pressed="false">验证任务</button><button type="button" data-type="certification" aria-pressed="false">认证成果</button></nav>
+        </div>
+        <div class="contribution-grid" id="contributionGrid">
+          <article class="contribution-card" data-card-domain="cann" data-card-type="practice"><div class="card-meta"><span class="tag">CANN</span><span class="tag type">实践经验</span><span class="verified">● 已复现</span></div><h4>Ascend C 尾块 Tiling 的稳定处理方式</h4><p>补齐输入非整除时的边界判断、版本差异与三组性能数据。</p><div class="evidence"><span>代码 ✓</span><span>日志 ✓</span><span>指标 3 组</span></div><div class="impact">12 人复现 · 被课程引用 2 次 · +186 分</div></article>
+          <article class="contribution-card" data-card-domain="genai" data-card-type="benchmark"><div class="card-meta"><span class="tag">生成式 AI 与大语言模型</span><span class="tag type">验证任务</span><span class="verified">● 推荐实践</span></div><h4>八卡训练通信重叠效果验证</h4><p>统一模型、数据与环境，对比开启重叠前后的吞吐与稳定性。</p><div class="evidence"><span>环境 ✓</span><span>断言 4 项</span><span>结果 6 次</span></div><div class="impact">复现成功率 94% · 帮助 38 人 · +168 分</div></article>
+          <article class="contribution-card" data-card-domain="agent" data-card-type="certification"><div class="card-meta"><span class="tag">智能体</span><span class="tag type">认证成果</span><span class="verified">● 已核验</span></div><h4>RAG 应用开发认证后的完整实践补充</h4><p>认证证明基础能力，附加可运行项目和效果评估后形成贡献资产。</p><div class="evidence"><span>证书 ✓</span><span>项目 ✓</span><span>评估报告 ✓</span></div><div class="impact">通过官方核验 · 项目被复用 9 次 · +96 分</div></article>
+        </div>
+        <p class="empty" id="emptyState">当前筛选下暂时没有已验证贡献。</p>
+        <footer class="floor-footer"><span id="filterSummary">展示全部领域、全部贡献类型的代表内容。</span><a class="primary-link" href="#leaderboard">查看更多，进入开发榜 →</a></footer>
+      </section></div>
+    </section>
+
+    <section class="screen" id="contribution-detail">
+      <header class="screen-caption"><span>02</span><div><h2>贡献详情 · 让审核和复现有共同输入</h2><p>经验正文保留叙事，系统同时抽取可运行的任务、环境、指标与证据。</p></div></header>
+      <div class="screen-body detail-layout">
+        <article class="detail-card"><header class="detail-head"><div><span class="eyebrow">CANN · 实践经验</span><h3>Ascend C 尾块 Tiling 的稳定处理方式</h3></div><span class="state-badge">推荐实践</span></header><div class="asset-fields"><section class="asset-field"><span>01 · 问题与适用范围</span><b>非整除输入导致越界或结果异常</b><p>适用于 Ascend C 自定义算子，输入长度不能整除 blockLength 的场景。</p></section><section class="asset-field"><span>02 · 指定复现环境</span><b>Atlas 800T A2 · CANN 8.0.RC2</b><p>镜像、驱动、固件、算子工程 commit 与编译参数均可追溯。</p></section><section class="asset-field"><span>03 · 结构化验证任务</span><b>三组输入 + 四条断言</b><p>覆盖整除、单元素尾块和大尾块；验证正确性、无越界与耗时。</p></section><section class="asset-field"><span>04 · 证据与复现记录</span><b>代码、日志、Profiling 与复现报告</b><p>12 名开发者提交结果，11 次通过，1 次因版本差异待补充。</p></section></div><section class="compare-box"><div class="compare-head"><b>可比较结果</b><span>相对基线吞吐 +11.8%</span></div><div class="metric-row"><div><small>正确性</small><strong>4 / 4</strong></div><div><small>平均耗时</small><strong>1.42 ms</strong></div><div><small>复现成功率</small><strong>91.7%</strong></div></div></section></article>
+        <aside class="verification-panel"><h3>验证状态</h3><p>每个状态都有进入条件；失效后会退回维护，不永久占榜。</p><div class="status-list"><div class="status-item done"><i>✓</i><div><b>基础审核</b><small>来源、许可与字段完整</small></div><span>已通过</span></div><div class="status-item done"><i>✓</i><div><b>官方环境复现</b><small>指定环境运行通过</small></div><span>已完成</span></div><div class="status-item done"><i>✓</i><div><b>社区交叉验证</b><small>11 / 12 次复现成功</small></div><span>已完成</span></div><div class="status-item current"><i>04</i><div><b>推荐实践</b><small>进入领域资产库并持续维护</small></div><span>当前</span></div><div class="status-item"><i>05</i><div><b>版本复核</b><small>新版本发布后重新验证</small></div><span>待触发</span></div></div><div class="score-preview"><span>本贡献已产生</span><strong>+186 分</strong><small>证据完整 +60 · 官方复现 +40 · 社区复现 +66 · 课程引用 +20</small></div></aside>
+      </div>
+    </section>
+
+    <section class="screen" id="leaderboard">
+      <header class="screen-caption"><span>03</span><div><h2>独立开发榜 · 排名必须解释“为什么”</h2><p>周榜鼓励近期行动，长期榜表达持续影响，领域榜帮助用户找到同方向贡献者。</p></div></header>
+      <div class="screen-body board-layout">
+        <section class="ranking-card"><header class="ranking-head"><div><h3>开发贡献榜</h3><p id="rankingDescription">本周新获得的有效贡献积分</p></div><nav class="scope-tabs" aria-label="榜单类型"><button type="button" data-scope="week" aria-selected="true">周榜</button><button type="button" data-scope="total" aria-selected="false">长期榜</button><button type="button" data-scope="domain" aria-selected="false">领域榜</button></nav></header><div class="filter-block"><span class="filter-label">领域榜筛选</span><nav class="filter-row" aria-label="榜单领域筛选"><button type="button" data-board-domain="all" aria-pressed="true">全部</button><button type="button" data-board-domain="cann" aria-pressed="false">CANN</button><button type="button" data-board-domain="genai" aria-pressed="false">生成式 AI 与大语言模型</button><button type="button" data-board-domain="agent" aria-pressed="false">智能体</button></nav></div><table class="rank-table"><thead><tr><th>排名</th><th>贡献者</th><th>领域</th><th>得分原因</th><th>积分</th></tr></thead><tbody id="rankingBody"></tbody></table></section>
+        <aside class="score-panel"><h3>积分由可验证影响产生</h3><p>同一贡献的分数可以追溯到具体动作和证据。</p><div class="score-rule"><b>证据完整</b><span>最高 +60</span><small>代码、环境、日志、指标与复现步骤。</small></div><div class="score-rule"><b>指定环境复现</b><span>+40</span><small>在平台标准环境中通过验证。</small></div><div class="score-rule"><b>社区复现</b><span>每次 +6</span><small>有效结果可比较；周期内设上限。</small></div><div class="score-rule"><b>帮助与引用</b><span>最高 +120</span><small>被问题答案、课程、文档或项目采用。</small></div><div class="score-rule"><b>持续维护</b><span>最高 +60</span><small>补充版本差异、修正过期步骤。</small></div><div class="score-rule"><b>认证成果</b><span>基础 +20</span><small>核验证书；附项目与评估证据后再计影响分。</small></div><p class="rule-note">点赞、浏览、发帖数量不直接换算积分；无法复现、来源不明或已失效的内容不进入榜单。</p></aside>
+      </div>
+    </section>
+  </main>
+  <script>
+    (()=>{
+      let selectedDomain='all',selectedType='all',scope='week',boardDomain='all';
+      const cards=[...document.querySelectorAll('[data-card-domain]')];
+      const domainButtons=[...document.querySelectorAll('[data-domain]')];
+      const typeButtons=[...document.querySelectorAll('[data-type]')];
+      function filterCards(){let count=0;cards.forEach(card=>{const show=(selectedDomain==='all'||card.dataset.cardDomain===selectedDomain)&&(selectedType==='all'||card.dataset.cardType===selectedType);card.hidden=!show;if(show)count+=1});document.getElementById('emptyState').style.display=count?'none':'block';document.getElementById('filterSummary').textContent=`当前展示 ${count} 条代表内容；领域与贡献类型可交叉筛选。`}
+      domainButtons.forEach(button=>button.addEventListener('click',()=>{selectedDomain=button.dataset.domain;domainButtons.forEach(item=>item.setAttribute('aria-pressed',String(item===button)));filterCards()}));
+      typeButtons.forEach(button=>button.addEventListener('click',()=>{selectedType=button.dataset.type;typeButtons.forEach(item=>item.setAttribute('aria-pressed',String(item===button)));filterCards()}));
+      const people=[
+        {name:'林深见鹿',domain:'cann',label:'CANN',week:438,total:4210,reason:'尾块 Tiling 实践被课程引用 2 次',detail:'证据 +60 · 复现 +66 · 引用 +120 · 帮助 +192'},
+        {name:'NPU_Leo',domain:'genai',label:'生成式 AI 与大语言模型',week:412,total:3680,reason:'八卡通信重叠任务完成 16 次复现',detail:'标准复现 +40 · 社区复现 +96 · 帮助 +156'},
+        {name:'AgentMia',domain:'agent',label:'智能体',week:356,total:3018,reason:'RAG 评估模板被 23 个项目复用',detail:'认证 +20 · 项目证据 +60 · 引用 +138 · 维护 +42'},
+        {name:'KernelCat',domain:'cann',label:'CANN',week:328,total:3196,reason:'修正 CANN 8.0 参数并补充三组指标',detail:'维护 +60 · 指标证据 +60 · 复现 +78'},
+        {name:'MindFormer_X',domain:'genai',label:'生成式 AI 与大语言模型',week:306,total:2724,reason:'精度对齐清单帮助 41 人定位问题',detail:'问题解决 +164 · 复现 +72 · 维护 +42'},
+        {name:'RAG-Runner',domain:'agent',label:'智能体',week:284,total:2518,reason:'检索评估基线新增四个可信数据集',detail:'数据证据 +60 · 社区复现 +84 · 引用 +72'}
+      ];
+      const scopeButtons=[...document.querySelectorAll('[data-scope]')],boardButtons=[...document.querySelectorAll('[data-board-domain]')];
+      function renderRanking(){const list=people.filter(person=>boardDomain==='all'||person.domain===boardDomain).sort((a,b)=>(scope==='total'?b.total-a.total:b.week-a.week));document.getElementById('rankingDescription').textContent=scope==='week'?'本周新获得的有效贡献积分':scope==='total'?'持续积累的全部有效贡献积分':'当前领域中的有效贡献积分';document.getElementById('rankingBody').innerHTML=list.map((person,index)=>`<tr><td class="rank-no">${index+1}</td><td class="person"><b>${person.name}</b><small>代表贡献可查看</small></td><td><span class="tag">${person.label}</span></td><td class="score-reason"><b>${person.reason}</b><small>${person.detail}</small></td><td class="score-total"><b>${scope==='total'?person.total:person.week}</b><small>积分</small></td></tr>`).join('')}
+      scopeButtons.forEach(button=>button.addEventListener('click',()=>{scope=button.dataset.scope;scopeButtons.forEach(item=>item.setAttribute('aria-selected',String(item===button)));renderRanking()}));
+      boardButtons.forEach(button=>button.addEventListener('click',()=>{boardDomain=button.dataset.boardDomain;boardButtons.forEach(item=>item.setAttribute('aria-pressed',String(item===button)));if(boardDomain!=='all'){scope='domain';scopeButtons.forEach(item=>item.setAttribute('aria-selected',String(item.dataset.scope===scope)))}renderRanking()}));
+      filterCards();renderRanking();
+    })();
+  </script>
+</body>
+</html>
