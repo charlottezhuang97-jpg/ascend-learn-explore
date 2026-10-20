@@ -64,6 +64,9 @@ const courses = {
   }
 };
 
+window.AscendCourseCatalog = courses;
+
+if (document.getElementById('stageNav')) {
 const courseKey = new URLSearchParams(location.search).get('course') || 'training';
 const course = courses[courseKey] || courses.training;
 const startLink=document.querySelector('.start-button');
@@ -142,3 +145,4 @@ document.querySelector('#planButton')?.addEventListener('click',event=>{
   button.innerHTML=joined?'＋ <span>加入计划</span>':'✓ <span>已加入计划</span>';
   button.setAttribute('aria-pressed',String(!joined));
 });
+}

@@ -259,7 +259,7 @@ if __name__ == '__main__':
     if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home'].includes(event.key)) return;
     event.preventDefault();
     if (event.key === 'Home') {
-      moveMiniVideo(57, 77);
+      moveMiniVideo(10, 77);
       showToast('悬浮视频已回到默认位置');
       return;
     }
@@ -320,11 +320,14 @@ if __name__ == '__main__':
     setView('video');
     if (keepIdePerspective) setVideoPerspective('ide');
     const [minutes, seconds] = time.split(':').map(Number);
-    const percent = Math.min(100, ((minutes * 60 + seconds) / 1120) * 100);
-    videoCurrentTime.textContent = `${time} / 18:40`;
+    const totalSeconds = Number(videoRoom.dataset.durationSeconds) || 1120;
+    const duration = `${Math.floor(totalSeconds / 60).toString().padStart(2, '0')}:${(totalSeconds % 60).toString().padStart(2, '0')}`;
+    const percent = Math.min(100, ((minutes * 60 + seconds) / totalSeconds) * 100);
+    videoCurrentTime.textContent = `${time} / ${duration}`;
     timelineCurrentTime.textContent = time;
     miniVideoTime.textContent = time;
     videoPlayed.style.width = `${percent}%`;
+    document.dispatchEvent(new CustomEvent('learning:time-update', {detail:{seconds:minutes * 60 + seconds}}));
     const node = videoCodeNodes[time];
     if (node) {
       openIdeFile(node.file, node.line);
