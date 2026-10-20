@@ -94,4 +94,63 @@
   });
   document.querySelectorAll('.companion-tabs button').forEach(button=>button.addEventListener('click',()=>{boardBar.hidden=button.dataset.tab!=='chat';}));
   document.getElementById('ideAssistForm').addEventListener('submit',()=>{tool=null;render();});
+
+  // Both study views share the same resource categories and note collection.
+  const videoResources = document.getElementById('ideAssistResources');
+  const boardResources = document.getElementById('boardCourseResources');
+  boardResources.classList.add('ide-assist-resources');
+  boardResources.innerHTML = videoResources.innerHTML;
+  const resourceRoots = [videoResources, boardResources];
+  const noteStore = document.getElementById('notesPanel');
+  resourceRoots.forEach(root => {
+    const home = document.createElement('div'); home.dataset.resourceHome='';
+    while(root.firstChild)home.append(root.firstChild);
+    const detail = document.createElement('section');detail.className='study-resource-detail';detail.hidden=true;
+    root.append(home,detail);
+  });
+  const resourceTitles = {errors:'常见错误码',quiz:'随堂测试',docs:'相关文档',notes:'笔记'};
+  function noteMarkup() {
+    const entries=[...noteStore.querySelectorAll('.note-item')];
+    return `<p class="study-lead">白板摘录与随手记，在两种学习视角中同步查看。</p>${entries.length?entries.map(item=>`<article class="study-saved-note"><small>${escape(item.dataset.noteSource||'白板摘录')}</small><p>${escape(item.textContent)}</p></article>`).join(''):'<p class="study-empty">还没有笔记。可长按选中白板文字摘录，也可以在下方记录。</p>'}<form data-resource-note-form><label>添加笔记<textarea name="note" aria-label="笔记内容" placeholder="记下这一刻的理解或疑问…" required maxlength="2000"></textarea></label><button type="submit">保存笔记</button></form>`;
+  }
+  function openResource(root, key) {
+    root.dataset.openResource=key;
+    root.querySelector('[data-resource-home]').hidden=true;
+    const detail=root.querySelector('.study-resource-detail');detail.hidden=false;
+    let body='';
+    if(key==='notes')body=noteMarkup();
+    if(key==='errors')body=`<p class="study-lead">展开错误项，查看排查顺序。</p><details class="study-error-item"><summary>ACL_INIT_FAILED · 初始化失败</summary><p>先确认驱动、CANN 与运行时环境已正确安装，再检查环境变量和当前进程的设备权限。</p></details><details class="study-error-item"><summary>设备不可见 · NPU 数量为 0</summary><p>检查设备状态、容器挂载与设备权限，然后重新执行设备数量查询。</p></details><details class="study-error-item"><summary>通信初始化失败</summary><p>核对各进程的 RANK、WORLD_SIZE 与网络配置，确认所有训练进程均已启动。</p></details>`;
+    if(key==='quiz')body=`<p class="study-lead">选择一个答案，立即查看解析。</p><h3>${training?'AllReduce 求和后，为什么还需要除以设备数量？':'Cube 计算单元主要负责哪类任务？'}</h3><div class="study-quiz-options">${(training?['得到全局平均梯度','减少模型参数的数量','让每张 NPU 读取相同数据']:['矩阵运算','输入输出流程控制','保存所有训练数据']).map((choice,index)=>`<button type="button" data-resource-answer="${index}">${String.fromCharCode(65+index)}. ${choice}</button>`).join('')}</div><p class="study-quiz-feedback" role="status"></p>`;
+    if(key==='docs')body=`<p class="study-lead">按知识点查阅本节讲解与板书。</p>${data.points.map(([title,text,time,view,page])=>`<article class="study-summary-point"><h4>${escape(title)}</h4><p>${escape(text)}</p><button type="button" data-study-jump="${time}" data-study-view="${view}" data-study-page="${page}">${sourceBadge(view,view==='video'?'讲解':'板书')}<time>${time}</time><span>查看来源 ↗</span></button></article>`).join('')}`;
+    detail.innerHTML=`<header class="study-tool-head"><h2>${resourceTitles[key]}</h2><button type="button" data-resource-back>返回资源</button></header><div class="study-tool-body">${body}</div>`;
+  }
+  function syncNoteCounts() {
+    const count=noteStore.querySelectorAll('.note-item').length;
+    document.querySelectorAll('[data-resource-note-count]').forEach(node=>{node.textContent=String(count);});
+    resourceRoots.filter(root=>root.dataset.openResource==='notes').forEach(root=>openResource(root,'notes'));
+  }
+  new MutationObserver(syncNoteCounts).observe(noteStore,{childList:true,subtree:true,characterData:true});
+  document.addEventListener('click',event=>{
+    const button=event.target.closest('[data-assist-resource],[data-resource-back],[data-resource-answer]');
+    if(!button)return;
+    const root=resourceRoots.find(item=>item.contains(button));if(!root)return;
+    if(button.dataset.assistResource)openResource(root,button.dataset.assistResource);
+    else if(button.hasAttribute('data-resource-back')){
+      delete root.dataset.openResource;
+      root.querySelector('.study-resource-detail').hidden=true;
+      root.querySelector('[data-resource-home]').hidden=false;
+    } else {
+      const correct=button.dataset.resourceAnswer==='0';
+      root.querySelectorAll('[data-resource-answer]').forEach(item=>item.classList.toggle('selected',item===button));
+      root.querySelector('.study-quiz-feedback').textContent=correct?`回答正确。${data.cards[training?1:0][1]}`:`再想一想：${training?'这里需要把各设备的梯度总和变成平均值。':'Cube 擅长大规模矩阵乘法。'}`;
+    }
+  });
+  document.addEventListener('submit',event=>{
+    if(!event.target.matches('[data-resource-note-form]'))return;
+    event.preventDefault();
+    const input=event.target.elements.note;const text=input.value.trim();if(!text)return;
+    noteStore.querySelector('.empty-note')?.remove();
+    const note=document.createElement('p');note.className='note-item';note.dataset.noteSource='随手记';note.textContent=text;noteStore.append(note);
+    document.getElementById('noteCount').textContent=String(noteStore.querySelectorAll('.note-item').length);
+  });
 })();

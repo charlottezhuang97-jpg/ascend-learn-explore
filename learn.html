@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="assets/css/learning-high-fidelity.css?v=canvas-keypoints-7">
   <link rel="stylesheet" href="assets/css/video-learning.css?v=workspace-dock-2">
   <link rel="stylesheet" href="assets/css/video-teacher.css?v=compact-toolbar-1">
-  <link rel="stylesheet" href="assets/css/learning-study-tools.css?v=study-tools-1">
+  <link rel="stylesheet" href="assets/css/learning-study-tools.css?v=resource-tabs-2">
 </head>
 <body>
   <main class="learning-room" id="learningRoom" aria-label="沉浸式课程学习">
@@ -109,14 +109,15 @@
       <footer class="board-footer"><button type="button" id="toggleLessonOutline" aria-expanded="false" aria-controls="lessonOutline">☷ 本节大纲</button><button type="button">◖ 声音</button><span>长按画布中的文字，可加入我的笔记</span></footer>
     </section>
     <aside class="companion" aria-label="本节课学习辅助">
-      <header><strong>本节课</strong><button type="button" aria-label="收起辅助面板">×</button></header>
-      <nav class="companion-tabs" aria-label="学习辅助内容"><button type="button" class="active" data-tab="chat">AI 学伴</button><button type="button" data-tab="notes">我的笔记 <span id="noteCount">0</span></button></nav>
+      <header><strong>AI 学伴</strong><button type="button" aria-label="收起辅助面板">×</button></header>
+      <nav class="companion-tabs" aria-label="AI 学伴与课程资源"><button type="button" class="active" data-tab="chat">对话</button><button type="button" data-tab="resources">课程资源</button></nav>
       <section class="companion-content" id="chatPanel">
         <p class="companion-label">✎ 课程开篇</p>
         <p>你好，欢迎来到这一课。今天我们会理解昇腾处理器如何组织计算任务，并建立 NPU 与 CPU 协作的基本直觉。</p>
         <p>有不理解的概念，随时问我；也可以在画布上长按选词，把内容加入笔记。</p>
       </section>
-      <section class="companion-content" id="notesPanel" hidden><p class="empty-note">长按并选中板书文字后，笔记会保存在这里。</p></section>
+      <section class="board-course-resources" id="boardCourseResources" aria-label="课程资源" hidden></section>
+      <section class="companion-content" id="notesPanel" hidden><span id="noteCount" hidden>0</span><p class="empty-note">长按并选中板书文字后，笔记会保存在这里。</p></section>
       <form class="companion-input" id="companionForm"><button type="button" aria-label="添加资料">＋</button><input aria-label="向 AI 学伴提问" placeholder="输入问题…"><button type="submit" aria-label="发送问题">↑</button></form>
     </aside>
   </main>
@@ -143,9 +144,9 @@
         </div>
         <aside class="ide-assist-panel" id="ideAssistPanel" aria-label="AI 学伴" hidden>
           <header class="ide-assist-head"><div><small>AI COMPANION</small><strong>AI 学伴</strong></div><button type="button" id="closeIdeAssist" aria-label="关闭 AI 学伴">×</button></header>
-          <nav class="ide-assist-tabs" aria-label="AI 学伴与课程资源"><button type="button" class="active" data-ide-assist-tab="ai" aria-selected="true">AI 学伴</button><button type="button" data-ide-assist-tab="resources" aria-selected="false">课程资源</button></nav>
+          <nav class="ide-assist-tabs" aria-label="AI 学伴与课程资源"><button type="button" class="active" data-ide-assist-tab="ai" aria-selected="true">对话</button><button type="button" data-ide-assist-tab="resources" aria-selected="false">课程资源</button></nav>
           <div class="ide-assist-ai" id="ideAssistAi"><div class="ide-assist-context"><span>当前讲解 · <b id="ideAssistTime">03:20</b></span><strong id="ideAssistTopic">数据并行：按 rank 拆分批次</strong><small id="ideAssistFile">data_parallel.py · 第 14 行</small></div><div class="ide-assist-messages" id="ideAssistMessages" aria-live="polite"><div class="ide-assist-message assistant"><span>AI 学伴</span><p>这一行用 <code>DistributedSampler</code> 为每张 NPU 分配不同的数据切片。模型仍是完整副本，变化的是各设备读到的样本。</p></div></div><div class="ide-assist-suggestions"><button type="button" data-assist-question="为什么每张 NPU 需要不同的数据？">为什么要拆分数据？</button><button type="button" data-assist-question="AllReduce 为什么要除以设备数量？">解释梯度平均</button></div><form class="ide-assist-form" id="ideAssistForm"><input id="ideAssistInput" aria-label="向 AI 学伴提问" placeholder="问问当前代码或视频节点…"><button type="submit" aria-label="发送问题">↑</button></form></div>
-          <div class="ide-assist-resources" id="ideAssistResources" hidden><p>与当前课节关联的四类资料</p><button type="button" data-assist-resource="code"><span>⌘</span><strong>代码全览</strong><small>按视频时间查看所有示例</small></button><button type="button" data-assist-resource="errors"><span>!</span><strong>常见错误码</strong><small>定位运行失败的原因</small></button><button type="button" data-assist-resource="quiz"><span>?</span><strong>随堂测试</strong><small>检验拆分与同步的理解</small></button><button type="button" data-assist-resource="docs"><span>▤</span><strong>相关文档</strong><small>继续查阅 Ascend 学习资料</small></button></div>
+          <div class="ide-assist-resources" id="ideAssistResources" hidden><p>与当前课节关联的四类资料</p><button type="button" data-assist-resource="errors"><span>!</span><strong>常见错误码</strong><small>定位运行失败的原因</small></button><button type="button" data-assist-resource="quiz"><span>?</span><strong>随堂测试</strong><small>检验拆分与同步的理解</small></button><button type="button" data-assist-resource="docs"><span>▤</span><strong>相关文档</strong><small>继续查阅本节学习资料</small></button><button type="button" data-assist-resource="notes"><span>✎</span><strong>笔记 <b data-resource-note-count>0</b></strong><small>记录想法，回看白板摘录</small></button></div>
         </aside>
         <footer class="ide-statusbar"><span>main*</span><span>0 错误　0 警告</span><span>Python 3.11　UTF-8　Ascend NPU</span></footer>
         <div class="ide-mini-video" id="ideMiniVideo" aria-label="可拖动的悬浮讲解视频" hidden><button type="button" class="mini-video-drag-handle" id="miniVideoDragHandle" aria-label="移动悬浮视频；可拖拽或使用方向键" title="拖动视频 · 方向键也可移动"><span aria-hidden="true"></span></button><button type="button" class="mini-video-close" id="closeMiniVideo" aria-label="关闭悬浮视频">×</button><button type="button" class="mini-video-poster" id="miniVideoPlay" aria-label="播放悬浮讲解视频"><img src="assets/images/video-teacher-cover.png" alt="课程视频封面"></button><div class="mini-video-caption"><span id="miniVideoTime">08:24</span><span>先检查运行环境，再确认设备是否可用。</span></div></div>
@@ -210,7 +211,7 @@
       <button type="button" class="enter-learning" id="enterLearning">进入白板学习</button>
     </div>
   </section>
-  <script src="assets/js/learning-room.js?v=study-tools-1"></script>
-  <script src="assets/js/learning-study-tools.js?v=study-tools-1"></script>
+  <script src="assets/js/learning-room.js?v=resource-tabs-2"></script>
+  <script src="assets/js/learning-study-tools.js?v=resource-tabs-2"></script>
 </body>
 </html>

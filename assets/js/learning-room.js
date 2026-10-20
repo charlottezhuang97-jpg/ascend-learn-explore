@@ -311,12 +311,6 @@ if __name__ == '__main__':
     askIdeCompanion(question);
     input.value = '';
   });
-  document.querySelectorAll('[data-assist-resource]').forEach(button => button.addEventListener('click', () => {
-    const resourceMap = {code:'examples', errors:'errors', quiz:'quiz', docs:'docs'};
-    const resourceButton = document.querySelector(`[data-resource="${resourceMap[button.dataset.assistResource]}"]`);
-    resourceButton?.click();
-    showToast(`已打开${button.querySelector('strong').textContent}`);
-  }));
   if (isTrainingCourse) {
     overlay.hidden = true;
     setView('video');
@@ -463,7 +457,9 @@ if __name__ == '__main__':
     const target = tab.dataset.tab;
     tabs.forEach(item => item.classList.toggle('active', item === tab));
     chat.hidden = target !== 'chat';
-    notes.hidden = target !== 'notes';
+    document.getElementById('boardCourseResources').hidden = target !== 'resources';
+    document.getElementById('companionForm').hidden = target !== 'chat';
+    notes.hidden = true;
   }));
   document.querySelectorAll('[data-board-jump]').forEach(button => button.addEventListener('click', () => {
     setView('board');
