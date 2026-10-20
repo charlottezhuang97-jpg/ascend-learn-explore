@@ -283,6 +283,7 @@ if __name__ == '__main__':
   openIdeAssist.addEventListener('click', () => {
     const open = ideAssistPanel.hidden;
     if (videoRoom.classList.contains('teacher-mode')) setVideoPerspective('ide');
+    if (open && timelineCurrentTime.textContent === '00:00') seekVideo('03:20');
     setIdeAssistOpen(open);
   });
   document.getElementById('closeIdeAssist').addEventListener('click', () => setIdeAssistOpen(false));
@@ -435,6 +436,19 @@ if __name__ == '__main__':
   previousBoardPage.addEventListener('click', () => renderBoardPage(currentBoardPage - 1));
   nextBoardPage.addEventListener('click', () => renderBoardPage(currentBoardPage + 1));
   renderBoardPage(0, false);
+  document.addEventListener('learning:locate', event => {
+    const {time, view, page} = event.detail;
+    if (view === 'board') {
+      setView('board');
+      renderBoardPage(page || 0);
+      document.querySelector('.companion-tabs [data-tab="chat"]').click();
+    } else {
+      seekVideo(time);
+      setVideoPerspective('ide');
+      setIdeAssistOpen(true);
+      document.querySelector('[data-ide-assist-tab="ai"]').click();
+    }
+  });
   const motionToggle = document.getElementById('toggleGradientMotion');
   motionToggle.addEventListener('click', () => {
     const demo = document.getElementById('gradientDemo');
