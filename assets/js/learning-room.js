@@ -221,7 +221,7 @@ if __name__ == '__main__':
     const parentRect = videoIde.getBoundingClientRect();
     const videoRect = ideMiniVideo.getBoundingClientRect();
     const minLeft = 8;
-    const minTop = 62;
+    const minTop = videoIde.querySelector('.ide-toolbar').offsetHeight + 8;
     const reservedRight = ideAssistPanel.hidden ? 8 : ideAssistPanel.offsetWidth + 8;
     return {
       left: Math.max(minLeft, Math.min(left, parentRect.width - videoRect.width - reservedRight)),
@@ -280,7 +280,11 @@ if __name__ == '__main__':
     }
     else if (returnFocus) openIdeAssist.focus();
   }
-  openIdeAssist.addEventListener('click', () => setIdeAssistOpen(ideAssistPanel.hidden));
+  openIdeAssist.addEventListener('click', () => {
+    const open = ideAssistPanel.hidden;
+    if (videoRoom.classList.contains('teacher-mode')) setVideoPerspective('ide');
+    setIdeAssistOpen(open);
+  });
   document.getElementById('closeIdeAssist').addEventListener('click', () => setIdeAssistOpen(false));
   document.querySelectorAll('[data-ide-assist-tab]').forEach(button => button.addEventListener('click', () => {
     const ai = button.dataset.ideAssistTab === 'ai';

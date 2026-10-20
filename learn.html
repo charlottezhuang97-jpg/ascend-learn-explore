@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="assets/css/learning-room.css?v=canvas-keypoints-7">
   <link rel="stylesheet" href="assets/css/learning-high-fidelity.css?v=canvas-keypoints-7">
   <link rel="stylesheet" href="assets/css/video-learning.css?v=workspace-dock-2">
-  <link rel="stylesheet" href="assets/css/video-teacher.css?v=drag-assist-1">
+  <link rel="stylesheet" href="assets/css/video-teacher.css?v=compact-toolbar-1">
 </head>
 <body>
   <main class="learning-room" id="learningRoom" aria-label="沉浸式课程学习">
@@ -120,19 +120,6 @@
     </aside>
   </main>
   <main class="video-workspace teacher-mode" id="videoWorkspace" aria-label="视频学习工作台" hidden>
-    <header class="video-header">
-      <a class="room-close" href="index.html" aria-label="关闭课程">×</a>
-      <div class="lesson-title"><span>课节 1</span><strong id="videoLessonTitle">昇腾处理器的逻辑结构拆解</strong></div>
-      <button type="button" class="back-to-teacher" id="backToTeacher" hidden>← 回到老师讲解</button>
-      <div class="video-header-tools" aria-label="学习辅助功能">
-        <nav class="learning-mode-tabs" aria-label="学习形式"><button type="button" data-view="board">白板</button><button type="button" class="active" data-view="video">视频</button></nav>
-        <button type="button" class="video-tool" aria-label="视频播放速度">1.0×</button>
-        <button type="button" class="video-tool" aria-label="下载本节资料">⇩</button>
-        <button type="button" class="video-tool" aria-label="AI 学伴">✦</button>
-        <button type="button" class="video-tool" aria-label="学习设置">⚙</button>
-      </div>
-      <button type="button" class="layout-reset" id="resetWorkspaceLayout">↺ 恢复默认布局</button>
-    </header>
     <section class="video-dock" id="videoDock" aria-label="视频和 IDE 核心工作区，附带可移动辅助面板">
       <button type="button" class="teacher-backdrop-target" id="enterIdeFromBackdrop" aria-label="切换到 IDE 实践视角"></button>
       <section class="video-column" aria-label="老师讲解视频">
@@ -144,17 +131,18 @@
       <div class="dock-resizer" data-resize="video" role="separator" aria-label="调整视频与 IDE 的宽度；可用左右方向键" aria-orientation="vertical" tabindex="0"></div>
       <section class="video-ide dock-card fixed-workspace" id="videoIde" aria-label="固定 IDE 实践区">
         <header class="ide-toolbar">
-          <div class="ide-environment"><span class="ide-brand" aria-hidden="true">H</span><div><strong>HiDevLab 在线环境</strong><small><i></i> Ascend 910B · CANN 8.0 · 已连接</small></div><em>固定区域</em></div>
-          <div class="ide-actions"><button type="button" class="ide-assist-trigger" id="openIdeAssist" aria-controls="ideAssistPanel" aria-expanded="false">✦ 学习辅助</button><button type="button" class="primary" id="runCode">▶ 运行</button><button type="button">■ 停止</button><button type="button">保存</button></div>
+          <div class="ide-environment"><span class="ide-brand" aria-hidden="true">H</span><div><strong>HiDevLab 在线环境</strong><small><i></i> Ascend 910B · CANN 8.0 · 已连接</small></div></div>
+          <div class="ide-lesson-nav"><a class="ide-course-exit" href="index.html" aria-label="退出课程" title="退出课程">×</a><div class="ide-lesson-title"><span>课节 1</span><strong id="videoLessonTitle">昇腾处理器的逻辑结构拆解</strong></div><button type="button" class="back-to-teacher" id="backToTeacher" hidden>← 回到讲解</button></div>
+          <div class="ide-actions"><nav class="learning-mode-tabs" aria-label="学习形式"><button type="button" data-view="board">白板</button><button type="button" class="active" data-view="video">视频</button></nav><button type="button" class="ide-assist-trigger" id="openIdeAssist" aria-controls="ideAssistPanel" aria-expanded="false">✦ AI 学伴</button><button type="button" class="primary" id="runCode">▶ 运行</button><button type="button" class="ide-stop">■ 停止</button><button type="button" class="ide-save">保存</button><details class="ide-more-tools"><summary aria-label="更多课程工具" title="更多课程工具">⋯</summary><div class="ide-tools-menu"><button type="button" class="video-tool" aria-label="视频播放速度">播放速度 <span>1.0×</span></button><button type="button" class="video-tool" aria-label="下载本节资料">⇩ 下载本节资料</button><button type="button" class="video-tool" aria-label="学习设置">⚙ 学习设置</button><button type="button" id="resetWorkspaceLayout">↺ 恢复默认布局</button></div></details></div>
         </header>
         <div class="ide-body">
           <nav class="ide-activity" aria-label="IDE 功能"><button type="button" class="active" aria-label="资源管理器" title="资源管理器">▱</button><button type="button" aria-label="搜索" title="搜索">⌕</button><button type="button" aria-label="源代码管理" title="源代码管理">⑂</button><button type="button" aria-label="运行与调试" title="运行与调试">▷</button><button type="button" aria-label="扩展" title="扩展">▦</button></nav>
           <aside class="ide-explorer"><header><span>资源管理器</span><button type="button" aria-label="更多资源管理器操作">…</button></header><strong class="folder open">⌄ TRAINING-LAB</strong><strong class="folder">› scripts</strong><strong class="folder open">⌄ src</strong><strong class="folder nested">› ascendc</strong><button type="button" class="ide-file active" data-ide-file="data_parallel.py">PY data_parallel.py</button><button type="button" class="ide-file" data-ide-file="gradient_sync.py">PY gradient_sync.py</button><div class="ide-file-row"><button type="button" class="ide-file" data-ide-file="check_env.py">PY check_env.py</button><button type="button" class="file-video-jump" id="fileVideoJump" aria-label="查看 check_env.py 对应视频：08 分 24 秒" aria-describedby="fileVideoTooltip"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="12" rx="2"/><path d="m8 7 5 3-5 3z"/></svg></button><span class="file-video-tooltip" id="fileVideoTooltip" role="tooltip">视频：08 分 24 秒</span></div><button type="button" class="ide-file" data-ide-file="README.md">MD README.md</button></aside>
           <section class="ide-editor-area"><div class="ide-tabs" role="tablist" aria-label="打开的文件"><button type="button" role="tab" aria-selected="true" class="active" data-ide-file="data_parallel.py">PY&nbsp; data_parallel.py</button><button type="button" role="tab" aria-selected="false" data-ide-file="gradient_sync.py">PY&nbsp; gradient_sync.py</button><button type="button" role="tab" aria-selected="false" data-ide-file="check_env.py">PY&nbsp; check_env.py</button><button type="button" role="tab" aria-selected="false" data-ide-file="README.md">MD&nbsp; README.md</button></div><div class="ide-editor-shell"><div class="ide-gutter" id="ideGutter" aria-hidden="true"></div><div class="ide-code-surface"><div class="ide-line-highlight" id="ideLineHighlight" aria-hidden="true"></div><textarea id="ideEditor" spellcheck="false" aria-label="当前文件代码编辑器" aria-describedby="ideOutput"></textarea></div></div><div class="ide-output" id="ideOutput"><nav aria-label="IDE 底部面板"><button type="button">问题</button><button type="button" class="active">输出</button><button type="button">调试控制台</button><button type="button">终端</button></nav><small>尚未运行代码。</small></div></section>
         </div>
-        <aside class="ide-assist-panel" id="ideAssistPanel" aria-label="学习辅助" hidden>
-          <header class="ide-assist-head"><div><small>LEARNING ASSISTANT</small><strong>学习辅助</strong></div><button type="button" id="closeIdeAssist" aria-label="关闭学习辅助">×</button></header>
-          <nav class="ide-assist-tabs" aria-label="学习辅助内容"><button type="button" class="active" data-ide-assist-tab="ai" aria-selected="true">AI 学伴</button><button type="button" data-ide-assist-tab="resources" aria-selected="false">课程资源</button></nav>
+        <aside class="ide-assist-panel" id="ideAssistPanel" aria-label="AI 学伴" hidden>
+          <header class="ide-assist-head"><div><small>AI COMPANION</small><strong>AI 学伴</strong></div><button type="button" id="closeIdeAssist" aria-label="关闭 AI 学伴">×</button></header>
+          <nav class="ide-assist-tabs" aria-label="AI 学伴与课程资源"><button type="button" class="active" data-ide-assist-tab="ai" aria-selected="true">AI 学伴</button><button type="button" data-ide-assist-tab="resources" aria-selected="false">课程资源</button></nav>
           <div class="ide-assist-ai" id="ideAssistAi"><div class="ide-assist-context"><span>当前讲解 · <b id="ideAssistTime">03:20</b></span><strong id="ideAssistTopic">数据并行：按 rank 拆分批次</strong><small id="ideAssistFile">data_parallel.py · 第 14 行</small></div><div class="ide-assist-messages" id="ideAssistMessages" aria-live="polite"><div class="ide-assist-message assistant"><span>AI 学伴</span><p>这一行用 <code>DistributedSampler</code> 为每张 NPU 分配不同的数据切片。模型仍是完整副本，变化的是各设备读到的样本。</p></div></div><div class="ide-assist-suggestions"><button type="button" data-assist-question="为什么每张 NPU 需要不同的数据？">为什么要拆分数据？</button><button type="button" data-assist-question="AllReduce 为什么要除以设备数量？">解释梯度平均</button></div><form class="ide-assist-form" id="ideAssistForm"><input id="ideAssistInput" aria-label="向 AI 学伴提问" placeholder="问问当前代码或视频节点…"><button type="submit" aria-label="发送问题">↑</button></form></div>
           <div class="ide-assist-resources" id="ideAssistResources" hidden><p>与当前课节关联的四类资料</p><button type="button" data-assist-resource="code"><span>⌘</span><strong>代码全览</strong><small>按视频时间查看所有示例</small></button><button type="button" data-assist-resource="errors"><span>!</span><strong>常见错误码</strong><small>定位运行失败的原因</small></button><button type="button" data-assist-resource="quiz"><span>?</span><strong>随堂测试</strong><small>检验拆分与同步的理解</small></button><button type="button" data-assist-resource="docs"><span>▤</span><strong>相关文档</strong><small>继续查阅 Ascend 学习资料</small></button></div>
         </aside>
@@ -221,6 +209,6 @@
       <button type="button" class="enter-learning" id="enterLearning">进入白板学习</button>
     </div>
   </section>
-  <script src="assets/js/learning-room.js?v=drag-assist-1"></script>
+  <script src="assets/js/learning-room.js?v=compact-toolbar-1"></script>
 </body>
 </html>
