@@ -1,5 +1,6 @@
 (() => {
   const params=new URLSearchParams(location.search);
+  if(params.get('course')==='mindie')return;
   const key=params.get('course')||'architecture';
   const catalog=window.AscendCourseCatalog;
   const legacy={title:params.get('title')||'昇腾 AI 处理器架构',stages:[

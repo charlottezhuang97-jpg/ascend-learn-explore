@@ -2,7 +2,8 @@
   const training = new URLSearchParams(location.search).get('course') === 'training';
   const labels = {course:'课程总结', chapter:'章节总结', transcript:'视频字幕', cards:'闪卡'};
   const lesson = document.getElementById('videoLessonTitle').textContent;
-  const data = training ? {
+  const mindie = new URLSearchParams(location.search).get('course') === 'mindie';
+  const data = window.MindIEStudyData || (training ? {
     course:'大模型分布式训练', chapter:'数据并行与梯度同步',
     outline:[['建立训练全景','理解模型、数据、设备与训练任务之间的关系。'],['完成设备协同','通过数据并行、梯度同步与混合精度完成多卡协作。'],['稳定调优与验收','从通信开销、训练稳定性到可复现的验收证据。']],
     points:[['数据拆分','每张 NPU 保留完整模型，通过 rank 读取不同的数据切片。','03:20','video',0],['梯度同步','AllReduce 汇总局部梯度，再除以设备数量得到平均梯度。','05:05','video',1],['一致更新','各设备使用相同的全局梯度更新参数，保持模型副本一致。','07:36','board',1]],
@@ -21,7 +22,7 @@
     points:[['三类计算单元','Cube 负责矩阵计算，Vector 负责向量运算，Scalar 负责控制流程。','03:36','board',0],['数据搬运','把输入从全局内存搬到合适的片上缓冲区，再开始计算。','03:20','video',0],['结果写回','完成计算后，明确结果长度与写回目标，保证输出正确。','05:05','video',1]],
     transcript:[['01:50','video','讲解','达芬奇架构：AI 计算的核心','上一节我们把 NPU 比作工厂。现在进入工厂内部，理解各计算单元如何分工。',0],['03:20','video','代码','输入数据搬运','先准备输入数据与缓冲区，再把数据搬运到计算单元可访问的位置。',0],['03:36','board','板书','Cube、Vector 与 Scalar','达芬奇架构把计算任务拆分给三个各司其职的单元：Cube、Vector 和 Scalar。',0],['05:05','video','代码','计算结果写回','计算完成后，把结果按指定长度写回输出空间。',1],['05:40','board','高亮','计算单元的职责','Cube 承担矩阵乘法，Vector 处理向量运算，Scalar 负责控制流程。',0],['06:20','board','小测','判断主要计算单元','Transformer 中的大规模矩阵乘法，主要由哪个计算单元承担？',0]],
     cards:[['Cube 主要负责什么？','矩阵计算，例如大模型中的矩阵乘法。'],['Vector 与 Scalar 有什么区别？','Vector 处理向量运算与后处理；Scalar 负责标量运算和流程控制。'],['算子执行的基本顺序是什么？','输入搬运 → 计算 → 结果写回。']]
-  };
+  });
   let tool = null, filter = 'all', query = '', cardIndex = 0, revealed = false, selectedEntry = -1;
   const surfaces = [];
   const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -50,11 +51,13 @@
     document.dispatchEvent(new CustomEvent('learning:locate',{detail:{time,view,page}}));
   }
   function summary(course) {
+    if(mindie)return `<div class="study-scope">${course?'整门课程':'当前章节'}</div><h3>${escape(course?data.course:data.chapter)}</h3>${course?`<ol class="study-summary-list">${data.outline.map(([title,text],i)=>`<li><span>${i+1}</span><div><h4>${escape(title)}</h4><p>${escape(text)}</p></div></li>`).join('')}</ol>`:`<p class="study-lead">按实验手册整理为八步。点击节点，在现有 IDE 中查看对应代码。</p>${data.points.map(([title,text,time,view,page])=>`<article class="study-summary-point"><h4>${escape(title)}</h4><p>${escape(text)}</p><button type="button" data-study-jump="${time}" data-study-view="${view}" data-study-page="${page}">查看 ${time} →</button></article>`).join('')}`}<p class="study-caption">未连接真实运行环境；原视频与认证规则待接入。</p>`;
     const heading=course?data.course:data.chapter;
     const body=course?`<p class="study-lead">围绕整门课程，把学习内容串成三个能力阶段。</p><ol class="study-summary-list">${data.outline.map(([title,text],i)=>`<li><span>${String(i+1).padStart(2,'0')}</span><div><h4>${title}</h4><p>${text}</p></div></li>`).join('')}</ol><div class="study-callout"><b>学完后你能够</b><p>${training?'独立完成一次可验证的分布式训练，保留指标、调优过程与验收证据。':'理解昇腾处理器的计算分工，并完成数据搬运、计算与结果验证。'}</p></div>`:`<p class="study-lead">本章三个重点，点击来源回到对应讲解。</p>${data.points.map(([title,text,time,view,page])=>`<article class="study-summary-point"><h4>${title}</h4><p>${text}</p><button type="button" data-study-jump="${time}" data-study-view="${view}" data-study-page="${page}">${sourceBadge(view,view==='video'?'讲解':'板书')}<time>${time}</time><span>定位 ↗</span></button></article>`).join('')}`;
     return `<div class="study-scope">${course?'整门课程':'当前章节'}</div><h3>${escape(heading)}</h3>${body}`;
   }
   function transcript() {
+    if(mindie)return '<p class="study-lead">原始视频和字幕文件待接入，暂不生成虚构的时间戳。可通过课程资源和实验手册查看八个实践步骤。</p>';
     const entries=data.transcript.map((entry,index)=>({entry,index})).filter(({entry})=>(filter==='all'||entry[1]===filter)&&(!query||entry.join(' ').toLowerCase().includes(query.toLowerCase())));
     return `<div class="study-transcript-toolbar"><label class="study-search"><span aria-hidden="true">⌕</span><input type="search" data-study-search aria-label="搜索字幕或知识点" placeholder="搜索字幕或知识点" value="${escape(query)}"></label><div class="study-filters" aria-label="字幕来源筛选">${[['all','全部'],['video','视频'],['board','白板']].map(([key,title])=>`<button type="button" data-study-filter="${key}" aria-pressed="${filter===key}" class="${filter===key?'active':''}">${title}</button>`).join('')}<small>${entries.length} 条</small></div></div><p class="study-caption">本节内容时间轴 · 示例字幕</p><ol class="study-transcript-list">${entries.map(({entry:[time,view,type,title,text,page],index})=>`<li class="${selectedEntry===index?'is-current':''}"><button type="button" class="study-entry-heading" data-study-entry="${index}" aria-label="定位到 ${time} ${title}"><time>${time}</time>${sourceBadge(view,type)}<span class="study-jump-arrow" aria-hidden="true">↗</span></button><h4>${title}</h4><p>${text}</p><div class="study-entry-actions"><button type="button" data-study-entry="${index}">${view==='video'?'定位视频':'查看白板'} ↗</button><button type="button" data-study-copy="${index}" aria-label="复制 ${time} 的字幕">复制</button></div></li>`).join('')}</ol>${entries.length?'':'<p class="study-empty">没有匹配内容，试试其他关键词。</p>'}`;
   }
@@ -122,6 +125,8 @@
     if(key==='errors')body=`<p class="study-lead">展开错误项，查看排查顺序。</p><details class="study-error-item"><summary>ACL_INIT_FAILED · 初始化失败</summary><p>先确认驱动、CANN 与运行时环境已正确安装，再检查环境变量和当前进程的设备权限。</p></details><details class="study-error-item"><summary>设备不可见 · NPU 数量为 0</summary><p>检查设备状态、容器挂载与设备权限，然后重新执行设备数量查询。</p></details><details class="study-error-item"><summary>通信初始化失败</summary><p>核对各进程的 RANK、WORLD_SIZE 与网络配置，确认所有训练进程均已启动。</p></details>`;
     if(key==='quiz')body=`<p class="study-lead">选择一个答案，立即查看解析。</p><h3>${training?'AllReduce 求和后，为什么还需要除以设备数量？':'Cube 计算单元主要负责哪类任务？'}</h3><div class="study-quiz-options">${(training?['得到全局平均梯度','减少模型参数的数量','让每张 NPU 读取相同数据']:['矩阵运算','输入输出流程控制','保存所有训练数据']).map((choice,index)=>`<button type="button" data-resource-answer="${index}">${String.fromCharCode(65+index)}. ${choice}</button>`).join('')}</div><p class="study-quiz-feedback" role="status"></p>`;
     if(key==='docs')body=`<p class="study-lead">按知识点查阅本节讲解与板书。</p>${data.points.map(([title,text,time,view,page])=>`<article class="study-summary-point"><h4>${escape(title)}</h4><p>${escape(text)}</p><button type="button" data-study-jump="${time}" data-study-view="${view}" data-study-page="${page}">${sourceBadge(view,view==='video'?'讲解':'板书')}<time>${time}</time><span>查看来源 ↗</span></button></article>`).join('')}`;
+    if(mindie && key==='errors')body=`<p class="study-lead">按手册步骤排查；以下是排查场景，不编造错误码。</p>${window.MindIELab.steps.map(s=>`<details class="study-error-item"><summary>${escape(s.title)}</summary><p>${escape(s.trouble)}</p></details>`).join('')}`;
+    if(mindie && key==='quiz')body='<p class="study-lead">设计示例，不计入认证成绩。</p><h3>MindIE 的 modelWeightPath 应使用哪个路径？</h3><div class="study-quiz-options"><button type="button" data-resource-answer="0">A. 容器内的 /home/weights/</button><button type="button" data-resource-answer="1">B. 任意主机目录</button><button type="button" data-resource-answer="2">C. 模型下载网页</button></div><p class="study-quiz-feedback" role="status"></p>';
     detail.innerHTML=`<header class="study-tool-head"><h2>${resourceTitles[key]}</h2><button type="button" data-resource-back>返回资源</button></header><div class="study-tool-body">${body}</div>`;
   }
   function syncNoteCounts() {
@@ -142,7 +147,7 @@
     } else {
       const correct=button.dataset.resourceAnswer==='0';
       root.querySelectorAll('[data-resource-answer]').forEach(item=>item.classList.toggle('selected',item===button));
-      root.querySelector('.study-quiz-feedback').textContent=correct?`回答正确。${data.cards[training?1:0][1]}`:`再想一想：${training?'这里需要把各设备的梯度总和变成平均值。':'Cube 擅长大规模矩阵乘法。'}`;
+      root.querySelector('.study-quiz-feedback').textContent=correct?`回答正确。${data.cards[training?1:0][1]}`:`再想一想：${mindie?'服务在容器内运行，应读取容器内已挂载的权重路径。':training?'这里需要把各设备的梯度总和变成平均值。':'Cube 擅长大规模矩阵乘法。'}`;
     }
   });
   document.addEventListener('submit',event=>{

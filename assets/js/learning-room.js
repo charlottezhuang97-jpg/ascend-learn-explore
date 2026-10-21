@@ -1,5 +1,6 @@
 (() => {
   const params = new URLSearchParams(window.location.search);
+  const isMindIECourse = params.get('course') === 'mindie';
   const isTrainingCourse = params.get('course') === 'training';
   const courseName = params.get('title') || (isTrainingCourse ? '大模型分布式训练' : '昇腾学习课程');
   document.getElementById('courseName').textContent = courseName;
@@ -30,7 +31,7 @@
     target.setAttribute('aria-label', typingTexts[index]);
     target.textContent = '';
   });
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (isMindIECourse || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     typingTargets.forEach((target, index) => { target.textContent = typingTexts[index]; });
     document.querySelector('[data-board-page="1"]').classList.add('media-ready');
   } else {
@@ -179,6 +180,7 @@ if __name__ == '__main__':
     videoRoom.hidden = !video;
     if (video) setVideoPerspective('teacher');
     document.querySelectorAll('.learning-mode-tabs button').forEach(button => button.classList.toggle('active', button.dataset.view === view));
+    document.dispatchEvent(new CustomEvent('learning:view-change',{detail:{view}}));
   }
   function setVideoPerspective(perspective) {
     const teacher = perspective === 'teacher';
@@ -299,6 +301,7 @@ if __name__ == '__main__':
   }));
   function askIdeCompanion(question) {
     const messages = document.getElementById('ideAssistMessages');
+    if(isMindIECourse){const current=window.MindIECurrentStep||window.MindIELab.steps[0];const message=document.createElement('div');message.className='ide-assist-message assistant';message.textContent=`基于手册的引导示例：${current.action} ${current.trouble}`;messages.append(message);messages.scrollTop=messages.scrollHeight;return;}
     messages.insertAdjacentHTML('beforeend', `<div class="ide-assist-message user"><span>你</span><p>${question.replace(/[<>&]/g, character => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[character]))}</p></div><div class="ide-assist-message assistant"><span>AI 学伴</span><p>结合当前视频节点来看：数据拆分决定每张 NPU 处理哪些样本，AllReduce 则保证各设备最终使用同一份平均梯度更新模型。你可以切换 03:20 和 05:05，对照代码中的高亮行理解两者的衔接。</p></div>`);
     messages.scrollTop = messages.scrollHeight;
   }
@@ -316,6 +319,7 @@ if __name__ == '__main__':
     setView('video');
   }
   function seekVideo(time) {
+    if(isMindIECourse){document.dispatchEvent(new CustomEvent('mindie:video-node',{detail:{time}}));return;}
     const keepIdePerspective = videoRoom.classList.contains('ide-mode') && !videoRoom.hidden;
     setView('video');
     if (keepIdePerspective) setVideoPerspective('ide');
@@ -412,6 +416,7 @@ if __name__ == '__main__':
   }
   function renderBoardPage(index, announce = true) {
     currentBoardPage = Math.max(0, Math.min(boardPages.length - 1, index));
+    if(isMindIECourse && window.MindIERenderBoard){window.MindIERenderBoard(currentBoardPage);return;}
     boardPages.forEach((page, pageIndex) => { page.hidden = pageIndex !== currentBoardPage; });
     const content = boardPageContent[currentBoardPage];
     boardPageValue.textContent = `${currentBoardPage + 1} / ${boardPages.length}`;
@@ -601,6 +606,7 @@ if __name__ == '__main__':
     showToast('重新运行成功，修复结果已验证');
   }
   document.getElementById('runCode').addEventListener('click', () => {
+    if(isMindIECourse){document.dispatchEvent(new CustomEvent('mindie:preview-output'));return;}
     if (currentIdeFile !== 'check_env.py') {
       ideOutput.innerHTML = `<b>问题　输出　调试控制台　终端</b><div class="ide-success" role="status"><div><strong>课堂示例 · ${currentIdeFile}</strong><span>这是视频讲解用的示例代码；请选择 check_env.py 完成环境检查实践。</span></div></div>`;
       return;
@@ -803,4 +809,5 @@ if __name__ == '__main__':
       document.getElementById('openDocument').focus();
     } else if (!aiFixNudge.hidden) aiFixNudge.hidden = true;
   });
+  window.AscendLearning={setView,setVideoPerspective,renderBoardPage,openIdeFile,showToast,setIdeAssistOpen,loadFiles(files){Object.assign(ideFileContents,files);}};
 })();
