@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>生成式 AI 通用知识 · 一体化学习画布</title>
+  <link rel="stylesheet" href="../assets/css/generative-ai-workbench.css?v=1">
+</head>
+<body>
+  <header class="app-header"><a href="../learn.html?course=training" class="exit" aria-label="返回原学习页">‹</a><a class="brand" href="../index.html"><span>A</span>Ascend <small>学习中心</small></a><span class="header-divider"></span><strong>生成式 AI 通用知识</strong><span class="course-category">理论 + 实验 + 微认证</span><div class="header-right"><button id="sourceButton" class="quiet">内容依据</button><span class="preview-tag">设计预览</span><span class="avatar">C</span></div></header>
+  <div class="workspace">
+    <aside class="course-outline"><div class="outline-head"><span>课程目录</span><small>按原课程结构组织</small></div><nav id="courseOutline" aria-label="理论、实践与微认证课程目录"></nav><div class="outline-bottom"><span>学习路径</span><p>理解概念 → 完成实验 → 参加微认证</p></div></aside>
+    <main class="learning-main">
+      <header class="lesson-header"><div><div class="breadcrumb">实践篇 / 文本生成推理快速入门</div><h1 id="lessonHeading">基于 MindIE 的文本生成推理实践</h1></div><button class="quiet" id="toggleAssistant" aria-controls="assistant" aria-expanded="true">✦ AI 学伴</button></header>
+      <nav class="learning-states" aria-label="当前知识点的学习方式"><button type="button" data-state="listen"><span>01</span>听讲</button><button type="button" data-state="code"><span>02</span>看代码</button><button type="button" data-state="practice"><span>03</span>动手实践</button><button type="button" data-state="review"><span>04</span>回顾</button><small>讲解与实践保留在同一张白板上</small></nav>
+      <section class="whiteboard" id="whiteboard" aria-label="学习画布"><div id="stateContent"></div></section>
+      <footer class="learning-footer"><span><i></i>学习位置已保留</span><div class="footer-track"><span id="labProgressFill"></span></div><b id="labProgressLabel">文本实验 0 / 8 步</b><button id="openCertification" class="quiet">查看微认证路径 →</button></footer>
+    </main>
+    <aside class="assistant" id="assistant" aria-label="AI 学伴"><header><span class="ai-symbol">✦</span><div><small>贴合当前知识点</small><strong>AI 学伴</strong></div><button class="quiet" id="closeAssistant" aria-label="收起 AI 学伴">×</button></header><nav class="assistant-tabs" aria-label="学伴内容"><button class="active" data-assistant-tab="dialog">对话</button><button data-assistant-tab="resources">课程资源</button></nav><div id="assistantBody"></div><div class="assistant-tool-row"><button data-tool="summary">章节总结</button><button data-tool="transcript">讲解节点</button><button data-tool="notes">笔记</button></div><form id="assistantForm"><label class="sr-only" for="assistantInput">向 AI 学伴提问</label><input id="assistantInput" placeholder="问问当前这一步…"><button aria-label="发送问题">↑</button></form></aside>
+  </div>
+  <dialog id="infoDialog"><form method="dialog"><button class="dialog-close" aria-label="关闭">×</button></form><div id="dialogContent"></div></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script src="../assets/js/mindie-lab-content.js?v=1"></script>
+  <script src="../assets/js/generative-ai-workbench.js?v=1"></script>
+</body>
+</html>
