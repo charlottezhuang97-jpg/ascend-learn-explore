@@ -110,7 +110,10 @@
     if(action==='next-step'){if(step<7)selectStep(step+1);else info('文本生成实验回顾',`已自核对 ${checks.length}/8 步。保存模型配置、Daemon start success! 服务日志与 /generate 返回的 text。自核对不等同于真实运行；完成理论与课程要求的实践后，再进入生成式AI通用知识微认证。`);}
     if(action==='practice'||action==='practice-video'){closeDirectory();outline.hidden=true;}
   });
-  document.querySelectorAll('.learning-mode-tabs [data-view="board"]').forEach(b=>b.addEventListener('click',()=>{boardPerspective(false);api.renderBoardPage(page);}));
+  document.querySelectorAll('.learning-mode-tabs').forEach(nav=>nav.setAttribute('aria-label','学习环节'));
+  document.querySelectorAll('.learning-mode-tabs [data-view="board"]').forEach(b=>{b.textContent='理论学习';b.addEventListener('click',()=>{boardPerspective(false);api.renderBoardPage(page===4?0:page);});});
+  document.querySelectorAll('.learning-mode-tabs [data-view="video"]').forEach(b=>{b.textContent='实践';b.addEventListener('click',()=>selectStep(step,true));});
+  document.addEventListener('learning:view-change',()=>document.querySelectorAll('.learning-mode-tabs button').forEach(b=>b.setAttribute('aria-pressed',String(b.classList.contains('active')))));
   document.querySelectorAll('.ide-assist-suggestions button').forEach((b,i)=>{b.textContent=i?'没看到预期结果怎么办？':'这一步在哪里执行？';b.dataset.assistQuestion=b.textContent;});
   document.querySelector('#chatPanel .companion-label').textContent='生成式AI通用知识';
   document.querySelectorAll('#chatPanel>p')[1].textContent='保留白板学习方式：从课程目录选择理论或实践资源。查看讲解时，点击视频外区域即可回到白板，视频变为可拖动小窗。';
