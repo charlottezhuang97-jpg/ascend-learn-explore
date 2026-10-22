@@ -1,5 +1,6 @@
 .mindie-course .video-workspace .ide-body{grid-template-columns:24px 300px minmax(0,1fr)}
 .mindie-course .video-workspace.ide-mode .teacher-timeline{display:none}
+.mindie-course .video-workspace .ide-live-subtitle{display:none}
 .mindie-course .video-workspace.ide-mode .video-ide{padding-bottom:0}
 .mindie-course .mindie-nested-tree{margin:0;padding:8px 8px 24px;border-top:0;font-size:12px}
 .mindie-course .mindie-nested-tree details{margin:0}
