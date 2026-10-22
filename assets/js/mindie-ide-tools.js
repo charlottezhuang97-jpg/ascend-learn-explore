@@ -14,8 +14,17 @@
     'docs/lab-notes.md':'# 文本生成实验笔记\n\n1. 主机权重：/home/lgy/Qwen2-7B/\n2. 容器权重：/home/weights/\n3. 服务：127.0.0.1:1025/generate\n\n记录真实环境中的配置、服务日志与接口响应。',
     'logs/output.log':'# 服务日志位置示意\n# 请在真实实验环境查看 output.log\n# 预期成功标记：Daemon start success!\n# 本文件不是实际运行日志。'
   };api.loadFiles(samples);
-  tree.innerHTML='<small>工程目录示意</small><details open><summary>conf</summary><button data-nested-file="conf/config.json">{} config.json</button></details><details open><summary>scripts</summary><details open><summary>service</summary><button data-nested-file="scripts/service/start.sh">$ start.sh</button></details><details open><summary>client</summary><button data-nested-file="scripts/client/generate.sh">$ generate.sh</button></details></details><details><summary>docs</summary><button data-nested-file="docs/lab-notes.md">MD lab-notes.md</button></details><details><summary>logs</summary><button data-nested-file="logs/output.log">≡ output.log</button></details>';
+  // One project tree for both the manual steps and supporting example files.
+  const stepFiles=[...explorer.querySelectorAll('.mindie-lab-files [data-mindie-step]')];
+  const branch=(name,indices,children='')=>`<details open><summary><span class="mindie-folder-icon" aria-hidden="true"></span>${name}</summary><div class="mindie-tree-children">${indices.map(i=>`<span data-step-slot="${i}"></span>`).join('')}${children}</div></details>`;
+  tree.innerHTML='<details class="mindie-project-root" open><summary>MINDIE-TEXT-LAB</summary><div class="mindie-tree-children">'+branch('environment',[0,1])+branch('container',[2,3])+branch('scripts',[],branch('setup',[4])+branch('service',[6])+branch('client',[7]))+branch('conf',[5])+branch('docs',[],'<button type="button" data-nested-file="docs/lab-notes.md"><span>MD</span>lab-notes.md</button>')+branch('logs',[],'<button type="button" data-nested-file="logs/output.log"><span>≡</span>output.log</button>')+'</div></details>';
+  // Move real file buttons rather than copying them, preserving existing file actions.
+  stepFiles.forEach((button,i)=>{button.querySelector('span').textContent=button.dataset.ideFile.endsWith('.json')?'{}':'$';button.title=button.dataset.ideFile;tree.querySelector(`[data-step-slot="${i}"]`).replaceWith(button);});
+  explorer.querySelector('.mindie-lab-files').remove();
   explorer.append(tree);
+  const markCurrent=button=>{tree.querySelectorAll('button').forEach(b=>{b.classList.toggle('active',b===button);if(b===button)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');});};
+  markCurrent(stepFiles[0]);
+  document.addEventListener('click',event=>{const button=event.target.closest('button');if(!button)return;if(tree.contains(button)){markCurrent(button);}else if(button.dataset.mindieStep!==undefined){markCurrent(stepFiles[Number(button.dataset.mindieStep)]);}});
   const pluginPanel=document.createElement('section');pluginPanel.className='mindie-plugin-content';pluginPanel.hidden=true;explorer.append(pluginPanel);
   function plugin(index){rail.querySelectorAll('button').forEach((b,i)=>{b.classList.toggle('active',i===index);b.setAttribute('aria-pressed',String(i===index));});explorer.querySelector('header span').textContent=plugins[index];[...explorer.children].filter(n=>n!==pluginPanel&&n.tagName!=='HEADER').forEach(n=>n.hidden=index!==0);pluginPanel.hidden=index===0;
     if(index===1)pluginPanel.innerHTML='<label for="mindieFileSearch">搜索实验文件</label><input id="mindieFileSearch" type="search" placeholder="文件名或代码内容"><div id="mindieSearchResults"></div>';
