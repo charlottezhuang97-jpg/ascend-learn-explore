@@ -1,0 +1,59 @@
+/* Step 1 interaction preview. No network, terminal, credentials or host execution. */
+(() => {
+  if(new URLSearchParams(location.search).get('course')!=='mindie'||!window.AscendCompanion)return;
+  const api=window.AscendCompanion,params=new URLSearchParams(location.search);
+  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('../css/mindie-environment-preview.css?v=1',document.currentScript.src);document.head.append(sheet);
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const phases=['环境准备','下载模型权重','获取MindIE镜像','启动容器','模型推理配置','启动MindIE服务','推理交互'];
+  const activeRuns=new Map();
+  const button=(action,label,kind='')=>`<button type="button" class="${kind}" data-uac-env-action="${action}">${label}</button>`;
+  const demo='<span class="env-demo-label">交互演示 · 未连接主机</span>';
+  const shield='<span class="env-shield" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6zM8 12l3 3 5-6"/></svg></span>';
+  function markup(s){
+    const complete=s.status==='success',running=s.status==='running';
+    const status={pending:'等待授权',running:'演示进行中',success:'演示检查通过',error:'演示需处理',cancelled:'已取消 · 未执行',manual:'等待手动检查',paused:'演示已暂停'}[s.status]||'等待授权';
+    const consent=['pending','paused'].includes(s.status);
+    const header=`<details class="env-progress" open><summary><b>文本生成推理实践</b><span>${complete?'1':'0'} / 7 步${complete?'（演示）':''}</span></summary><ol class="env-steps" aria-label="实验步骤">${phases.map((p,i)=>`<li class="${i===0?'current '+(complete?'complete':''):''}" ${i===0?'aria-current="step"':''}><span>${i===0&&complete?'✓':i+1}</span>${p}</li>`).join('')}</ol></details>`;
+    const command='<div class="env-command"><div><span>服务器主机 · Shell</span><span>只读查询</span></div><pre>npu-smi info\ndocker ps</pre></div>';
+    const card=`<section class="env-authorization"><header>${shield}<b>检查 NPU 与 Docker</b><small>只读检查</small></header><div class="env-host"><div><b>${s.host==='A'?'Atlas 800I A2 · 实验主机 A':'Atlas 800I A2 · 实验主机 B'}</b><small>示例目标 · 未建立真实连接</small></div>${consent?button('host','更换'):''}</div><dl class="env-meta"><dt>检查目的</dt><dd>确认 NPU 可查询、Docker 可用</dd><dt>操作范围</dt><dd>仅下方 2 条命令，本次检查有效</dd><dt>系统影响</dt><dd>不安装、不修改、不启停容器</dd></dl>${command}<p class="env-scope">回显可能包含设备与容器名称。此处只演示授权流程，不连接或操作你的服务器。</p>${consent?`<div class="env-actions">${button('authorize','授权执行（演示）','env-primary')}${button('manual','我来操作')}${button('cancel','取消','env-quiet')}</div>`:`<span class="env-status ${complete?'success':s.status==='error'?'error':''}">${status}</span>${running?`<div class="env-actions">${button('pause','暂停演示')}</div>`:''}`}</section>`;
+    let tail='';
+    if(consent)tail=`<div class="env-preview-options"><span>预览场景</span><button type="button" data-uac-env-action="normal" aria-pressed="${s.scenario==='normal'}">正常回显</button><button type="button" data-uac-env-action="failure" aria-pressed="${s.scenario==='failure'}">Docker 异常</button></div>`;
+    if(['cancelled','error','success','paused'].includes(s.status)&&!consent)tail=`<div class="env-actions">${button('reset','重新预览')}</div>`;
+    if(s.status==='manual')tail=`<p class="env-manual-note">请在你自己的实验终端运行上述命令。不要粘贴密码、Token 或无关系统信息。这里没有连接终端，不会自动判断你是否执行成功。</p><label>粘贴脱敏回显（可选）<textarea name="environment-output" aria-label="脱敏命令回显" maxlength="6000" placeholder="粘贴后只保存到当前对话，不自动判定通过…"></textarea></label><div class="env-actions">${button('save-manual','保存回显')}${button('reset','返回授权')}</div>`;
+    return `<div class="env-flow" data-uac-environment-id="${s.id}" data-uac-environment-state="${esc(JSON.stringify(s))}">${header}<div class="env-heading"><h3>先确认环境，再开始部署</h3>${demo}</div><p class="env-intro">我会先检查 NPU 和 Docker。只读取状态，不安装软件，也不会修改你的环境。</p>${card}${tail}<small class="env-source">依据实验手册 §2.2 · 环境准备 ｜ 仅本步可交互，其余步骤待制作</small></div>`;
+  }
+  function stateOf(node){try{const s=JSON.parse(node.dataset.uacEnvironmentState);return /^[a-z0-9-]+$/i.test(s.id)&&['A','B'].includes(s.host)?s:null;}catch{return null;}}
+  const find=id=>document.querySelector(`[data-uac-environment-id="${id}"]`);
+  function update(s,messageId){api.updateToolMessage(messageId,markup(s));}
+  function wrap(s,html){return `<div class="env-flow" data-uac-environment-link="${s.id}" data-uac-environment-revision="${s.revision||0}">${html}</div>`;}
+  const resultHeader=(name,state)=>`<header><b>${name}</b><span class="env-status ${state==='已通过'?'success':'error'}">${state}</span><span class="env-demo-label">演示数据</span></header>`;
+  function result(s){const failed=s.scenario==='failure';return wrap(s,`<p>以下为本步的模拟回显，仅用于评审样式，未查询真实设备。</p><section class="env-result">${resultHeader('NPU 检查','已通过')}<div class="env-command-name"><code>$ npu-smi info</code> · 示例退出码 0</div><div class="env-result-body"><div class="env-facts"><div><small>可见设备</small><b>1 个（示例）</b></div><div><small>设备编号</small><b>4（示例）</b></div><div><small>Health</small><b>OK</b></div></div><p>NPU 可以被查询，当前示例设备的健康状态正常。尚未检查完整的驱动与固件兼容性。</p></div><details><summary>查看模拟回显</summary><pre>NPU ID    Health\n4         OK\n\n# 简化的手册回显示例，非真实主机输出</pre></details></section><section class="env-result">${resultHeader('Docker 检查',failed?'需处理':'已通过')}<div class="env-command-name"><code>$ docker ps</code> · 示例退出码 ${failed?'1':'0'}</div><div class="env-result-body"><div class="env-facts"><div><small>查询状态</small><b>${failed?'连接失败':'正常'}</b></div><div><small>运行中容器</small><b>${failed?'未获取':'0 个'}</b></div><div><small>来源</small><b>模拟回显</b></div></div><p>${failed?'当前示例无法连接 Docker 服务。先核对服务状态和账户权限，不自动启动服务或扩大权限。':'Docker 查询成功，目前没有运行中的容器。这是正常结果，不影响下一步准备镜像和启动新容器。'}</p></div><details ${failed?'open':''}><summary>查看模拟回显</summary><pre>${failed?'Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?':'CONTAINER ID  IMAGE  COMMAND  CREATED  STATUS  PORTS  NAMES\n\n# 只有表头，没有运行中的容器'}</pre></details></section><div class="env-summary ${failed?'error':''}" role="status"><b>${failed?'1 / 2 项通过 · 暂不进入下一步':'2 / 2 项通过 · 环境准备完成（演示）'}</b><p>${failed?'Docker 检查未通过。请手动排查后重新检查，环境检查授权不包含安装或启停服务。':'下一步准备 Qwen2-7B 权重。继续只表示进入下一步，不代表授权下载或上传。'}</p><div class="env-actions">${failed?button('retry','重新授权检查','env-primary')+button('manual','我来处理'):button('next','继续下一步 →','env-primary')}</div></div>`);}
+  function run(s,messageId){
+    const scope=api.getSessionId();s.status='running';const token={cancelled:false};activeRuns.set(s.id,token);update(s,messageId);
+    api.addToolMessage('user','<p>授权在示例主机 '+s.host+' 上检查 NPU 和 Docker，仅执行上述两条只读查询。本次为交互演示。</p>');
+    const executionId=api.addToolMessage('assistant',wrap(s,`<p>已收到演示授权，正在展示检查过程。</p><div class="env-run" role="status"><div><span class="env-spinner" aria-hidden="true"></span><code>npu-smi info</code><small>模拟检查中</small></div><div><code>docker ps</code><small>等待检查</small></div></div><small class="env-source">未连接服务器，不执行真实命令</small>`));
+    token.executionId=executionId;
+    const stop=()=>token.cancelled||api.getSessionId()!==scope;
+    setTimeout(()=>{if(stop())return;api.updateToolMessage(executionId,wrap(s,'<p>演示命令记录</p><div class="env-run"><div><code>npu-smi info</code><small>模拟回显已就绪</small></div><div><span class="env-spinner" aria-hidden="true"></span><code>docker ps</code><small>模拟检查中</small></div></div><small class="env-source">仅为演示，未在主机执行</small>'));},500);
+    setTimeout(()=>{if(stop()){if(activeRuns.get(s.id)===token)activeRuns.delete(s.id);return;}s.status=s.scenario==='failure'?'error':'success';update(s,messageId);api.updateToolMessage(executionId,wrap(s,'<p>演示命令记录</p><div class="env-command"><div><span>示例主机 '+s.host+' · 无真实执行</span><span>2 条只读命令</span></div><pre>npu-smi info\ndocker ps</pre></div>'));api.addToolMessage('assistant',result(s));activeRuns.delete(s.id);},1100);
+  }
+  window.MindIEEnvironmentPreview={start(){const s={id:crypto.randomUUID(),status:'pending',host:'A',scenario:'normal'};api.beginTool('请协助我完成文本生成实验，先检查环境。',markup(s));find(s.id)?.scrollIntoView({block:'start',behavior:'auto'});}};
+  document.addEventListener('click',event=>{
+    const b=event.target.closest('[data-uac-env-action]');if(!b)return;
+    let root=b.closest('[data-uac-environment-id]');const linked=b.closest('[data-uac-environment-link]');if(!root)root=linked&&find(linked.dataset.uacEnvironmentLink);if(!root)return;
+    const s=stateOf(root);if(!s)return;const messageId=Number(root.closest('[data-uac-message]').dataset.uacMessage),action=b.dataset.uacEnvAction;
+    if(linked&&Number(linked.dataset.uacEnvironmentRevision)!==(s.revision||0))return;
+    if(action==='authorize'&&['pending','paused'].includes(s.status)){run(s,messageId);return;}
+    if(action==='normal'||action==='failure'){if(!['pending','paused'].includes(s.status))return;s.scenario=action;update(s,messageId);return;}
+    if(action==='host'){s.host=s.host==='A'?'B':'A';s.status='pending';update(s,messageId);return;}
+    if(action==='pause'){const token=activeRuns.get(s.id);if(token)token.cancelled=true;activeRuns.delete(s.id);s.status='paused';update(s,messageId);if(token?.executionId)api.updateToolMessage(token.executionId,wrap(s,'<p>模拟检查已暂停，未生成结果，也没有查询真实设备。</p>'));api.addToolMessage('assistant',wrap(s,'<p>演示已暂停，没有查询真实设备。若要继续，需要重新点击演示授权。</p>'));return;}
+    if(action==='cancel'){s.status='cancelled';update(s,messageId);api.addToolMessage('user','<p>取消这次环境检查。</p>');api.addToolMessage('assistant',wrap(s,'<p>已取消，未执行任何检查。你可以稍后重新授权，或自行操作。</p>'));return;}
+    if(action==='manual'){s.status='manual';update(s,messageId);api.addToolMessage('user','<p>我来操作，暂不授权自动检查。</p>');return;}
+    if(action==='save-manual'){const text=root.querySelector('textarea')?.value.trim();if(!text)return;api.addToolMessage('user',`<p>以下是我提供的脱敏回显：</p><pre>${esc(text.slice(0,6000))}</pre>`);api.addToolMessage('assistant',wrap(s,'<p>已记录用户提供的回显。未连接真实执行端，未自动验证，也不会将步骤标为已通过。</p>'));return;}
+    if(action==='reset'||action==='retry'){const old=activeRuns.get(s.id);if(old)old.cancelled=true;activeRuns.delete(s.id);s.status='pending';s.revision=(s.revision||0)+1;update(s,messageId);const target=find(s.id);target?.scrollIntoView({block:'start',behavior:'auto'});target?.querySelector('[data-uac-env-action="authorize"]')?.focus({preventScroll:true});return;}
+    if(action==='next'){if(s.status!=='success')return;api.addToolMessage('user','<p>继续下一步，查看权重准备方案。</p>');api.addToolMessage('assistant',wrap(s,'<p>第 2 步是下载模型权重。本轮仅评审“环境准备”，后续界面暂未制作；没有发起下载、上传或新授权。</p>'));}
+  });
+  document.addEventListener('uac:render',()=>{for(const root of document.querySelectorAll('[data-uac-environment-id]')){const s=stateOf(root);if(s?.status==='running'&&!activeRuns.has(s.id)){s.status='paused';update(s,Number(root.closest('[data-uac-message]').dataset.uacMessage));}}for(const link of document.querySelectorAll('[data-uac-environment-link]')){const s=stateOf(find(link.dataset.uacEnvironmentLink)||{dataset:{}});if(s&&Number(link.dataset.uacEnvironmentRevision)!==(s.revision||0))link.querySelectorAll('button').forEach(b=>b.disabled=true);}});
+  const start=document.createElement('button');start.type='button';start.className='mindie-practice-link';start.textContent='AI 实验引导';start.title='预览环境准备的授权与回显';start.addEventListener('click',()=>window.MindIEEnvironmentPreview.start());document.querySelector('#videoIde .ide-actions')?.insertBefore(start,document.getElementById('runCode'));
+  if(params.get('agent')==='environment'){if(sheet.sheet)window.MindIEEnvironmentPreview.start();else sheet.addEventListener('load',()=>window.MindIEEnvironmentPreview.start(),{once:true});}
+})();
