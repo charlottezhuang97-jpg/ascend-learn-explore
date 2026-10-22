@@ -9,6 +9,15 @@
   document.title='生成式AI通用知识 · 白板与 IDE 学习';
   $('courseName').textContent='生成式AI通用知识';
   let step=0,page=0,boardTeacher=false;
+  let boardTypingGeneration=0;
+  function revealBoardPoints(canvas){
+    const generation=++boardTypingGeneration;
+    const targets=[...canvas.querySelectorAll('.board-page-intro h2,.board-page-intro p')];
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    const lines=targets.map(target=>{const text=target.textContent;target.setAttribute('aria-label',text);target.setAttribute('aria-live','off');target.classList.add('mindie-type-line');target.innerHTML=`<span class="mindie-type-reserve" aria-hidden="true">${esc(text)}</span><span class="mindie-type-output"></span>`;return{target,text,output:target.querySelector('.mindie-type-output')};});
+    canvas.classList.add('mindie-board-revealing');
+    (async()=>{for(const {target,text,output} of lines){if(generation!==boardTypingGeneration)return;target.classList.add('mindie-is-typing');for(const char of Array.from(text)){if(generation!==boardTypingGeneration||!target.isConnected)return;output.textContent+=char;await new Promise(resolve=>setTimeout(resolve,32));}target.classList.remove('mindie-is-typing');await new Promise(resolve=>setTimeout(resolve,100));}if(generation===boardTypingGeneration)canvas.classList.remove('mindie-board-revealing');})();
+  }
   let checks=[];try{checks=JSON.parse(localStorage.getItem('mindie-integrated-checks')||'[]');if(!Array.isArray(checks))checks=[];}catch{}
   const topics=['生成式AI概述','昇腾AI基础软硬件平台','生成式AI在昇腾平台上的应用案例','生成式AI展望'];
   const pages=[
@@ -22,8 +31,9 @@
   const boardPages=[...document.querySelectorAll('[data-board-page]')];
   window.MindIERenderBoard=index=>{
     page=Math.max(0,Math.min(4,index));const p=pages[page];
-    boardPages.forEach((n,i)=>{n.hidden=i!==page;n.classList.add('media-ready');});
+    boardPages.forEach((n,i)=>{n.hidden=i!==page;n.classList.remove('mindie-board-revealing');n.classList.add('media-ready');});
     const canvas=boardPages[page];canvas.innerHTML=`<div class="board-page-intro"><span>${p.kicker}</span><h2>${p.title}</h2><p>${p.description}</p></div><figure class="embedded-board-media mindie-board-diagram"><figcaption><span>课堂图解</span><strong>${page===4?'文本生成推理链路':'理解当前知识点'}</strong></figcaption><div class="mindie-chain">${p.nodes.map(([name,detail],i)=>`${i?'<span aria-hidden="true">→</span>':''}<div><b>${name}</b><small>${detail}</small></div>`).join('')}</div><p>${p.note}</p>${page===4?'<button type="button" class="mindie-practice-link" data-mindie-action="practice">查看 IDE 实践 →</button>':''}</figure>`;
+    canvas.scrollTop=0;revealBoardPoints(canvas);
     $('boardPageValue').textContent=`${page+1} / 5`;$('previousBoardPage').disabled=page===0;$('nextBoardPage').disabled=page===4;
     document.querySelector('.learning-anchor>span').lastChild.textContent=`板书 ${String(page+1).padStart(2,'0')} · ${page===4?'文本生成':p.title}`;
     $('boardSubtitle').textContent=p.caption;title(p.title,page===4?'实践篇':`课节 ${page+1}`);
@@ -60,7 +70,7 @@
   progress.querySelector('.mindie-progress-line').append(document.querySelector('.mindie-board-track'));boardArea.append(progress);
   function placeProgress(){if($('learningRoom').hidden)return;const r=$('whiteboard').getBoundingClientRect();boardArea.style.setProperty('--mindie-progress-left',`${r.left+20}px`);boardArea.style.setProperty('--mindie-progress-width',`${Math.max(0,r.width-40)}px`);}
   new ResizeObserver(placeProgress).observe($('whiteboard'));window.addEventListener('resize',placeProgress);document.addEventListener('learning:view-change',placeProgress);placeProgress();
-  function boardPerspective(teacher){boardTeacher=teacher;$('learningRoom').classList.toggle('board-teacher-mode',teacher);bigVideo.hidden=!teacher;mini.hidden=teacher;back.hidden=teacher;$('boardToVideo').hidden=teacher;}
+  function boardPerspective(teacher){boardTeacher=teacher;$('learningRoom').classList.toggle('board-teacher-mode',teacher);bigVideo.hidden=!teacher;mini.hidden=teacher;boardArea.classList.toggle('mindie-board-mini-open',!teacher);back.hidden=teacher;$('boardToVideo').hidden=teacher;}
   document.querySelector('.whiteboard').addEventListener('click',()=>{if(boardTeacher)boardPerspective(false);});
   $('boardToVideo').addEventListener('click',e=>{e.stopImmediatePropagation();api.setView('board');boardPerspective(true);},true);
   $('boardToVideo').lastChild.textContent='查看视频讲解';$('boardToVideo').removeAttribute('data-time');
@@ -106,7 +116,7 @@
     if(action==='practice-video'){selectStep(0);api.setView('video');api.setVideoPerspective('teacher');}
     if(action==='board-teacher')boardPerspective(true);
     if(action==='board-canvas')boardPerspective(false);
-    if(action==='close-board-video')mini.hidden=true;
+    if(action==='close-board-video'){mini.hidden=true;boardArea.classList.remove('mindie-board-mini-open');}
     if(action==='video-placeholder')api.showToast('当前为上传封面示意；原始视频待接入');
     if(action==='close-directory')closeDirectory();
     if(b.hasAttribute('data-mindie-close-directory'))closeDirectory();

@@ -3,7 +3,7 @@
   const params=new URLSearchParams(location.search);
   if(params.get('embedded')==='1'||window.AscendCompanion)return;
   const root=new URL('../../',document.currentScript.src),url=p=>new URL(p,root).href;
-  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=url('assets/css/unified-companion.css?v=2');document.head.append(sheet);
+  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=url('assets/css/unified-companion.css?v=3');document.head.append(sheet);
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const icons={map:'<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15M15 6v15"/>',resources:'<path d="M4 4h6a3 3 0 0 1 3 3v14a4 4 0 0 0-4-2H4zM20 4h-4a3 3 0 0 0-3 3M20 4v15h-3"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>',back:'<path d="m14 6-6 6 6 6"/>',spark:'<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/>'};
   const svg=name=>`<svg viewBox="0 0 24 24" aria-hidden="true">${icons[name]}</svg>`;

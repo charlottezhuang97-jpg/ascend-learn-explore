@@ -6,3 +6,6 @@
 @media(max-width:1100px){.uac-enabled .learning-room .board-area{padding-right:0}.uac-panel{width:400px}.uac-cards>button{min-height:95px}.uac-body.uac-empty{padding-bottom:10vh}}
 @media(max-width:520px){.uac-panel{top:8px;right:8px;bottom:8px;width:calc(100vw - 16px);border-radius:16px}.uac-header{padding:10px 14px;height:60px}.uac-body{padding:10px 18px 18px}.uac-cards>button{min-height:90px;font-size:15px}.uac-body.uac-empty{padding-bottom:5vh}.uac-header button{width:36px;height:36px}.uac-fab{right:14px;bottom:14px}}
 @media(prefers-reduced-motion:reduce){.uac-panel *{transition:none!important;scroll-behavior:auto!important}}
+/* Reserve a separate bottom band for the floating learning timeline. */
+.mindie-course .uac-panel{z-index:160;bottom:100px}.mindie-course .uac-fab{z-index:150;bottom:100px}
+@media(max-height:650px){.mindie-course .uac-panel{bottom:88px}.mindie-course .uac-fab{bottom:90px}}
