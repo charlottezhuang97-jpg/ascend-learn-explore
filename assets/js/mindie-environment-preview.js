@@ -2,9 +2,25 @@
 (() => {
   if(new URLSearchParams(location.search).get('course')!=='mindie'||!window.AscendCompanion)return;
   const api=window.AscendCompanion,params=new URLSearchParams(location.search);
-  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('../css/mindie-environment-preview.css?v=vertical-steps-4',document.currentScript.src);document.head.append(sheet);
+  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('../css/mindie-environment-preview.css?v=step-icons-5',document.currentScript.src);document.head.append(sheet);
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const phases=['环境准备','下载模型权重','获取MindIE镜像','启动容器','模型推理配置','启动MindIE服务','推理交互'];
+  // CSS-drawn icons survive the companion's history sanitizer (unlike inline SVG).
+  function decorateSteps(html){
+    const template=document.createElement('template');template.innerHTML=html;
+    template.content.querySelector('.env-flow')?.setAttribute('data-uac-step-ui-version','3');
+    for(const label of template.content.querySelectorAll('.env-vertical-step>summary>small')){
+      const step=label.closest('.env-vertical-step');
+      const kind=step.classList.contains('pass')?'done':step.classList.contains('fail')?'error':step.classList.contains('not-run')?'idle':'active';
+      const meaning={idle:'未执行',active:'进行中',done:'已完成',error:'未通过，需修改'}[kind];
+      const icon=document.createElement('span');icon.className='env-step-state '+kind;
+      icon.setAttribute('role','img');icon.setAttribute('aria-label',meaning);icon.setAttribute('title',meaning);
+      label.replaceWith(icon);
+    }
+    return template.innerHTML;
+  }
+  window.MindIEStepUI={decorate:decorateSteps};
+  function markup(s){return decorateSteps(rawMarkup(s));}
   const activeRuns=new Map();
   const npuOutput='NPU ID    Health\n4         OK\n\n# 简化的手册回显示例，非真实主机输出';
   const dockerOutput=s=>s.scenario==='failure'?'Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?':'CONTAINER ID  IMAGE  COMMAND  CREATED  STATUS  PORTS  NAMES\n\n# 只有表头，没有运行中的容器';
@@ -12,7 +28,7 @@
   const button=(action,label,kind='')=>`<button type="button" class="${kind}" data-uac-env-action="${action}">${label}</button>`;
   const demo='<span class="env-demo-label">交互演示 · 未连接主机</span>';
   const shield='<span class="env-shield" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6zM8 12l3 3 5-6"/></svg></span>';
-  function markup(s){
+  function rawMarkup(s){
     const complete=s.status==='success',running=s.status==='running';
     const status={pending:'等待授权',running:'演示进行中',success:'演示检查通过',error:'演示需处理',cancelled:'已取消 · 未执行',manual:'等待手动检查',paused:'演示已暂停'}[s.status]||'等待授权';
     const consent=['pending','paused'].includes(s.status);
@@ -60,6 +76,9 @@
     if(action==='next'){if(s.status!=='success')return;api.addToolMessage('user','<p>继续下一步，查看权重准备方案。</p>');api.addToolMessage('assistant',wrap(s,'<p>第 2 步是下载模型权重。本轮仅评审“环境准备”，后续界面暂未制作；没有发起下载、上传或新授权。</p>'));}
   });
   document.addEventListener('uac:render',()=>{for(const root of document.querySelectorAll('[data-uac-environment-id]')){const s=stateOf(root);if(s?.status==='running'&&!activeRuns.has(s.id)){s.status='paused';update(s,Number(root.closest('[data-uac-message]').dataset.uacMessage));}}for(const link of document.querySelectorAll('[data-uac-environment-link]')){const s=stateOf(find(link.dataset.uacEnvironmentLink)||{dataset:{}});if(s&&Number(link.dataset.uacEnvironmentRevision)!==(s.revision||0))link.querySelectorAll('button').forEach(b=>b.disabled=true);}});
+  let upgrading=false;
+  function upgradeHistory(){if(upgrading)return;upgrading=true;try{const ids=[...document.querySelectorAll('[data-uac-environment-id]')].map(r=>r.dataset.uacEnvironmentId);for(const id of ids){const root=find(id);if(!root||root.dataset.uacStepUiVersion==='3')continue;const s=stateOf(root);if(s)update(s,Number(root.closest('[data-uac-message]').dataset.uacMessage));}}finally{upgrading=false;}}
+  document.addEventListener('uac:render',upgradeHistory);upgradeHistory();
   const start=document.createElement('button');start.type='button';start.className='mindie-practice-link';start.textContent='AI 实验引导';start.title='预览环境准备的授权与回显';start.addEventListener('click',()=>window.MindIEEnvironmentPreview.start());document.querySelector('#videoIde .ide-actions')?.insertBefore(start,document.getElementById('runCode'));
   if(params.get('agent')==='environment'){if(sheet.sheet)window.MindIEEnvironmentPreview.start();else sheet.addEventListener('load',()=>window.MindIEEnvironmentPreview.start(),{once:true});}
 })();
