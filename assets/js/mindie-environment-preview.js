@@ -6,6 +6,9 @@
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const phases=['环境准备','下载模型权重','获取MindIE镜像','启动容器','模型推理配置','启动MindIE服务','推理交互'];
   const activeRuns=new Map();
+  const npuOutput='NPU ID    Health\n4         OK\n\n# 简化的手册回显示例，非真实主机输出';
+  const dockerOutput=s=>s.scenario==='failure'?'Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?':'CONTAINER ID  IMAGE  COMMAND  CREATED  STATUS  PORTS  NAMES\n\n# 只有表头，没有运行中的容器';
+  function terminal(s,name,status,output='',reveal=false){window.MindIETerminal?.write({id:`${s.id}:${s.revision||0}:${name}`,host:s.host,command:name==='npu'?'npu-smi info':'docker ps',status,output},{reveal});}
   const button=(action,label,kind='')=>`<button type="button" class="${kind}" data-uac-env-action="${action}">${label}</button>`;
   const demo='<span class="env-demo-label">交互演示 · 未连接主机</span>';
   const shield='<span class="env-shield" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6zM8 12l3 3 5-6"/></svg></span>';
@@ -33,9 +36,10 @@
     api.addToolMessage('user','<p>授权在示例主机 '+s.host+' 上检查 NPU 和 Docker，仅执行上述两条只读查询。本次为交互演示。</p>');
     const executionId=api.addToolMessage('assistant',wrap(s,`<p>已收到演示授权，正在展示检查过程。</p><div class="env-run" role="status"><div><span class="env-spinner" aria-hidden="true"></span><code>npu-smi info</code><small>模拟检查中</small></div><div><code>docker ps</code><small>等待检查</small></div></div><small class="env-source">未连接服务器，不执行真实命令</small>`));
     token.executionId=executionId;
+    token.current='npu';terminal(s,'npu','running','',true);
     const stop=()=>token.cancelled||api.getSessionId()!==scope;
-    setTimeout(()=>{if(stop())return;api.updateToolMessage(executionId,wrap(s,'<p>演示命令记录</p><div class="env-run"><div><code>npu-smi info</code><small>模拟回显已就绪</small></div><div><span class="env-spinner" aria-hidden="true"></span><code>docker ps</code><small>模拟检查中</small></div></div><small class="env-source">仅为演示，未在主机执行</small>'));},500);
-    setTimeout(()=>{if(stop()){if(activeRuns.get(s.id)===token)activeRuns.delete(s.id);return;}s.status=s.scenario==='failure'?'error':'success';update(s,messageId);api.updateToolMessage(executionId,wrap(s,'<p>演示命令记录</p><div class="env-command"><div><span>示例主机 '+s.host+' · 无真实执行</span><span>2 条只读命令</span></div><pre>npu-smi info\ndocker ps</pre></div>'));api.addToolMessage('assistant',result(s));activeRuns.delete(s.id);},1100);
+    setTimeout(()=>{if(stop()){terminal(s,token.current,'paused','演示已暂停，未生成本条命令的回显。');return;}terminal(s,'npu','success',npuOutput);token.current='docker';terminal(s,'docker','running');api.updateToolMessage(executionId,wrap(s,'<p>演示命令记录</p><div class="env-run"><div><code>npu-smi info</code><small>模拟回显已就绪</small></div><div><span class="env-spinner" aria-hidden="true"></span><code>docker ps</code><small>模拟检查中</small></div></div><small class="env-source">仅为演示，未在主机执行</small>'));},500);
+    setTimeout(()=>{if(stop()){terminal(s,token.current,'paused','演示已中断，未生成本条命令的回显。');if(activeRuns.get(s.id)===token)activeRuns.delete(s.id);return;}terminal(s,'docker',s.scenario==='failure'?'error':'success',dockerOutput(s));s.status=s.scenario==='failure'?'error':'success';update(s,messageId);api.updateToolMessage(executionId,wrap(s,'<p>演示命令记录</p><div class="env-command"><div><span>示例主机 '+s.host+' · 无真实执行</span><span>2 条只读命令</span></div><pre>npu-smi info\ndocker ps</pre></div>'));api.addToolMessage('assistant',result(s));activeRuns.delete(s.id);},1100);
   }
   window.MindIEEnvironmentPreview={start(){const s={id:crypto.randomUUID(),status:'pending',host:'A',scenario:'normal'};api.beginTool('请协助我完成文本生成实验，先检查环境。',markup(s));find(s.id)?.scrollIntoView({block:'start',behavior:'auto'});}};
   document.addEventListener('click',event=>{
@@ -46,7 +50,7 @@
     if(action==='authorize'&&['pending','paused'].includes(s.status)){run(s,messageId);return;}
     if(action==='normal'||action==='failure'){if(!['pending','paused'].includes(s.status))return;s.scenario=action;update(s,messageId);return;}
     if(action==='host'){s.host=s.host==='A'?'B':'A';s.status='pending';update(s,messageId);return;}
-    if(action==='pause'){const token=activeRuns.get(s.id);if(token)token.cancelled=true;activeRuns.delete(s.id);s.status='paused';update(s,messageId);if(token?.executionId)api.updateToolMessage(token.executionId,wrap(s,'<p>模拟检查已暂停，未生成结果，也没有查询真实设备。</p>'));api.addToolMessage('assistant',wrap(s,'<p>演示已暂停，没有查询真实设备。若要继续，需要重新点击演示授权。</p>'));return;}
+    if(action==='pause'){const token=activeRuns.get(s.id);if(token){token.cancelled=true;terminal(s,token.current,'paused','演示已暂停，未生成本条命令的回显。');}activeRuns.delete(s.id);s.status='paused';update(s,messageId);if(token?.executionId)api.updateToolMessage(token.executionId,wrap(s,'<p>模拟检查已暂停，未生成结果，也没有查询真实设备。</p>'));api.addToolMessage('assistant',wrap(s,'<p>演示已暂停，没有查询真实设备。若要继续，需要重新点击演示授权。</p>'));return;}
     if(action==='cancel'){s.status='cancelled';update(s,messageId);api.addToolMessage('user','<p>取消这次环境检查。</p>');api.addToolMessage('assistant',wrap(s,'<p>已取消，未执行任何检查。你可以稍后重新授权，或自行操作。</p>'));return;}
     if(action==='manual'){s.status='manual';update(s,messageId);api.addToolMessage('user','<p>我来操作，暂不授权自动检查。</p>');return;}
     if(action==='save-manual'){const text=root.querySelector('textarea')?.value.trim();if(!text)return;api.addToolMessage('user',`<p>以下是我提供的脱敏回显：</p><pre>${esc(text.slice(0,6000))}</pre>`);api.addToolMessage('assistant',wrap(s,'<p>已记录用户提供的回显。未连接真实执行端，未自动验证，也不会将步骤标为已通过。</p>'));return;}

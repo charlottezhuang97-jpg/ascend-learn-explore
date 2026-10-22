@@ -37,11 +37,20 @@
   const output=$('ideOutput'),stack=document.createElement('section');stack.className='mindie-bottom-stack';output.before(stack);stack.append(output);
   const consolePanel=document.createElement('section');consolePanel.className='mindie-console';consolePanel.setAttribute('aria-label','问题、输出与终端');consolePanel.innerHTML='<nav role="tablist" aria-label="IDE 底部面板"><button type="button" role="tab" aria-selected="false" data-console-tab="problems">问题 <span id="mindieProblemCount">0</span></button><button type="button" role="tab" aria-selected="true" class="active" data-console-tab="output">输出</button><button type="button" role="tab" aria-selected="false" data-console-tab="terminal">终端</button></nav><div id="mindieConsoleBody" role="tabpanel" tabindex="0"></div>';stack.append(consolePanel);
   let consoleTab='output',repair=null;
+  const terminalRecords=[];
+  function terminalMarkup(){const labels={running:'模拟处理中',success:'已完成（演示）',error:'失败（演示）',paused:'已暂停（演示）'};return '<div class="mindie-agent-terminal"><small>AI 学伴回写 · 演示记录 · 终端未连接真实服务器</small>'+terminalRecords.map(r=>`<section class="mindie-terminal-entry ${r.status}"><header><code><span>demo@host-${esc(r.host.toLowerCase())}:~$</span> ${esc(r.command)}</code><span>${labels[r.status]}</span></header>${r.output?`<pre>${esc(r.output)}</pre>`:'<p>等待模拟回显…</p>'}</section>`).join('')+'</div>';}
+  window.MindIETerminal={write(record,{reveal=false}={}){
+    if(!record||typeof record.id!=='string'||!['running','success','error','paused'].includes(record.status))return;
+    const next={id:record.id,command:String(record.command||''),host:record.host==='B'?'B':'A',status:record.status,output:String(record.output||'')};
+    const index=terminalRecords.findIndex(r=>r.id===next.id);if(index<0)terminalRecords.push(next);else terminalRecords[index]=next;
+    if(reveal){api.setView('video');api.setVideoPerspective('ide');consoleTab='terminal';}
+    if(consoleTab==='terminal'){renderConsole();$('mindieConsoleBody').scrollTop=$('mindieConsoleBody').scrollHeight;}
+  }};
   editor.setAttribute('aria-describedby','mindieConsoleBody');
   function renderConsole(){consolePanel.querySelectorAll('[data-console-tab]').forEach(b=>{const active=b.dataset.consoleTab===consoleTab;b.classList.toggle('active',active);b.setAttribute('aria-selected',String(active));});$('mindieProblemCount').textContent=repair&&!repair.applied?'1':'0';const s=window.MindIECurrentStep||lab.steps[0];let html;
     if(consoleTab==='problems')html=repair?`<div class="mindie-problem ${repair.applied?'pending':''}" role="status"><strong>${repair.applied?'修改已应用 · 待真实运行验证':'路径错误示例 · config.patch.json'}</strong><p>${repair.applied?'已改为容器权重路径 /home/weights/。这里只应用代码，不代表服务运行成功。':`第 ${repair.line} 行：modelWeightPath 使用了主机路径，服务在容器内无法按此路径读取挂载权重。`}</p>${repair.applied?'':'<button type="button" data-repair-action="show">✦ 查看 AI 修复对照</button>'}</div>`:'<p>暂无已标记的问题。可点击“演示报错”查看修复流程。</p>';
     if(consoleTab==='output')html=`<small>手册回显示例 · 未连接 NPU</small><pre>${esc(s.output)}</pre>`;
-    if(consoleTab==='terminal')html=`<small>${esc(s.context)} · 终端未连接（只读命令预览）</small><pre>${esc(s.code)}</pre>`;
+    if(consoleTab==='terminal')html=terminalRecords.length?terminalMarkup():`<small>${esc(s.context)} · 终端未连接（只读命令预览，未执行）</small><pre>${esc(s.code)}</pre>`;
     $('mindieConsoleBody').innerHTML=html;
   }
   renderConsole();
