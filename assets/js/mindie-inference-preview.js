@@ -55,10 +55,28 @@
     };
     return advice[c.name]||['核对预期与当前值，修正后重新比对。'];
   }
+  function highlightShell(code){
+    const pattern=/"(?:\\.|[^"\\])*"|'[^']*'|--?[a-zA-Z][\w-]*|\bcurl\b|\b\d+\b/g;
+    let html='',last=0;for(const match of code.matchAll(pattern)){html+=esc(code.slice(last,match.index));const token=match[0],kind=token==='curl'?'command':token.startsWith('-')?'flag':/^\d/.test(token)?'number':'string';html+=`<span class="env-syntax-${kind}">${esc(token)}</span>`;last=match.index+token.length;}return html+esc(code.slice(last));
+  }
+  function codeAdvice(c){
+    const code=window.MindIELab.steps[7].code;
+    const note=c.name==='响应状态'?'参考请求代码不保证修复 HTTP 500；实际服务异常仍需结合服务日志排查。本页是模拟响应，置入代码不会修改 HTTP 状态。':c.name==='生成结果'?'此代码用于发起请求，不会伪造或补写响应 text；请以服务实际返回内容为准。':'以下为符合本次练习目标的完整请求代码，可置入 IDE 后继续修改。';
+    return `<div class="env-code-advice"><div class="env-code-toolbar"><span>Shell</span><div>${button('copy-advice','复制')}${button('insert-advice','置入 IDE 修改')}</div></div><pre><code>${highlightShell(code)}</code></pre><div class="env-code-note">${esc(note)}<br>置入将替换 ${file}，可撤销；不会执行命令。</div></div>`;
+  }
   function reportMarkup(s){if(!s.report)return '';
     return `<section class="env-comparison ${s.report.passed?'pass':'fail'}"><div class="env-comparison-title" role="status"><b>${s.report.passed?'✓ 比对一致':'✕ 比对不一致'}</b><span>${s.report.count} / ${s.report.checks.length} 项符合 · 演示</span></div><p>${s.report.passed?'本步已完成并自动收起。可随时展开查看代码与结果。':'本步尚未完成，保留展开。按下面的建议处理，再重新比对。'}</p><div class="env-check-list">${s.report.checks.map(c=>`<details class="env-check ${c.pass?'pass':'fail'}" ${c.pass?'':'open'}><summary><span>${c.pass?'✓':'✕'}</span><b>${esc(c.name)}</b><small>${c.pass?'一致':'不一致'}</small></summary><p>预期：${esc(c.expected)}</p><p>当前：${esc(c.actual)}</p>${c.pass?'':`<div class="env-fix-advice"><b>修改建议</b><ol>${suggestions(c,s.report).map(t=>`<li>${esc(t)}</li>`).join('')}</ol><p>处理后，点击“读取当前代码并比对”再次检查。</p></div>`}</details>`).join('')}</div><details class="env-code-snapshot"><summary>查看本次读取的用户代码</summary><pre>${esc(s.code)}</pre></details><small>这是本地规则与模拟响应的比对，不代表已部署、已请求真实服务或生成内容事实正确。</small></section>`;
   }
-  function markup(s){return window.MindIEStepUI.decorate(rawMarkup(s));}
+  function markup(s){
+    const template=document.createElement('template');template.innerHTML=window.MindIEStepUI.decorate(rawMarkup(s));
+    template.content.querySelector('[data-uac-inference-id]').setAttribute('data-uac-inference-ui-version','4');
+    // Upgrade the advice presentation without changing recorded validation data.
+    for(const advice of template.content.querySelectorAll('.env-fix-advice')){
+      const name=advice.closest('.env-check').querySelector('summary>b').textContent;
+      const next=document.createElement('template');next.innerHTML=codeAdvice({name});advice.replaceWith(next.content);
+    }
+    return template.innerHTML;
+  }
   function rawMarkup(s){const passed=s.status==='pass',failed=s.status==='fail';
     return `<div class="env-flow env-inference" data-uac-inference-id="${s.id}" data-uac-inference-state="${esc(JSON.stringify(s))}"><div class="env-vertical-head"><b>文本生成推理实践</b><span class="env-demo-label">第 7 步示例 · 未连接服务器</span></div><div class="env-vertical-steps">${names.map((name,i)=>i!==6?`<details class="env-vertical-step not-run"><summary><span class="env-step-number">${i+1}</span><b>${name}</b><small>本次未执行</small></summary><div class="env-step-content"><p>仅保留流程位置。本次直接预览第 7 步，没有验证此步骤，不能视为已完成。</p></div></details>`:`<details class="env-vertical-step current ${passed?'pass':failed?'fail':''}" ${passed?'':'open'} data-uac-inference-step><summary><span class="env-step-number">${passed?'✓':failed?'✕':'7'}</span><b>推理交互</b><small>${passed?'比对一致 · 7/7':failed?`不一致 · ${s.report.count}/7`:s.status==='stale'?'待重新比对':'进行中'}</small></summary><div class="env-step-summary">${passed?'7 / 7 项符合 · 响应包含非空 text · 点击展开结果':failed?`${s.report.count} / 7 项符合 · 请修正后重新比对`:'目标：发送请求，并获得包含 text 的 JSON 响应'}</div><div class="env-step-content"><p>编辑 IDE 中的 <code>${file}</code>，再比对代码与本步目标。这里只解析代码和模拟响应，不执行 curl。</p><section class="env-step-target"><b>本步预期结果</b><p>POST <code>${expectedURL}</code></p><p>提示词“${expectedPrompt}”，<code>max_tokens: 500</code>，JSON 请求体。</p><pre>HTTP 200\n{ "text": "非空的模型生成文本" }</pre><small>校验字段与响应结构，不逐字匹配生成文本。更换提示词需同步调整本次目标。</small></section><div class="env-editor-source"><b>代码来源：IDE 当前文件</b><span>${file}</span><div class="env-actions">${button('locate','定位用户代码')}${button('reference','填入参考代码（替换当前文件）')}${s.backup!==undefined?button('undo','撤销填入'):''}</div></div><label class="env-response-label">本次模拟响应（可编辑）<textarea name="inference-response" aria-label="本次模拟响应" maxlength="6000" spellcheck="false">${esc(s.response)}</textarea></label><div class="env-preview-options"><span>模拟 HTTP 状态</span><button type="button" data-uac-inference-action="http-ok" aria-pressed="${s.http===200}">200</button><button type="button" data-uac-inference-action="http-error" aria-pressed="${s.http===500}">500</button></div>${s.status==='stale'?'<p class="env-stale" role="status">输入已改变，原比对结果已失效，请重新比对。</p>':''}<div class="env-actions env-compare-actions">${button('compare','读取当前代码并比对',true)}</div>${reportMarkup(s)}<small class="env-source">依据手册 §2.2 推理交互 ｜ 仅为样式与本地比对演示</small></div></details>`).join('')}</div></div>`;
   }
@@ -68,11 +86,20 @@
   // Saved conversations contain old HTML. Re-render from their recorded state,
   // without re-running validation or changing the user's historical code/result.
   let upgrading=false;
-  function upgradeHistory(){if(upgrading)return;upgrading=true;try{const ids=[...document.querySelectorAll('[data-uac-inference-id]')].map(r=>r.dataset.uacInferenceId);for(const id of ids){const root=find(id);if(!root||root.dataset.uacStepUiVersion==='3')continue;const s=state(root);if(s)update(root,s);}}finally{upgrading=false;}}
+  function upgradeHistory(){if(upgrading)return;upgrading=true;try{const ids=[...document.querySelectorAll('[data-uac-inference-id]')].map(r=>r.dataset.uacInferenceId);for(const id of ids){const root=find(id);if(!root||root.dataset.uacInferenceUiVersion==='4')continue;const s=state(root);if(s)update(root,s);}}finally{upgrading=false;}}
   document.addEventListener('uac:render',upgradeHistory);upgradeHistory();
   window.MindIEInferencePreview={validate,start(){locate();const s={id:crypto.randomUUID(),status:'pending',http:200,response:'{\n  "text": "你好！我是 Qwen2-7B，这是一条文本生成响应示例。"\n}',code:'',report:null};api.beginTool('用第 7 步演示：比对我的代码与预期结果。',markup(s));find(s.id)?.querySelector('[data-uac-inference-step]')?.scrollIntoView({block:'start',behavior:'auto'});}};
-  document.addEventListener('click',event=>{const launch=event.target.closest('[data-uac-inference-launch]');if(launch){window.MindIEInferencePreview.start();return;}const b=event.target.closest('[data-uac-inference-action]');if(!b)return;const root=b.closest('[data-uac-inference-id]'),s=root&&state(root);if(!s)return;const action=b.dataset.uacInferenceAction;
+  document.addEventListener('click',async event=>{const launch=event.target.closest('[data-uac-inference-launch]');if(launch){window.MindIEInferencePreview.start();return;}const b=event.target.closest('[data-uac-inference-action]');if(!b)return;const root=b.closest('[data-uac-inference-id]'),s=root&&state(root);if(!s)return;const action=b.dataset.uacInferenceAction;
     s.response=root.querySelector('textarea[name="inference-response"]').value;
+    if(action==='copy-advice'){
+      const code=b.closest('.env-code-advice').querySelector('pre code').textContent;
+      try{await navigator.clipboard.writeText(code);b.textContent='已复制';learning.showToast('代码已复制');}catch{learning.showToast('复制未成功，请选中代码后手动复制');}return;
+    }
+    if(action==='insert-advice'){
+      const code=b.closest('.env-code-advice').querySelector('pre code').textContent;
+      locate();if(s.backup===undefined)s.backup=editor().value;editor().value=code;editor().dispatchEvent(new Event('input',{bubbles:true}));
+      s.status='stale';s.report=null;update(find(s.id)||root,s);editor().focus();learning.showToast('建议代码已置入 08_generate.sh，可撤销；未执行命令');return;
+    }
     if(action==='locate'){locate();editor().focus();return;}
     if(action==='reference'||action==='undo'){locate();if(action==='reference'){if(s.backup===undefined)s.backup=editor().value;editor().value=window.MindIELab.steps[7].code;}else{if(s.backup===undefined)return;editor().value=s.backup;delete s.backup;}editor().dispatchEvent(new Event('input',{bubbles:true}));learning.showToast(action==='reference'?'已填入参考代码，可撤销；未执行命令':'已恢复填入前的代码');s.status='stale';s.report=null;update(find(s.id)||root,s);return;}
     if(action==='http-ok'||action==='http-error'){s.http=action==='http-ok'?200:500;s.status='stale';s.report=null;update(root,s);return;}
