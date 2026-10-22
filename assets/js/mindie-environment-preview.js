@@ -2,7 +2,7 @@
 (() => {
   if(new URLSearchParams(location.search).get('course')!=='mindie'||!window.AscendCompanion)return;
   const api=window.AscendCompanion,params=new URLSearchParams(location.search);
-  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('../css/mindie-environment-preview.css?v=vertical-steps-3',document.currentScript.src);document.head.append(sheet);
+  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('../css/mindie-environment-preview.css?v=vertical-steps-4',document.currentScript.src);document.head.append(sheet);
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const phases=['环境准备','下载模型权重','获取MindIE镜像','启动容器','模型推理配置','启动MindIE服务','推理交互'];
   const activeRuns=new Map();
