@@ -1,6 +1,11 @@
 (()=>{
   const embedded=new URLSearchParams(location.search).get('embedded')==='1';
   if(embedded)document.body.classList.add('embedded');
+  if(new URLSearchParams(location.search).get('capability')==='1'){
+    document.body.classList.add('capability-only');
+    document.querySelectorAll('a').forEach(a=>a.target='_top');
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&parent!==window)parent.postMessage({type:'back-smart-assistant'},location.origin);});
+  }
   const send=type=>{if(embedded&&parent!==window)parent.postMessage({type},'*');else location.href='index.html'};
   document.querySelector('#companionClose').addEventListener('click',()=>send('close-ai-companion'));
   document.querySelector('#assistantBack').addEventListener('click',()=>send('back-smart-assistant'));

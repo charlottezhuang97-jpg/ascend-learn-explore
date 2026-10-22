@@ -1,4 +1,6 @@
 @font-face{font-family:"HarmonyOS Sans";src:url("../fonts/HarmonyOS_Sans_SC_Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+.capability-only .ac-header{display:none}.capability-only .ac-content{padding-top:8px}.capability-only .ac-tab-panel{min-height:0}
+.capability-only .ac-radar{height:350px}.capability-only .ac-radar svg{top:60px;width:230px;height:230px}.capability-only .ac-levels{top:68px}.capability-only .ac-person{top:148px}.capability-only .ac-domain{width:110px}
 @font-face{font-family:"HarmonyOS Sans";src:url("../fonts/HarmonyOS_Sans_SC_Medium.woff2") format("woff2");font-weight:600;font-display:swap}
 :root{--ac-ink:#101828;--ac-secondary:rgba(0,0,0,.6);--ac-muted:#99a1af;--ac-blue:#2e53fa;--ac-purple:#8f55ed;--ac-green:#21cfa1;--ac-orange:#ff8c42;--ac-line:#e5e7eb;--ac-page:#f5f8ff;--ac-soft:#eef4ff;--ac-white:#fff;--ac-shadow:0 8px 24px rgba(16,24,40,.1);--ac-font:"HarmonyOS Sans","HarmonyOS Sans SC","PingFang SC",sans-serif}
 *{box-sizing:border-box}html,body{min-height:100%;margin:0}body{background:#e9eef6;color:var(--ac-ink);font:400 14px/22px var(--ac-font)}button,a{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}[hidden]{display:none!important}

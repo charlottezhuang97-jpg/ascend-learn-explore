@@ -23,6 +23,7 @@
     transcript:[['01:50','video','讲解','达芬奇架构：AI 计算的核心','上一节我们把 NPU 比作工厂。现在进入工厂内部，理解各计算单元如何分工。',0],['03:20','video','代码','输入数据搬运','先准备输入数据与缓冲区，再把数据搬运到计算单元可访问的位置。',0],['03:36','board','板书','Cube、Vector 与 Scalar','达芬奇架构把计算任务拆分给三个各司其职的单元：Cube、Vector 和 Scalar。',0],['05:05','video','代码','计算结果写回','计算完成后，把结果按指定长度写回输出空间。',1],['05:40','board','高亮','计算单元的职责','Cube 承担矩阵乘法，Vector 处理向量运算，Scalar 负责控制流程。',0],['06:20','board','小测','判断主要计算单元','Transformer 中的大规模矩阵乘法，主要由哪个计算单元承担？',0]],
     cards:[['Cube 主要负责什么？','矩阵计算，例如大模型中的矩阵乘法。'],['Vector 与 Scalar 有什么区别？','Vector 处理向量运算与后处理；Scalar 负责标量运算和流程控制。'],['算子执行的基本顺序是什么？','输入搬运 → 计算 → 结果写回。']]
   });
+  window.AscendStudyData=data;
   let tool = null, filter = 'all', query = '', cardIndex = 0, revealed = false, selectedEntry = -1;
   const surfaces = [];
   const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
