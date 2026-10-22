@@ -55,6 +55,11 @@
   boardArea.append(mini);
   const footer=document.querySelector('.board-footer');footer.insertAdjacentHTML('beforeend','<div class="mindie-board-track" aria-label="学习节点；原视频时间待接入"><i></i><button type="button" data-mindie-page="0" title="重点：生成式 AI 概述" aria-label="重点：生成式 AI 概述">♧</button><button type="button" data-mindie-page="4" title="代码：文本推理链路" aria-label="代码：文本推理链路">&lt;/&gt;</button><button type="button" data-mindie-action="practice" title="实践：进入 IDE" aria-label="实践：进入 IDE">⚑</button></div>');
   document.querySelectorAll('.mindie-board-track button').forEach((b,i)=>{b.innerHTML=document.querySelectorAll('.teacher-timeline .timeline-marker')[i].innerHTML;});
+  const progress=document.createElement('nav');progress.className='mindie-glass-progress';progress.setAttribute('aria-label','理论学习进度与实验入口');
+  progress.innerHTML='<span class="mindie-progress-label">理论学习</span><div class="mindie-progress-line"></div><button type="button" class="mindie-lab-entry" data-mindie-action="practice" data-mindie-lab-entry aria-label="进入文本生成实验实践" title="进入实验，白板位置会保留"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3M8 15h8M10 17h.01M14 18h.01"/></svg><span>实验</span><span aria-hidden="true">→</span></button>';
+  progress.querySelector('.mindie-progress-line').append(document.querySelector('.mindie-board-track'));boardArea.append(progress);
+  function placeProgress(){if($('learningRoom').hidden)return;const r=$('whiteboard').getBoundingClientRect();boardArea.style.setProperty('--mindie-progress-left',`${r.left+20}px`);boardArea.style.setProperty('--mindie-progress-width',`${Math.max(0,r.width-40)}px`);}
+  new ResizeObserver(placeProgress).observe($('whiteboard'));window.addEventListener('resize',placeProgress);document.addEventListener('learning:view-change',placeProgress);placeProgress();
   function boardPerspective(teacher){boardTeacher=teacher;$('learningRoom').classList.toggle('board-teacher-mode',teacher);bigVideo.hidden=!teacher;mini.hidden=teacher;back.hidden=teacher;$('boardToVideo').hidden=teacher;}
   document.querySelector('.whiteboard').addEventListener('click',()=>{if(boardTeacher)boardPerspective(false);});
   $('boardToVideo').addEventListener('click',e=>{e.stopImmediatePropagation();api.setView('board');boardPerspective(true);},true);
@@ -97,7 +102,7 @@
     if(b.dataset.mindieStep!==undefined){selectStep(Number(b.dataset.mindieStep));return;}
     if(b.dataset.mindieMissing){closeDirectory();info(b.dataset.mindieMissing,'按上传课程目录保留入口。本次未提供该资源或认证规则，待正式内容接入，不伪造教学内容和通过结果。');return;}
     const action=b.dataset.mindieAction;
-    if(action==='practice')selectStep(step,true);
+    if(action==='practice'){selectStep(step,true);if(b.hasAttribute('data-mindie-lab-entry')){api.showToast('已进入文本生成实验：按左侧八步操作，并对照手册核对结果');$('ideEditor').focus();}}
     if(action==='practice-video'){selectStep(0);api.setView('video');api.setVideoPerspective('teacher');}
     if(action==='board-teacher')boardPerspective(true);
     if(action==='board-canvas')boardPerspective(false);
