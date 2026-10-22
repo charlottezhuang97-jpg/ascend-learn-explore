@@ -364,6 +364,18 @@ if __name__ == '__main__':
     referenceDrawer.setAttribute('aria-hidden', 'true');
     document.getElementById('openDocument').focus();
   });
+  const soundToggle = document.getElementById('toggleBoardSound');
+  soundToggle.addEventListener('click', () => {
+    const muted = soundToggle.getAttribute('aria-pressed') !== 'true';
+    soundToggle.setAttribute('aria-pressed', String(muted));
+    const label = muted ? '声音：已静音，点击开启' : '声音：已开启，点击静音';
+    soundToggle.setAttribute('aria-label', label);
+    soundToggle.title = label;
+    soundToggle.querySelector('[data-sound-waves]').style.display = muted ? 'none' : '';
+    soundToggle.querySelector('[data-sound-muted]').style.display = muted ? 'inline' : 'none';
+    document.querySelectorAll('video,audio').forEach(media => { media.muted = muted; });
+  });
+  soundToggle.querySelector('[data-sound-muted]').style.display = 'none';
   const outlinePanel = document.getElementById('lessonOutline');
   const outlineToggle = document.getElementById('toggleLessonOutline');
   function setOutlineOpen(open) {
