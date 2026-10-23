@@ -3,6 +3,12 @@
   const learning=window.AscendLearning,companion=window.AscendCompanion;
   if(!learning||!companion)return;
   document.body.classList.add('fixed1030');
+  document.getElementById('fileVideoJump')?.remove();document.getElementById('fileVideoTooltip')?.remove();
+  const fileTabs=document.querySelector('#videoIde .ide-tabs');
+  fileTabs.setAttribute('aria-label','打开的文件，可横向滚动');
+  fileTabs.addEventListener('wheel',e=>{if(!e.ctrlKey&&fileTabs.scrollWidth>fileTabs.clientWidth&&Math.abs(e.deltaY)>Math.abs(e.deltaX)){const next=Math.max(0,Math.min(fileTabs.scrollWidth-fileTabs.clientWidth,fileTabs.scrollLeft+e.deltaY));if(next!==fileTabs.scrollLeft){e.preventDefault();fileTabs.scrollLeft=next;}}},{passive:false});
+  fileTabs.addEventListener('click',e=>{e.target.closest('button')?.scrollIntoView({block:'nearest',inline:'nearest'});});
+  fileTabs.addEventListener('keydown',e=>{const tabs=[...fileTabs.querySelectorAll('button')],index=tabs.indexOf(e.target);if(index<0||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const next=e.key==='Home'?0:e.key==='End'?tabs.length-1:(index+(e.key==='ArrowRight'?1:tabs.length-1))%tabs.length;tabs[next].click();tabs[next].focus();});
   const title=document.querySelector('.board-header .lesson-title');
   const header=document.createElement('header');header.className='fixed1030-header';
   header.innerHTML='<a class="room-close" href="index.html" aria-label="返回课程首页">‹</a><div class="fixed1030-lesson"></div><span class="fixed1030-badge">1030 预览</span><a class="fixed1030-production" href="https://charlottezhuang97-jpg.github.io/ascend-learn-explore/learn.html?course=mindie">正式版 ↗</a>';

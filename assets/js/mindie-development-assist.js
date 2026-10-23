@@ -99,24 +99,45 @@
     return corrected===text?null:corrected;
   }
   function showSelection(){
-    if(filename()!==file||!latest||latest.passed||latest.code!==editor.value){popup.hidden=true;return;}
+    if(!filename()){popup.hidden=true;return;}
     const start=editor.selectionStart,end=editor.selectionEnd,text=editor.value.slice(start,end);
     if(!text.trim()){popup.hidden=true;return;}
-    const replacement=selectionFix(text),line=editor.value.slice(0,start).split('\n').length,endLine=editor.value.slice(0,end).split('\n').length;
-    selection={file,whole:editor.value,start,end,text,replacement};
-    popup.innerHTML=`<header><b>AI 学伴</b><div><button type="button" data-selection-action="copy">复制</button><button type="button" data-selection-action="insert" ${replacement?'':'disabled'}>置入 IDE</button><button type="button" data-selection-action="close" aria-label="关闭选区建议">×</button></div></header><p>${file} · 第 ${line}${endLine!==line?'–'+endLine:''} 行 · ${paused?'断点暂停（演示）':'运行报错（演示）'}</p><div class="env-code-advice"><pre><code>${engine.highlightShell(replacement??text)}</code></pre></div><small>${replacement?'建议将 max_tokens 字符串改为数值，或修正本实验接口路径。置入仅替换本次选区，可撤销，不执行代码。':'此选区未命中可可靠修复的本地规则，当前仅展示所选代码。请打开学伴进行整段问题分析。'}</small>`;
+    const selectedFile=filename(),replacement=selectedFile===file?selectionFix(text):null,line=editor.value.slice(0,start).split('\n').length,endLine=editor.value.slice(0,end).replace(/\n$/,'').split('\n').length;
+    const matchedRun=latest?.filename===selectedFile&&latest.code===editor.value;
+    selection={file:selectedFile,whole:editor.value,start,end,text,replacement,line,endLine};
+    popup.innerHTML=`<header><b>AI 学伴</b><div><button type="button" data-selection-action="copy">复制</button><button type="button" data-selection-action="insert" ${replacement?'':'disabled'}>置入 IDE</button><button type="button" data-selection-action="close" aria-label="关闭选区建议">×</button></div></header><p>${esc(selectedFile)} · 第 ${line}${endLine!==line?'–'+endLine:''} 行 · ${paused?'断点暂停（演示）':matchedRun&&!latest.passed?'运行报错（演示）':'已选中代码'}</p><div class="env-code-advice"><pre><code>${engine.highlightShell(replacement??text)}</code></pre></div><small>${replacement?'发现本地规则可修复的问题。置入仅替换本次选区，可撤销，不执行代码。':'基于所选代码提问，或结合对应运行记录定位异常。'}</small><footer class="mindie-selection-shortcuts" aria-label="代码选区快捷操作"><button type="button" data-selection-action="ask">问一问</button><button type="button" data-selection-action="diagnose">异常定位</button></footer>`;
     popup.hidden=false;
-    const rect=editor.getBoundingClientRect(),width=Math.min(460,innerWidth-32);popup.style.width=width+'px';
+    const rect=editor.getBoundingClientRect(),width=Math.min(460,innerWidth-32,Math.max(260,rect.width-24));popup.style.width=width+'px';
     const y=rect.top+(line-1)*(parseFloat(getComputedStyle(editor).lineHeight)||22)-editor.scrollTop;
-    popup.style.left=Math.max(16,Math.min(rect.left+Math.min(rect.width*.35,260),innerWidth-width-16))+'px';
+    popup.style.left=Math.max(16,Math.min(rect.left+Math.min(rect.width*.35,260),rect.right-width-12,innerWidth-width-16))+'px';
     popup.style.top=Math.max(16,Math.min(y+28,innerHeight-popup.offsetHeight-16))+'px';
   }
-  let selectionTimer;function queueSelection(){clearTimeout(selectionTimer);selectionTimer=setTimeout(showSelection,100);}
+  let selectionTimer,selecting=false;function queueSelection(){clearTimeout(selectionTimer);selectionTimer=setTimeout(()=>{if(!selecting)showSelection();},100);}
+  editor.addEventListener('pointerdown',e=>{if(e.button===0){selecting=true;popup.hidden=true;}});
+  document.addEventListener('pointerup',()=>{if(selecting){selecting=false;queueSelection();}});
+  document.addEventListener('pointercancel',()=>{selecting=false;});
   editor.addEventListener('select',queueSelection);editor.addEventListener('mouseup',queueSelection);editor.addEventListener('keyup',queueSelection);
   editor.addEventListener('scroll',()=>{positionMark();popup.hidden=true;});
   editor.addEventListener('input',()=>{popup.hidden=true;paused=false;positionMark();if(filename()!==file)return;for(const root of [...document.querySelectorAll('[data-uac-inference-id]')]){const s=read(root);if(s?.report&&!s.stale){s.stale=true;update(find(s.id),s);}}});
   popup.addEventListener('click',async e=>{const key=e.target.closest('[data-selection-action]')?.dataset.selectionAction;if(!selection)return;
     if(key==='close'){popup.hidden=true;return;}
+    if(key==='ask'||key==='diagnose'){
+      if(filename()!==selection.file||editor.value!==selection.whole){popup.hidden=true;ide.showToast('文件或代码已变化，请重新框选');return;}
+      const context=`${selection.file} · 第 ${selection.line}–${selection.endLine} 行`,snippet=`<div class="env-code-advice"><pre><code>${engine.highlightShell(selection.text)}</code></pre></div>`;
+      popup.hidden=true;
+      if(key==='ask'){
+        const step=window.MindIELab.steps.find(s=>s.file===selection.file);
+        api.beginTool(`请解释所选代码：${context}\n${selection.text}`,`<p>已收到你框选的 <b>${esc(context)}</b>：</p>${snippet}<p>${esc(step?.action||'可以继续问我这段代码的用途、参数含义或修改方法。')}</p><small>依据当前课程手册的预设说明，非实时 AI；不会修改或执行代码。</small>`);
+      }else if(latest?.filename===selection.file&&latest.code===selection.whole){
+        const result=engine.validate(latest.code,latest.response,latest.http,latest.filename);
+        const within=latest.errorLine>=selection.line&&latest.errorLine<=selection.endLine;
+        const intro=`<p>选区：<b>${esc(context)}</b>。${latest.passed?'该次模拟运行未记录异常。':within?'终端记录的异常行位于本次选区内。':`终端记录的异常位于第 ${latest.errorLine} 行，不在当前选区内，不能直接认定此选区有误。`}</p>`;
+        api.beginTool(`定位所选代码的异常：${context}\n${selection.text}`,intro+render({id:crypto.randomUUID(),status:result.passed?'pass':'fail',run:latest,code:latest.code,report:result}));
+      }else{
+        api.beginTool(`定位所选代码的异常：${context}\n${selection.text}`,`<p>当前文件或代码版本还没有匹配的运行记录，无法确认终端异常位置。</p>${snippet}<p>${selection.replacement?'本地规则发现选区中有可修正的参数或路径；可重新框选并置入建议后，在 IDE 运行验证。':'请先在 IDE 中运行当前文件，再结合终端错误和断点记录定位问题。当前演示只接入第 7 步的模拟运行。'}</p><small>未执行代码、未调用调试器或实时 AI。</small>`);
+      }
+      return;
+    }
     if(key==='copy'){try{await navigator.clipboard.writeText(selection.replacement??selection.text);ide.showToast('选区代码已复制');}catch{ide.showToast('复制失败，请手动选择并复制代码');}return;}
     if(key==='insert'){
       if(!selection.replacement||filename()!==selection.file||editor.value!==selection.whole){ide.showToast('文件或代码已变化，请重新选择；未覆盖代码');popup.hidden=true;return;}
