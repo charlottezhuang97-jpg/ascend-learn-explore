@@ -116,7 +116,7 @@
   editor.addEventListener('pointerdown',e=>{if(e.button===0){selecting=true;popup.hidden=true;}});
   document.addEventListener('pointerup',()=>{if(selecting){selecting=false;queueSelection();}});
   document.addEventListener('pointercancel',()=>{selecting=false;});
-  editor.addEventListener('select',queueSelection);editor.addEventListener('mouseup',queueSelection);editor.addEventListener('keyup',queueSelection);
+  editor.addEventListener('select',queueSelection);editor.addEventListener('mouseup',queueSelection);editor.addEventListener('keyup',e=>{if(e.key!=='Escape')queueSelection();});
   editor.addEventListener('scroll',()=>{positionMark();popup.hidden=true;});
   editor.addEventListener('input',()=>{popup.hidden=true;paused=false;positionMark();if(filename()!==file)return;for(const root of [...document.querySelectorAll('[data-uac-inference-id]')]){const s=read(root);if(s?.report&&!s.stale){s.stale=true;update(find(s.id),s);}}});
   popup.addEventListener('click',async e=>{const key=e.target.closest('[data-selection-action]')?.dataset.selectionAction;if(!selection)return;
@@ -151,7 +151,7 @@
     if(key==='copy'){try{await navigator.clipboard.writeText(code);b.textContent='已复制';ide.showToast('代码已复制');}catch{ide.showToast('复制失败，请手动复制代码');}}
     if(key==='insert'){locate();setCode(code);popup.hidden=true;s.stale=true;update(find(s.id),s);editor.focus();ide.showToast('代码已置入，可撤销；请点击 IDE“运行”验证');}
   });
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!popup.hidden){popup.hidden=true;e.preventDefault();e.stopImmediatePropagation();}},true);
+  window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!popup.hidden){clearTimeout(selectionTimer);popup.hidden=true;e.preventDefault();e.stopImmediatePropagation();}},true);
   document.addEventListener('pointerdown',e=>{if(!popup.contains(e.target)&&e.target!==editor)popup.hidden=true;});
   document.addEventListener('click',e=>{if(e.target.closest('[data-ide-file],[data-nested-file]')){popup.hidden=true;paused=false;refreshBar();decorateGutter();}});
   engine.start=()=>{locate();refreshBar();api.close();ide.showToast('第 7 步：先运行代码，再打开 AI 学伴分析终端报错');};
