@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, '1030']
   workflow_dispatch:
 
 permissions:
@@ -18,9 +18,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Build curated Pages artifact
+      - name: Checkout production source (always main)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Build production without changing its URLs
         run: bash scripts/build-pages.sh
+      - name: Checkout isolated 1030 source
+        uses: actions/checkout@v4
+        with:
+          ref: '1030'
+          path: .preview-1030-source
+      - name: Build and overlay only /previews/1030/
+        run: |
+          set -euo pipefail
+          bash .preview-1030-source/scripts/build-pages.sh
+          mkdir -p .pages-dist/previews/1030
+          cp -a .preview-1030-source/.pages-dist/. .pages-dist/previews/1030/
+          git -C .preview-1030-source rev-parse HEAD > .pages-dist/previews/1030/REVISION
+          test -f .pages-dist/learn.html
+          test -f .pages-dist/previews/1030/learn-1030.html
       - uses: actions/configure-pages@v5
         with:
           enablement: true

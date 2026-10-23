@@ -13,7 +13,8 @@
   const features={course:'课程总结',chapter:'章节总结',transcript:'智能字幕',cards:'知识卡片',mindmap:'思维导图',notes:'我的笔记'};
   let messages=[],view='chat',showCards=true,lastTrigger=null,open=false,notes=[],selectedCourse=null;
   let conversations=[],activeId=null,sessionSource=null,storageError=false;
-  const historyKey='ascend-unified-conversations-v1',activeKey='ascend-unified-active-id';
+  const preview1030=location.pathname.includes('/previews/1030/')||location.pathname.endsWith('/learn-1030.html');
+  const historyKey=preview1030?'ascend-1030-conversations-v1':'ascend-unified-conversations-v1',activeKey=preview1030?'ascend-1030-active-id':'ascend-unified-active-id';
   try{const saved=JSON.parse(localStorage.getItem(historyKey)||'[]');if(Array.isArray(saved))conversations=saved.filter(s=>s&&typeof s.id==='string'&&Array.isArray(s.messages));activeId=localStorage.getItem(activeKey);}catch{storageError=true;}
   try{notes=JSON.parse(localStorage.getItem('ascend-unified-notes')||'[]');if(!Array.isArray(notes))notes=[];}catch{}
   const panel=document.createElement('section');panel.className='uac-panel';panel.id='unifiedCompanion';panel.hidden=true;panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','false');panel.setAttribute('aria-labelledby','uacTitle');
