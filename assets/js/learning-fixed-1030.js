@@ -21,6 +21,11 @@
   // Reuse the real timeline outside either view's hidden subtree.
   const timeline=document.querySelector('.mindie-glass-progress');if(timeline)document.body.append(timeline);
   panel.querySelector('[data-uac-action="close"]').hidden=true;
+  const miniVideo=document.getElementById('ideMiniVideo');let miniClosed=false;
+  const miniToggle=document.createElement('button');miniToggle.type='button';miniToggle.className='mindie-practice-link';miniToggle.textContent='悬浮讲解';miniToggle.setAttribute('aria-controls','ideMiniVideo');miniToggle.setAttribute('aria-pressed','false');
+  document.querySelector('#videoIde .ide-actions').insertBefore(miniToggle,document.getElementById('runCode'));
+  miniToggle.addEventListener('click',()=>{miniClosed=!miniVideo.hidden;sync();if(!miniVideo.hidden)document.getElementById('miniVideoDragHandle').focus();});
+  document.getElementById('closeMiniVideo').addEventListener('click',()=>{miniClosed=true;sync();miniToggle.focus();});
   // A fixed companion cannot be dismissed by legacy floating-panel triggers.
   companion.close=()=>companion.open();
   const originalView=learning.setView,originalPerspective=learning.setVideoPerspective;
@@ -29,7 +34,8 @@
     document.body.dataset.fixedView=mode;
     for(const b of footer.querySelectorAll('[data-fixed-view]')){const selected=b.dataset.fixedView===mode;b.classList.toggle('active',selected);b.setAttribute('aria-selected',String(selected));b.tabIndex=selected?0:-1;}
     const url=new URL(location.href);url.searchParams.set('mode',mode);history.replaceState(null,'',url);
-    document.getElementById('ideMiniVideo').hidden=true;
+    miniVideo.hidden=mode!=='ide'||miniClosed;
+    miniToggle.setAttribute('aria-pressed',String(!miniVideo.hidden));
   }
   learning.setView=(view)=>{originalView(view);sync();};
   learning.setVideoPerspective=(perspective)=>{originalPerspective(perspective);sync();};
