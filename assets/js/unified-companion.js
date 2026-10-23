@@ -48,7 +48,7 @@
     if(messages.length)content.scrollTop=content.scrollHeight;
     document.dispatchEvent(new CustomEvent('uac:render'));
   }
-  function setOpen(value,trigger){open=value;if(trigger)lastTrigger=trigger;panel.hidden=!open;fab.hidden=open;fab.setAttribute('aria-expanded',String(open));document.querySelectorAll('[data-uac-entry],#openIdeAssist,#homeCompanionFab').forEach(b=>b.setAttribute('aria-expanded',String(open)));if(open){render();panel.querySelector('[data-uac-action="close"]').focus({preventScroll:true});}else lastTrigger?.focus({preventScroll:true});}
+  function setOpen(value,trigger){open=value;if(trigger)lastTrigger=trigger;panel.hidden=!open;fab.hidden=open;fab.setAttribute('aria-expanded',String(open));document.querySelectorAll('[data-uac-entry],#openIdeAssist,#homeCompanionFab').forEach(b=>b.setAttribute('aria-expanded',String(open)));if(open){render();panel.querySelector('[data-uac-action="close"]').focus({preventScroll:true});document.dispatchEvent(new CustomEvent('uac:open'));}else lastTrigger?.focus({preventScroll:true});}
   const append=(role,html)=>messages.push({id:messages.length+1,role,html});
   const pickCourse=()=>'<p>当前页面还未选择课程。先选一门课程，我会基于对应内容继续整理。</p><div class="uac-actions"><button type="button" data-uac-course="mindie">生成式AI通用知识</button><button type="button" data-uac-course="training">大模型分布式训练</button></div>';
   function stepMarkup(){return window.MindIELab?.steps.map((s,i)=>`<li><b>${i+1}. ${esc(s.title)}</b><p>${esc(s.goal)}</p><button type="button" data-uac-step="${i}">在 IDE 中查看 →</button></li>`).join('')||'';}

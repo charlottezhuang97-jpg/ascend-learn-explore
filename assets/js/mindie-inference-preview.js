@@ -35,7 +35,7 @@
       {name:'JSON 内容类型',expected:'Content-type: application/json',actual:request?.headers.find(h=>/^content-type\s*:/i.test(h))||'缺少 Content-type',pass:!!request?.headers.some(h=>/^content-type\s*:\s*application\/json\s*$/i.test(h))},
       {name:'请求体可解析',expected:'合法的 JSON 对象',actual:body&&typeof body==='object'&&!Array.isArray(body)?'JSON 对象':'请求体缺失或 JSON 无效',pass:!!body&&typeof body==='object'&&!Array.isArray(body)},
       {name:'本次提示词',expected:expectedPrompt,actual:typeof body?.prompt==='string'?body.prompt:'缺少 prompt',pass:body?.prompt===expectedPrompt},
-      {name:'生成长度',expected:'max_tokens = 500',actual:`max_tokens = ${body?.max_tokens??'未填写'}`,pass:body?.max_tokens===500},
+      {name:'生成长度',expected:'max_tokens = 500（数值）',actual:`max_tokens = ${body?.max_tokens===undefined?'未填写':JSON.stringify(body.max_tokens)}${typeof body?.max_tokens==='string'?'（字符串）':typeof body?.max_tokens==='number'?'（数值）':''}`,pass:body?.max_tokens===500},
       {name:'响应状态',expected:'HTTP 200',actual:`HTTP ${http}`,pass:http===200},
       {name:'生成结果',expected:'响应为 JSON，text 是非空字符串',actual:typeof responseBody?.text==='string'&&responseBody.text.trim()?'已获得非空 text':'text 缺失、为空或响应不是合法 JSON',pass:typeof responseBody?.text==='string'&&!!responseBody.text.trim()}
     ];
@@ -68,6 +68,7 @@
     return `<section class="env-comparison ${s.report.passed?'pass':'fail'}"><div class="env-comparison-title" role="status"><b>${s.report.passed?'✓ 比对一致':'✕ 比对不一致'}</b><span>${s.report.count} / ${s.report.checks.length} 项符合 · 演示</span></div><p>${s.report.passed?'本步已完成并自动收起。可随时展开查看代码与结果。':'本步尚未完成，保留展开。按下面的建议处理，再重新比对。'}</p><div class="env-check-list">${s.report.checks.map(c=>`<details class="env-check ${c.pass?'pass':'fail'}" ${c.pass?'':'open'}><summary><span>${c.pass?'✓':'✕'}</span><b>${esc(c.name)}</b><small>${c.pass?'一致':'不一致'}</small></summary><p>预期：${esc(c.expected)}</p><p>当前：${esc(c.actual)}</p>${c.pass?'':`<div class="env-fix-advice"><b>修改建议</b><ol>${suggestions(c,s.report).map(t=>`<li>${esc(t)}</li>`).join('')}</ol><p>处理后，点击“读取当前代码并比对”再次检查。</p></div>`}</details>`).join('')}</div><details class="env-code-snapshot"><summary>查看本次读取的用户代码</summary><pre>${esc(s.code)}</pre></details><small>这是本地规则与模拟响应的比对，不代表已部署、已请求真实服务或生成内容事实正确。</small></section>`;
   }
   function markup(s){
+    if(window.MindIEDevelopmentAssist)return window.MindIEDevelopmentAssist.render(s);
     const template=document.createElement('template');template.innerHTML=window.MindIEStepUI.decorate(rawMarkup(s));
     template.content.querySelector('[data-uac-inference-id]').setAttribute('data-uac-inference-ui-version','4');
     // Upgrade the advice presentation without changing recorded validation data.
@@ -88,8 +89,9 @@
   let upgrading=false;
   function upgradeHistory(){if(upgrading)return;upgrading=true;try{const ids=[...document.querySelectorAll('[data-uac-inference-id]')].map(r=>r.dataset.uacInferenceId);for(const id of ids){const root=find(id);if(!root||root.dataset.uacInferenceUiVersion==='4')continue;const s=state(root);if(s)update(root,s);}}finally{upgrading=false;}}
   document.addEventListener('uac:render',upgradeHistory);upgradeHistory();
-  window.MindIEInferencePreview={validate,start(){locate();const s={id:crypto.randomUUID(),status:'pending',http:200,response:'{\n  "text": "你好！我是 Qwen2-7B，这是一条文本生成响应示例。"\n}',code:'',report:null};api.beginTool('用第 7 步演示：比对我的代码与预期结果。',markup(s));find(s.id)?.querySelector('[data-uac-inference-step]')?.scrollIntoView({block:'start',behavior:'auto'});}};
+  window.MindIEInferencePreview={validate,highlightShell,start(){locate();const s={id:crypto.randomUUID(),status:'pending',http:200,response:'{\n  "text": "你好！我是 Qwen2-7B，这是一条文本生成响应示例。"\n}',code:'',report:null};api.beginTool('用第 7 步演示：比对我的代码与预期结果。',markup(s));find(s.id)?.querySelector('[data-uac-inference-step]')?.scrollIntoView({block:'start',behavior:'auto'});}};
   document.addEventListener('click',async event=>{const launch=event.target.closest('[data-uac-inference-launch]');if(launch){window.MindIEInferencePreview.start();return;}const b=event.target.closest('[data-uac-inference-action]');if(!b)return;const root=b.closest('[data-uac-inference-id]'),s=root&&state(root);if(!s)return;const action=b.dataset.uacInferenceAction;
+    if(window.MindIEDevelopmentAssist)return;
     s.response=root.querySelector('textarea[name="inference-response"]').value;
     if(action==='copy-advice'){
       const code=b.closest('.env-code-advice').querySelector('pre code').textContent;
@@ -105,7 +107,7 @@
     if(action==='http-ok'||action==='http-error'){s.http=action==='http-ok'?200:500;s.status='stale';s.report=null;update(root,s);return;}
     if(action==='compare'){s.code=editor().value;s.report=validate(s.code,s.response,s.http,currentFile());s.status=s.report.passed?'pass':'fail';api.addToolMessage('user','<p>请读取我当前的代码，并与第 7 步目标及模拟响应进行比对。</p>');const next=update(find(s.id)||root,s);window.MindIETerminal?.write({id:`${s.id}:comparison:${Date.now()}`,host:'A',command:s.code,status:s.report.passed?'success':'error',output:`[本地比对演示，未执行请求]\n${s.report.count}/7 项符合\nHTTP ${s.http}\n${s.response}\n\n${s.report.checks.filter(c=>!c.pass).map(c=>c.name+'：'+c.actual+'；预期 '+c.expected).join('\n')}`},{reveal:true});next?.querySelector('[data-uac-inference-step]')?.scrollIntoView({block:'start',behavior:'auto'});}
   });
-  document.addEventListener('input',event=>{if(event.target!==editor()&&!event.target.matches('[name="inference-response"]'))return;for(const root of document.querySelectorAll('[data-uac-inference-id]')){const s=state(root);if(!s?.report)continue;s.response=root.querySelector('textarea').value;s.status='stale';s.report=null;const typing=event.target===root.querySelector('textarea'),position=typing?event.target.selectionStart:0;const next=update(root,s);if(typing){const t=next.querySelector('textarea');t.focus({preventScroll:true});t.setSelectionRange(position,position);}}});
+  document.addEventListener('input',event=>{if(window.MindIEDevelopmentAssist)return;if(event.target!==editor()&&!event.target.matches('[name="inference-response"]'))return;for(const root of document.querySelectorAll('[data-uac-inference-id]')){const s=state(root);if(!s?.report)continue;s.response=root.querySelector('textarea').value;s.status='stale';s.report=null;const typing=event.target===root.querySelector('textarea'),position=typing?event.target.selectionStart:0;const next=update(root,s);if(typing){const t=next.querySelector('textarea');t.focus({preventScroll:true});t.setSelectionRange(position,position);}}});
   const entry=document.createElement('button');entry.type='button';entry.className='mindie-practice-link';entry.textContent='第 7 步 · 结果比对';entry.addEventListener('click',()=>window.MindIEInferencePreview.start());document.querySelector('#videoIde .ide-actions')?.insertBefore(entry,document.getElementById('runCode'));
   function openPreview(){
     const previous=[...document.querySelectorAll('[data-uac-inference-id]')].at(-1);
@@ -115,5 +117,6 @@
     if(failure)root.querySelector('[data-uac-inference-step]').open=true;
     (failure||root?.querySelector('[data-uac-inference-step]'))?.scrollIntoView({block:'start',behavior:'auto'});
   }
-  if(new URLSearchParams(location.search).get('agent')==='inference'){const sheet=document.querySelector('link[href*="mindie-environment-preview.css"]');if(!sheet||sheet.sheet)openPreview();else sheet.addEventListener('load',openPreview,{once:true});}
+  // The development workflow module owns entry/open behavior. Analysis starts
+  // only after a run has produced a terminal record and the user accepts it.
 })();
