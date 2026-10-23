@@ -391,7 +391,8 @@
     if (!stage.querySelector('#outlineTurn')) return;
     removeComposition();
     stage.querySelector('#outlineTurn')?.remove();
-    flow.classList.remove('outline-expanded', 'course-preview-expanded');
+    flow.classList.remove('outline-expanded', 'course-preview-expanded', 'knowledge-answer');
+    stage.querySelector('.kmap')?.destroy?.();
     stage.querySelector('#courseBuildStep')?.remove();
     const lastActions = stage.querySelector('#flowQuestion4 .flow-actions');
     if (lastActions) lastActions.hidden = false;
@@ -485,13 +486,14 @@
     removeComposition();
     flow.hidden = true;
     clearSourceTimers();
-    flow.classList.remove('outline-expanded', 'course-preview-expanded');
+    flow.classList.remove('outline-expanded', 'course-preview-expanded', 'knowledge-answer');
+    stage.querySelector('.kmap')?.destroy?.();
     background.forEach(node => { node.inert = false; });
     document.body.style.overflow = '';
     if (returnFocus) returnFocus.focus();
   }
 
-  window.openCourseFlow = value => {
+  window.openCourseFlow = (value, options = {}) => {
     goal = value;
     goalElement.textContent = value;
     questions = /算子|Ascend\s*C/i.test(value) ? topicQuestions.operator : /推理|部署|服务化/i.test(value) ? topicQuestions.inference : trainingQuestions;
@@ -500,10 +502,16 @@
     returnFocus = document.activeElement;
     flow.hidden = false;
     clearSourceTimers();
-    flow.classList.remove('outline-expanded', 'course-preview-expanded');
+    flow.classList.remove('outline-expanded', 'course-preview-expanded', 'knowledge-answer');
+    stage.querySelector('.kmap')?.destroy?.();
     background.forEach(node => { node.inert = true; });
     document.body.style.overflow = 'hidden';
-    renderQuestions();
+    if (window.createKnowledgeOutline && /算子|Ascend\s*C|Triton|CATLASS/i.test(value)) {
+      stage.replaceChildren();
+      flow.classList.add('knowledge-answer');
+      stage.append(window.createKnowledgeOutline({goal:value, source:options.source}));
+      closeButton.focus();
+    } else renderQuestions();
   };
 
   closeButton.addEventListener('click', close);

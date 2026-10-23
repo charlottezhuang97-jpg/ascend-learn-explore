@@ -31,7 +31,7 @@
       '我有深度学习基础，想了解如何使用昇腾进行开发'
     ],
     '算子开发': [
-      '我想学习 Ascend C 算子开发',
+      '我要学习算子开发',
       '我想开发一个自定义算子，并完成编译、运行和验证',
       '我需要排查算子精度或性能问题'
     ],
@@ -323,7 +323,11 @@
     const profile = `${role || ''} ${goal || ''} ${level || ''}`;
     const course = /推理/.test(profile) ? 'inference' : /应用/.test(profile) ? 'agent' : /算子|Ascend C|Triton|CUDA/.test(profile) ? 'operator' : 'training';
     closeQuiz();
-    window.location.assign(`course-preview.html?course=${course}&source=quiz&profile=${encodeURIComponent(generatedGoal)}`);
+    if (course === 'operator' && window.openCourseFlow) {
+      window.openCourseFlow('我要学习算子开发', {source:'assessment'});
+    } else {
+      window.location.assign(`course-preview.html?course=${course}&source=quiz&profile=${encodeURIComponent(generatedGoal)}`);
+    }
   }
 
   openQuizButton.addEventListener('click', event => {
