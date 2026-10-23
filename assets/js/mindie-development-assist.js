@@ -7,7 +7,7 @@
   const names=['环境准备','下载模型权重','获取MindIE镜像','启动容器','模型推理配置','启动MindIE服务','推理交互'];
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const filename=()=>document.querySelector('.ide-tabs button.active')?.dataset.ideFile;
-  const reference=()=>window.MindIELab.steps[7].code;
+  const reference=goal=>goal?window.MindIEGuideContent.command({config:{...window.MindIEGuideContent.defaults,prompt:goal.prompt,maxTokens:String(goal.maxTokens)},steps:Array.from({length:7},()=>({}))},6):window.MindIELab.steps[7].code;
   const find=id=>document.querySelector(`[data-uac-inference-id="${id}"]`);
   const action=(key,text,primary=false)=>`<button type="button" data-uac-dev-action="${key}" class="${primary?'env-primary':''}">${text}</button>`;
   let latest=null,undo=null,selection=null,breakpoint=null,paused=false,upgrading=false;
@@ -19,7 +19,7 @@
     return `<div class="env-code-advice"><div class="env-code-toolbar"><span>Shell · ${file}</span><div>${action('copy','复制')}${action('insert','置入 IDE 修改')}</div></div><pre><code>${engine.highlightShell(code)}</code></pre>${note?`<div class="env-code-note">${esc(note)}</div>`:''}</div>`;
   }
   function report(s){const r=s.report;if(!r)return '';
-    return `<section class="env-comparison ${r.passed?'pass':'fail'}"><div class="env-comparison-title" role="status"><b>${r.passed?'✓ 运行结果符合预期':'✕ 终端结果与预期不一致'}</b><span>${r.count} / ${r.checks.length} 项符合 · 演示</span></div><p>${s.stale?'代码已修改。以下仍是上一次运行快照的分析；请回到 IDE 重新运行。':r.passed?'本步已完成并自动收起，可展开查看运行记录。':'以下分析基于运行时的文件、代码和终端记录，不读取后来切换的文件。修改后请在 IDE 点击“运行”。'}</p>${r.checks.map(c=>`<details class="env-check ${c.pass?'pass':'fail'}" ${c.pass?'':'open'}><summary><span>${c.pass?'✓':'✕'}</span><b>${esc(c.name)}</b><small>${c.pass?'一致':'不一致'}</small></summary><p>预期：${esc(c.expected)}</p><p>运行记录：${esc(c.actual)}</p></details>`).join('')}${r.passed?'':`<h3>建议修复代码</h3>${codePanel(reference(),'完整参考请求，置入将替换 08_generate.sh，可撤销；不会执行代码，也不会改变模拟响应。服务端 500 仍需结合实际服务日志排查。')}`}<details class="env-code-snapshot"><summary>查看运行时的代码与终端记录</summary><pre>${esc(s.run?.code??s.code)}\n\n${esc(s.run?.output??s.response)}</pre></details></section>`;
+    return `<section class="env-comparison ${r.passed?'pass':'fail'}"><div class="env-comparison-title" role="status"><b>${r.passed?'✓ 运行结果符合预期':'✕ 终端结果与预期不一致'}</b><span>${r.count} / ${r.checks.length} 项符合 · 演示</span></div><p>${s.stale?'代码已修改。以下仍是上一次运行快照的分析；请回到 IDE 重新运行。':r.passed?'本步已完成并自动收起，可展开查看运行记录。':'以下分析基于运行时的文件、代码和终端记录，不读取后来切换的文件。修改后请在 IDE 点击“运行”。'}</p>${r.checks.map(c=>`<details class="env-check ${c.pass?'pass':'fail'}" ${c.pass?'':'open'}><summary><span>${c.pass?'✓':'✕'}</span><b>${esc(c.name)}</b><small>${c.pass?'一致':'不一致'}</small></summary><p>预期：${esc(c.expected)}</p><p>运行记录：${esc(c.actual)}</p></details>`).join('')}${r.passed?'':`<h3>建议修复代码</h3>${codePanel(reference(s.run?.goal),'完整参考请求，置入将替换 08_generate.sh，可撤销；不会执行代码，也不会改变模拟响应。服务端 500 仍需结合实际服务日志排查。')}`}<details class="env-code-snapshot"><summary>查看运行时的代码与终端记录</summary><pre>${esc(s.run?.code??s.code)}\n\n${esc(s.run?.output??s.response)}</pre></details></section>`;
   }
   function render(s){
     const run=s.run,offer=s.status==='offer',declined=s.status==='declined';
@@ -60,12 +60,13 @@
     const code=editor.value;
     if(code.length>50000){ide.showToast('演示仅支持 50 KB 以内的代码；未运行');return;}
     let http=200,response=JSON.stringify({text:'这是一条模拟生成文本。'});
-    const draft=engine.validate(code,response,200,file);
+    const goal=window.MindIEGuidedLearning?.requestGoal();
+    const draft=engine.validate(code,response,200,file,goal);
     const invalid=draft.checks.slice(0,5).some(c=>!c.pass);
     if(bar.querySelector('select').value==='500'){http=500;response=JSON.stringify({error:'Internal Server Error（模拟服务异常）'});}
     else if(invalid){http=400;response=JSON.stringify({error:draft.checks.filter(c=>!c.pass).map(c=>c.name+'：'+c.actual).join('；')});}
-    const result=engine.validate(code,response,http,file),line=errorLine(code);
-    latest={id:crypto.randomUUID(),filename:file,code,http,response,passed:result.passed,errorLine:result.passed?null:line,time:Date.now(),output:`[模拟运行 · 未执行命令]\n${file}${result.passed?'':':'+line}\nHTTP ${http}\n${response}`};
+    const result=engine.validate(code,response,http,file,goal),line=errorLine(code);
+    latest={id:crypto.randomUUID(),filename:file,code,http,response,goal,passed:result.passed,errorLine:result.passed?null:line,time:Date.now(),output:`[模拟运行 · 未执行命令]\n${file}${result.passed?'':':'+line}\nHTTP ${http}\n${response}`};
     try{sessionStorage.setItem(storageKey,JSON.stringify(latest));}catch{}
     paused=false;popup.hidden=true;
     window.MindIETerminal.write({id:latest.id,host:'A',command:code,status:result.passed?'success':'error',output:latest.output},{reveal:true});
@@ -129,7 +130,7 @@
         const step=window.MindIELab.steps.find(s=>s.file===selection.file);
         api.beginTool(`请解释所选代码：${context}\n${selection.text}`,`<p>已收到你框选的 <b>${esc(context)}</b>：</p>${snippet}<p>${esc(step?.action||'可以继续问我这段代码的用途、参数含义或修改方法。')}</p><small>依据当前课程手册的预设说明，非实时 AI；不会修改或执行代码。</small>`);
       }else if(latest?.filename===selection.file&&latest.code===selection.whole){
-        const result=engine.validate(latest.code,latest.response,latest.http,latest.filename);
+        const result=engine.validate(latest.code,latest.response,latest.http,latest.filename,latest.goal);
         const within=latest.errorLine>=selection.line&&latest.errorLine<=selection.endLine;
         const intro=`<p>选区：<b>${esc(context)}</b>。${latest.passed?'该次模拟运行未记录异常。':within?'终端记录的异常行位于本次选区内。':`终端记录的异常位于第 ${latest.errorLine} 行，不在当前选区内，不能直接认定此选区有误。`}</p>`;
         api.beginTool(`定位所选代码的异常：${context}\n${selection.text}`,intro+render({id:crypto.randomUUID(),status:result.passed?'pass':'fail',run:latest,code:latest.code,report:result}));
@@ -146,7 +147,7 @@
   });
   document.addEventListener('click',async e=>{const b=e.target.closest('[data-uac-dev-action]');if(!b)return;const root=b.closest('[data-uac-inference-id]'),s=root&&read(root);if(!s)return;const key=b.dataset.uacDevAction;
     if(key==='decline'){s.status='declined';update(root,s);api.addToolMessage('user','<p>暂不分析这次运行。</p>');return;}
-    if(key==='analyze'){s.code=s.run.code;s.response=s.run.response;s.http=s.run.http;s.report=engine.validate(s.run.code,s.run.response,s.run.http,s.run.filename);s.status=s.report.passed?'pass':'fail';api.addToolMessage('user','<p>请分析这次终端报错，给出修复建议。</p>');const next=update(find(s.id),s);next?.querySelector('.env-comparison')?.scrollIntoView({block:'start'});return;}
+    if(key==='analyze'){s.code=s.run.code;s.response=s.run.response;s.http=s.run.http;s.report=engine.validate(s.run.code,s.run.response,s.run.http,s.run.filename,s.run.goal);s.status=s.report.passed?'pass':'fail';api.addToolMessage('user','<p>请分析这次终端报错，给出修复建议。</p>');const next=update(find(s.id),s);next?.querySelector('.env-comparison')?.scrollIntoView({block:'start'});return;}
     const code=b.closest('.env-code-advice')?.querySelector('pre code')?.textContent;
     if(key==='copy'){try{await navigator.clipboard.writeText(code);b.textContent='已复制';ide.showToast('代码已复制');}catch{ide.showToast('复制失败，请手动复制代码');}}
     if(key==='insert'){locate();setCode(code);popup.hidden=true;s.stale=true;update(find(s.id),s);editor.focus();ide.showToast('代码已置入，可撤销；请点击 IDE“运行”验证');}

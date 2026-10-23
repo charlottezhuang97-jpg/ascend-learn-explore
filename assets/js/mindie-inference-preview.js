@@ -25,17 +25,18 @@
     while(tokens.length){const arg=tokens.shift();if(['-X','--request','-H','--header','-d','--data','--data-raw','--url'].includes(arg)){if(!tokens.length)throw Error(`${arg} 缺少参数。`);const value=tokens.shift();if(['-X','--request'].includes(arg))method=value.toUpperCase();else if(['-H','--header'].includes(arg))headers.push(value);else if(arg==='--url')url=value;else{if(payload!==undefined)throw Error('当前示例仅支持一份 JSON 请求体。');payload=value;}}else if(/^https?:\/\//.test(arg)){if(url)throw Error('当前示例仅支持一个请求地址。');url=arg;}else throw Error(`当前示例不支持参数 ${arg}，无法可靠比对；没有执行命令。`);}
     return {method:method||(payload!==undefined?'POST':'GET'),url,payload,headers};
   }
-  function validate(code,response,http,filename=file){
+  function validate(code,response,http,filename=file,goal){
+    const targetPrompt=goal?.prompt??expectedPrompt,targetTokens=goal?.maxTokens??500,targetURL=goal?.url??expectedURL;
     let request,parseError='',body,responseBody;
     try{request=parseCurl(code);}catch(error){parseError=error.message;}
     try{body=JSON.parse(request?.payload);}catch{}
     try{responseBody=JSON.parse(response);}catch{}
     const checks=[
-      {name:'请求方法与地址',expected:'POST '+expectedURL,actual:request?`${request.method} ${request.url||'未填写地址'}`:parseError,pass:filename===file&&request?.method==='POST'&&request?.url===expectedURL},
+      {name:'请求方法与地址',expected:'POST '+targetURL,actual:request?`${request.method} ${request.url||'未填写地址'}`:parseError,pass:filename===file&&request?.method==='POST'&&request?.url===targetURL},
       {name:'JSON 内容类型',expected:'Content-type: application/json',actual:request?.headers.find(h=>/^content-type\s*:/i.test(h))||'缺少 Content-type',pass:!!request?.headers.some(h=>/^content-type\s*:\s*application\/json\s*$/i.test(h))},
       {name:'请求体可解析',expected:'合法的 JSON 对象',actual:body&&typeof body==='object'&&!Array.isArray(body)?'JSON 对象':'请求体缺失或 JSON 无效',pass:!!body&&typeof body==='object'&&!Array.isArray(body)},
-      {name:'本次提示词',expected:expectedPrompt,actual:typeof body?.prompt==='string'?body.prompt:'缺少 prompt',pass:body?.prompt===expectedPrompt},
-      {name:'生成长度',expected:'max_tokens = 500（数值）',actual:`max_tokens = ${body?.max_tokens===undefined?'未填写':JSON.stringify(body.max_tokens)}${typeof body?.max_tokens==='string'?'（字符串）':typeof body?.max_tokens==='number'?'（数值）':''}`,pass:body?.max_tokens===500},
+      {name:'本次提示词',expected:targetPrompt,actual:typeof body?.prompt==='string'?body.prompt:'缺少 prompt',pass:body?.prompt===targetPrompt},
+      {name:'生成长度',expected:`max_tokens = ${targetTokens}（数值）`,actual:`max_tokens = ${body?.max_tokens===undefined?'未填写':JSON.stringify(body.max_tokens)}${typeof body?.max_tokens==='string'?'（字符串）':typeof body?.max_tokens==='number'?'（数值）':''}`,pass:body?.max_tokens===targetTokens},
       {name:'响应状态',expected:'HTTP 200',actual:`HTTP ${http}`,pass:http===200},
       {name:'生成结果',expected:'响应为 JSON，text 是非空字符串',actual:typeof responseBody?.text==='string'&&responseBody.text.trim()?'已获得非空 text':'text 缺失、为空或响应不是合法 JSON',pass:typeof responseBody?.text==='string'&&!!responseBody.text.trim()}
     ];
