@@ -8,8 +8,8 @@
     {name:'下载模型权重',context:'示例主机文件',files:[1],tasks:['选择准备方式','本地下载权重','上传服务器','检查权重文件'],goal:'按所选分支准备 Qwen2-7B，并检查服务器目录中的示例文件。',impact:'手册是网页下载后上传，未提供下载/上传命令。此处不访问本地文件、不下载或上传；只模拟选定目录的存在检查，不宣称可信哈希完整性验证。',scenarios:[['ok','文件清单齐全'],['missing','缺少模型分片']]},
     {name:'获取 MindIE 镜像',context:'示例主机终端',files:[2],tasks:['选择设备和镜像','确认仓库权限','用户完成安全登录','拉取或复用镜像'],goal:'核对历史实验镜像与所选设备/架构；已有本地镜像可直接复用。',impact:'拉取会占用网络和磁盘；申请权限、登录及凭据输入由用户在外部安全界面完成。不会收集账号或密码。版本沿用手册，不是当前推荐版本。',scenarios:[['ok','正常回显'],['denied','访问被拒绝'],['architecture','架构不匹配']]},
     {name:'启动容器',context:'示例主机终端',files:[3],tasks:['核对镜像、设备和目录','确认容器参数与权限','创建/复用并检查容器'],goal:'把用户确认的设备、驱动和只读权重提供给指定容器。',impact:'创建容器会使用主机网络并赋予高权限（手册实验模板），需分别确认。已有同名容器不自动删除。复用分支只做示例状态与挂载检查。',scenarios:[['ok','正常回显'],['conflict','同名容器冲突'],['device','设备不存在']]},
-    {name:'模型推理配置',context:'指定容器会话',files:[4,5],tasks:['进入指定容器','初始化五个环境脚本','预览配置字段差异','确认备份、合并和静态检查'],goal:'先初始化当前容器会话，再单独确认配置片段；保留原文件其他字段。',impact:'初始化与写配置分两次授权。配置示例关闭 HTTPS，须确认仅用于隔离实验；trustRemoteCode 保持 false。主机设备号不自动推导为容器内编号。',scenarios:[['ok','正常回显'],['script','初始化脚本缺失'],['path','容器权重路径不可读']]},
-    {name:'启动 MindIE 服务',context:'指定容器会话',files:[6],tasks:['确认端口与日志计划','后台启动服务','核对新日志、进程和端口','停止日志观察'],goal:'区分“后台命令提交”与“启动证据符合”，不读取旧日志冒充本次成功。',impact:'启动会占用算力、内存并写日志。默认示例新日志；追加保留旧日志；覆盖日志必须另行确认。停止 tail 只停止观察，不停止后台服务。',scenarios:[['ok','启动证据符合'],['port','端口占用'],['timeout','启动超时']]},
+    {name:'模型推理配置',context:'指定容器会话',files:[4,5],tasks:['进入指定容器','初始化五个环境脚本','预览配置字段差异','确认备份、合并和配置检查'],goal:'先初始化当前容器会话，再单独确认配置片段；保留原文件其他字段。',impact:'初始化与写配置分两次授权。配置示例关闭 HTTPS，须确认仅用于隔离实验；trustRemoteCode 保持 false。主机设备号不自动推导为容器内编号。',scenarios:[['ok','正常回显'],['script','初始化脚本缺失'],['path','容器权重路径不可读']]},
+    {name:'启动 MindIE 服务',context:'指定容器会话',files:[6],tasks:['确认端口与日志计划','后台启动服务','核对新日志、进程和端口','停止日志观察'],goal:'区分“后台命令提交”与“启动成功”，不读取旧日志冒充本次成功。',impact:'启动会占用算力、内存并写日志。默认示例新日志；追加保留旧日志；覆盖日志必须另行确认。停止 tail 只停止观察，不停止后台服务。',scenarios:[['ok','启动成功'],['port','端口占用'],['timeout','启动超时']]},
     {name:'推理交互',context:'指定容器终端',files:[7],tasks:['确认提示词与生成参数','发送一次请求','展示文本与检查响应'],goal:'向执行请求所在实验环境的 127.0.0.1:1025/generate 发一次请求。',impact:'仅授权本次提示词和生成量；不自动重试。不要输入敏感信息；参数变更后重新确认。生成文本不是模型规格或知识正确性的证明。',scenarios:[['ok','正常响应'],['http','HTTP 500'],['empty','空 text 响应']]}
   ];
   const syllabus=
@@ -68,7 +68,7 @@
       "缺分片、索引或 tokenizer 文件时，补齐同一模型版本再重查。",
       "上传冲突或空间不足由用户处理，不自动覆盖、删除旧文件或换模型。"
     ],
-    "finish": "所选服务器目录可访问，当前版本所需文件存在；下载、上传与检查的证据来源清楚。",
+    "finish": "所选服务器目录可访问，当前版本所需文件存在；下载、上传与检查的记录来源清楚。",
     "source": "网页下载后上传来自手册；ls -lh 为产品补充检查。原文未提供下载 / 上传命令，不编造脚本。"
   },
   {
@@ -95,7 +95,7 @@
       "权限不足、认证失败、中断、空间不足、架构不匹配时不推进。",
       "由用户处理后重新确认，不为完成流程静默换镜像。"
     ],
-    "finish": "选定镜像已存在于目标主机，并核对设备 / 架构；真实适配需真实证据。",
+    "finish": "选定镜像已存在于目标主机，并核对设备 / 架构；是否适配需要在真实环境中检查。",
     "source": "镜像标识和 docker pull 形式来自手册；镜像检查与状态门槛为评审补充。"
   },
   {
@@ -127,7 +127,7 @@
     "source": "docker run 模板来自手册，容器名作一致性修正；复用检查为产品补充。"
   },
   {
-    "intro": "进入指定容器、初始化环境，再确认配置差异与静态检查；此步还不是服务启动。",
+    "intro": "进入指定容器、初始化环境，再确认配置差异与配置检查；此步还不是服务启动。",
     "location": "docker exec 在主机执行；5 条 source、config.json 操作在同一容器会话中。",
     "before": [
       "容器名沿用步骤 4；权重路径使用容器内 /home/weights/。",
@@ -146,17 +146,17 @@
     ],
     "evidence": [
       "5 个脚本的执行状态与容器上下文；无 stdout 不自动判失败。",
-      "备份位置、字段差异、JSON / 路径 / 参数静态检查结果，缺少证据标未获得。"
+      "备份位置、字段差异、JSON / 路径 / 参数配置检查结果，未查到的结果标为“未获得”。"
     ],
     "failure": [
       "脚本缺失、权重不可读、JSON 不合法、设备或卡数冲突时停止写入并给出建议。",
       "新会话需重新初始化；应用失败保留原文件，回滚也需解释目标与影响。"
     ],
-    "finish": "环境初始化完成，配置差异已确认并通过静态检查；不能提前写“模型服务部署成功”。",
+    "finish": "环境初始化完成，配置差异已确认并通过配置检查；不能提前写“模型服务部署成功”。",
     "source": "命令与字段值来自手册；中文引号、注释和尾逗号已整理为合法 JSON 合并片段，不是完整配置。"
   },
   {
-    "intro": "按确认计划后台启动 MindIE，以本次启动证据判定状态，然后停止日志观察。",
+    "intro": "按确认计划后台启动 MindIE，根据本次启动结果判断是否成功，然后停止日志观察。",
     "location": "步骤 5 初始化后的同一容器会话，mindie-service 目录。",
     "before": [
       "确认监听地址 / 端口、选定 NPU 与内存影响、日志位置及已有服务。",
@@ -180,14 +180,14 @@
       "端口占用、启动超时或日志报错时保持展开，先核对日志、权重、设备和环境。",
       "未经新授权不重启、不杀进程、不覆盖旧日志。"
     ],
-    "finish": "本次服务启动证据符合，用户已停止日志观察；服务未被停止。",
+    "finish": "服务已启动，日志观察已结束；服务仍在运行。",
     "source": "cd / nohup / tail 与成功标记来自手册；新日志防覆盖和追加策略为产品补充。"
   },
   {
     "intro": "确认本次提示词和生成参数，只发送一次推理请求，检查响应并展示生成文本。",
     "location": "实验执行环境的容器终端；127.0.0.1 指执行请求的环境，不是用户浏览器本机。",
     "before": [
-      "前一步已取得服务启动证据。",
+      "前一步已确认服务启动。",
       "默认 prompt=介绍下Qwen2-7B、max_tokens=500、POST /generate；自定义参数更新预览后重新授权。"
     ],
     "ai": [
@@ -256,7 +256,7 @@
     const failures={docker:['Cannot connect to the Docker daemon.','核对 Docker 服务与当前账户权限。只读检查授权不包含安装或启停服务。'],npu:['NPU ID 4   Health: Warning','请由管理员检查设备健康状态，本流程不自动升级固件或重启主机。'],missing:['Missing: model-00004-of-00004.safetensors','补齐选定模型版本要求的分片后重新检查，不以文件存在代替可信哈希校验。'],denied:['denied: requested access to the resource is denied','请在安全界面确认仓库权限和登录，不在对话粘贴凭据。'],architecture:['Image architecture does not match selected host architecture','核对实际架构和镜像元数据，不自动替换镜像版本。'],conflict:['Conflict: container name '+p.container+' is already in use.','换一个容器名，或选择复用并核对已有容器；不会删除旧容器。'],device:['No such file: /dev/davinci'+p.device,'回到参数确认实际设备节点；不要自动扩大设备访问范围。'],script:['source: set_env.sh: No such file or directory','核对镜像组件和脚本路径；新会话需要重新初始化。'],path:['Permission denied or missing: /home/weights/','检查只读挂载及容器内路径，不把主机路径写入容器配置。'],port:['Address already in use: 1025','先确认已有进程及端口占用；本授权不包含终止进程或停止旧服务。'],timeout:['Timed out waiting for new Daemon start success! marker','检查本次新日志、权重、设备和环境，未经新授权不自动重试启动。'],http:['HTTP 500\n{"error":"Internal Server Error（模拟）"}','核对服务端新日志与请求参数；修复代码不能保证解决服务端故障。'],empty:['HTTP 200\n{"text":""}','HTTP 200 仍可能无有效文本。查看实际响应与服务日志，不伪造返回内容。']};
     const relevant=i===0?['docker','npu']:i===1?['missing']:i===2?['denied','architecture']:i===3?['conflict','device']:i===4?(phase==='config'?['path']:['script']):i===5?['port','timeout']:['http','empty'];
     if(relevant.includes(scenario)){const [output,advice]=failures[scenario];return {passed:false,output,advice,checks:[{name:steps[i].tasks.at(-1),status:'fail',detail:advice}]};}
-    let output,checks=steps[i].tasks.map(name=>({name,status:'pass',detail:'本分支模拟证据符合预期，未连接真实主机。'}));
+    let output,checks=steps[i].tasks.map(name=>({name,status:'pass',detail:'本项检查已通过（演示），未连接真实主机。'}));
     if(i===0){checks=checks.slice(3);output='NPU ID  Health\n'+p.device+'       OK\n\nCONTAINER ID  IMAGE  COMMAND  CREATED  STATUS  PORTS  NAMES\n# Docker 空表头也是正常查询结果。';}
     if(i===1){output=lab.steps[1].output+'\n示例目录：'+p.weightsPath+'\n仅做存在检查，未核验可信哈希。';checks[1]={name:steps[i].tasks[1],status:p.weightsMethod==='download'?'user':'skip',detail:p.weightsMethod==='download'?'用户确认已在外部下载；此页未下载。':'本分支不需要下载。'};checks[2]={name:steps[i].tasks[2],status:p.weightsMethod==='server'?'skip':'user',detail:p.weightsMethod==='server'?'服务器已有，本分支跳过上传。':'用户确认已在外部上传；此页未上传。'};}
     if(i===2){output='IMAGE ID: demo-image-id\nTAG: '+p.image+'\n架构：'+p.architecture+'（用户选择，模拟核对）';checks[1].detail=checks[2].detail=p.imageMode==='cached'?'复用本地镜像，本分支不申请权限或登录。':'仅用户确认外部权限/安全登录；无凭据进入对话。';}
