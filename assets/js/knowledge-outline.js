@@ -29,13 +29,13 @@
     const expandedPath={cann:'ascend',gen:null,agent:null};
     const scenes = {
       cann: {
-        label: 'CANN', height: 760,
+        label: 'CANN', height: 960,
         nodes: [
-          ['tuning','应用/算子调优',1210,600,270,'tuning'],['cann','CANN',1210,330,300,'domain active'],
+          ['tuning','应用/算子调优',710,795,300,'tuning'],['cann','CANN',1210,330,300,'domain active'],
           ['ascend','AscendC算子开发',710,75,300,'path active'],['triton','Triton算子开发',710,255,300,'path'],
           ['catlass','CATLASS算子开发',710,435,300,'path'],['950','950系列算子开发',710,615,300,'path']
         ],
-        edges: [['cann','ascend'],['cann','triton'],['cann','catlass'],['cann','950']]
+        edges: [['cann','ascend'],['cann','triton'],['cann','catlass'],['cann','950'],['cann','tuning']]
       },
       gen: {
         label: '生成式 AI', height: 700,
@@ -138,7 +138,7 @@
       sceneTitle.textContent = `${scene.label} · 知识图谱`;
       viewport.setAttribute('aria-label', `${scene.label}知识图谱，可滚动查看，使用缩放按钮调整大小`);
       root.querySelector('.kmap-footer span').textContent = '点击路径展开课程 · 使用编辑课程调整学习内容';
-      root.querySelector('.kmap-footer span:last-child').textContent = id === 'cann' ? '蓝色虚线：共同调优方向　灰色实线：分类关联' : '灰色实线：分类关联';
+      root.querySelector('.kmap-footer span:last-child').textContent = id === 'cann' ? '蓝色虚线：共同后续课程　灰色实线：分类关联' : '灰色实线：分类关联';
       lines.setAttribute('viewBox', `0 0 1500 ${scene.height}`);
       lines.style.height = `${scene.height}px`;
       renderCourses();
@@ -148,7 +148,7 @@
     }
     function node([id,title,x,y,w,type]) {
       const el=document.createElement('button'); el.type='button';el.className=`kmap-node ${type}`;el.dataset.node=id;el.style.cssText=`left:${x-w/2}px;top:${y}px;width:${w}px`;
-      el.innerHTML=`<span class="kmap-node-type">${type.includes('domain')?'知识领域':id==='tuning'?'共同方向':'学习路径'}</span><strong></strong>${type.includes('path')?`<span class="kmap-path-meta">${(assignments[id]||[]).length} 门课程 <span class="kmap-chevron">${expandedPath[activeScene]===id?'⌄':'›'}</span></span>`:''}`;
+      el.innerHTML=`<span class="kmap-node-type">${type.includes('domain')?'知识领域':id==='tuning'?'课程 · 共同进阶':'学习路径'}</span><strong></strong>${id==='tuning'?'<span class="kmap-tuning-note">完成算子开发路径后学习</span>':''}${type.includes('path')?`<span class="kmap-path-meta">${(assignments[id]||[]).length} 门课程 <span class="kmap-chevron">${expandedPath[activeScene]===id?'⌄':'›'}</span></span>`:''}`;
       el.querySelector('strong').textContent=title;
       el.addEventListener('click',()=>{if(type.includes('path')){expandedPath[activeScene]=expandedPath[activeScene]===id?null:id;renderScene(activeScene);root.querySelector('[data-node="'+id+'"]').focus({preventScroll:true});}else{root.querySelectorAll('.kmap-node.is-selected').forEach(n=>n.classList.remove('is-selected'));el.classList.add('is-selected');root.querySelector('.kmap-footer span').textContent=`已选择「${title}」 · ${scenes[activeScene].label}知识图谱`;}});
       if(type.includes('path'))el.setAttribute('aria-expanded',String(expandedPath[activeScene]===id));canvas.append(el);
@@ -159,7 +159,19 @@
       lines.replaceChildren();
       scenes[activeScene].edges.forEach(edge => connect(...edge));
       if (activeScene === 'cann') {
-        ['ascend','triton','catlass','950'].forEach(id => connect('tuning', id, true));
+        const target=canvas.querySelector('[data-node="tuning"]');
+        ['ascend','triton','catlass','950'].forEach((id,index)=>{
+          const from=canvas.querySelector(`[data-node="${id}"]`);
+          const x=from.offsetLeft+from.offsetWidth;
+          const endX=target.offsetLeft+target.offsetWidth;
+          const y=from.offsetTop+from.offsetHeight/2;
+          const endY=target.offsetTop+target.offsetHeight/2;
+          const rail=970+index*16;
+          const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+          path.setAttribute('d',`M${x},${y} C${rail},${y} ${rail},${endY} ${endX},${endY}`);
+          path.classList.add('shared');
+          lines.append(path);
+        });
 
       }
       const path=expandedPath[activeScene];
@@ -168,7 +180,7 @@
     function renderCourses() {
       const path=expandedPath[activeScene];
       const list=(assignments[path]||[]).map(courseById).filter(Boolean);
-      scenes[activeScene].height=Math.max(activeScene==='cann'?760:700, 110+list.length*157);
+      scenes[activeScene].height=Math.max(activeScene==='cann'?960:700, 110+list.length*157);
       lines.setAttribute('viewBox',`0 0 1500 ${scenes[activeScene].height}`);
       lines.style.height=`${scenes[activeScene].height}px`;
       list.forEach((course,index)=>{
