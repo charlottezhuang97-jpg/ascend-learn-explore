@@ -125,11 +125,11 @@
     terminal(s,i,'running','正在展示模拟过程…');
     token.timer=setTimeout(()=>{if(token.cancelled||running.get(s.id)!==token)return;running.delete(s.id);if(A.getSessionId()!==token.session)return;finish(s,i,messageId,authorization);},i<2?1600:900);
   }
-  function start(){
+  function start({isolated=false}={}){
     A.showToolMessage?.();const existing=[...document.querySelectorAll('[data-uac-guide-id]')].at(-1);
     if(existing){existing.scrollIntoView({block:'start'});L.setView('video');L.setVideoPerspective('ide');return;}
     const s={id:crypto.randomUUID(),revision:1,current:0,config:{...C.defaults},steps:C.steps.map((_,i)=>({status:i===0?'ready':'idle',phase:i===0?'request':i===1?'download':i===4?'initialize':'',scenario:'ok',records:[],archive:[],error:''}))};
-    L.setView('video');L.setVideoPerspective('ide');A.beginTool('请按实验手册引导我完成 MindIE 文本生成实验，每一步先确认范围。',render(s));locate(s,0);
+    L.setView('video');L.setVideoPerspective('ide');(isolated?A.beginIsolatedTool:A.beginTool)('历史版本：请按实验手册逐步引导我完成 MindIE 文本生成实验。',render(s));locate(s,0);
   }
   function requestGoal(){const roots=[...document.querySelectorAll('[data-uac-guide-id]')];const s=roots.length?read(roots.at(-1)):null;const goal=s?{prompt:s.config.prompt,maxTokens:Number(s.config.maxTokens),url:'http://127.0.0.1:1025/generate'}:goals.get(A.getSessionId());if(goal)goals.set(A.getSessionId(),goal);return goal;}
   window.MindIEGuidedLearning={start,requestGoal};window.MindIEEnvironmentPreview.start=start;
@@ -168,5 +168,5 @@
   document.addEventListener('uac:render',hydrate);hydrate();
   const environmentLabel=document.querySelector('.ide-environment small');if(environmentLabel)environmentLabel.innerHTML='<i></i> HiDevLab A3 环境获取演示 · A2 手册模板兼容性待核对 · 未连接';
   const toolbar=[...document.querySelectorAll('.mindie-practice-link')].find(b=>b.textContent==='AI 实验引导');if(toolbar){toolbar.textContent='实验引导';toolbar.title='先完成环境准备，再开始推理（演示）';}
-  if(new URLSearchParams(location.search).get('guide')==='open'||['environment','inference'].includes(new URLSearchParams(location.search).get('agent')))start();
+  // The previous confirmation-heavy guide remains available from the companion history view.
 })();
