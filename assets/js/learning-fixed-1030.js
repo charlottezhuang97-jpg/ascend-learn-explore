@@ -45,10 +45,7 @@
   document.addEventListener('learning:view-change',()=>queueMicrotask(sync));
   // Internal lesson/video links still use the original closure APIs.
   new MutationObserver(sync).observe(document.getElementById('videoWorkspace'),{attributes:true,attributeFilter:['class','hidden']});
-  const comments=document.createElement('dialog');comments.className='fixed1030-comments';comments.innerHTML='<form method="dialog"><header><h2>课程评论</h2><button type="submit" aria-label="关闭课程评论">×</button></header></form><p>1030 预览评论，仅保存在本机，不提交到正式版。</p><label for="fixed1030Comment">你的学习反馈</label><textarea id="fixed1030Comment" placeholder="写下对这节课程的反馈…" maxlength="2000"></textarea><button type="button" data-save-comment>保存评论</button><p data-comment-status role="status"></p>';
-  document.body.append(comments);
-  footer.querySelector('[data-fixed-comment]').addEventListener('click',()=>{try{comments.querySelector('textarea').value=localStorage.getItem('ascend-1030-comment')||'';}catch{}comments.showModal();});
-  comments.querySelector('[data-save-comment]').addEventListener('click',()=>{try{localStorage.setItem('ascend-1030-comment',comments.querySelector('textarea').value);comments.querySelector('[data-comment-status]').textContent='已保存在本机（预览版）';}catch{comments.querySelector('[data-comment-status]').textContent='浏览器未允许保存，请自行复制内容';}});
+  // Course reviews are rendered below the learning area by learning-reviews-1030.js.
   const params=new URLSearchParams(location.search),mode=params.get('mode')||(params.get('view')==='board'?'board':params.get('perspective')==='ide'?'ide':'video');
   choose(['video','board','ide'].includes(mode)?mode:'video');companion.open();sync();
 })();
