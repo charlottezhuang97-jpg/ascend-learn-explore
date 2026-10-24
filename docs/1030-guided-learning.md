@@ -2,6 +2,8 @@
 
 依据已确认的 [实验工作流评审](auxiliary/mindie-agent-workflow-review.md) 和实验手册 §2.2。仅更新 1030 预览，不替换正式版。
 
+完整步骤文本见 [步骤 1–7 内容稿](auxiliary/mindie-seven-step-content.md)。界面与内容稿使用同一份结构化说明，覆盖前置准备、协助范围、用户确认、回显、异常与完成条件。
+
 ## 入口与边界
 
 - 页面：`learn-1030.html?course=mindie&mode=ide&guide=open`。
