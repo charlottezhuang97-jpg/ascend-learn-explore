@@ -3,7 +3,7 @@
   if(new URLSearchParams(location.search).get('course')!=='mindie'||!window.MindIEInferencePreview)return;
   const api=window.AscendCompanion,ide=window.AscendLearning,engine=window.MindIEInferencePreview;
   const editor=document.getElementById('ideEditor'),file='08_generate.sh',storageKey='ascend-mindie-last-run-v1';
-  const stylesheet=document.createElement('link');stylesheet.rel='stylesheet';stylesheet.href=new URL('../css/mindie-development-assist.css?v=1',document.currentScript.src);document.head.append(stylesheet);
+  const stylesheet=document.createElement('link');stylesheet.rel='stylesheet';stylesheet.href=new URL('../css/mindie-development-assist.css?v=selection-2',document.currentScript.src);document.head.append(stylesheet);
   const names=['环境准备','下载模型权重','获取MindIE镜像','启动容器','模型推理配置','启动MindIE服务','推理交互'];
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const filename=()=>document.querySelector('.ide-tabs button.active')?.dataset.ideFile;
@@ -95,23 +95,47 @@
   gutter.addEventListener('keydown',e=>{if(['Enter',' '].includes(e.key)&&e.target.parentElement===gutter){e.preventDefault();toggleBreakpoint(e.target);}});
   new MutationObserver(decorateGutter).observe(gutter,{childList:true});decorateGutter();
   function selectionFix(text){
-    let corrected=text.replace(/("max_tokens"\s*:\s*)"500"/g,(_,prefix)=>prefix+'500');
+    let corrected=text.replace(/("max_tokens"\s*:\s*)"(\d+)"/g,(whole,prefix,n)=>Number(n)>=1&&Number(n)<=2048?prefix+Number(n):whole);
     corrected=corrected.replace(/http:\/\/127\.0\.0\.1:1025\/(?:wrong|generat)(?=[\s'"\\]|$)/g,'http://127.0.0.1:1025/generate');
     return corrected===text?null:corrected;
+  }
+  const selectionLabel=()=>`${selection.file} · 第 ${selection.line}–${selection.endLine} 行`;
+  const selectedStep=()=>window.MindIELab.steps.find(s=>s.file===selection.file);
+  function selectionExplanation(){
+    const rows=[],text=selection.text,step=selectedStep();
+    if(/"max_tokens"/.test(text))rows.push('max_tokens 是本次请求的生成长度参数；本演示要求 JSON 数值，不能把 500 写成字符串 "500"。修改生成量后要更新预览并重新确认请求。');
+    if(/"prompt"/.test(text))rows.push('prompt 是本次问题。更换问题会改变练习目标，请保留对应请求和响应，不把生成内容当作事实证明。');
+    if(/curl|\/generate/.test(text))rows.push('请求应为 POST，使用 application/json；127.0.0.1 指执行该请求的实验环境，而不是浏览器本机。');
+    if(/source\s/.test(text))rows.push('这些 source 命令在同一容器会话加载环境；无文字回显不等于失败。后续启动服务仍需使用该会话环境。');
+    if(/docker run|privileged|net=host/.test(text))rows.push('容器创建引用已确认的设备、镜像与只读权重目录；高权限和主机网络必须分别确认，不因选中代码就获得执行授权。');
+    if(/npu-smi|docker ps/.test(text))rows.push('这是主机只读检查。Docker 只返回表头也可能是正常结果；检查授权不包括安装或启停组件。');
+    if(/httpsEnabled|npuDeviceIds|modelWeightPath/.test(text))rows.push('这只是完整配置中的字段：核对容器设备映射、权重路径及隔离实验的 HTTPS 边界，不能把片段直接覆盖为完整文件。');
+    if(/tail|nohup|mindieservice_daemon/.test(text))rows.push('后台启动与日志观察是两个动作。Ctrl+C 只退出 tail，不代表停止后台服务；成功应依据本次日志和进程 / 端口证据。');
+    if(!rows.length)rows.push(step?.action||'当前选区没有匹配到课程规则，请继续描述希望理解的用途、输入输出或修改目标。');
+    return '<ul>'+rows.map(row=>'<li>'+esc(row)+'</li>').join('')+'</ul>';
+  }
+  function selectionShortcuts(){return '<footer class="mindie-selection-shortcuts" aria-label="代码选区快捷操作"><button type="button" data-selection-action="write">帮我写代码</button><button type="button" data-selection-action="explain">帮我解释</button><button type="button" data-selection-action="note">记笔记</button></footer><button type="button" class="selection-diagnose" data-selection-action="diagnose">异常定位 →</button>';}
+  function selectionComparison(){
+    const step=selectedStep(),proposed=selection.replacement;
+    popup.innerHTML=`<header><b>AI 学伴 · 帮我写代码</b><button type="button" data-selection-action="close" aria-label="关闭选区建议">×</button></header><p>${esc(selectionLabel())}</p><div class="selection-code-compare"><section><h3>所选原代码</h3><div class="env-code-advice"><pre><code>${engine.highlightShell(selection.text)}</code></pre></div></section><section><h3>${proposed?'建议修正代码':'完整文件参考 · 非局部修复'}</h3><div class="env-code-advice"><div class="env-code-toolbar"><span>${esc(selection.file)}</span><div><button type="button" data-selection-action="${proposed?'copy':'copy-reference'}">复制</button><button type="button" data-selection-action="insert" ${proposed?'':'disabled'}>置入 IDE 修改</button></div></div><pre><code>${engine.highlightShell(proposed||step?.code||selection.text)}</code></pre></div></section></div><small>${proposed?'本地规则识别到参数类型或接口路径问题。置入仅替换本次选区，可撤销；不会运行代码，也不保证服务端问题已解决。':'当前没有可可靠应用的局部修正；下方仅展示课程完整文件参考，不允许直接替换当前选区。请用“帮我解释”补充修改目标。'} 未接入实时 AI。</small>${selectionShortcuts()}`;
+    positionSelection(true);
+  }
+  function positionSelection(compare=false){
+    const rect=editor.getBoundingClientRect(),width=Math.min(compare?620:360,innerWidth-32,Math.max(260,rect.width-24));popup.style.width=width+'px';
+    const y=rect.top+(selection.line-1)*(parseFloat(getComputedStyle(editor).lineHeight)||22)-editor.scrollTop;
+    popup.style.left=Math.max(16,Math.min(rect.left+Math.min(rect.width*.35,260),rect.right-width-12,innerWidth-width-16))+'px';
+    popup.style.top=Math.max(16,Math.min(y+28,innerHeight-popup.offsetHeight-16))+'px';
   }
   function showSelection(){
     if(!filename()){popup.hidden=true;return;}
     const start=editor.selectionStart,end=editor.selectionEnd,text=editor.value.slice(start,end);
     if(!text.trim()){popup.hidden=true;return;}
+    if(text.length>8000){popup.hidden=true;ide.showToast('请将选区缩小到 8000 字以内，方便解释与记录');return;}
     const selectedFile=filename(),replacement=selectedFile===file?selectionFix(text):null,line=editor.value.slice(0,start).split('\n').length,endLine=editor.value.slice(0,end).replace(/\n$/,'').split('\n').length;
     const matchedRun=latest?.filename===selectedFile&&latest.code===editor.value;
     selection={file:selectedFile,whole:editor.value,start,end,text,replacement,line,endLine};
-    popup.innerHTML=`<header><b>AI 学伴</b><div><button type="button" data-selection-action="copy">复制</button><button type="button" data-selection-action="insert" ${replacement?'':'disabled'}>置入 IDE</button><button type="button" data-selection-action="close" aria-label="关闭选区建议">×</button></div></header><p>${esc(selectedFile)} · 第 ${line}${endLine!==line?'–'+endLine:''} 行 · ${paused?'断点暂停（演示）':matchedRun&&!latest.passed?'运行报错（演示）':'已选中代码'}</p><div class="env-code-advice"><pre><code>${engine.highlightShell(replacement??text)}</code></pre></div><small>${replacement?'发现本地规则可修复的问题。置入仅替换本次选区，可撤销，不执行代码。':'基于所选代码提问，或结合对应运行记录定位异常。'}</small><footer class="mindie-selection-shortcuts" aria-label="代码选区快捷操作"><button type="button" data-selection-action="ask">问一问</button><button type="button" data-selection-action="diagnose">异常定位</button></footer>`;
-    popup.hidden=false;
-    const rect=editor.getBoundingClientRect(),width=Math.min(460,innerWidth-32,Math.max(260,rect.width-24));popup.style.width=width+'px';
-    const y=rect.top+(line-1)*(parseFloat(getComputedStyle(editor).lineHeight)||22)-editor.scrollTop;
-    popup.style.left=Math.max(16,Math.min(rect.left+Math.min(rect.width*.35,260),rect.right-width-12,innerWidth-width-16))+'px';
-    popup.style.top=Math.max(16,Math.min(y+28,innerHeight-popup.offsetHeight-16))+'px';
+    popup.innerHTML=`<header><b>AI 学伴</b><button type="button" data-selection-action="close" aria-label="关闭选区建议">×</button></header><p>${esc(selectedFile)} · 第 ${line}${endLine!==line?'–'+endLine:''} 行 · ${paused?'断点暂停（演示）':matchedRun&&!latest.passed?'运行报错（演示）':'已选中代码'}</p><details class="selection-source"><summary>查看所选代码</summary><div class="env-code-advice"><pre><code>${engine.highlightShell(text)}</code></pre></div></details>${selectionShortcuts()}<small>选择一个操作，不会自动执行或修改代码。</small>`;
+    popup.hidden=false;positionSelection();
   }
   let selectionTimer,selecting=false;function queueSelection(){clearTimeout(selectionTimer);selectionTimer=setTimeout(()=>{if(!selecting)showSelection();},100);}
   editor.addEventListener('pointerdown',e=>{if(e.button===0){selecting=true;popup.hidden=true;}});
@@ -122,13 +146,22 @@
   editor.addEventListener('input',()=>{popup.hidden=true;paused=false;positionMark();if(filename()!==file)return;for(const root of [...document.querySelectorAll('[data-uac-inference-id]')]){const s=read(root);if(s?.report&&!s.stale){s.stale=true;update(find(s.id),s);}}});
   popup.addEventListener('click',async e=>{const key=e.target.closest('[data-selection-action]')?.dataset.selectionAction;if(!selection)return;
     if(key==='close'){popup.hidden=true;return;}
-    if(key==='ask'||key==='diagnose'){
+    if(['write','note','explain','copy-reference'].includes(key)&& (filename()!==selection.file||editor.value!==selection.whole)){popup.hidden=true;ide.showToast('文件或代码已变化，请重新框选');return;}
+    if(key==='write'){selectionComparison();return;}
+    if(key==='copy-reference'){try{await navigator.clipboard.writeText(selectedStep()?.code||selection.text);ide.showToast('课程完整文件参考已复制，未置入或运行');}catch{ide.showToast('复制失败，请手动选择代码');}return;}
+    if(key==='note'){
+      const step=selectedStep(),context=selectionLabel(),draft=`代码笔记 · ${context}\n学习步骤：${step?.title||'当前文件'}\n\n所选代码：\n${selection.text}\n\n我的理解：\n`;
+      popup.hidden=true;
+      api.beginTool(`帮我把所选代码记成笔记：${context}\n${selection.text}`,`<section class="selection-note-draft"><h3>代码笔记草稿</h3><p>已带入文件、行号和所选代码。补充理解后保存到“我的笔记”；只保存在当前浏览器，不上传代码。</p><form data-uac-code-note><label>编辑笔记<textarea name="note" maxlength="12000" required aria-label="代码笔记内容">${esc(draft)}</textarea></label><button type="submit">保存到我的笔记</button><p data-uac-note-status role="status"></p></form></section>`);
+      return;
+    }
+    if(key==='ask'||key==='explain'||key==='diagnose'){
       if(filename()!==selection.file||editor.value!==selection.whole){popup.hidden=true;ide.showToast('文件或代码已变化，请重新框选');return;}
       const context=`${selection.file} · 第 ${selection.line}–${selection.endLine} 行`,snippet=`<div class="env-code-advice"><pre><code>${engine.highlightShell(selection.text)}</code></pre></div>`;
       popup.hidden=true;
-      if(key==='ask'){
+      if(key==='ask'||key==='explain'){
         const step=window.MindIELab.steps.find(s=>s.file===selection.file);
-        api.beginTool(`请解释所选代码：${context}\n${selection.text}`,`<p>已收到你框选的 <b>${esc(context)}</b>：</p>${snippet}<p>${esc(step?.action||'可以继续问我这段代码的用途、参数含义或修改方法。')}</p><small>依据当前课程手册的预设说明，非实时 AI；不会修改或执行代码。</small>`);
+        api.beginTool(`请解释所选代码：${context}\n${selection.text}`,`<p>已收到你框选的 <b>${esc(context)}</b>：</p>${snippet}${selectionExplanation()}<p>${esc(step?.goal||'可以继续描述你的问题。')}</p><small>依据当前课程手册的预设说明，非实时 AI；不会修改或执行代码。</small>`);
       }else if(latest?.filename===selection.file&&latest.code===selection.whole){
         const result=engine.validate(latest.code,latest.response,latest.http,latest.filename,latest.goal);
         const within=latest.errorLine>=selection.line&&latest.errorLine<=selection.endLine;
@@ -142,8 +175,15 @@
     if(key==='copy'){try{await navigator.clipboard.writeText(selection.replacement??selection.text);ide.showToast('选区代码已复制');}catch{ide.showToast('复制失败，请手动选择并复制代码');}return;}
     if(key==='insert'){
       if(!selection.replacement||filename()!==selection.file||editor.value!==selection.whole){ide.showToast('文件或代码已变化，请重新选择；未覆盖代码');popup.hidden=true;return;}
-      const before=editor.value;editor.setRangeText(selection.replacement,selection.start,selection.end,'select');const after=editor.value;editor.dispatchEvent(new Event('input',{bubbles:true}));undo={file,before,after};refreshBar();popup.hidden=true;ide.showToast('仅替换所选代码；请点击 IDE“运行”验证');
+      const before=editor.value;editor.setRangeText(selection.replacement,selection.start,selection.end,'select');const after=editor.value;editor.dispatchEvent(new Event('input',{bubbles:true}));undo={file:selection.file,before,after};refreshBar();popup.hidden=true;ide.showToast('仅替换所选代码；请点击 IDE“运行”验证');
     }
+  });
+  document.addEventListener('submit',e=>{
+    const form=e.target;if(!form.matches('[data-uac-code-note]'))return;e.preventDefault();
+    const note=form.elements.note.value.trim();if(!note)return;
+    if(!api.saveNote?.(note)){form.querySelector('[data-uac-note-status]').textContent='未能保存，浏览器存储不可用；请先复制笔记内容。';return;}
+    const id=Number(form.closest('[data-uac-message]').dataset.uacMessage);
+    api.updateToolMessage(id,`<section class="selection-note-draft"><h3>代码笔记</h3><p role="status">已保存到本机“我的笔记”。</p><pre>${esc(note)}</pre><button type="button" data-uac-feature="notes">查看我的笔记 →</button></section>`);
   });
   document.addEventListener('click',async e=>{const b=e.target.closest('[data-uac-dev-action]');if(!b)return;const root=b.closest('[data-uac-inference-id]'),s=root&&read(root);if(!s)return;const key=b.dataset.uacDevAction;
     if(key==='decline'){s.status='declined';update(root,s);api.addToolMessage('user','<p>暂不分析这次运行。</p>');return;}
