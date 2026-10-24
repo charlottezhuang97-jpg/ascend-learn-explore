@@ -509,7 +509,7 @@
     if (window.createKnowledgeOutline && /算子|Ascend\s*C|Triton|CATLASS/i.test(value)) {
       stage.replaceChildren();
       flow.classList.add('knowledge-answer');
-      stage.append(window.createKnowledgeOutline({goal:value, source:options.source}));
+      stage.append(window.createKnowledgeOutline({goal:value, source:options.source||'search',view:'cann',allowOverview:false}));
       closeButton.focus();
     } else renderQuestions();
   };

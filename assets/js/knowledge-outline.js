@@ -20,7 +20,7 @@
   const curriculum=window.AscendKnowledgeCurriculum;
   if(curriculum) courses.push(...curriculum.courses);
   const levelBadge=c=>{const badge=document.createElement('span');badge.className='kmap-level '+(curriculum?.levels[c.level]||'');badge.textContent=c.level||'等级待补充';return badge;};
-  window.createKnowledgeOutline = ({goal='我要学习算子开发', source='goal',view='all'}={}) => {
+  window.createKnowledgeOutline = ({goal='我要学习算子开发', source='goal',view='cann',allowOverview=false}={}) => {
     const root=document.createElement('section'); root.className='kmap';
     root.innerHTML=`<div class="kmap-heading"><div><span class="kmap-eyebrow">${source==='assessment'?'根据测一测结果推荐':'为你的学习目标推荐'}</span><h1 id="flowHeading">从知识图谱，找到学习的起点</h1><p class="kmap-description"></p></div><a class="kmap-back" href="index.html">返回首页 ↗</a></div><div class="kmap-bar"><div class="kmap-legend"><span class="kmap-dot"></span>当前推荐方向 <span class="kmap-pattern"></span>学习路径 ${icon}课程</div><div class="kmap-tools"><button data-action="focus">聚焦 CANN</button><button data-action="all">查看全图</button><button data-action="minus" aria-label="缩小">−</button><output aria-live="polite">100%</output><button data-action="plus" aria-label="放大">＋</button></div></div><div class="kmap-viewport" tabindex="0" aria-label="学习知识图谱，可滚动查看，使用缩放按钮调整大小"><div class="kmap-canvas"><svg class="kmap-lines" viewBox="0 0 1500 1540" aria-hidden="true"></svg></div></div><div class="kmap-footer"><span>点击学习路径展开课程 · 点击课程查看目录</span><span>蓝色虚线：共同调优方向　灰色实线：分类关联</span></div>`;
     root.querySelector('.kmap-description').textContent=`「${goal}」 · 先了解全貌，再沿学习路径逐步实践。`;
@@ -68,7 +68,7 @@
       ...(curriculum?.paths.filter(p=>p.scene==='gen').map(p=>[p.id,p.title,0,0,300,'path'])||[])];
     scenes.gen.edges=[['gen','training'],['gen','inference'],['gen','model-tuning'],
       ...(curriculum?.paths.filter(p=>p.parent).map(p=>[p.parent,p.id])||[])];
-    let activeScene = ['cann','gen','agent'].includes(view)?view:'all';
+    let activeScene = allowOverview&&view==='all'?'all':['cann','gen','agent'].includes(view)?view:'cann';
     let canvasWidth=1900,canvasHeight=1000;
     let layoutEdges=[],courseChains=[];
     const pathNodes = scene => scenes[scene].nodes.filter(node => node[5].includes('path'));
@@ -119,7 +119,7 @@
     sidebar.className = 'kmap-sidebar';
     sidebar.setAttribute('aria-label', '开发场景');
     sidebar.innerHTML = '<p class="kmap-sidebar-title">开发场景</p>';
-    Object.entries({all:{label:'全览'},...scenes}).forEach(([id, scene], index) => {
+    Object.entries(allowOverview?{all:{label:'全览'},...scenes}:scenes).forEach(([id, scene], index) => {
       const button = document.createElement('button');
       button.type = 'button';
       button.dataset.scene = id;
@@ -141,6 +141,7 @@
     sceneTitle.setAttribute('aria-live', 'polite');
     pane.prepend(sceneTitle);
     function renderScene(id) {
+      if(id==='all'&&!allowOverview)id='cann';
       if (modal) closeModal();
       activeScene = id;
       const scene = scenes[id]||{label:'全部开发场景'};
