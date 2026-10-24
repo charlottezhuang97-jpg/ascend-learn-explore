@@ -2,7 +2,7 @@
  * Every output below is a labelled fixture, never a real execution result. */
 (() => {
   const lab=window.MindIELab;
-  const defaults={host:'A',weightsMethod:'server',weightsPath:'/home/lgy/Qwen2-7B/',filesPrepared:false,imageMode:'cached',access:'granted',loginConfirmed:false,architecture:'aarch64',image:lab.image,container:'qwen',device:'4',containerMode:'create',allowPrivileged:false,allowHostNetwork:false,containerDevice:'0',mappingConfirmed:false,allowHttp:false,logPolicy:'new',logFile:'output-1030.log',overwriteLog:false,prompt:'介绍下Qwen2-7B',maxTokens:'500'};
+  const defaults={host:'A',weightsMethod:'download',weightsPath:'/home/lgy/Qwen2-7B/',filesPrepared:false,imageMode:'cached',access:'granted',loginConfirmed:false,architecture:'aarch64',image:lab.image,container:'qwen',device:'4',containerMode:'create',allowPrivileged:false,allowHostNetwork:false,containerDevice:'0',mappingConfirmed:false,allowHttp:false,logPolicy:'new',logFile:'output-1030.log',overwriteLog:false,prompt:'介绍下Qwen2-7B',maxTokens:'500'};
   const steps=[
     {name:'获取并检查实验环境',context:'示例主机',files:[0],tasks:['申请 HiDevLab 100 卡时 A3 算力','创建 CANN 环境','环境开机','选择实验主机','查询 NPU','查询 Docker'],goal:'先获取 HiDevLab 实验环境，再只读查询 NPU 和 Docker。',impact:'HiDevLab 申请、创建、开机分别确认，仅模拟，不申请真实资源或产生费用；检查阶段只包含两条只读命令。',scenarios:[['ok','正常回显'],['docker','Docker 不可连接'],['npu','NPU Health 异常']]},
     {name:'下载模型权重',context:'示例主机文件',files:[1],tasks:['选择准备方式','本地下载权重','上传服务器','检查权重文件'],goal:'按所选分支准备 Qwen2-7B，并检查服务器目录中的示例文件。',impact:'手册是网页下载后上传，未提供下载/上传命令。此处不访问本地文件、不下载或上传；只模拟选定目录的存在检查，不宣称可信哈希完整性验证。',scenarios:[['ok','文件清单齐全'],['missing','缺少模型分片']]},
@@ -224,7 +224,7 @@
   function patch(p){const json=JSON.parse(lab.steps[5].code);json.BackendConfig.npuDeviceIds=[[Number(p.containerDevice)]];return json;}
   function command(s,i){const p=s.config,phase=s.steps[i].phase;
     if(i===0)return acquisition.find(x=>x.key===phase)?.plan||lab.steps[0].code;
-    if(i===1)return 'ls -lh '+quote(p.weightsPath);
+    if(i===1)return phase==='download'?'网页下载 Qwen2-7B 权重（演示，未访问 Hugging Face）':phase==='upload'?'上传权重到 '+p.weightsPath+'（演示，未传输文件）':'ls -lh '+quote(p.weightsPath);
     if(i===2)return (p.imageMode==='pull'?'docker pull '+p.image+'\n':'')+'docker images';
     if(i===3){const check='ll /dev/ | grep davinci\ndocker images\n';return p.containerMode==='reuse'?'docker ps --filter '+quote('name=^/'+p.container+'$')+'\ndocker inspect '+p.container:check+lab.steps[3].code.replace('--name qwen','--name '+p.container).replace('/dev/davinci4','/dev/davinci'+p.device).replace('/home/lgy/Qwen2-7B/',p.weightsPath).replace(lab.image,p.image);}
     if(i===4)return phase==='config'?JSON.stringify(patch(p),null,2):lab.steps[4].code.replace('exec -it qwen','exec -it '+p.container);
@@ -243,7 +243,7 @@
   }
   function gate(s,i){const p=s.config;
     if(i>0&&s.steps.slice(0,i).some(x=>x.status!=='success'))return '请先完成前面的依赖步骤。';
-    if(i===1&&p.weightsMethod!=='server'&&!p.filesPrepared)return '请先在外部下载/上传权重，并确认已准备。该确认不会被当成真实服务器验证。';
+    if(i===1&&p.weightsMethod!=='server'&&!p.filesPrepared&&!['download','upload','verify'].includes(s.steps[i].phase))return '请先在外部下载/上传权重，并确认已准备。该确认不会被当成真实服务器验证。';
     if(i===2&&p.imageMode==='pull'&&(p.access!=='granted'||!p.loginConfirmed))return '镜像权限申请或安全登录尚未由用户确认；不演示拉取，也不自动批准权限。';
     if(i===3&&p.containerMode==='create'&&(!p.allowPrivileged||!p.allowHostNetwork))return '创建容器前，请分别确认高权限与主机网络的实验影响。';
     if(i===4&&s.steps[i].phase==='config'&&(!p.mappingConfirmed||!p.allowHttp))return '请确认容器内设备编号，并单独确认本隔离实验中的非 HTTPS 配置。';
@@ -253,12 +253,14 @@
   function fixture(s,i){const p=s.config,scenario=s.steps[i].scenario,phase=s.steps[i].phase;
     const provision=i===0&&acquisition.find(x=>x.key===phase);
     if(provision)return {passed:true,output:provision.result,advice:'',checks:[{name:provision.task,status:'pass',detail:provision.result}]};
+    if(i===1&&phase==='download')return {passed:true,output:'下载步骤演示完成。未访问 Hugging Face，也未在本机生成模型文件。',advice:'',checks:[{name:'本地下载权重',status:'pass',detail:'仅演示流程；实际文件需由用户准备。'}]};
+    if(i===1&&phase==='upload')return {passed:true,output:'上传步骤演示完成。目标目录：'+p.weightsPath+'。未向服务器传输文件。',advice:'',checks:[{name:'上传服务器',status:'pass',detail:'仅演示流程；实际服务器目录尚未验证。'}]};
     const failures={docker:['Cannot connect to the Docker daemon.','核对 Docker 服务与当前账户权限。只读检查授权不包含安装或启停服务。'],npu:['NPU ID 4   Health: Warning','请由管理员检查设备健康状态，本流程不自动升级固件或重启主机。'],missing:['Missing: model-00004-of-00004.safetensors','补齐选定模型版本要求的分片后重新检查，不以文件存在代替可信哈希校验。'],denied:['denied: requested access to the resource is denied','请在安全界面确认仓库权限和登录，不在对话粘贴凭据。'],architecture:['Image architecture does not match selected host architecture','核对实际架构和镜像元数据，不自动替换镜像版本。'],conflict:['Conflict: container name '+p.container+' is already in use.','换一个容器名，或选择复用并核对已有容器；不会删除旧容器。'],device:['No such file: /dev/davinci'+p.device,'回到参数确认实际设备节点；不要自动扩大设备访问范围。'],script:['source: set_env.sh: No such file or directory','核对镜像组件和脚本路径；新会话需要重新初始化。'],path:['Permission denied or missing: /home/weights/','检查只读挂载及容器内路径，不把主机路径写入容器配置。'],port:['Address already in use: 1025','先确认已有进程及端口占用；本授权不包含终止进程或停止旧服务。'],timeout:['Timed out waiting for new Daemon start success! marker','检查本次新日志、权重、设备和环境，未经新授权不自动重试启动。'],http:['HTTP 500\n{"error":"Internal Server Error（模拟）"}','核对服务端新日志与请求参数；修复代码不能保证解决服务端故障。'],empty:['HTTP 200\n{"text":""}','HTTP 200 仍可能无有效文本。查看实际响应与服务日志，不伪造返回内容。']};
-    const relevant=i===0?['docker','npu']:i===1?['missing']:i===2?['denied','architecture']:i===3?['conflict','device']:i===4?(phase==='config'?['path']:['script']):i===5?['port','timeout']:['http','empty'];
+    const relevant=i===0?['docker','npu']:i===1?(phase==='verify'?['missing']:[]):i===2?['denied','architecture']:i===3?['conflict','device']:i===4?(phase==='config'?['path']:['script']):i===5?['port','timeout']:['http','empty'];
     if(relevant.includes(scenario)){const [output,advice]=failures[scenario];return {passed:false,output,advice,checks:[{name:steps[i].tasks.at(-1),status:'fail',detail:advice}]};}
     let output,checks=steps[i].tasks.map(name=>({name,status:'pass',detail:'本项检查已通过（演示），未连接真实主机。'}));
     if(i===0){checks=checks.slice(3);output='NPU ID  Health\n'+p.device+'       OK\n\nCONTAINER ID  IMAGE  COMMAND  CREATED  STATUS  PORTS  NAMES\n# Docker 空表头也是正常查询结果。';}
-    if(i===1){output=lab.steps[1].output+'\n示例目录：'+p.weightsPath+'\n仅做存在检查，未核验可信哈希。';checks[1]={name:steps[i].tasks[1],status:p.weightsMethod==='download'?'user':'skip',detail:p.weightsMethod==='download'?'用户确认已在外部下载；此页未下载。':'本分支不需要下载。'};checks[2]={name:steps[i].tasks[2],status:p.weightsMethod==='server'?'skip':'user',detail:p.weightsMethod==='server'?'服务器已有，本分支跳过上传。':'用户确认已在外部上传；此页未上传。'};}
+    if(i===1){output=lab.steps[1].output+'\n示例目录：'+p.weightsPath+'\n仅展示预期文件清单，未查询真实目录或核验可信哈希。';checks[1]={name:steps[i].tasks[1],status:'pass',detail:'下载流程已演示；未真正下载文件。'};checks[2]={name:steps[i].tasks[2],status:'pass',detail:'上传流程已演示；未真正传输文件。'};}
     if(i===2){output='IMAGE ID: demo-image-id\nTAG: '+p.image+'\n架构：'+p.architecture+'（用户选择，模拟核对）';checks[1].detail=checks[2].detail=p.imageMode==='cached'?'复用本地镜像，本分支不申请权限或登录。':'仅用户确认外部权限/安全登录；无凭据进入对话。';}
     if(i===3)output='CONTAINER ID: demo-container-id\nNAME: '+p.container+'\nSTATE: running（模拟）\nDEVICE: /dev/davinci'+p.device+'\nMOUNT: '+p.weightsPath+' → /home/weights（只读）';
     if(i===4){if(phase==='initialize'){output='位置：容器 '+p.container+'（模拟）\n5/5 环境脚本示例退出码：0\nsource 无 stdout 是正常情况。\n后续服务继续使用同一容器会话。';checks=checks.slice(0,2);}else{output='示例备份记录：config.json.bak-'+s.id.slice(0,8)+'\n配置片段 JSON 可解析\nmodelWeightPath = /home/weights/\nworldSize = 1\ntrustRemoteCode = false\n仅模拟字段合并，原文件其他字段保持未操作。\n真实完整配置、设备与路径未读取。';checks=checks.slice(2);}}
