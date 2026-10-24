@@ -16,27 +16,27 @@
       cann: {
         label: 'CANN', height: 760,
         nodes: [
-          ['tuning','应用/算子调优',790,55,245,'tuning'],['cann','CANN',790,330,220,'domain active'],
-          ['ascend','AscendC算子开发',420,220,265,'path active'],['triton','Triton算子开发',420,480,265,'path'],
-          ['catlass','CATLASS算子开发',1160,220,270,'path'],['950','950系列算子开发',1160,480,270,'path']
+          ['tuning','应用/算子调优',1210,600,270,'tuning'],['cann','CANN',1210,330,300,'domain active'],
+          ['ascend','AscendC算子开发',710,75,300,'path active'],['triton','Triton算子开发',710,255,300,'path'],
+          ['catlass','CATLASS算子开发',710,435,300,'path'],['950','950系列算子开发',710,615,300,'path']
         ],
         edges: [['cann','ascend'],['cann','triton'],['cann','catlass'],['cann','950']]
       },
       gen: {
         label: '生成式 AI', height: 700,
         nodes: [
-          ['gen','生成式AI与大语言模型',750,280,310,'domain active'],
-          ['training','训练开发',330,160,265,'path'],['inference','推理开发',330,420,265,'path'],
-          ['genapp','生成式AI应用开发部署',1190,280,310,'path']
+          ['gen','生成式AI与大语言模型',1150,280,340,'domain active'],
+          ['training','训练开发',590,100,320,'path'],['inference','推理开发',590,280,320,'path'],
+          ['genapp','生成式AI应用开发部署',590,460,320,'path']
         ],
         edges: [['gen','training'],['gen','inference'],['gen','genapp']]
       },
       agent: {
         label: '智能体', height: 700,
         nodes: [
-          ['agent','智能体',750,280,220,'domain active'],
-          ['agentapp','Agent应用开发部署',330,280,300,'path'],
-          ['rag','RAG应用开发部署',1170,280,300,'path']
+          ['agent','智能体',1150,290,300,'domain active'],
+          ['agentapp','Agent应用开发部署',590,180,320,'path'],
+          ['rag','RAG应用开发部署',590,400,320,'path']
         ],
         edges: [['agent','agentapp'],['agent','rag']]
       }
@@ -105,7 +105,7 @@
         if (expanded) courses.forEach((_, index) => connect('ascend', `course${index}`));
       }
     }
-    function renderCourses(){canvas.querySelectorAll('.kmap-course').forEach(n=>n.remove());root.querySelector('[data-node="ascend"]').setAttribute('aria-expanded',String(expanded));root.querySelector('.kmap-chevron').textContent=expanded?'⌄':'›';if(expanded)courses.forEach((c,i)=>{const el=document.createElement('button');el.type='button';el.className='kmap-node kmap-course';el.dataset.node=`course${i}`;el.style.cssText=`left:24px;top:${75+i*157}px;width:240px`;el.innerHTML=`<span class="kmap-course-label">${icon}课程 ${String(i+1).padStart(2,'0')}</span><strong></strong><span class="kmap-course-link">查看课程 →</span>`;el.querySelector('strong').textContent=c.title;el.addEventListener('click',()=>openCourse(i,el));canvas.append(el);});requestAnimationFrame(draw);}
+    function renderCourses(){canvas.querySelectorAll('.kmap-course').forEach(n=>n.remove());root.querySelector('[data-node="ascend"]').setAttribute('aria-expanded',String(expanded));root.querySelector('.kmap-chevron').textContent=expanded?'⌄':'›';if(expanded)courses.forEach((c,i)=>{const el=document.createElement('button');el.type='button';el.className='kmap-node kmap-course';el.dataset.node=`course${i}`;el.style.cssText=`left:30px;top:${75+i*157}px;width:340px`;el.innerHTML=`<span class="kmap-course-label">${icon}课程 ${String(i+1).padStart(2,'0')}</span><strong></strong><span class="kmap-course-link">查看课程 →</span>`;el.querySelector('strong').textContent=c.title;el.addEventListener('click',()=>openCourse(i,el));canvas.append(el);});requestAnimationFrame(draw);}
     function closeModal(){if(!modal)return;const back=modal._return;document.body.style.overflow=modal._overflow;modal.remove();modal=null;root.inert=false;back?.focus();}
     function openCourse(index,trigger){if(modal)closeModal();const c=courses[index];modal=document.createElement('div');modal.className='kmap-modal';modal._return=trigger;modal._overflow=document.body.style.overflow;document.body.style.overflow='hidden';modal.innerHTML=`<div class="kmap-scrim"></div><aside class="kmap-drawer" role="dialog" aria-modal="true" aria-labelledby="kmapCourseTitle" tabindex="-1"><header><span>${icon}课程详情</span><button class="kmap-dismiss" aria-label="关闭课程详情">×</button></header><div class="kmap-drawer-content"><p class="kmap-eyebrow">CANN / AscendC算子开发</p><h2 id="kmapCourseTitle"></h2><p class="kmap-course-description"></p><div class="kmap-course-facts">3 个模块 · 6 个课节 <span>含实践</span></div><h3>课程目录</h3><div class="kmap-directory"></div><h3>关联课程</h3><div class="kmap-related"></div></div><footer><a class="kmap-start">查看完整学习路径 →</a></footer></aside>`;
       modal.querySelector('h2').textContent=c.title;modal.querySelector('.kmap-course-description').textContent=c.description;
