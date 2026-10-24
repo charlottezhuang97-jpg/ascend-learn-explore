@@ -1,0 +1,67 @@
+/* Decorative document/check watermark: no interaction or status semantics. */
+.fixed1030 .env-flow .env-result,
+.fixed1030 .env-flow .env-comparison,
+.fixed1030 .env-flow .env-summary {
+  background-color: #f6f7f9;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22160%22%20viewBox%3D%220%200%20160%20160%22%20fill%3D%22none%22%3E%3Cg%20transform%3D%22rotate(-13%2080%2080)%22%20stroke%3D%22%23e7ebf2%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M42%2017h61l22%2024v99H42z%22%2F%3E%3Cpath%20d%3D%22M101%2018v26h23M58%2063h45M58%2080h32%22%2F%3E%3Cpath%20d%3D%22m61%20107%2012%2012%2023-24%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-size: 152px 152px;
+  background-position: right -14px top -24px;
+  border-radius: 20px;
+}
+
+.fixed1030 .env-flow .env-result {
+  border-color: #e4e8ee;
+  box-shadow: none;
+}
+
+.fixed1030 .env-flow .env-result > header {
+  min-height: 66px;
+  flex-wrap: wrap;
+  align-content: center;
+  background: transparent;
+  border-bottom-color: #e3e7ee;
+}
+
+.fixed1030 .env-flow .env-result-body {
+  background: transparent;
+}
+
+.fixed1030 .env-flow .env-result details,
+.fixed1030 .env-flow .env-result .env-command-name {
+  background: rgb(255 255 255 / 35%);
+  border-top-color: #e3e7ee;
+}
+
+.fixed1030 .env-flow .env-facts > div {
+  background: rgb(255 255 255 / 65%);
+}
+
+.fixed1030 .env-flow .env-result pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.fixed1030 .env-flow .env-comparison {
+  border-color: #d4e3dc;
+}
+
+.fixed1030 .env-flow .env-comparison.fail,
+.fixed1030 .env-flow .env-summary.error {
+  border-color: #e6cdd1;
+}
+
+.fixed1030 .env-flow .env-comparison-title {
+  min-height: 48px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 520px) {
+  .fixed1030 .env-flow .env-result,
+  .fixed1030 .env-flow .env-comparison,
+  .fixed1030 .env-flow .env-summary {
+    background-size: 124px 124px;
+    background-position: right -16px top -16px;
+    border-radius: 16px;
+  }
+}
