@@ -37,9 +37,57 @@
   background: rgb(255 255 255 / 65%);
 }
 
+/* Match the existing dark code suggestions, including restored chat records. */
+.fixed1030 .env-flow {
+  --guide-code-bg: #10151a;
+  --guide-code-text: #dbe4ee;
+  --guide-code-border: #46505c;
+}
+
+.fixed1030 .env-flow pre,
 .fixed1030 .env-flow .env-result pre {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  max-height: 320px;
+  margin: 12px 0;
+  padding: 18px;
+  overflow: auto;
+  border: 1px solid var(--guide-code-border);
+  border-radius: 16px;
+  background: var(--guide-code-bg);
+  color: var(--guide-code-text);
+  font: 12px/1.9 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
+  tab-size: 2;
+  scrollbar-color: #596778 var(--guide-code-bg);
+}
+
+.fixed1030 .env-flow pre code {
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  white-space: inherit;
+}
+
+.fixed1030 .env-flow .env-command {
+  background: var(--guide-code-bg);
+  border-color: var(--guide-code-border);
+  border-radius: 16px;
+}
+
+.fixed1030 .env-flow .env-command > div {
+  color: #b7c5d6;
+  border-bottom-color: #303a46;
+}
+
+.fixed1030 .env-flow .env-command pre,
+.fixed1030 .env-flow .env-code-advice pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
 }
 
 .fixed1030 .env-flow .env-comparison {
