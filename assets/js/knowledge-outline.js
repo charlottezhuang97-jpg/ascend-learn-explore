@@ -12,23 +12,99 @@
     root.querySelector('.kmap-description').textContent=`「${goal}」 · 先了解全貌，再沿学习路径逐步实践。`;
     const canvas=root.querySelector('.kmap-canvas'), viewport=root.querySelector('.kmap-viewport'), lines=root.querySelector('.kmap-lines');
     let expanded=true, scale=1, modal=null;
-    const nodes=[
-      ['tuning','应用/算子调优',790,55,245,'tuning'],['cann','CANN',790,330,220,'domain active'],
-      ['ascend','AscendC算子开发',420,220,265,'path active'],['triton','Triton算子开发',420,480,265,'path'],['catlass','CATLASS算子开发',1160,220,270,'path'],['950','950系列算子开发',1160,480,270,'path'],
-      ['gen','生成式AI与大语言模型',790,870,310,'domain context'],['training','训练开发',420,800,230,'path context'],['inference','推理开发',420,960,230,'path context'],['genapp','生成式AI应用开发部署',1160,870,290,'path context'],
-      ['agent','智能体',790,1190,220,'domain context'],['agentapp','Agent应用开发部署',420,1190,280,'path context'],['rag','RAG应用开发部署',1160,1190,280,'path context'],['deep','深度学习',790,1430,220,'domain context']
-    ];
+    const scenes = {
+      cann: {
+        label: 'CANN', height: 760,
+        nodes: [
+          ['tuning','应用/算子调优',790,55,245,'tuning'],['cann','CANN',790,330,220,'domain active'],
+          ['ascend','AscendC算子开发',420,220,265,'path active'],['triton','Triton算子开发',420,480,265,'path'],
+          ['catlass','CATLASS算子开发',1160,220,270,'path'],['950','950系列算子开发',1160,480,270,'path']
+        ],
+        edges: [['cann','ascend'],['cann','triton'],['cann','catlass'],['cann','950']]
+      },
+      gen: {
+        label: '生成式 AI', height: 700,
+        nodes: [
+          ['gen','生成式AI与大语言模型',750,280,310,'domain active'],
+          ['training','训练开发',330,160,265,'path'],['inference','推理开发',330,420,265,'path'],
+          ['genapp','生成式AI应用开发部署',1190,280,310,'path']
+        ],
+        edges: [['gen','training'],['gen','inference'],['gen','genapp']]
+      },
+      agent: {
+        label: '智能体', height: 700,
+        nodes: [
+          ['agent','智能体',750,280,220,'domain active'],
+          ['agentapp','Agent应用开发部署',330,280,300,'path'],
+          ['rag','RAG应用开发部署',1170,280,300,'path']
+        ],
+        edges: [['agent','agentapp'],['agent','rag']]
+      }
+    };
+    let activeScene = 'cann';
+    const workspace = document.createElement('div');
+    workspace.className = 'kmap-workspace';
+    const sidebar = document.createElement('nav');
+    sidebar.className = 'kmap-sidebar';
+    sidebar.setAttribute('aria-label', '开发场景');
+    sidebar.innerHTML = '<p class="kmap-sidebar-title">开发场景</p>';
+    Object.entries(scenes).forEach(([id, scene], index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.scene = id;
+      button.setAttribute('aria-pressed', String(id === activeScene));
+      button.innerHTML = `<span class="kmap-scene-index">0${index + 1}</span><strong></strong><span aria-hidden="true">›</span>`;
+      button.querySelector('strong').textContent = scene.label;
+      button.addEventListener('click', () => renderScene(id));
+      sidebar.append(button);
+    });
+    const pane = document.createElement('div');
+    pane.className = 'kmap-pane';
+    ['.kmap-bar', '.kmap-viewport', '.kmap-footer'].forEach(selector => pane.append(root.querySelector(selector)));
+    workspace.append(sidebar, pane);
+    root.append(workspace);
+    root.querySelector('[data-action="focus"]').textContent = '重置视图';
+    root.querySelector('[data-action="all"]').textContent = '适配视图';
+    const sceneTitle = document.createElement('p');
+    sceneTitle.className = 'kmap-scene-title';
+    sceneTitle.setAttribute('aria-live', 'polite');
+    pane.prepend(sceneTitle);
+    function renderScene(id) {
+      if (modal) closeModal();
+      activeScene = id;
+      const scene = scenes[id];
+      sidebar.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.scene === id)));
+      canvas.querySelectorAll('.kmap-node').forEach(element => element.remove());
+      lines.replaceChildren();
+      scene.nodes.forEach(node);
+      sceneTitle.textContent = `${scene.label} · 知识图谱`;
+      viewport.setAttribute('aria-label', `${scene.label}知识图谱，可滚动查看，使用缩放按钮调整大小`);
+      root.querySelector('.kmap-footer span').textContent = id === 'cann' ? '点击 AscendC 路径展开课程 · 点击课程查看目录' : '当前仅展示所选场景 · 切换左侧入口查看其他开发场景';
+      root.querySelector('.kmap-footer span:last-child').textContent = id === 'cann' ? '蓝色虚线：共同调优方向　灰色实线：分类关联' : '灰色实线：分类关联';
+      lines.setAttribute('viewBox', `0 0 1500 ${scene.height}`);
+      lines.style.height = `${scene.height}px`;
+      if (id === 'cann') renderCourses();
+      zoom(Math.max(.65, Math.min(1, viewport.clientWidth / 1500)));
+      viewport.scrollTo(0, 0);
+      requestAnimationFrame(draw);
+    }
     function node([id,title,x,y,w,type]) {
       const el=document.createElement('button'); el.type='button';el.className=`kmap-node ${type}`;el.dataset.node=id;el.style.cssText=`left:${x-w/2}px;top:${y}px;width:${w}px`;
       el.innerHTML=`<span class="kmap-node-type">${type.includes('domain')?'知识领域':id==='tuning'?'共同方向':'学习路径'}</span><strong></strong>${id==='ascend'?'<span class="kmap-path-meta">4 门课程 <span class="kmap-chevron">⌄</span></span>':''}`;
       el.querySelector('strong').textContent=title;
-      el.addEventListener('click',()=>{if(id==='ascend'){expanded=!expanded;renderCourses();}else{root.querySelectorAll('.kmap-node.is-selected').forEach(n=>n.classList.remove('is-selected'));el.classList.add('is-selected');root.querySelector('.kmap-footer span').textContent=id==='cann'?'已聚焦 CANN，点击 AscendC算子开发查看推荐课程':`已选择「${title}」。当前展开的是 AscendC 算子开发课程。`;}});
+      el.addEventListener('click',()=>{if(id==='ascend'){expanded=!expanded;renderCourses();}else{root.querySelectorAll('.kmap-node.is-selected').forEach(n=>n.classList.remove('is-selected'));el.classList.add('is-selected');root.querySelector('.kmap-footer span').textContent=`已选择「${title}」 · ${scenes[activeScene].label}知识图谱`;}});
       if(id==='ascend')el.setAttribute('aria-expanded','true');canvas.append(el);
     }
-    nodes.forEach(node);
     function curve(a,b,dashed=false){const path=document.createElementNS('http://www.w3.org/2000/svg','path');const mid=(a[0]+b[0])/2;path.setAttribute('d',`M${a[0]},${a[1]} C${mid},${a[1]} ${mid},${b[1]} ${b[0]},${b[1]}`);if(dashed)path.classList.add('shared');lines.append(path);}
     function connect(a,b,dashed=false){const x=canvas.querySelector(`[data-node="${a}"]`),y=canvas.querySelector(`[data-node="${b}"]`);if(!x||!y)return;const ax=x.offsetLeft,ay=x.offsetTop,bx=y.offsetLeft,by=y.offsetTop;const vertical=Math.abs(ax-bx)<100;if(vertical){const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',`M${ax+x.offsetWidth/2},${ay+x.offsetHeight} L${bx+y.offsetWidth/2},${by}`);if(dashed)p.classList.add('shared');lines.append(p);}else{const right=bx>ax;curve([right?ax+x.offsetWidth:ax,ay+x.offsetHeight/2],[right?bx:bx+y.offsetWidth,by+y.offsetHeight/2],dashed);}}
-    function draw(){lines.replaceChildren();[['cann','ascend'],['cann','triton'],['cann','catlass'],['cann','950'],['cann','gen'],['gen','agent'],['agent','deep'],['gen','training'],['gen','inference'],['gen','genapp'],['agent','agentapp'],['agent','rag']].forEach(e=>connect(...e));['ascend','triton','catlass','950'].forEach(id=>connect('tuning',id,true));if(expanded)courses.forEach((_,i)=>connect('ascend',`course${i}`));}
+    function draw() {
+      lines.replaceChildren();
+      scenes[activeScene].edges.forEach(edge => connect(...edge));
+      if (activeScene === 'cann') {
+        ['ascend','triton','catlass','950'].forEach(id => connect('tuning', id, true));
+        if (expanded) courses.forEach((_, index) => connect('ascend', `course${index}`));
+      }
+    }
     function renderCourses(){canvas.querySelectorAll('.kmap-course').forEach(n=>n.remove());root.querySelector('[data-node="ascend"]').setAttribute('aria-expanded',String(expanded));root.querySelector('.kmap-chevron').textContent=expanded?'⌄':'›';if(expanded)courses.forEach((c,i)=>{const el=document.createElement('button');el.type='button';el.className='kmap-node kmap-course';el.dataset.node=`course${i}`;el.style.cssText=`left:24px;top:${75+i*157}px;width:240px`;el.innerHTML=`<span class="kmap-course-label">${icon}课程 ${String(i+1).padStart(2,'0')}</span><strong></strong><span class="kmap-course-link">查看课程 →</span>`;el.querySelector('strong').textContent=c.title;el.addEventListener('click',()=>openCourse(i,el));canvas.append(el);});requestAnimationFrame(draw);}
     function closeModal(){if(!modal)return;const back=modal._return;document.body.style.overflow=modal._overflow;modal.remove();modal=null;root.inert=false;back?.focus();}
     function openCourse(index,trigger){if(modal)closeModal();const c=courses[index];modal=document.createElement('div');modal.className='kmap-modal';modal._return=trigger;modal._overflow=document.body.style.overflow;document.body.style.overflow='hidden';modal.innerHTML=`<div class="kmap-scrim"></div><aside class="kmap-drawer" role="dialog" aria-modal="true" aria-labelledby="kmapCourseTitle" tabindex="-1"><header><span>${icon}课程详情</span><button class="kmap-dismiss" aria-label="关闭课程详情">×</button></header><div class="kmap-drawer-content"><p class="kmap-eyebrow">CANN / AscendC算子开发</p><h2 id="kmapCourseTitle"></h2><p class="kmap-course-description"></p><div class="kmap-course-facts">3 个模块 · 6 个课节 <span>含实践</span></div><h3>课程目录</h3><div class="kmap-directory"></div><h3>关联课程</h3><div class="kmap-related"></div></div><footer><a class="kmap-start">查看完整学习路径 →</a></footer></aside>`;
@@ -40,9 +116,9 @@
       modal.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();closeModal();}if(e.key==='Tab'){const items=[...modal.querySelectorAll('button, summary, a[href]')].filter(n=>n.getClientRects().length);const first=items[0],last=items.at(-1);if(e.shiftKey&&(document.activeElement===first||document.activeElement===modal.querySelector('aside'))){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
       document.body.append(modal);root.inert=true;modal.querySelector('.kmap-dismiss').focus();
     }
-    function zoom(value){scale=Math.max(.3,Math.min(1.4,value));canvas.style.transformOrigin='0 0';canvas.style.zoom=scale;canvas.style.width='1500px';canvas.style.height='1540px';root.querySelector('output').textContent=`${Math.round(scale*100)}%`;}
-    root.querySelector('.kmap-tools').onclick=e=>{const a=e.target.closest('button')?.dataset.action;if(a==='plus')zoom(scale+.1);if(a==='minus')zoom(scale-.1);if(a==='all'){zoom(Math.min(viewport.clientWidth/1500,viewport.clientHeight/1540));viewport.scrollTo(0,0);}if(a==='focus'){zoom(Math.min(1,viewport.clientWidth/1500));viewport.scrollTo(0,0);}};
-    renderCourses();const observer=new ResizeObserver(draw);observer.observe(canvas);requestAnimationFrame(()=>{zoom(Math.max(.65,Math.min(1,viewport.clientWidth/1500)));viewport.scrollTo(0,0);draw();});
+    function zoom(value){scale=Math.max(.3,Math.min(1.4,value));canvas.style.transformOrigin='0 0';canvas.style.zoom=scale;canvas.style.width='1500px';canvas.style.height=`${scenes[activeScene].height}px`;root.querySelector('output').textContent=`${Math.round(scale*100)}%`;}
+    root.querySelector('.kmap-tools').onclick=e=>{const a=e.target.closest('button')?.dataset.action;if(a==='plus')zoom(scale+.1);if(a==='minus')zoom(scale-.1);if(a==='all'){zoom(Math.min(viewport.clientWidth/1500,viewport.clientHeight/scenes[activeScene].height));viewport.scrollTo(0,0);}if(a==='focus'){zoom(Math.min(1,viewport.clientWidth/1500));viewport.scrollTo(0,0);}};
+    const observer=new ResizeObserver(draw);observer.observe(canvas);requestAnimationFrame(()=>renderScene('cann'));
     root.destroy=()=>{closeModal();observer.disconnect();};return root;
   };
 })();
