@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, '知识地图']
+    branches: [main, '1030']
   workflow_dispatch:
 
 permissions:
@@ -18,35 +18,55 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout production source (always main)
+        uses: actions/checkout@v4
         with:
           ref: main
-          path: base-src
-      - name: Build curated Pages artifact from main
-        run: bash base-src/scripts/build-pages.sh
-      - uses: actions/checkout@v4
+      - name: Build production without changing its URLs
+        run: bash scripts/build-pages.sh
+      - name: Checkout isolated 1030 source
+        uses: actions/checkout@v4
         with:
-          ref: '知识地图'
-          path: preview-src
-      - name: Overlay knowledge-map preview
+          ref: '1030'
+          path: .preview-1030-source
+      - name: Build and overlay only /previews/1030/
         run: |
           set -euo pipefail
-          dist="$GITHUB_WORKSPACE/base-src/.pages-dist"
-          preview="$dist/knowledge-map-preview"
-          mkdir -p "$preview"
-          for file in index.html course-preview.html learn.html ai-companion.html knowledge-map.html knowledge-map-v1.html knowledge-map-v2.html learning-plan.html catalog.html page-registry.json; do
-            if [ -f "preview-src/$file" ]; then cp "preview-src/$file" "$preview/$file"; fi
+          bash .preview-1030-source/scripts/build-pages.sh
+          mkdir -p .pages-dist/previews/1030
+          cp -a .preview-1030-source/.pages-dist/. .pages-dist/previews/1030/
+          git -C .preview-1030-source rev-parse HEAD > .pages-dist/previews/1030/REVISION
+          test -f .pages-dist/learn.html
+          test -f .pages-dist/previews/1030/learn-1030.html
+      # Keep this shared workflow synchronized on main, 1030 and 知识地图.
+      # All production deploys retain both independently developed previews.
+      - name: Checkout isolated knowledge-map source
+        uses: actions/checkout@v4
+        with:
+          ref: '知识地图'
+          path: .preview-knowledge-map-source
+      - name: Build and overlay only /knowledge-map-preview/
+        run: |
+          set -euo pipefail
+          preview_source=".preview-knowledge-map-source"
+          bash "$preview_source/scripts/build-pages.sh"
+          for file in knowledge-map-v1.html knowledge-map-v2.html learning-plan.html; do
+            cp "$preview_source/$file" "$preview_source/.pages-dist/$file"
           done
-          cp -R preview-src/assets "$preview/assets"
-          cp -R preview-src/design-system "$preview/design-system"
-          touch "$preview/.nojekyll"
-          echo "published preview at /knowledge-map-preview/"
+          mkdir -p .pages-dist/knowledge-map-preview
+          cp -a "$preview_source/.pages-dist/." .pages-dist/knowledge-map-preview/
+          git -C "$preview_source" rev-parse HEAD > .pages-dist/knowledge-map-preview/REVISION
+          test -f .pages-dist/knowledge-map.html
+          test -f .pages-dist/previews/1030/learn-1030.html
+          test -f .pages-dist/knowledge-map-preview/knowledge-map.html
+          test -f .pages-dist/knowledge-map-preview/knowledge-map-v1.html
+          test -f .pages-dist/knowledge-map-preview/learning-plan.html
       - uses: actions/configure-pages@v5
         with:
           enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: base-src/.pages-dist
+          path: .pages-dist
 
   deploy:
     needs: build
