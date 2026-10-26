@@ -18,6 +18,7 @@
   const stepFiles=[...explorer.querySelectorAll('.mindie-lab-files [data-mindie-step]')];
   const branch=(name,indices,children='')=>`<details open><summary><span class="mindie-folder-icon" aria-hidden="true"></span>${name}</summary><div class="mindie-tree-children">${indices.map(i=>`<span data-step-slot="${i}"></span>`).join('')}${children}</div></details>`;
   tree.innerHTML='<details class="mindie-project-root" open><summary>MINDIE-TEXT-LAB</summary><div class="mindie-tree-children">'+branch('environment',[0,1])+branch('container',[2,3])+branch('scripts',[],branch('setup',[4])+branch('service',[6])+branch('client',[7]))+branch('conf',[5])+branch('docs',[],'<button type="button" data-nested-file="docs/lab-notes.md"><span>MD</span>lab-notes.md</button>')+branch('logs',[],'<button type="button" data-nested-file="logs/output.log"><span>≡</span>output.log</button>')+'</div></details>';
+  tree.insertAdjacentHTML('afterbegin','<p class="mindie-tree-note">页面内的示例工作区，并非服务器真实目录。NPU、Docker、镜像与服务命令应在对应终端执行；IDE 用于查看或修改配置片段和请求示例。当前未连接真实主机。</p>');
   // Move real file buttons rather than copying them, preserving existing file actions.
   stepFiles.forEach((button,i)=>{button.querySelector('span').textContent=button.dataset.ideFile.endsWith('.json')?'{}':'$';button.title=button.dataset.ideFile;tree.querySelector(`[data-step-slot="${i}"]`).replaceWith(button);});
   explorer.querySelector('.mindie-lab-files').remove();

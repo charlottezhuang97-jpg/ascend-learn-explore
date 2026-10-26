@@ -1,0 +1,10 @@
+.mindie-tree-note{margin:8px;padding:9px;border:1px solid #34435a;border-radius:7px;background:#1b2636;color:#b3c3d9;font-size:10px;line-height:1.55}
+.mindie-next-experiment{display:grid;gap:8px;margin-top:18px;padding:16px;border:1px solid #d7e3f5;border-radius:12px;background:linear-gradient(145deg,#f6f9ff,#fff)}
+.mindie-next-experiment>span{color:#5577b2;font-size:12px;font-weight:600}
+.mindie-next-experiment h3{margin:0;color:#243954;font-size:17px}
+.mindie-next-experiment p{margin:0;color:#4d5f78;line-height:1.7}
+.mindie-next-experiment small{color:#78879b;line-height:1.6}
+.mindie-next-experiment button{justify-self:start;min-height:38px;margin-top:4px;padding:8px 12px;border:0;border-radius:8px;background:#2f66bd;color:#fff;font:inherit;cursor:pointer}
+.mindie-next-experiment button:hover{background:#24569f}
+.mindie-next-experiment button:focus-visible{outline:3px solid #8db6f4;outline-offset:2px}
+@media(max-width:600px){.mindie-info-dialog{padding:18px}.mindie-next-experiment{padding:13px}}

@@ -85,6 +85,10 @@
   window.addEventListener('resize',()=>{if(!mini.hidden)move(mini.offsetLeft,mini.offsetTop);closeDirectory();});
   const infoDialog=document.createElement('dialog');infoDialog.className='mindie-info-dialog';document.body.append(infoDialog);
   function info(heading,text){infoDialog.innerHTML=`<form method="dialog"><button aria-label="关闭">×</button></form><h2>${esc(heading)}</h2><p>${esc(text)}</p>`;infoDialog.showModal();}
+  function showExperimentCompletion(){
+    info('文本生成推理实验 · 阶段回顾',`已到达第 8 步，自核对 ${checks.length}/8 步。当前为页面演示，不代表真实设备运行或实验通过。`);
+    infoDialog.insertAdjacentHTML('beforeend','<section class="mindie-next-experiment"><span>下一实验</span><h3>视图生成推理快速入门</h3><p><b>实验名称：</b>基于 MindIE 的视图生成推理实践</p><p><b>实验描述：</b>把本次熟悉的模型准备、服务部署与接口调用思路，继续应用到视图生成推理。</p><small>课程目录中已列出该实验；对应课件、视频和操作手册尚未接入，具体步骤与命令暂不虚构。</small><button type="button" data-mindie-action="open-next-experiment">查看第二个实验</button></section>');
+  }
   api.loadFiles(Object.fromEntries(lab.steps.map(s=>[s.file,s.code])));
   const explorer=document.querySelector('.ide-explorer');const oldJump=$('fileVideoJump');
   explorer.querySelectorAll('.folder,[data-ide-file]').forEach(n=>n.remove());
@@ -112,6 +116,7 @@
     if(b.dataset.mindieStep!==undefined){selectStep(Number(b.dataset.mindieStep));return;}
     if(b.dataset.mindieMissing){closeDirectory();info(b.dataset.mindieMissing,'按上传课程目录保留入口。本次未提供该资源或认证规则，待正式内容接入，不伪造教学内容和通过结果。');return;}
     const action=b.dataset.mindieAction;
+    if(action==='open-next-experiment'){infoDialog.close();const trigger=document.querySelector('.lesson-directory-trigger');trigger?.click();const nextBranch=[...directory.querySelectorAll('.directory-unit')].find(branch=>branch.textContent.includes('视图生成'));if(nextBranch){nextBranch.open=true;nextBranch.scrollIntoView({block:'nearest'});}return;}
     if(action==='practice'){selectStep(step,true);if(b.hasAttribute('data-mindie-lab-entry')){api.showToast('已进入文本生成实验：按左侧八步操作，并对照手册核对结果');$('ideEditor').focus();}}
     if(action==='practice-video'){selectStep(0);api.setView('video');api.setVideoPerspective('teacher');}
     if(action==='board-teacher')boardPerspective(true);
@@ -122,7 +127,7 @@
     if(b.hasAttribute('data-mindie-close-directory'))closeDirectory();
     if(action==='step-note')info('手册依据与注意事项',lab.steps[step].note+' '+lab.steps[step].trouble);
     if(action==='check-step'){const id=lab.steps[step].id;checks=checks.includes(id)?checks.filter(x=>x!==id):[...checks,id];try{localStorage.setItem('mindie-integrated-checks',JSON.stringify(checks));}catch{}renderOutput();refreshDirectory();}
-    if(action==='next-step'){if(step<7)selectStep(step+1);else info('文本生成实验回顾',`已自核对 ${checks.length}/8 步。保存模型配置、Daemon start success! 服务日志与 /generate 返回的 text。自核对不等同于真实运行；完成理论与课程要求的实践后，再进入生成式AI通用知识微认证。`);}
+    if(action==='next-step'){if(step<7)selectStep(step+1);else showExperimentCompletion();}
     if(action==='practice'||action==='practice-video'){closeDirectory();outline.hidden=true;}
   });
   document.querySelectorAll('.learning-mode-tabs').forEach(nav=>nav.setAttribute('aria-label','学习环节'));
