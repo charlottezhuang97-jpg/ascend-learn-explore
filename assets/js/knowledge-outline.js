@@ -17,7 +17,8 @@
       modules:course.stages.map(stage => [stage.title, ...stage.units.flatMap(unit => Array.isArray(unit) ? [unit[1]] : unit.lessons.map(lesson => lesson[1]))])
     });
   });
-  window.createKnowledgeOutline = ({goal='我要学习算子开发', source='goal'}={}) => {
+  window.AscendKnowledgeCourses = courses;
+  window.createKnowledgeOutline = ({goal='我要学习算子开发', source='goal', workflow=false, initialPath='ascend', initialCourseId='ascend-0', onStart=null}={}) => {
     const root=document.createElement('section'); root.className='kmap';
     root.innerHTML=`<div class="kmap-heading"><div><span class="kmap-eyebrow">${source==='assessment'?'根据测一测结果推荐':'为你的学习目标推荐'}</span><h1 id="flowHeading">从知识图谱，找到学习的起点</h1><p class="kmap-description"></p></div><a class="kmap-back" href="index.html">返回首页 ↗</a></div><div class="kmap-bar"><div class="kmap-legend"><span class="kmap-dot"></span>当前推荐方向 <span class="kmap-pattern"></span>学习路径 ${icon}课程</div><div class="kmap-tools"><button data-action="focus">聚焦 CANN</button><button data-action="all">查看全图</button><button data-action="minus" aria-label="缩小">−</button><output aria-live="polite">100%</output><button data-action="plus" aria-label="放大">＋</button></div></div><div class="kmap-viewport" tabindex="0" aria-label="学习知识图谱，可滚动查看，使用缩放按钮调整大小"><div class="kmap-canvas"><svg class="kmap-lines" viewBox="0 0 1500 1540" aria-hidden="true"></svg></div></div><div class="kmap-footer"><span>点击学习路径展开课程 · 点击课程查看目录</span><span>蓝色虚线：共同调优方向　灰色实线：分类关联</span></div>`;
     root.querySelector('.kmap-description').textContent=`「${goal}」 · 先了解全貌，再沿学习路径逐步实践。`;
@@ -26,7 +27,7 @@
     const storageKey='ascend-knowledge-map-courses-v1';
     const defaults={ascend:['ascend-0','ascend-1','ascend-2','ascend-3']};
     let assignments=structuredClone(defaults), savedAssignments=structuredClone(defaults);
-    const expandedPath={cann:'ascend',gen:null,agent:null};
+    const expandedPath={cann:initialPath,gen:null,agent:null};
     const scenes = {
       cann: {
         label: 'CANN', height: 960,
@@ -72,17 +73,20 @@
     } catch (_) { /* Storage may be unavailable; editing still works in this page. */ }
     const editActions=document.createElement('div');
     editActions.className='kmap-edit-actions';
-    editActions.innerHTML='<button type="button" class="kmap-edit-toggle">编辑课程</button><button type="button" class="kmap-edit-cancel" hidden>取消</button>';
+    editActions.innerHTML='<button type="button" class="kmap-edit-toggle">编辑课程</button><button type="button" class="kmap-edit-cancel" hidden>取消</button><button type="button" class="kmap-start-learning" hidden>确认课程，安排学习 →</button>';
     editActions.append(root.querySelector('.kmap-back'));
     root.querySelector('.kmap-heading').append(editActions);
     const editToggle=editActions.querySelector('.kmap-edit-toggle');
     const cancelEdit=editActions.querySelector('.kmap-edit-cancel');
+    const startLearning=editActions.querySelector('.kmap-start-learning');
+    startLearning.hidden=!workflow;
     const editStatus=document.createElement('p');
     editStatus.className='kmap-edit-status';
     editStatus.setAttribute('role','status');
     root.querySelector('.kmap-heading').after(editStatus);
     function setEditing(value) {
       editing=value;
+      if(value)startLearning.hidden=true;
       root.classList.toggle('is-editing', value);
       editToggle.textContent=value?'完成编辑':'编辑课程';
       cancelEdit.hidden=!value;
@@ -96,8 +100,16 @@
       try { localStorage.setItem(storageKey, JSON.stringify(assignments)); } catch (_) { stored=false; }
       setEditing(false);
       editStatus.textContent=stored?'学习图谱已更新，课程调整已保存在当前浏览器。':'学习图谱已更新，本次调整仅在当前页面保留。';
+      startLearning.hidden=!workflow;
     };
-    cancelEdit.onclick=()=>{assignments=structuredClone(savedAssignments);setEditing(false);editStatus.textContent='已取消本次编辑。';};
+    cancelEdit.onclick=()=>{assignments=structuredClone(savedAssignments);setEditing(false);editStatus.textContent='已取消本次编辑。';startLearning.hidden=!workflow;};
+    startLearning.onclick=()=>{
+      const selectedIds=[...new Set([...(assignments[initialPath]||[]),...Object.values(assignments).flat()])];
+      const selected=selectedIds.map(courseById).filter(Boolean);
+      const course=selected.find(item=>item.id===initialCourseId)||selected[0];
+      if(!course){editStatus.textContent='请先从课程库添加至少一门课程，再安排学习计划。';return;}
+      if(typeof onStart==='function')onStart(course,selected);
+    };
 
     const workspace = document.createElement('div');
     workspace.className = 'kmap-workspace';
@@ -185,10 +197,13 @@
       lines.style.height=`${scenes[activeScene].height}px`;
       list.forEach((course,index)=>{
         const card=document.createElement('div');
-        card.className='kmap-node kmap-course';card.dataset.node=`course-${course.id}`;
-        card.style.cssText=`left:30px;top:${75+index*157}px;width:340px`;
+        card.className='kmap-node kmap-course'+(workflow&&course.id===initialCourseId?' is-recommended':'');card.dataset.node='course-'+course.id;
+        card.style.cssText='left:30px;top:'+(75+index*157)+'px;width:340px';
         const open=document.createElement('button');open.type='button';open.className='kmap-course-open';
-        open.innerHTML=`<span class="kmap-course-label">${icon}课程 ${String(index+1).padStart(2,'0')}</span><strong></strong><span class="kmap-course-link">查看课程 →</span>`;
+        open.innerHTML='<span class="kmap-course-label"></span><strong></strong><span class="kmap-course-link">查看课程 →</span>';
+        const courseLabel=open.querySelector('.kmap-course-label');
+        courseLabel.innerHTML=icon+'课程 '+String(index+1).padStart(2,'0');
+        if(workflow&&course.id===initialCourseId){const badge=document.createElement('b');badge.className='kmap-recommended-label';badge.textContent='建议起点';courseLabel.append(badge);}
         open.querySelector('strong').textContent=course.title;
         open.onclick=()=>openCourse(courses.indexOf(course),open);
         card.append(open);

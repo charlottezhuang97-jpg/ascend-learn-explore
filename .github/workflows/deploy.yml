@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, '知识地图']
   workflow_dispatch:
 
 permissions:
@@ -19,14 +19,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build curated Pages artifact
-        run: bash scripts/build-pages.sh
+        with:
+          ref: main
+          path: base-src
+      - name: Build curated Pages artifact from main
+        run: bash base-src/scripts/build-pages.sh
+      - uses: actions/checkout@v4
+        with:
+          ref: '知识地图'
+          path: preview-src
+      - name: Overlay knowledge-map preview
+        run: |
+          set -euo pipefail
+          dist="$GITHUB_WORKSPACE/base-src/.pages-dist"
+          preview="$dist/knowledge-map-preview"
+          mkdir -p "$preview"
+          for file in index.html course-preview.html learn.html ai-companion.html knowledge-map.html knowledge-map-v1.html knowledge-map-v2.html learning-plan.html catalog.html page-registry.json; do
+            if [ -f "preview-src/$file" ]; then cp "preview-src/$file" "$preview/$file"; fi
+          done
+          cp -R preview-src/assets "$preview/assets"
+          cp -R preview-src/design-system "$preview/design-system"
+          touch "$preview/.nojekyll"
+          echo "published preview at /knowledge-map-preview/"
       - uses: actions/configure-pages@v5
         with:
           enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .pages-dist
+          path: base-src/.pages-dist
 
   deploy:
     needs: build

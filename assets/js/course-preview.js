@@ -83,7 +83,8 @@ setText('[data-proof-intro]',course.proofIntro);
 
 const escapeHtml = value => String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const meta=document.querySelector('.preview-meta');
-if(meta)meta.replaceChildren(...[`${course.stages.length} 课程模块`,...course.meta].map(value=>{const chip=document.createElement('span');chip.textContent=value;return chip;}));
+const selectedGoal=new URLSearchParams(location.search).get('goal');
+if(meta)meta.replaceChildren(...[...(selectedGoal?[`本次目标：${selectedGoal}`]:[]),`${course.stages.length} 课程模块`,...course.meta].map(value=>{const chip=document.createElement('span');chip.textContent=value;return chip;}));
 
 const nav=document.querySelector('#stageNav');
 const route=document.querySelector('#courseRoute');

@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>知识地图 · 昇腾学习</title><link rel="stylesheet" href="versions/knowledge-map-v1/source/assets/css/knowledge-outline.css?v=deadline-calendar-1"><link rel="stylesheet" href="versions/knowledge-map-v1/source/assets/css/learning-plan.css?v=deadline-calendar-1"></head><body class="knowledge-page"><header><img src="assets/images/logo.png" alt="Ascend"><span>学习方案探索</span></header><main id="knowledgeMap"></main><script src="versions/knowledge-map-v1/source/assets/js/course-preview.js?v=course-modules-8"></script><script src="versions/knowledge-map-v1/source/assets/js/knowledge-outline.js?v=deadline-calendar-1"></script><script src="versions/knowledge-map-v1/source/assets/js/learning-plan.js?v=deadline-calendar-1"></script><script>
+const query=new URLSearchParams(location.search);
+const goal=query.get('goal')||'我要学习算子开发';
+const main=document.querySelector('main');
+function showMap(){
+  main.querySelector('.study-plan')?.destroy?.();
+  main.replaceChildren(window.createKnowledgeOutline({goal,source:query.get('source')||'goal',workflow:true,onStart:(course,courses)=>{
+    main.querySelector('.kmap')?.destroy?.();
+    main.replaceChildren(window.createLearningPlan({courses:courses||[course],goal,onBack:showMap}));
+  }}));
+}
+showMap();
+</script><nav aria-label="知识地图版本" style="position:fixed;bottom:16px;right:20px;z-index:50;display:flex;align-items:center;gap:16px;padding:10px 18px;border:1px solid #dce5f3;border-radius:12px;background:white;box-shadow:0 4px 20px #18335414;font:14px sans-serif"><span>V1 · 原知识地图</span><a href="knowledge-map.html?version=v2" style="color:#176bfa">切换新版 V2 →</a></nav></body></html>

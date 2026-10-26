@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>知识地图 · 昇腾学习</title><link rel="stylesheet" href="assets/css/knowledge-outline.css?v=deadline-calendar-1"><link rel="stylesheet" href="assets/css/learning-plan.css?v=deadline-calendar-1"></head><body class="knowledge-page"><header><img src="assets/images/logo.png" alt="Ascend"><span>学习方案探索</span></header><main id="knowledgeMap"></main><script src="assets/js/course-preview.js?v=course-modules-8"></script><script src="assets/js/knowledge-outline.js?v=deadline-calendar-1"></script><script src="assets/js/learning-plan.js?v=deadline-calendar-1"></script><script>
+const query=new URLSearchParams(location.search);
+const goal=query.get('goal')||'我要学习算子开发';
+const main=document.querySelector('main');
+function showMap(){
+  main.querySelector('.study-plan')?.destroy?.();
+  main.replaceChildren(window.createKnowledgeOutline({goal,source:query.get('source')||'goal',workflow:true,onStart:(course,courses)=>{
+    main.querySelector('.kmap')?.destroy?.();
+    main.replaceChildren(window.createLearningPlan({courses:courses||[course],goal,onBack:showMap}));
+  }}));
+}
+showMap();
+</script></body></html>

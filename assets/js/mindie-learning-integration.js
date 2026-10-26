@@ -7,7 +7,7 @@
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   document.body.classList.add('mindie-course');
   document.title='生成式AI通用知识 · 白板与 IDE 学习';
-  $('courseName').textContent='生成式AI通用知识';
+  if($('courseName'))$('courseName').textContent='生成式AI通用知识';
   let step=0,page=0,boardTeacher=false;
   let boardTypingGeneration=0;
   function revealBoardPoints(canvas){
@@ -136,6 +136,6 @@
   window.MindIEStudyData={course:'生成式AI通用知识',chapter:'基于MindIE的文本生成推理实践',outline:[['理论篇','生成式AI概述、昇腾AI基础软硬件平台、应用案例与展望。'],['实践篇','文本生成与视图生成推理快速入门；当前已提供文本生成手册。'],['微认证','理论与实验完成后衔接生成式AI通用知识微认证。']],points:lab.steps.map((s,i)=>[s.title,s.goal,`节点${i+1}`,'video',4]),transcript:[],cards:[['modelWeightPath 应使用哪个路径？','服务在容器内运行，使用已挂载的 /home/weights/，而不是主机目录。'],['如何确认服务启动？','查看真实服务日志中的 Daemon start success!，再发送接口请求。']]};
   // Do not manufacture transcript timing when only a Word manual is supplied.
   document.querySelectorAll('[data-assist-resource="quiz"] small').forEach(n=>n.textContent='检验容器路径与服务调用的理解');
-  selectStep(0);api.renderBoardPage(0);$('modeOverlay').hidden=true;
-  if(params.get('view')==='video'){api.setView('video');api.setVideoPerspective('teacher');}else{api.setView('board');boardPerspective(false);}
+  selectStep(0);api.renderBoardPage(0);
+  if(params.get('view')==='board'){api.setView('board');boardPerspective(false);}else{api.setView('video');api.setVideoPerspective('teacher');}
 })();

@@ -3,7 +3,8 @@
   const isMindIECourse = params.get('course') === 'mindie';
   const isTrainingCourse = params.get('course') === 'training';
   const courseName = params.get('title') || (isTrainingCourse ? '大模型分布式训练' : '昇腾学习课程');
-  document.getElementById('courseName').textContent = courseName;
+  const courseNameNode = document.getElementById('courseName');
+  if (courseNameNode) courseNameNode.textContent = courseName;
   document.getElementById('lessonTitle').textContent = '昇腾处理器的逻辑结构拆解';
   document.getElementById('videoLessonTitle').textContent = '昇腾处理器的逻辑结构拆解';
   document.title = `${courseName} · 学习`;
@@ -23,6 +24,10 @@
     document.querySelector('#chatPanel .companion-label').textContent = '✎ 数据并行';
     document.querySelectorAll('#chatPanel>p')[1].textContent = '这节课会沿着一个训练批次，观察四张 NPU 如何独立计算局部梯度，再通过 AllReduce 保持模型参数一致。';
     document.querySelectorAll('#chatPanel>p')[2].textContent = '你可以切换图解、GIF 动态演示和思维导图；每种形式都定位到视频 06:20–09:40 和分布式并行指南 §3.2。';
+  }
+  if (params.get('lesson')) {
+    document.getElementById('lessonTitle').textContent = params.get('lesson');
+    document.getElementById('videoLessonTitle').textContent = params.get('lesson');
   }
   const typingTargets = ['boardHeading', 'boardDescription', 'boardSubtitle'].map(id => document.getElementById(id));
   const typingTexts = typingTargets.map(target => target.textContent);
@@ -50,23 +55,6 @@
       }
     })();
   }
-  let selectedMode = 'board';
-  const overlay = document.getElementById('modeOverlay');
-  const enter = document.getElementById('enterLearning');
-  document.querySelectorAll('.mode-option').forEach(button => button.addEventListener('click', () => {
-    selectedMode = button.dataset.mode;
-    document.querySelectorAll('.mode-option').forEach(item => {
-      const active = item === button;
-      item.classList.toggle('selected', active);
-      item.setAttribute('aria-checked', String(active));
-    });
-    enter.textContent = selectedMode === 'board' ? '进入白板学习' : '进入视频学习';
-  }));
-  enter.addEventListener('click', () => {
-    overlay.hidden = true;
-    setView(selectedMode);
-  });
-
   const boardRoom = document.getElementById('learningRoom');
   const videoRoom = document.getElementById('videoWorkspace');
   const referenceDrawer = document.getElementById('referenceDrawer');
@@ -314,10 +302,9 @@ if __name__ == '__main__':
     askIdeCompanion(question);
     input.value = '';
   });
-  if (isTrainingCourse) {
-    overlay.hidden = true;
-    setView('video');
-  }
+  // Learning plans hand the learner straight to the video lesson. Keep the
+  // board available through the in-workspace switch for later exploration.
+  setView(params.get('view') === 'board' ? 'board' : 'video');
   function seekVideo(time) {
     if(isMindIECourse){document.dispatchEvent(new CustomEvent('mindie:video-node',{detail:{time}}));return;}
     const keepIdePerspective = videoRoom.classList.contains('ide-mode') && !videoRoom.hidden;

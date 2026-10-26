@@ -7,7 +7,18 @@
     {title:'认识昇腾计算体系',units:[{number:1,title:'昇腾处理器架构',lessons:[['课程','昇腾处理器的逻辑结构拆解','18:40'],['课程','Cube、Vector 与 Scalar 的协作','22 分钟'],['实践','完成 CANN 环境检查','26 分钟']]},{number:2,title:'CANN 软件栈',lessons:[['课程','训练任务的执行链路','24 分钟'],['实践','追踪一次任务的下发路径','32 分钟']]}]},
     {title:'理解计算与数据流',units:[{number:3,title:'计算与内存',lessons:[['课程','片上内存与数据搬运','26 分钟'],['课程','流水执行与计算单元','28 分钟'],['实践','观察算子输入与输出','30 分钟']]}]}
   ]};
-  const course=catalog[key]||legacy;
+  let planned=null;
+  if(params.get('planCourse')){
+    try {
+      const stored=JSON.parse(localStorage.getItem('ascend-learning-calendar-v1')||'null');
+      planned=stored?.courses?.find(item=>item.id===params.get('planCourse')&&Array.isArray(item.modules));
+    } catch (_) {}
+    if(!planned&&params.get('lesson'))planned={title:params.get('title')||'当前课程',modules:[['当前学习内容',params.get('lesson')]]};
+  }
+  const course=planned?{
+    title:planned.title,
+    stages:planned.modules.map((module,index)=>({title:module[0],units:[{number:index+1,title:module[0],lessons:module.slice(1).map(title=>['课程',title,'25 分钟'])}]}))
+  }:catalog[key]||legacy;
   const escape=text=>String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const toSeconds=text=>text.includes(':')?text.split(':').reduce((total,n)=>total*60+Number(n),0):parseInt(text,10)*60;
   const formatTime=seconds=>`${Math.floor(seconds/60).toString().padStart(2,'0')}:${(seconds%60).toString().padStart(2,'0')}`;
@@ -19,10 +30,10 @@
   })}));
   const lessons=stages.flatMap(stage=>stage.units.flatMap(unit=>unit.lessons));
   const currentTitle=document.getElementById('videoLessonTitle').textContent;
-  const requested=lessons.find(lesson=>lesson.id===params.get('unit'));
+  const requested=lessons.find(lesson=>lesson.id===params.get('unit'))||lessons.find(lesson=>lesson.title===params.get('lesson'));
   const current=requested||lessons.find(lesson=>lesson.title===currentTitle)||lessons[0];
   // The existing preview video is 18:40 unless a specific lesson was selected.
-  if(!requested)current.seconds=1120;
+  if(!requested&&!planned)current.seconds=1120;
   document.querySelectorAll('.lesson-directory-trigger').forEach(button=>{
     button.querySelector('strong').textContent=current.title;
     button.querySelector('span').textContent=`课节 ${current.number}`;
@@ -32,7 +43,7 @@
   document.querySelector('.timeline-duration').textContent=formatTime(current.seconds);
   document.getElementById('videoCurrentTime').textContent=`00:00 / ${formatTime(current.seconds)}`;
   const videoMeta=document.querySelector('.video-meta>span');videoMeta.firstChild.textContent=`课节 ${current.number} · `;
-  const storageKey=`ascend-lesson-progress:${key}`;
+  const storageKey='ascend-lesson-progress:'+(params.get('planCourse')||key);
   let progress={};try{progress=JSON.parse(localStorage.getItem(storageKey)||'{}')||{};}catch{}
   const getProgress=lesson=>Math.min(100,Math.max(0,Math.round(Number(progress[lesson.id])||0)));
   const hasPractice=lesson=>lesson.kind==='实践'||['数据并行与梯度同步','昇腾处理器的逻辑结构拆解'].includes(lesson.title);
@@ -41,7 +52,7 @@
   panel.innerHTML=`<header class="lesson-directory-head"><div><span>课程目录</span><h2>${escape(course.title)}</h2></div><button type="button" data-directory-close aria-label="关闭课程目录">×</button></header><div class="lesson-directory-location">当前位置：模块 ${current.stage+1} / 单元 ${current.unit} / 课节 ${current.number}<button type="button" data-directory-current>定位当前课节</button></div><div class="lesson-directory-columns"><span>模块 / 单元 / 课节</span><span>进度</span><span>实践</span><span>时长</span></div><div class="lesson-directory-scroll">${stages.map(stage=>{
     const all=stage.units.flatMap(unit=>unit.lessons);
     return `<details class="directory-stage" ${stage.index===current.stage?'open':''}><summary><span class="directory-name">模块 ${stage.index+1} · ${escape(stage.title)}</span><span class="directory-progress" data-directory-progress="${all.map(l=>l.id).join(',')}">${aggregate(all)}%</span><span class="directory-practice">${all.filter(hasPractice).length} 项</span><time>${Math.round(all.reduce((n,l)=>n+l.seconds,0)/60)} 分</time></summary><div class="directory-stage-content">${stage.units.map(unit=>`<details class="directory-unit" ${unit.number===current.unit?'open':''}><summary><span class="directory-name">单元 ${unit.number} · ${escape(unit.title)}</span><span class="directory-progress" data-directory-progress="${unit.lessons.map(l=>l.id).join(',')}">${aggregate(unit.lessons)}%</span><span class="directory-practice">${unit.lessons.filter(hasPractice).length} 项</span><time>${Math.round(unit.lessons.reduce((n,l)=>n+l.seconds,0)/60)} 分</time></summary><ol>${unit.lessons.map(lesson=>{
-      const url=new URL(location.href);url.searchParams.set('unit',lesson.id);url.searchParams.delete('v');url.searchParams.set('view',room.hidden?'board':'video');
+      const url=new URL(location.href);url.searchParams.set('unit',lesson.id);url.searchParams.delete('lesson');url.searchParams.delete('v');url.searchParams.set('view',room.hidden?'board':'video');
       return `<li><a href="${escape(url.pathname+url.search)}" class="directory-lesson ${lesson.id===current.id?'is-current':''}" ${lesson.id===current.id?'aria-current="page"':''} data-directory-lesson="${lesson.id}"><span class="directory-lesson-title"><span class="directory-state" aria-hidden="true">${lesson.id===current.id?'▶':getProgress(lesson)===100?'✓':'○'}</span><span>课节 ${lesson.number} · ${escape(lesson.title)}${lesson.id===current.id?'<b>当前</b>':''}</span></span><span class="directory-progress" data-directory-progress="${lesson.id}">${getProgress(lesson)}%</span><span class="directory-practice ${hasPractice(lesson)?'has-practice':''}">${hasPractice(lesson)?'含实践':'无实践'}</span><time>${formatTime(lesson.seconds)}</time></a></li>`;
     }).join('')}</ol></details>`).join('')}</div></details>`;
   }).join('')}</div><footer class="lesson-directory-footer">${stages.length} 个模块 · ${unitCounter} 个单元 · ${lessons.length} 个课节<span>进度按本机学习位置记录</span></footer>`;
@@ -65,5 +76,5 @@
     progress[current.id]=Math.max(getProgress(current),Math.round(event.detail.seconds/current.seconds*100));try{localStorage.setItem(storageKey,JSON.stringify(progress));}catch{}
     panel.querySelectorAll('[data-directory-progress]').forEach(node=>{const ids=node.dataset.directoryProgress.split(',');node.textContent=`${aggregate(lessons.filter(l=>ids.includes(l.id)))}%`;});
   });
-  if(params.get('view')){document.getElementById('modeOverlay').hidden=true;document.querySelector(`.learning-mode-tabs [data-view="${params.get('view')==='board'?'board':'video'}"]`)?.click();}
+  if(params.get('view'))document.querySelector(`.learning-mode-tabs [data-view="${params.get('view')==='board'?'board':'video'}"]`)?.click();
 })();

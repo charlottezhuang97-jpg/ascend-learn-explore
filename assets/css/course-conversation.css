@@ -128,3 +128,27 @@
   .course-flow.conversation.course-preview-expanded #coursePreviewStep .compose-grid{height:auto;grid-template-columns:1fr;overflow:visible}
   .course-flow.conversation.course-preview-expanded #coursePreviewStep .paper-area,.course-flow.conversation.course-preview-expanded #coursePreviewStep .course-preview{height:min(560px,58dvh)}
 }
+
+/* Certification search flow: show the interactive map first, then one goal choice. */
+.course-flow.certification-search-flow .flow-main{width:100%;max-width:none;margin:0;padding:18px 24px 56px}
+.course-flow.certification-search-flow .flow-goal{display:none}
+.course-flow.certification-search-flow #flowStage{max-width:1680px;margin:0 auto}
+.course-flow.certification-search-flow .flow-note{display:none}
+.certification-map-frame{display:block;width:100%;height:1200px;border:0;border-radius:16px;background:#f5f7fb}
+.certification-goal-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:24px 0}
+.certification-goal-option{min-height:106px;padding:20px 22px;text-align:left;display:flex;flex-direction:column;justify-content:center;gap:8px;border:1px solid #dce5f2;border-radius:14px;background:#fff;color:#17263e;box-shadow:0 2px 8px #17263e08}
+.certification-goal-option:hover,.certification-goal-option:focus-visible{border-color:#2e70f5;outline:2px solid #dce9ff}
+.certification-goal-option[aria-pressed="true"]{border-color:#176bfa;background:#f2f7ff;box-shadow:0 0 0 1px #176bfa22}
+.certification-goal-option strong{font-size:16px}.certification-goal-option span{font-size:14px;line-height:1.55;color:#687b95}
+.certification-goal-submit{display:block;margin-left:auto;min-height:46px}
+.certification-goal-submit:disabled{border-color:#dfe5ef;background:#f2f4f8;color:#98a4b8;cursor:not-allowed}
+@media(max-width:700px){.course-flow.certification-search-flow .flow-main{padding:12px 10px 36px}.certification-map-frame{height:1100px;border-radius:10px}.certification-goal-options{grid-template-columns:1fr;gap:10px;margin:18px 0}.certification-goal-option{min-height:88px;padding:15px}}
+
+/* 推理认证：先显示搜索气泡，再用单题选择认证级别 */
+.cert-search-user-query{width:fit-content;max-width:min(720px,86%);margin:4px 0 28px auto;padding:15px 22px;border-radius:24px 24px 8px 24px;background:#f0f2f6;color:#26354e;font-size:20px;line-height:1.5;font-weight:500}
+.certification-search-flow .flow-search-step{margin-bottom:26px}
+.cert-level-options{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0 0}
+.cert-level-option{min-height:116px}
+.cert-level-option strong{font-size:18px}
+.cert-level-option span{font-size:14px}
+@media(max-width:700px){.cert-search-user-query{font-size:16px;margin-bottom:20px;padding:12px 16px}.cert-level-options{grid-template-columns:1fr}.cert-level-option{min-height:82px}}
