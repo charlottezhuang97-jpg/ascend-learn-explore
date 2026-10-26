@@ -25,20 +25,38 @@
   try{const v=JSON.parse(localStorage.getItem(selectionKey));if(Array.isArray(v))selected=courses.filter(c=>v.includes(c.id)).map(c=>c.id);}catch{}
   const dialog=$('#detailsDialog');
   document.querySelectorAll('[data-domain]').forEach(b=>{const id=b.dataset.domain;b.innerHTML=icon(id==='cann'?'chip':id==='gen'?'brain':'robot')+'<span>'+({cann:'CANN',gen:'生成式AI',agent:'智能体'})[id]+'</span>';b.addEventListener('click',()=>setDomain(id));});
-  function courseCard(c){const directory=c.modules.map((m,i)=>'<span class="directory-preview-row"><small>0'+(i+1)+'</small><span><b>'+m[0]+'</b><em>'+m.slice(1).join(' · ')+'</em></span></span>').join('');return '<article class="course-card" data-course="'+c.id+'"><header class="course-heading"><span class="icon-tile">'+icon('book')+'</span><h4>'+c.title+'</h4></header><button type="button" class="content-module directory-module" data-directory="'+c.id+'" aria-label="查看'+c.title+'的全部目录">'+icon('list')+'<span class="module-text"><span class="module-line"><strong>课程目录</strong><span class="module-action">查看全部目录 →</span></span><span class="module-preview-list">'+directory+'</span></span></button><button type="button" class="content-module case" data-case="'+c.id+'" aria-label="查看案例：'+c.caseTitle+'">'+icon('flask')+'<span class="module-text"><span class="module-line"><strong>案例实践</strong><span class="chevron" aria-hidden="true">›</span></span><span class="module-summary">'+c.caseTitle+'</span></span></button><footer class="course-foot"><span class="duration">'+icon('clock')+'时长：20min</span><button type="button" class="text-button" data-course-detail="'+c.id+'">查看课程 →</button></footer></article>'; }
+  function courseContentCard(c){
+    const directory=c.modules.map((m,i)=>'<span class="directory-preview-row"><small>0'+(i+1)+'</small><span><b>'+escape(m[0])+'</b><em>'+m.slice(1).map(escape).join(' · ')+'</em></span></span>').join('');
+    return '<div class="course-card course-content-card" data-course="'+c.id+'" role="group" aria-labelledby="course-title-'+c.id+'"><button type="button" class="content-module directory-module" data-directory="'+c.id+'" aria-label="查看'+escape(c.title)+'的全部目录">'+icon('list')+'<span class="module-text"><span class="module-line"><strong>课程目录</strong><span class="module-action">查看全部目录 →</span></span><span class="module-preview-list">'+directory+'</span></span></button><button type="button" class="content-module case" data-case="'+c.id+'" aria-label="查看案例：'+escape(c.caseTitle)+'">'+icon('flask')+'<span class="module-text"><span class="module-line"><strong>案例实践</strong><span class="chevron" aria-hidden="true">›</span></span><span class="module-summary">'+escape(c.caseTitle)+'</span></span></button><footer class="course-foot"><span class="duration">'+icon('clock')+'时长：20min</span><button type="button" class="text-button" data-course-detail="'+c.id+'">查看课程 →</button></footer></div>';
+  }
+  function courseBranch(c,index){
+    const side=index%2===0?'left':'right';
+    return '<article class="course-branch side-'+side+'" data-course-branch="'+c.id+'" aria-labelledby="course-title-'+c.id+'"><svg class="stage-lines course-branch-lines" aria-hidden="true"></svg><h4 class="course-node" id="course-title-'+c.id+'"><button type="button" data-course-detail="'+c.id+'" aria-label="查看课程：'+escape(c.title)+'"><span class="course-node-kind">'+icon('book')+'课程 0'+(index+1)+'</span><span class="course-node-title">'+escape(c.title)+'</span></button></h4>'+courseContentCard(c)+'</article>';
+  }
+  function courseStage(shown){
+    return '<section class="route-stage course-stage" aria-labelledby="stage1"><header class="stage-head"><span class="stage-count">01</span><h3 id="stage1">理论学习</h3><p>课程目录与案例</p></header><div class="course-tree">'+(shown.length?shown.map(courseBranch).join(''):'<p class="empty-courses">尚未选择课程。点击“编辑路径”添加课程。</p>')+'</div></section>';
+  }
   function topicCard(t,i){return '<button class="topic-card" type="button" data-topic="'+i+'"><span class="topic-head">'+icon('list')+'<strong>'+t.title+'</strong><span class="percent">'+t.percent+'%</span></span><p>'+t.summary.join('<br>')+'</p></button>';}
   function practiceCard(p,i){return '<button class="practice-card" type="button" data-practice="'+i+'"><span class="topic-head">'+icon('terminal')+'<strong>'+p.title+'</strong></span><p>'+p.goals.join('<br>')+'</p></button>';}
   function stage(n,title,subtitle,left,right,cls=''){return '<section class="route-stage '+cls+'" aria-labelledby="stage'+n+'"><header class="stage-head"><span class="stage-count">0'+n+'</span><h3 id="stage'+n+'">'+title+'</h3><p>'+subtitle+'</p></header><div class="stage-grid"><svg class="stage-lines" aria-hidden="true"></svg><div class="stage-column left">'+left+'</div><div class="spine-node"><b>0'+n+'</b><strong>'+title+'</strong><small>'+subtitle+'</small></div><div class="stage-column right">'+right+'</div></div></section>';}
   function renderRoute(){
     resizeObserver?.disconnect();
-    const shown=courses.filter(c=>selected.includes(c.id)), left=shown.filter((c,i)=>i%2===0),right=shown.filter((c,i)=>i%2===1);
-    $('#route').innerHTML=stage(1,'理论学习','课程目录与案例',left.map(courseCard).join('')||'<p class="empty-courses">尚未选择课程。点击“编辑学习内容”添加课程。</p>',right.map(courseCard).join(''),'course-stage')+stage(2,'理论考试','按知识领域检验所学',[0,2,4].map(i=>topicCard(topics[i],i)).join(''),[1,3].map(i=>topicCard(topics[i],i)).join(''),'theory-stage')+stage(3,'编程考试','线下预约考试',practiceCard(practices[0],0),practiceCard(practices[1],1),'practice-stage')+'<section class="route-stage certificate-stage" aria-labelledby="stage4"><header class="stage-head"><span class="stage-count">04</span><h3 id="stage4">获取证书</h3><p>完成考试后获取认证</p></header><div class="certificate-card">'+icon('certificate')+'<div><h4>推理开发者认证（'+certificationLevel+'）</h4><p>完成学习与考试，检验推理开发能力</p><button type="button" data-certificate>查看证书 →</button></div></div></section>';
+    const shown=courses.filter(c=>selected.includes(c.id));
+    $('#route').innerHTML=courseStage(shown)+stage(2,'理论考试','按知识领域检验所学',[0,2,4].map(i=>topicCard(topics[i],i)).join(''),[1,3].map(i=>topicCard(topics[i],i)).join(''),'theory-stage')+stage(3,'编程考试','线下预约考试',practiceCard(practices[0],0),practiceCard(practices[1],1),'practice-stage')+'<section class="route-stage certificate-stage" aria-labelledby="stage4"><header class="stage-head"><span class="stage-count">04</span><h3 id="stage4">获取证书</h3><p>完成考试后获取认证</p></header><div class="certificate-card">'+icon('certificate')+'<div><h4>推理开发者认证（'+certificationLevel+'）</h4><p>完成学习与考试，检验推理开发能力</p><button type="button" data-certificate>查看证书 →</button></div></div></section>';
     $('#planAll').disabled=!shown.length;
     resizeObserver=new ResizeObserver(()=>requestAnimationFrame(drawLines));
-    document.querySelectorAll('.stage-grid').forEach(e=>resizeObserver.observe(e));
+    document.querySelectorAll('.stage-grid,.course-branch').forEach(e=>resizeObserver.observe(e));
     requestAnimationFrame(drawLines);
   }
   function drawLines(){
+    document.querySelectorAll('.course-branch').forEach(branch=>{
+      const svg=branch.querySelector('.course-branch-lines');
+      if(innerWidth<=700){svg.replaceChildren();return;}
+      const bounds=branch.getBoundingClientRect(),node=branch.querySelector('.course-node').getBoundingClientRect(),card=branch.querySelector('.course-content-card').getBoundingClientRect();
+      const left=branch.classList.contains('side-left'),x1=(left?node.left:node.right)-bounds.left,y1=node.top-bounds.top+node.height/2,x2=(left?card.right:card.left)-bounds.left,y2=card.top-bounds.top+card.height/2,mid=(x1+x2)/2;
+      svg.setAttribute('viewBox','0 0 '+bounds.width+' '+bounds.height);
+      svg.innerHTML='<path d="M '+x1+' '+y1+' C '+mid+' '+y1+', '+mid+' '+y2+', '+x2+' '+y2+'"/><circle cx="'+x1+'" cy="'+y1+'" r="3"/><circle cx="'+x2+'" cy="'+y2+'" r="3"/>';
+    });
     document.querySelectorAll('.stage-grid').forEach(grid=>{
       const svg=grid.querySelector('.stage-lines');if(!svg||innerWidth<=700)return;
       const g=grid.getBoundingClientRect(),n=grid.querySelector('.spine-node').getBoundingClientRect();

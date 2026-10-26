@@ -33,3 +33,31 @@ html.cert-map-search-entry .cert-title-row h2{font-size:24px;text-align:left}
 html.cert-map-search-entry .intro-actions{margin-top:10px}
 html.cert-map-search-entry .intro-actions .primary{min-height:38px;padding:6px 14px;font-size:13px}
 @media(max-width:700px){.cert-title-row{justify-content:flex-start;gap:10px}.cert-title-row h2{font-size:22px}.cert-header-actions{width:100%;justify-content:flex-start;flex-wrap:wrap}html.cert-map-search-entry .cert-title-row{align-items:flex-start;flex-direction:column}html.cert-map-search-entry .cert-title-row h2{font-size:20px}.directory-preview-row{font-size:11px}.directory-preview-row b{font-size:11px}}
+
+/* 认证课程以主干标题节点关联左右两侧的目录与实践。 */
+.course-tree{position:relative;isolation:isolate;display:grid;gap:24px;padding:0 0 8px}
+.course-branch{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 224px minmax(0,1fr);column-gap:24px;align-items:center;min-width:0}
+.course-node{grid-column:2;grid-row:1;margin:0;position:relative;z-index:2;min-width:0;font-size:16px}
+.course-node>button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:100%;min-height:132px;padding:20px 16px;border:1px solid var(--blue);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);text-align:center;color:var(--ink);transition:background .15s,border-color .15s}
+.course-node>button:hover{background:var(--soft)}
+.course-node-kind{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--blue);font-size:12px;font-weight:500;line-height:1.5}
+.course-node-kind .icon{width:20px;height:20px}
+.course-node-title{font-size:15px;line-height:1.65;font-weight:650;overflow-wrap:anywhere;text-wrap:balance}
+.course-content-card{grid-row:1;z-index:2;min-width:0}
+.course-branch.side-left .course-content-card{grid-column:1}
+.course-branch.side-right .course-content-card{grid-column:3}
+.course-content-card .content-module:first-child{margin-top:0}
+.course-content-card .content-module:last-of-type{margin-bottom:0}
+.course-content-card .module-line{align-items:center;flex-wrap:wrap;row-gap:4px}
+.course-content-card .module-preview-list{gap:10px;margin-top:12px}
+.course-content-card .directory-preview-row{font-size:13px;line-height:1.6}
+.course-content-card .directory-preview-row b{font-size:13px}
+.course-content-card .module-action{min-height:32px;display:inline-flex;align-items:center}
+.course-content-card .course-foot .text-button{min-height:40px}
+.course-content-card .directory-module{padding:14px}
+.course-content-card .case{padding:14px}
+.course-content-card .course-foot{margin-top:12px;padding-top:8px}
+.course-content-card .case .module-summary{display:block;overflow:visible;-webkit-line-clamp:unset}
+@media(min-width:1500px){.course-branch{grid-template-columns:minmax(0,1fr) 248px minmax(0,1fr);column-gap:28px}.course-node-title{font-size:16px}}
+@media(min-width:701px) and (max-width:1000px){.course-branch{grid-template-columns:minmax(0,1fr) 190px minmax(0,1fr);column-gap:18px}.course-node>button{padding:16px 12px}.course-node-title{font-size:14px}.course-content-card{padding:10px}.course-content-card .content-module{padding:10px;gap:8px}.course-content-card .directory-preview-row{grid-template-columns:20px minmax(0,1fr);gap:5px;font-size:12px}.course-content-card .directory-preview-row b{font-size:12px}}
+@media(max-width:700px){.course-tree{gap:24px;padding-bottom:0}.course-branch{display:flex;flex-direction:column;align-items:stretch;gap:10px}.course-node{width:100%}.course-node>button{min-height:0;align-items:flex-start;gap:7px;padding:14px 16px;text-align:left}.course-node-kind{justify-content:flex-start}.course-node-title{font-size:15px}.course-content-card{width:100%}.course-content-card .module-preview-list{gap:10px}.course-content-card .directory-preview-row,.course-content-card .directory-preview-row b{font-size:13px}.course-content-card .module-line{gap:6px}.course-content-card .module-action{font-size:12px}.course-branch-lines{display:none}}

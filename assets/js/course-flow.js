@@ -469,7 +469,7 @@
     const turn = assistantTurn('certificationMapTurn', '结合您的目标，已为你生成专属的学习路径', '推理开发者认证（' + certificationLevel + '）', '先浏览理论学习、课程与案例，再查看对应考试内容；你可以编辑路径，也可以打开完整知识图谱。');
     const frame = element('iframe', 'certification-map-frame');
     frame.title = '推理开发者认证知识地图';
-    frame.src = 'knowledge-map.html?version=v2&flow=search&level=' + encodeURIComponent(certificationLevel);
+    frame.src = 'knowledge-map.html?version=v2&flow=search&v=cert-course-spine-3&level=' + encodeURIComponent(certificationLevel);
     frame.loading = 'eager';
     frame.addEventListener('load', () => { try { frame.contentWindow.postMessage({type:'cert-map:measure'}, location.origin); } catch {} });
     turn.body.append(frame);
