@@ -31,7 +31,7 @@
     if(s.stale){const step=template.content.querySelector('.env-vertical-step.current');step?.classList.remove('pass','fail');const icon=step?.querySelector('.env-step-state');if(icon){icon.className='env-step-state active';icon.setAttribute('aria-label','代码已修改，待运行');icon.setAttribute('title','代码已修改，待运行');}}
     return template.innerHTML;
   }
-  window.MindIEDevelopmentAssist={render};
+  window.MindIEDevelopmentAssist={render,loadErrorExample};
   function upgrade(){if(upgrading)return;upgrading=true;try{for(const id of [...document.querySelectorAll('[data-uac-inference-id]')].map(e=>e.dataset.uacInferenceId)){const root=find(id);if(root?.dataset.uacDevelopmentVersion==='1')continue;const s=root&&read(root);if(s)update(root,s);}}finally{upgrading=false;}}
   document.addEventListener('uac:render',upgrade);upgrade();
   function offerAnalysis(){
@@ -54,6 +54,13 @@
     mark.style.top=top+'px';mark.style.height=height+'px';mark.hidden=top<0||top>editor.clientHeight;
   }
   function setCode(code){const before=editor.value;editor.value=code;editor.dispatchEvent(new Event('input',{bubbles:true}));undo={file:filename(),before,after:code};refreshBar();}
+  function loadErrorExample(){
+    locate();setCode(reference().replace(/("max_tokens"\s*:\s*)500/,'$1"500"'));
+    bar.querySelector('select').value='auto';
+    bar.querySelector('small').textContent='错误示例已载入：max_tokens 被写成字符串。点击“运行”。';
+    editor.focus({preventScroll:true});
+    ide.showToast('第 7 步错误示例已载入；点击 IDE“运行”查看结果');
+  }
   function errorLine(code){const lines=code.split('\n');let index=lines.findIndex(l=>/"max_tokens"\s*:\s*"/.test(l));if(index<0)index=lines.findIndex(l=>/https?:/.test(l));return Math.max(1,index+1);}
   function run(){
     const previous=latest;
@@ -70,15 +77,15 @@
     try{sessionStorage.setItem(storageKey,JSON.stringify(latest));}catch{}
     paused=false;popup.hidden=true;
     window.MindIETerminal.write({id:latest.id,host:'A',command:code,status:result.passed?'success':'error',output:latest.output},{reveal:true});
-    bar.querySelector('small').textContent=result.passed?'模拟运行通过':'模拟运行报错 · 打开 AI 学伴可分析';positionMark();
+    bar.querySelector('small').textContent=result.passed?'模拟运行通过':'结果有误：划选高亮错误代码，再点“帮我写代码”';positionMark();
     // Existing authorized analyses are refreshed on rerun; a new failure still
     // requires the explicit analysis confirmation when the companion opens.
     for(const root of [...document.querySelectorAll('[data-uac-inference-id]')]){const s=read(root);if(!s?.run||!s.report||s.run.id!==previous?.id)continue;s.run=latest;s.code=code;s.response=response;s.http=http;s.report=result;s.status=result.passed?'pass':'fail';s.stale=false;update(find(s.id),s);}
-    ide.showToast(result.passed?'模拟运行符合预期':'终端已有错误记录，可打开 AI 学伴分析');
+    ide.showToast(result.passed?'模拟运行符合预期':'结果有误：划选第 '+line+' 行代码，向 AI 学伴请求修正');
   }
   document.getElementById('runCode').addEventListener('click',e=>{if(filename()!==file)return;e.preventDefault();e.stopImmediatePropagation();run();},true);
   bar.addEventListener('click',e=>{const key=e.target.closest('[data-dev-toolbar]')?.dataset.devToolbar;
-    if(key==='example'){locate();setCode(reference().replace(/("max_tokens"\s*:\s*)500/,'$1"500"'));bar.querySelector('select').value='auto';ide.showToast('已载入 max_tokens 类型错误示例；点击 IDE“运行”');}
+    if(key==='example')loadErrorExample();
     if(key==='undo'){if(!undo||filename()!==undo.file||editor.value!==undo.after){ide.showToast('代码已变化，未覆盖；请手动撤销或核对');return;}editor.value=undo.before;undo=null;editor.dispatchEvent(new Event('input',{bubbles:true}));refreshBar();ide.showToast('已撤销置入，未执行代码');}
     if(key==='debug'){
       if(!latest||latest.passed||latest.code!==editor.value){ide.showToast('请先运行当前代码并产生报错记录');return;}
@@ -118,7 +125,7 @@
   function selectionComparison(){
     const step=selectedStep(),proposed=selection.replacement;
     popup.innerHTML=`<header><b>AI 学伴 · 帮我写代码</b><button type="button" data-selection-action="close" aria-label="关闭选区建议">×</button></header><p>${esc(selectionLabel())}</p><div class="selection-code-compare"><section><h3>所选原代码</h3><div class="env-code-advice"><pre><code>${engine.highlightShell(selection.text)}</code></pre></div></section><section><h3>${proposed?'建议修正代码':'完整文件参考 · 非局部修复'}</h3><div class="env-code-advice"><div class="env-code-toolbar"><span>${esc(selection.file)}</span><div><button type="button" data-selection-action="${proposed?'copy':'copy-reference'}">复制</button><button type="button" data-selection-action="insert" ${proposed?'':'disabled'}>置入 IDE 修改</button></div></div><pre><code>${engine.highlightShell(proposed||step?.code||selection.text)}</code></pre></div></section></div><small>${proposed?'本地规则识别到参数类型或接口路径问题。置入仅替换本次选区，可撤销；不会运行代码，也不保证服务端问题已解决。':'当前没有可可靠应用的局部修正；下方仅展示课程完整文件参考，不允许直接替换当前选区。请用“帮我解释”补充修改目标。'} 未接入实时 AI。</small>${selectionShortcuts()}`;
-    positionSelection(true);
+    popup.dataset.view='comparison';positionSelection(true);
   }
   function positionSelection(compare=false){
     const rect=editor.getBoundingClientRect(),width=Math.min(compare?620:360,innerWidth-32,Math.max(260,rect.width-24));popup.style.width=width+'px';
@@ -130,10 +137,12 @@
     if(!filename()){popup.hidden=true;return;}
     const start=editor.selectionStart,end=editor.selectionEnd,text=editor.value.slice(start,end);
     if(!text.trim()){popup.hidden=true;return;}
+    if(!popup.hidden&&selection?.file===filename()&&selection.whole===editor.value&&selection.start===start&&selection.end===end)return;
     if(text.length>8000){popup.hidden=true;ide.showToast('请将选区缩小到 8000 字以内，方便解释与记录');return;}
     const selectedFile=filename(),replacement=selectedFile===file?selectionFix(text):null,line=editor.value.slice(0,start).split('\n').length,endLine=editor.value.slice(0,end).replace(/\n$/,'').split('\n').length;
     const matchedRun=latest?.filename===selectedFile&&latest.code===editor.value;
     selection={file:selectedFile,whole:editor.value,start,end,text,replacement,line,endLine};
+    popup.dataset.view='shortcuts';
     popup.innerHTML=`<header><b>AI 学伴</b><button type="button" data-selection-action="close" aria-label="关闭选区建议">×</button></header><p>${esc(selectedFile)} · 第 ${line}${endLine!==line?'–'+endLine:''} 行 · ${paused?'断点暂停（演示）':matchedRun&&!latest.passed?'运行报错（演示）':'已选中代码'}</p><details class="selection-source"><summary>查看所选代码</summary><div class="env-code-advice"><pre><code>${engine.highlightShell(text)}</code></pre></div></details>${selectionShortcuts()}<small>选择一个操作，不会自动执行或修改代码。</small>`;
     popup.hidden=false;positionSelection();
   }
@@ -147,7 +156,7 @@
   popup.addEventListener('click',async e=>{const key=e.target.closest('[data-selection-action]')?.dataset.selectionAction;if(!selection)return;
     if(key==='close'){popup.hidden=true;return;}
     if(['write','note','explain','copy-reference'].includes(key)&& (filename()!==selection.file||editor.value!==selection.whole)){popup.hidden=true;ide.showToast('文件或代码已变化，请重新框选');return;}
-    if(key==='write'){selectionComparison();return;}
+    if(key==='write'){clearTimeout(selectionTimer);selectionComparison();return;}
     if(key==='copy-reference'){try{await navigator.clipboard.writeText(selectedStep()?.code||selection.text);ide.showToast('课程完整文件参考已复制，未置入或运行');}catch{ide.showToast('复制失败，请手动选择代码');}return;}
     if(key==='note'){
       const step=selectedStep(),context=selectionLabel(),draft=`代码笔记 · ${context}\n学习步骤：${step?.title||'当前文件'}\n\n所选代码：\n${selection.text}\n\n我的理解：\n`;
