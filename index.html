@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="assets/css/course-outline.css?v=outline-toolbar-1">
   <link rel="stylesheet" href="assets/css/course-conversation.css?v=ai-dialog-rhythm-2">
   <link rel="stylesheet" href="assets/css/home-figma.css?v=knowledge-map-entry-4">
+  <link rel="stylesheet" href="assets/css/home-latest-structure.css?v=home-20261026-1">
   <link rel="stylesheet" href="assets/css/knowledge-experience.css?v=1">
 <link rel="stylesheet" href="assets/css/knowledge-outline.css?v=map-entry-split-7">
 </head>
@@ -74,16 +75,12 @@
     <section class="dlc-section dlc-continue" id="courseFirstFloor" aria-labelledby="continueTitle">
       <h2 class="dlc-section-title" id="continueTitle">继续学习</h2>
       <div class="continue-map-link-row"><a href="knowledge-map.html?view=all&amp;source=overview">知识地图全览 <span aria-hidden="true">→</span></a></div>
-      <a class="continue-card" href="course-preview.html?course=training">
-        <span class="continue-topic">生成式AI与模型</span>
-        <img class="continue-cover" src="assets/images/figma-home/continue-course.png" alt="课程封面">
-        <div class="continue-content">
-          <h3>昇腾算力与 MindSpore 框架：大语言模型开发与深度调优全栈</h3>
-          <p>深度解析昇腾 NPU 硬件架构及 CANN 软件栈底层原理，掌握从 MindSpore 中的模型构建、训练与性能调优，到大模型服务化部署的完整流程。</p>
-          <div class="continue-tags"><span>上次学到</span><span>第1单元 · 讲次1</span></div>
-        </div>
-        <div class="continue-progress"><strong>继续学习 →</strong><div class="continue-bar"><span></span></div><span>1%</span></div>
-      </a>
+      <div class="continue-grid" aria-label="最近学习内容">
+        <a class="continue-tile continue-tile-course" href="course-preview.html?course=mindie"><span class="continue-tile-kind">课程 · 推理开发</span><h3>MindIE 服务部署与模型推理</h3><p>继续上次学习 · 第 3 讲</p><span class="tile-progress"><i style="width:64%"></i></span><small>已完成 64% <b>继续学习 →</b></small></a>
+        <a class="continue-tile continue-tile-path" href="knowledge-map.html?view=all&amp;source=overview"><span class="continue-tile-kind">学习路径 · 算子开发</span><h3>Ascend C 算子开发入门</h3><p>下一步：完成向量加法实践</p><span class="tile-route"><i></i><i></i><i></i><i></i></span><small>6 门课程 · 2 门已完成 <b>接着学 →</b></small></a>
+        <a class="continue-tile continue-tile-cert" href="#certifications"><span class="continue-tile-kind">认证 · 开发者成长</span><h3>Ascend C 算子开发者认证</h3><p>已完成 3 / 6 个学习单元</p><span class="tile-progress"><i style="width:48%"></i></span><small>准备认证学习 <b>继续 →</b></small></a>
+        <a class="continue-tile continue-tile-course continue-tile-four" href="course-preview.html?course=training"><span class="continue-tile-kind">课程 · 模型训练</span><h3>大模型训练全流程</h3><p>最近学习 · 分布式训练基础</p><span class="tile-progress"><i style="width:28%"></i></span><small>已完成 28% <b>继续学习 →</b></small></a>
+      </div>
     </section>
 
     <section class="dlc-section problem-first-floor" id="problemFirstFloor" aria-labelledby="problemFloorTitle" hidden>
@@ -121,7 +118,8 @@
         <button type="button" role="tab" aria-selected="false" data-filter="调试与性能优化">调试与性能优化</button>
         <button type="button" role="tab" aria-selected="false" data-filter="AI应用与智能体">AI应用与智能体</button>
       </div>
-      <div class="scene-grid">
+      <div class="path-explorer"><div class="path-list" id="pathList" role="listbox" aria-label="精选学习路径"></div><div class="path-detail" id="pathDetail" role="region" aria-live="polite" aria-label="学习路径课程链路"></div></div>
+      <div class="scene-grid" hidden>
         <a class="scene-card" href="course-preview.html?course=operator" data-category="算子开发">
           <div class="scene-main"><div class="scene-tags"><span>算子开发</span><span>CANN</span><span class="micro-cert"><img src="assets/images/figma-home/certification.svg" alt="">微认证</span></div><h3>Ascend C 算子开发</h3><div class="scene-user"><b>用户</b><span>适合需要开发自定义算子，解决算子不支持、性能不足问题的开发者</span></div><img class="scene-orb" src="assets/images/figma-home/course-orb.png" alt=""><div class="knowledge-route"><span>编程模型</span><span>编程范式</span><span>SIMD编程</span><span>矩阵计算</span></div><div class="scene-hover-details"><span>实践环境</span><span>支持 HiDevLab</span><span>CANN 8.0.RC3 · Ascend 910B</span></div><span class="scene-actions"><span class="scene-primary">前往学习</span><span class="scene-secondary">AI调整</span></span></div>
           <div class="scene-cost"><span><img src="assets/images/figma-home/meta-time.svg" alt="">12h</span><span><img src="assets/images/figma-home/meta-lessons.svg" alt="">6单元｜18讲</span><span><img src="assets/images/figma-home/meta-practice.svg" alt="">标准实践</span><span><img src="assets/images/figma-home/meta-learners.svg" alt="">1406人学习</span><span><img src="assets/images/figma-home/meta-rating.svg" alt="">4.8分</span></div>
@@ -142,8 +140,20 @@
       <p class="scene-more">若想访问更多路径，可点击<a href="catalog.html">查看所有</a></p>
     </section>
 
+    <section class="dlc-section certification-floor" id="certifications" aria-labelledby="certTitle">
+      <h2 class="dlc-section-title" id="certTitle">按认证学习</h2>
+      <div class="cert-level-tabs" role="tablist" aria-label="认证等级"><button type="button" role="tab" aria-selected="true" data-cert-level="入门级">入门级 · ACDA</button><button type="button" role="tab" aria-selected="false" data-cert-level="工程师级">工程师 · ACDP</button><button type="button" role="tab" aria-selected="false" data-cert-level="专家级">专家级 · ACDE</button></div>
+      <div class="cert-grid" id="certGrid"></div>
+    </section>
+
+    <section class="dlc-section learning-calendar" id="learningCalendar" aria-labelledby="calendarTitle">
+      <h2 class="dlc-section-title" id="calendarTitle">学习日历</h2>
+      <div class="calendar-toolbar"><div><button type="button" id="calendarPrev" aria-label="上个月">‹</button><strong id="calendarMonth">2026 年 10 月</strong><button type="button" id="calendarNext" aria-label="下个月">›</button><button class="calendar-today" type="button" id="calendarToday">今天</button></div><div class="calendar-filters" role="tablist" aria-label="日历内容筛选"><button type="button" role="tab" aria-selected="true" data-calendar-filter="全部">全部</button><button type="button" role="tab" aria-selected="false" data-calendar-filter="官方活动">官方活动</button><button type="button" role="tab" aria-selected="false" data-calendar-filter="我的学习">我的学习</button></div></div>
+      <div class="calendar-panel"><div class="calendar-month-view"><div class="calendar-weekdays"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div><div class="calendar-days" id="calendarDays"></div><div class="calendar-legend"><span class="dot-official">官方活动</span><span class="dot-learning">我的学习</span></div></div><aside class="calendar-agenda"><h3 id="agendaDate">10 月 26 日 · 星期一</h3><div id="agendaItems"></div></aside></div>
+    </section>
+
     <section class="dlc-section community-contribution" id="growth" aria-labelledby="growthTitle">
-      <div class="community-heading"><h2 class="dlc-section-title" id="growthTitle">把实践经验带回社区</h2><p>完成课程实践后，AI 会根据代码、日志和指标生成草稿；由你确认内容和公开范围，再把可复用经验分享给更多开发者。</p><div class="contribution-flow" aria-label="贡献发布流程"><span><b>01</b>完成真实实践</span><i>→</i><span><b>02</b>AI 整理草稿</span><i>→</i><span><b>03</b>确认范围后发布</span></div></div>
+      <div class="community-heading"><span>学习经验贡献</span><h2 class="dlc-section-title" id="growthTitle">把实践经验带回社区</h2><p>完成课程实践后，AI 会根据代码、日志和指标生成草稿；由你确认内容和公开范围，再把可复用经验分享给更多开发者。</p><div class="contribution-flow" aria-label="贡献发布流程"><span><b>01</b>完成真实实践</span><i>→</i><span><b>02</b>AI 整理草稿</span><i>→</i><span><b>03</b>确认范围后发布</span></div></div>
       <div class="contribution-stage" aria-label="学习者贡献案例；鼠标悬停可查看详情">
         <article class="contribution-card card-a"><div class="contribution-card-inner"><div class="contribution-face contribution-front"><img class="portrait" src="assets/images/avatars/avatar-male.png" alt="NPU Leo 的头像"><div><span>实践排错</span><h3>双卡训练排错记录</h3><p>NPU_Leo · 模型训练</p></div><b>被收藏 128 次</b></div><div class="contribution-face contribution-back"><span>经验摘要</span><h3>HCCL 初始化失败怎么定位？</h3><p>从版本、网卡与通信域三步排查，并附上可复现日志。</p><a href="course-preview.html?course=training">查看经验 →</a></div></div></article>
         <article class="contribution-card card-b"><div class="contribution-card-inner"><div class="contribution-face contribution-front"><img class="portrait" src="assets/images/avatars/avatar-female.png" alt="林深见鹿的头像"><div><span>算子开发</span><h3>尾块 Tiling 实践</h3><p>林深见鹿 · Ascend C</p></div><b>帮助 86 人完成验证</b></div><div class="contribution-face contribution-back"><span>经验摘要</span><h3>非整除数据的尾块处理</h3><p>记录 TilingData 参数、核间分配和边界检查的完整方法。</p><a href="course-preview.html?course=operator">查看经验 →</a></div></div></article>
@@ -180,6 +190,7 @@
   </aside>
 
   <script src="assets/js/home-figma.js?v=community-floor-2"></script>
+  <script src="assets/js/home-latest-structure.js?v=home-20261026-1"></script>
   <script src="assets/js/course-outline.js?v=outline-toolbar-1"></script>
   <script src="assets/js/course-compose.js?v=lesson-types-2"></script>
   <script src="assets/js/course-preview.js?v=course-modules-8"></script><script src="assets/js/knowledge-curriculum.js?v=2"></script><script src="assets/js/knowledge-outline.js?v=map-entry-split-7"></script>
