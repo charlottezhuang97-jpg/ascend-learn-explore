@@ -3,7 +3,7 @@
   if(new URLSearchParams(location.search).get('course')!=='mindie'||!window.MindIEInferencePreview)return;
   const api=window.AscendCompanion,ide=window.AscendLearning,engine=window.MindIEInferencePreview;
   const editor=document.getElementById('ideEditor'),file='08_generate.sh',storageKey='ascend-mindie-last-run-v1';
-  const stylesheet=document.createElement('link');stylesheet.rel='stylesheet';stylesheet.href=new URL('../css/mindie-development-assist.css?v=selection-2',document.currentScript.src);document.head.append(stylesheet);
+  const stylesheet=document.createElement('link');stylesheet.rel='stylesheet';stylesheet.href=new URL('../css/mindie-development-assist.css?v=selection-3',document.currentScript.src);document.head.append(stylesheet);
   const names=['环境准备','下载模型权重','获取MindIE镜像','启动容器','模型推理配置','启动MindIE服务','推理交互'];
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const filename=()=>document.querySelector('.ide-tabs button.active')?.dataset.ideFile;
@@ -121,10 +121,10 @@
     if(!rows.length)rows.push(step?.action||'当前选区没有匹配到课程规则，请继续描述希望理解的用途、输入输出或修改目标。');
     return '<ul>'+rows.map(row=>'<li>'+esc(row)+'</li>').join('')+'</ul>';
   }
-  function selectionShortcuts(){return '<footer class="mindie-selection-shortcuts" aria-label="代码选区快捷操作"><button type="button" data-selection-action="write">帮我写代码</button><button type="button" data-selection-action="explain">帮我解释</button><button type="button" data-selection-action="note">记笔记</button></footer><button type="button" class="selection-diagnose" data-selection-action="diagnose">异常定位 →</button>';}
+  function selectionShortcuts(draft=''){return `<footer class="mindie-selection-shortcuts" aria-label="代码选区快捷操作"><button type="button" data-selection-action="write">帮我写代码</button><button type="button" data-selection-action="explain">帮我解释</button><button type="button" data-selection-action="note">记笔记</button></footer><form class="mindie-selection-question" data-selection-question><label for="mindie-selection-question-input">针对选中的代码提问</label><div><input id="mindie-selection-question-input" name="question" type="text" maxlength="500" required autocomplete="off" placeholder="输入你的问题…" value="${esc(draft)}" aria-describedby="mindie-selection-question-status"><button type="submit">发送</button></div><p id="mindie-selection-question-status" role="status" aria-live="polite"></p></form><button type="button" class="selection-diagnose" data-selection-action="diagnose">异常定位 →</button>`;}
   function selectionComparison(){
-    const step=selectedStep(),proposed=selection.replacement;
-    popup.innerHTML=`<header><b>AI 学伴 · 帮我写代码</b><button type="button" data-selection-action="close" aria-label="关闭选区建议">×</button></header><p>${esc(selectionLabel())}</p><div class="selection-code-compare"><section><h3>所选原代码</h3><div class="env-code-advice"><pre><code>${engine.highlightShell(selection.text)}</code></pre></div></section><section><h3>${proposed?'建议修正代码':'完整文件参考 · 非局部修复'}</h3><div class="env-code-advice"><div class="env-code-toolbar"><span>${esc(selection.file)}</span><div><button type="button" data-selection-action="${proposed?'copy':'copy-reference'}">复制</button><button type="button" data-selection-action="insert" ${proposed?'':'disabled'}>置入 IDE 修改</button></div></div><pre><code>${engine.highlightShell(proposed||step?.code||selection.text)}</code></pre></div></section></div><small>${proposed?'本地规则识别到参数类型或接口路径问题。置入仅替换本次选区，可撤销；不会运行代码，也不保证服务端问题已解决。':'当前没有可可靠应用的局部修正；下方仅展示课程完整文件参考，不允许直接替换当前选区。请用“帮我解释”补充修改目标。'} 未接入实时 AI。</small>${selectionShortcuts()}`;
+    const step=selectedStep(),proposed=selection.replacement,draft=popup.querySelector('[name="question"]')?.value||'';
+    popup.innerHTML=`<header><b>AI 学伴 · 帮我写代码</b><button type="button" data-selection-action="close" aria-label="关闭选区建议">×</button></header><p>${esc(selectionLabel())}</p><div class="selection-code-compare"><section><h3>所选原代码</h3><div class="env-code-advice"><pre><code>${engine.highlightShell(selection.text)}</code></pre></div></section><section><h3>${proposed?'建议修正代码':'完整文件参考 · 非局部修复'}</h3><div class="env-code-advice"><div class="env-code-toolbar"><span>${esc(selection.file)}</span><div><button type="button" data-selection-action="${proposed?'copy':'copy-reference'}">复制</button><button type="button" data-selection-action="insert" ${proposed?'':'disabled'}>置入 IDE 修改</button></div></div><pre><code>${engine.highlightShell(proposed||step?.code||selection.text)}</code></pre></div></section></div><small>${proposed?'本地规则识别到参数类型或接口路径问题。置入仅替换本次选区，可撤销；不会运行代码，也不保证服务端问题已解决。':'当前没有可可靠应用的局部修正；下方仅展示课程完整文件参考，不允许直接替换当前选区。请用“帮我解释”补充修改目标。'} 未接入实时 AI。</small>${selectionShortcuts(draft)}`;
     popup.dataset.view='comparison';positionSelection(true);
   }
   function positionSelection(compare=false){
@@ -186,6 +186,16 @@
       if(!selection.replacement||filename()!==selection.file||editor.value!==selection.whole){ide.showToast('文件或代码已变化，请重新选择；未覆盖代码');popup.hidden=true;return;}
       const before=editor.value;editor.setRangeText(selection.replacement,selection.start,selection.end,'select');const after=editor.value;editor.dispatchEvent(new Event('input',{bubbles:true}));undo={file:selection.file,before,after};refreshBar();popup.hidden=true;ide.showToast('仅替换所选代码；请点击 IDE“运行”验证');
     }
+  });
+  popup.addEventListener('submit',e=>{
+    const form=e.target;if(!form.matches('[data-selection-question]'))return;e.preventDefault();
+    const question=form.elements.question.value.trim(),status=form.querySelector('[role="status"]');
+    if(!question){status.textContent='请输入问题后再发送。';form.elements.question.focus();return;}
+    if(!selection||filename()!==selection.file||editor.value!==selection.whole){status.textContent='代码已变化，请重新框选后提问。';return;}
+    clearTimeout(selectionTimer);
+    const context=selectionLabel(),snippet=`<div class="env-code-advice"><pre><code>${engine.highlightShell(selection.text)}</code></pre></div>`;
+    popup.hidden=true;
+    api.beginTool(`${question}（${context}）`,`<p>你问的是 <b>${esc(context)}</b> 中的这段代码：</p>${snippet}${selectionExplanation()}<small>以上是根据课程内容整理的提示；本演示未连接实时 AI。如需更具体的回答，请在学伴中继续补充问题。</small>`);
   });
   document.addEventListener('submit',e=>{
     const form=e.target;if(!form.matches('[data-uac-code-note]'))return;e.preventDefault();
