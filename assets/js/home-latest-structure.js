@@ -15,7 +15,7 @@
   const categories = ['精选','模型训练','推理与部署','算子开发','调试与性能优化','AI应用与智能体'];
   let selectedPath = paths[0];
   function renderPathList(category) {
-    const filtered = category === '精选' ? paths.filter(item => item.featured || item.category === '推理与部署' || item.category === '模型训练') : paths.filter(item => item.category === category);
+    const filtered = category === '精选' ? paths.filter(item => item.featured || item.category === '推理与部署' || (item.category === '模型训练' && item.name === '大模型训练全流程')) : paths.filter(item => item.category === category);
     if (!filtered.some(item => item === selectedPath)) selectedPath = filtered[0] || paths[0];
     pathList.innerHTML = filtered.map((item, index) => `<button class="path-choice" type="button" role="option" aria-selected="${item === selectedPath}" data-path="${paths.indexOf(item)}"><span>${item.label}</span><strong>${item.name}</strong><small>${item.courses.length} 门课程 · 按顺序学习</small></button>`).join('');
     pathList.querySelectorAll('.path-choice').forEach(button => button.addEventListener('click', () => {
@@ -27,7 +27,9 @@
   }
   function renderPathDetail() {
     const hrefs = selectedPath.category === '算子开发' ? ['course-preview.html?course=operator'] : selectedPath.category === '推理与部署' ? ['course-preview.html?course=mindie'] : selectedPath.category === '模型训练' ? ['course-preview.html?course=training'] : ['catalog.html'];
-    pathDetail.innerHTML = `<div class="path-detail-head"><div><h3>${selectedPath.name}</h3><p>${selectedPath.desc}</p></div><span>${selectedPath.courses.length} 门课程</span></div><div class="path-courses">${selectedPath.courses.map((name, index) => `<a class="path-course" href="${hrefs[0]}"><span class="path-course-index">${String(index + 1).padStart(2, '0')}</span><span><b>${name}</b><small>${index === 0 ? '路径起点 · 建立基础认知' : index === selectedPath.courses.length - 1 ? '路径进阶 · 完成综合实践' : '循序渐进 · 课程与实践结合'}</small></span><em>${index === 0 ? '开始学习 →' : '课程预览 →'}</em></a>`).join('')}</div>`;
+    const visibleCourses = selectedPath.courses.slice(0, 3);
+    const hasMore = selectedPath.courses.length > visibleCourses.length;
+    pathDetail.innerHTML = `<div class="path-detail-head"><div><h3>${selectedPath.name}</h3><p>${selectedPath.desc}</p></div><span>${selectedPath.courses.length} 门课程</span></div><div class="path-courses">${visibleCourses.map((name, index) => `<a class="path-course" href="${hrefs[0]}"><span class="path-course-index">${String(index + 1).padStart(2, '0')}</span><span><b>${name}</b><small>${index === 0 ? '路径起点 · 建立基础认知' : index === visibleCourses.length - 1 && !hasMore ? '路径进阶 · 完成综合实践' : '循序渐进 · 课程与实践结合'}</small></span><em>${index === 0 ? '开始学习 →' : '课程预览 →'}</em></a>`).join('')}</div>${hasMore ? `<a class="path-more-link" href="knowledge-map.html?view=all&amp;source=overview">查看完整课程链路 · 还有 ${selectedPath.courses.length - visibleCourses.length} 门 →</a>` : ''}`;
   }
   document.querySelectorAll('.scene-tabs [data-filter]').forEach(button => button.addEventListener('click', () => renderPathList(button.dataset.filter)));
   renderPathList('精选');
