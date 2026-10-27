@@ -14,8 +14,8 @@
     {"id":"course-preview","title":"课程预览","status":"current","source":"course-preview.html","publicPath":"course-preview.html?course=training","description":"课程模块、单元、课程覆盖区域、真实环境复现与社区经验链路"},
     {"id":"learn","title":"沉浸式学习","status":"current","source":"learn.html","publicPath":"learn.html?course=training","description":"白板、视频、IDE 与 AI 学伴协作学习"},
     {"id":"ai-companion","title":"AI 学伴","status":"current","source":"ai-companion.html","publicPath":"ai-companion.html","description":"个人能力同心环、学习建议与计划"},
-    {"id":"mindie-guided-companion","title":"MindIE AI 学伴 · 步骤式伴学","status":"current","source":"learn-1030.html","publicPath":"learn-1030.html?course=mindie&mode=video&guide=open","description":"两阶段伴学：环境准备包含6个子步骤，完成后进入开始推理；逐步展示目标、操作预览与结果，由学习者确认后继续"},
-    {"id":"mindie-auto-companion","title":"MindIE AI 学伴 · 全自动准备环境","status":"current","source":"learn-1030.html","publicPath":"learn-1030.html?course=mindie&mode=video&agent=environment","description":"自动演示环境获取、模型权重准备并打开 IDE；无需逐项确认，完成后直接进入推理交互"},
+    {"id":"mindie-guided-companion","title":"MindIE AI 学伴 · 步骤式伴学","status":"current","source":"learn-1030.html","publicPath":"learn-1030.html?course=mindie&mode=video&guide=open","description":"分阶段完成环境准备与推理交互；环境准备含 6 个子步骤，每步可查看目标、操作预览和结果，并由学习者确认后继续"},
+    {"id":"mindie-auto-companion","title":"MindIE AI 学伴 · 自动环境准备","status":"current","source":"learn-1030.html","publicPath":"learn-1030.html?course=mindie&mode=video&agent=environment","description":"自动完成环境获取、模型权重准备并打开 IDE；无需逐项确认，随后进入推理交互"},
     {"id":"knowledge-map","title":"知识地图","status":"current","source":"knowledge-map.html","publicPath":"knowledge-map.html","description":"CANN、生成式 AI 与大语言模型、智能体三大领域的分区知识网络、个人状态与 AI 推荐路线"},
 
     {"id":"find-v1","title":"查找学习资源","status":"legacy","source":"archive/legacy-v1/find.html","publicPath":"archive/legacy-v1/find.html","description":"早期全站导航与资源查找方案"},
