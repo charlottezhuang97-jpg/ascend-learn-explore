@@ -48,3 +48,131 @@
   document.querySelectorAll('.pill-tabs,.scenario-subtabs').forEach(group=>{const tabs=[...group.querySelectorAll('[role=tab]')];function sync(){tabs.forEach(t=>t.tabIndex=t.getAttribute('aria-selected')==='true'?0:-1);}sync();tabs.forEach((b,i)=>{b.addEventListener('click',sync);b.addEventListener('keydown',e=>{let j;if(e.key==='ArrowRight')j=(i+1)%tabs.length;else if(e.key==='ArrowLeft')j=(i-1+tabs.length)%tabs.length;else if(e.key==='Home')j=0;else if(e.key==='End')j=tabs.length-1;else return;e.preventDefault();tabs[j].click();tabs[j].focus();});});});
   renderScene(0);renderCert('ACDA');renderCalendar();
 })();
+
+// A single decorative particle field; springs return every point to its grid.
+(() => {
+  const hero = document.querySelector('.dlc-hero');
+  if (!hero) return;
+  const canvas = document.createElement('canvas');
+  canvas.className = 'hero-particles';
+  canvas.setAttribute('aria-hidden', 'true');
+  hero.prepend(canvas);
+  const ctx = canvas.getContext('2d');
+  if (!ctx) { canvas.remove(); return; }
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  const pointer = { x: 0, y: 0, active: false };
+  let width = 0, height = 0, points = [], frame = 0, visible = true;
+  let glow = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    if (glow > .005) {
+      const radius = Math.min(240, width * .38);
+      const light = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, radius);
+      light.addColorStop(0, `rgba(255,255,255,${.34 * glow})`);
+      light.addColorStop(.4, `rgba(246,250,255,${.17 * glow})`);
+      light.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = light;
+      ctx.fillRect(0, 0, width, height);
+    }
+    for (const p of points) {
+      const distance = Math.hypot(p.x - pointer.x, p.y - pointer.y);
+      const lit = Math.max(0, 1 - distance / 200) * glow;
+      const fade = Math.max(.08, 1 - p.by / (height * 1.12));
+      ctx.fillStyle = `rgba(255,255,255,${Math.min(1, .68 * fade + lit * .55)})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.25 + lit * .85, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function animate() {
+    frame = 0;
+    if (!visible || document.hidden) return;
+    const targetGlow = pointer.active && !motion.matches ? 1 : 0;
+    glow += (targetGlow - glow) * .09;
+    let moving = Math.abs(targetGlow - glow) > .005;
+    const radius = Math.min(240, width * .38);
+    for (const p of points) {
+      let tx = p.bx, ty = p.by;
+      if (pointer.active && !motion.matches) {
+        const dx = pointer.x - p.bx, dy = pointer.y - p.by;
+        const distance = Math.hypot(dx, dy);
+        const strength = Math.max(0, 1 - distance / radius);
+        // Keep a spread of particles around the pointer rather than one white dot.
+        const attraction = .68 * strength * strength;
+        tx += dx * attraction;
+        ty += dy * attraction;
+      }
+      p.vx = (p.vx + (tx - p.x) * .035) * .79;
+      p.vy = (p.vy + (ty - p.y) * .035) * .79;
+      p.x += p.vx;
+      p.y += p.vy;
+      if (Math.abs(tx - p.x) + Math.abs(ty - p.y) + Math.abs(p.vx) + Math.abs(p.vy) > .04) moving = true;
+    }
+    draw();
+    if (moving) frame = requestAnimationFrame(animate);
+  }
+  function wake() { if (!frame && visible && !document.hidden) frame = requestAnimationFrame(animate); }
+  function reset() {
+    const box = hero.getBoundingClientRect();
+    width = box.width; height = box.height;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    points = [];
+    for (let y = 10; y < height; y += 26) {
+      for (let x = 10; x < width; x += 26) points.push({bx:x, by:y, x, y, vx:0, vy:0});
+    }
+    glow = 0;
+    draw();
+    wake();
+  }
+  hero.addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch' || motion.matches) return;
+    const box = hero.getBoundingClientRect();
+    pointer.x = e.clientX - box.left; pointer.y = e.clientY - box.top;
+    pointer.active = true;
+    wake();
+  }, {passive:true});
+  hero.addEventListener('pointerleave', () => { pointer.active = false; wake(); });
+  hero.addEventListener('pointercancel', () => { pointer.active = false; wake(); });
+  motion.addEventListener('change', () => { pointer.active = false; reset(); });
+  document.addEventListener('visibilitychange', () => { pointer.active = false; if (document.hidden) { cancelAnimationFrame(frame); frame=0; } else wake(); });
+  new ResizeObserver(reset).observe(hero);
+  new IntersectionObserver(entries => {
+    visible = entries[0].isIntersecting;
+    if (visible) wake(); else { pointer.active=false; cancelAnimationFrame(frame); frame=0; }
+  }).observe(hero);
+})();
+
+// One shared label avoids putting duplicated labels or artwork into the cards.
+(() => {
+  const label = document.createElement('span');
+  label.className = 'fan-hover-label';
+  label.setAttribute('aria-hidden', 'true');
+  document.body.append(label);
+  let current = null;
+  function position() {
+    if (!current) return;
+    const box = current.getBoundingClientRect();
+    label.style.left = `${box.left + box.width / 2}px`;
+    label.style.top = `${box.top - 12}px`;
+  }
+  function show(card) {
+    current = card;
+    label.textContent = card.classList.contains('fan-right') ? '认证路径' : '课程';
+    position();
+    label.dataset.visible = 'true';
+  }
+  function hide() { label.dataset.visible = 'false'; current = null; }
+  document.querySelectorAll('.october-fan>a').forEach(card => {
+    card.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch') show(card); });
+    card.addEventListener('pointerleave', () => { if (document.activeElement !== card) hide(); });
+    card.addEventListener('focus', () => show(card));
+    card.addEventListener('blur', hide);
+    card.addEventListener('transitionend', position);
+  });
+  addEventListener('scroll', position, {passive:true});
+  addEventListener('resize', hide, {passive:true});
+})();

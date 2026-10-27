@@ -3,73 +3,76 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f6fa">
-  <title>课程预览 · 昇腾开发者学习中心</title>
-  <link rel="stylesheet" href="assets/css/course-preview.css?v=knowledge-touchpoints-9">
+  <meta name="theme-color" content="#f7f8fb">
+  <meta name="description" content="查看昇腾课程介绍、学习目标、课程章节和开发者评价。">
+  <title>课程详情 · 昇腾开发者学习中心</title>
+  <link rel="icon" href="assets/images/figma-home/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/course-preview.css?v=course-detail-october-1">
 </head>
-<body>
-  <header class="preview-header">
-    <a class="exit-course" href="index.html" aria-label="退出课程并返回首页"><span aria-hidden="true">×</span>退出课程</a>
-    <strong class="preview-header-title" data-course-title>昇腾算力与 MindSpore 框架：大语言模型开发与深度调优全栈指南</strong>
-    <span class="course-avatar" aria-label="当前用户"><img src="assets/images/avatars/avatar-female.png" alt="" class="avatar-single"></span>
+<body class="course-detail-page">
+  <header class="preview-header detail-header">
+    <a class="exit-course" href="index.html"><span aria-hidden="true">‹</span>退出课程</a>
+    <button class="detail-ai-button" id="openWorkspaceCompanion" type="button"><span aria-hidden="true">✦</span> AI 学伴</button>
   </header>
 
-  <div class="preview-layout">
-    <aside class="course-sidebar route-sidebar" aria-label="课程模块">
-      <div class="sidebar-course-type">课程</div>
-      <h1 data-course-title>昇腾算力与 MindSpore 框架：大语言模型开发与深度调优全栈指南</h1>
-      <p class="course-summary" data-course-summary>完成从全局认识、设备协同到稳定调优与实战验收的完整链路。</p>
-      <div class="sidebar-section-label"><span>课程模块</span><i></i></div>
-      <ol class="stage-nav" id="stageNav" aria-label="课程模块目录"></ol>
-      <section class="course-coverage" aria-labelledby="courseCoverageTitle"><div class="sidebar-section-label"><span id="courseCoverageTitle">课程覆盖区域</span><i></i></div><p>模型训练 / MindSpore 框架</p><div><span>计算栈</span><span>训练工程</span><span>分布式并行</span><span>模型调优</span></div><a href="knowledge-map.html">在知识地图中查看 →</a></section>
-    </aside>
-
-    <main class="preview-main">
-      <section class="preview-hero" aria-labelledby="coursePreviewTitle">
-        <div class="hero-copy">
-          <span class="unit-badge">课程预览</span>
-          <p data-unit-intro>分布式训练通过多设备协同处理模型与数据，提升训练效率；本课程将带你掌握并行策略、通信同步、训练调优与任务验证。</p>
-          <div class="preview-meta" aria-label="课程信息"></div>
+  <main class="detail-layout">
+    <section class="detail-top" aria-labelledby="detailTitle">
+      <div class="detail-hero">
+        <div class="detail-hero-copy">
+          <span class="unit-badge">课程详情</span>
+          <h1 id="detailTitle" data-course-title>昇腾算力与 MindSpore 框架</h1>
+          <p data-unit-intro>了解昇腾技术与开发实践，沿着课程模块逐步完成学习目标。</p>
         </div>
-        <div class="hero-actions" aria-label="课程操作">
-          <a class="start-button" href="learn.html">▶ <span>开始学习</span></a>
-          <button class="plan-button" id="planButton" type="button">＋ <span>加入计划</span></button>
+        <div class="detail-hero-actions">
+          <a class="start-button" href="learn.html?course=training&unit=1-1">▶ <span>开始学习</span></a>
+          <button class="plan-button" id="planButton" type="button" aria-pressed="false">＋ <span>加入学习计划</span></button>
         </div>
-      </section>
-
-      <div class="preview-columns">
-        <div class="learning-column">
-          <section class="stage-roadmap" aria-labelledby="roadmapTitle">
-            <div class="roadmap-heading"><div><span class="eyebrow">当前课程模块</span><h3 id="roadmapTitle" data-active-stage-title>模块 1 · 建立训练基线</h3><p class="roadmap-stage-reason" data-stage-reason>先理解计算栈与框架运行方式，再建立后续训练可比较的共同基线。</p></div><span class="roadmap-count" data-stage-count>2 个单元 · 10 个课节</span></div>
-            <ol class="course-route" id="courseRoute" aria-label="当前课程模块的单元与课节" aria-live="polite"></ol>
-          </section>
-        </div>
-
-        <aside class="support-column" aria-label="课程与学习者信息">
-          <section class="peer-card" aria-labelledby="peerTitle">
-            <div class="panel-heading"><div><span class="panel-icon people-icon" aria-hidden="true">♧</span><h3 id="peerTitle">和你目标相近的人</h3></div><button class="more-button" type="button" aria-label="更多同行学习者">···</button></div>
-            <div class="peer-list" id="peerList"></div>
-            <div class="peer-footer"><span class="peer-community-icon" aria-hidden="true">♧</span><b><span data-peer-total>1000+</span> 人在学习相似课程</b><a href="catalog.html">查看更多课程 <span aria-hidden="true">›</span></a></div>
-          </section>
-
-          <section class="proof-card" aria-labelledby="proofTitle">
-            <div class="panel-heading"><div><span class="panel-icon proof-icon" aria-hidden="true">▣</span><h3 id="proofTitle">已在真实环境完成复现</h3></div></div>
-            <p class="proof-intro" data-proof-intro>已在 Ascend 910B、MindSpore 2.4 环境复现双卡训练流程。</p>
-            <div class="proof-metrics" id="proofMetrics"></div>
-            <a class="proof-link" href="prototypes/lowfi/knowledge-community.html">查看验证范围 <span aria-hidden="true">›</span></a>
-          </section>
-
-          <section class="community-card" aria-labelledby="communityTitle">
-            <span class="eyebrow">完成单元 10 后，可整理为社区经验</span>
-            <h3 id="communityTitle">完成任务后，把经验变成可复用内容</h3>
-            <p>AI 会根据代码、日志和指标生成草稿；默认仅自己可见，你确认并选择公开范围后才会发布。</p>
-            <ol class="contribution-flow" aria-label="社区贡献流程"><li><span class="flow-icon">▤</span><b>完成真实任务</b></li><li class="flow-arrow" aria-hidden="true">→</li><li><span class="flow-icon sparkle">✧</span><b>AI 整理草稿</b></li><li class="flow-arrow" aria-hidden="true">→</li><li><span class="flow-icon send">➤</span><b>确认后发布</b></li></ol>
-          </section>
-        </aside>
       </div>
-    </main>
-  </div>
-  <script src="assets/js/course-preview.js?v=course-modules-8"></script>
+      <div class="detail-stats" aria-label="课程学习数据">
+        <div class="learning-progress-block"><div class="progress-head"><strong>学习进度 <span>24%</span></strong><span>已学 2 / 12 课时</span></div><div class="progress-track" role="progressbar" aria-label="我的课程学习进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="24"><span></span></div><span class="progress-cert">◇ 课程认证</span></div>
+        <div class="stat-item"><span aria-hidden="true">✧</span><small>课程评分</small><strong>4.84 <small>分</small></strong></div>
+        <div class="stat-item"><span aria-hidden="true">♧</span><small>学习人数</small><strong>2,520 <small>人</small></strong></div>
+        <div class="stat-item"><span aria-hidden="true">◷</span><small>学习时长</small><strong>160 <small>min</small></strong></div>
+        <div class="stat-item"><span aria-hidden="true">△</span><small>难度等级</small><strong>中级</strong></div>
+      </div>
+      <p class="detail-disclaimer">学习进度与评价为页面演示数据；登录后可记录个人学习状态。</p>
+    </section>
+
+    <div class="detail-columns">
+      <div class="detail-main-column">
+        <section class="outcomes-panel detail-panel" aria-labelledby="outcomesTitle">
+          <div class="detail-section-heading"><div><h2 id="outcomesTitle">你能学到什么</h2><p>从理解原理，到完成可运行的开发实践</p></div><button type="button" class="quiet-toggle" data-toggle-panel="outcomeList" aria-expanded="true">收起 <span aria-hidden="true">⌃</span></button></div>
+          <ul class="outcome-list" id="outcomeList" aria-live="polite"></ul>
+          <p class="outcome-result"><span aria-hidden="true">✧</span><span data-route-outcome>完成课程学习，获得可验证的实践成果。</span></p>
+        </section>
+
+        <section class="curriculum-panel" aria-labelledby="curriculumTitle">
+          <div class="detail-section-heading curriculum-heading"><div><span class="detail-kicker">课程大纲</span><h2 id="curriculumTitle">循序渐进，完成课程学习</h2></div><span class="curriculum-total" id="curriculumTotal"></span></div>
+          <ol class="stage-nav module-timeline" id="stageNav" aria-label="课程章节"></ol>
+        </section>
+
+        <section class="reviews-panel detail-panel" aria-labelledby="reviewsTitle">
+          <div class="review-tabs" role="tablist" aria-label="课程讨论与资料"><button id="reviewsTab" role="tab" aria-selected="true" aria-controls="reviewsContent">课程评论 <span>197</span></button><button id="resourcesTab" role="tab" aria-selected="false" aria-controls="reviewsContent">学习资料 <span id="resourceCount">0</span></button><button type="button" class="quiet-toggle" data-toggle-panel="reviewsContent" aria-expanded="true">收起 <span aria-hidden="true">⌃</span></button></div>
+          <div id="reviewsContent" role="tabpanel" aria-labelledby="reviewsTab"><div id="reviewsListing">
+            <div class="rating-overview"><div class="rating-score"><strong>4.84</strong><span><b aria-label="5 星">★★★★★</b><small>140 人评价</small></span></div><div class="rating-bars"><div><span>好评</span><i><b style="width:77%"></b></i><strong>108</strong></div><div><span>中评</span><i><b style="width:14%"></b></i><strong>20</strong></div><div><span>差评</span><i><b style="width:9%"></b></i><strong>12</strong></div></div></div>
+            <form class="review-form" id="reviewForm"><span class="review-avatar" aria-hidden="true">学</span><label class="sr-only" for="reviewInput">分享你的课程学习心得</label><input id="reviewInput" name="review" maxlength="240" placeholder="分享你的学习心得" required><button type="submit">↗ 发布</button></form>
+            <div class="review-list" id="reviewList" aria-live="polite"></div>
+            <p class="local-feedback" id="reviewFeedback" role="status" aria-live="polite"></p>
+          </div><div id="reviewResources" hidden><p class="resources-intro">课程资料随章节整理，选择章节并开始学习后即可查看对应课件、实践手册与视频。</p><ul id="resourceList" class="resource-list"></ul></div></div>
+        </section>
+      </div>
+
+      <aside class="detail-side-column" aria-label="学习辅助信息">
+        <section class="detail-side-card custom-plan-card"><div><h2>定制我的学习计划</h2><p>根据你的基础和目标，推荐合适的学习路径。</p></div><span aria-hidden="true">›</span><button type="button" id="customPlanButton" class="full-card-button" aria-label="加入学习计划"></button></section>
+        <section class="detail-side-card prerequisite-card"><div class="side-card-heading"><span class="side-card-icon" aria-hidden="true">▤</span><div><h2>前置学习</h2><p>建议先了解以下基础课程</p></div></div><a href="course-preview.html?course=agent">生成式 AI 概述 <span>›</span></a><a href="course-preview.html?course=operator">昇腾 AI 基础软硬件平台 <span>›</span></a></section>
+        <section class="detail-side-card peer-card" aria-labelledby="peerTitle"><div class="side-card-heading"><span class="peer-emoji" aria-hidden="true">✦</span><div><h2 id="peerTitle">大家都在学</h2><p><b data-peer-total>1000+</b> 位学习者正在学习，他们的目标和你相似</p></div></div><div class="peer-list" id="peerList"></div><a class="peer-more" href="catalog.html">浏览更多课程 <span aria-hidden="true">›</span></a></section>
+        <section class="share-card" aria-labelledby="shareTitle"><span class="share-sparkle" aria-hidden="true">✦</span><h2 id="shareTitle">分享实践经验，有机会获得奖章</h2><p>把学习心得与实践经验分享给更多同学</p><a href="prototypes/lowfi/developer-contribution-closed-loop.html">分享经验 <span aria-hidden="true">↗</span></a><div class="share-decoration" aria-hidden="true"><span>★</span><span>✧</span><span>✦</span></div></section>
+        <section class="detail-side-card proof-card" aria-labelledby="proofTitle"><div class="side-card-heading"><span class="side-card-icon" aria-hidden="true">✓</span><div><h2 id="proofTitle">真实环境复现</h2><p data-proof-intro>课程关键实践已在真实环境中验证。</p></div></div><div class="proof-metrics" id="proofMetrics"></div><a class="proof-link" href="prototypes/lowfi/knowledge-community.html">查看验证范围 <span aria-hidden="true">›</span></a></section>
+      </aside>
+    </div>
+  </main>
+
+  <script src="assets/js/course-preview.js?v=course-detail-october-1"></script>
   <script src="assets/js/unified-companion.js?v=3"></script>
 </body>
 </html>

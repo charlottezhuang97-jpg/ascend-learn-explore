@@ -87,30 +87,38 @@ if(meta)meta.replaceChildren(...[`${course.stages.length} 课程模块`,...cours
 
 const nav=document.querySelector('#stageNav');
 const route=document.querySelector('#courseRoute');
-course.stages.forEach((stage,index)=>{
-  const selected=index===0;
-  const navItem=document.createElement('li');
-  navItem.innerHTML=`<button type="button" data-stage-index="${index}" aria-controls="courseRoute" aria-pressed="${selected}" ${selected?'aria-current="step"':''}><span class="stage-number">${index+1}</span><span><strong>${escapeHtml(stage.title)}</strong><small>${escapeHtml(stage.unitRange)}</small></span><span class="stage-chevron" aria-hidden="true">›</span></button>`;
-  nav.append(navItem);
-});
-
 const normalizeUnit=(raw,fallbackNumber)=>Array.isArray(raw)
   ? {number:fallbackNumber,title:raw[1].replace(/^单元\s*\d+[：:]\s*/,''),description:'完成本单元内容并进入对应课节学习。',lessons:[raw]}
   : raw;
-
-const renderStage=index=>{
-  const stage=course.stages[index];
+const kindIcon={课程:'▷',实践:'↗',测验:'✓'};
+const kindResource={课程:'视频课节',实践:'动手实践',测验:'单元测验'};
+let lessonCount=0;
+let unitCount=0;
+let resourceItems=[];
+const moduleRoman=['一','二','三','四','五','六','七','八'];
+nav.innerHTML=course.stages.map((stage,index)=>{
+  const selected=index===0;
   const previousUnits=course.stages.slice(0,index).reduce((count,item)=>count+item.units.length,0);
-  const units=stage.units.map((unit,unitIndex)=>normalizeUnit(unit,previousUnits+unitIndex+1));
-  setText('[data-active-stage-title]',`模块 ${index+1} · ${stage.title}`);
-  setText('[data-stage-reason]',stage.reason);
-  const lessonTotal=units.reduce((count,unit)=>count+unit.lessons.length,0);
-  setText('[data-stage-count]',`${units.length} 个单元 · ${lessonTotal} 个课节`);
-  route.innerHTML=units.map(unit=>{
-    const lessons=unit.lessons.map(([kind,title,duration],lessonIndex)=>`<li class="stage-unit lesson-row" data-kind="${escapeHtml(kind)}"><span class="unit-kind-icon" aria-hidden="true"></span><span class="kind-label">${escapeHtml(kind)}</span><span class="unit-title">${escapeHtml(title)}</span><span class="unit-duration">${escapeHtml(duration)}</span><a class="unit-play" href="learn.html?course=${encodeURIComponent(courseKey)}&unit=${unit.number}-${lessonIndex+1}" aria-label="开始课节：${escapeHtml(title)}">▶</a></li>`).join('');
-    return `<li class="unit-card"><div class="unit-card-head"><span class="unit-card-number">${unit.number}</span><div><span class="unit-card-kicker">单元 ${unit.number}</span><h4>${escapeHtml(unit.title)}</h4><p>${escapeHtml(unit.description)}</p></div><span class="unit-card-meta">${unit.lessons.length} 个课节</span></div><ol class="lesson-list" aria-label="单元 ${unit.number} 的课节">${lessons}</ol></li>`;
+  const units=stage.units.map((raw,unitIndex)=>normalizeUnit(raw,previousUnits+unitIndex+1));
+  unitCount+=units.length;
+  const count=units.reduce((sum,unit)=>sum+unit.lessons.length,0);
+  lessonCount+=count;
+  const lessonRows=units.map(unit=>{
+    const lessons=unit.lessons.map(([kind,title,duration],lessonIndex)=>{
+      resourceItems.push({kind,title,duration,unit:unit.number});
+      return `<li class="stage-unit lesson-row" data-kind="${escapeHtml(kind)}"><span class="unit-kind-icon" aria-hidden="true">${kindIcon[kind]||'·'}</span><span class="unit-title">${escapeHtml(title)}</span><span class="unit-duration">${escapeHtml(duration)}</span><a class="unit-play" href="learn.html?course=${encodeURIComponent(courseKey)}&unit=${unit.number}-${lessonIndex+1}" aria-label="开始课节：${escapeHtml(title)}">▶</a></li>`;
+    }).join('');
+    return `<li class="unit-card"><div class="unit-card-head"><span class="unit-card-number">${unit.number}</span><div><h4>${escapeHtml(unit.title)}</h4><p>${escapeHtml(unit.description)}</p></div><span class="unit-card-meta">${unit.lessons.length} 项学习内容</span></div><ol class="lesson-list" aria-label="单元 ${unit.number} 的课节">${lessons}</ol></li>`;
   }).join('');
-};
+  return `<li class="module-item"><button type="button" class="module-toggle" data-stage-index="${index}" aria-controls="module-content-${index}" aria-expanded="true" aria-pressed="${selected}" ${selected?'aria-current="step"':''}><span class="stage-number">${index+1}</span><span class="module-title-wrap"><strong>章节${moduleRoman[index]||index+1}：${escapeHtml(stage.title)}</strong><small>${escapeHtml(stage.unitRange)}</small></span><span class="module-meta">${units.length} 个单元 · ${count} 项学习内容</span><span class="stage-chevron" aria-hidden="true">收起⌃</span></button><div class="module-content" id="module-content-${index}"><div class="module-lead"><div class="module-lead-copy"><h3>${escapeHtml(stage.title)}</h3><p>${escapeHtml(stage.reason)}</p></div><span class="module-count">${units.length} 个单元</span></div><ol class="module-units" aria-label="${escapeHtml(stage.title)}课程单元">${lessonRows}</ol>${index===course.stages.length-1?'<p class="module-certificate">完成课程学习并通过考核后，可获得课程认证。</p>':''}</div></li>`;
+}).join('');
+const totalLessons=course.stages.reduce((sum,stage)=>sum+stage.units.reduce((inner,raw,index)=>inner+normalizeUnit(raw,index+1).lessons.length,0),0);
+document.querySelector('#curriculumTotal').textContent=`${unitCount} 个单元 · ${totalLessons} 项学习内容`;
+document.querySelector('#resourceCount').textContent=String(resourceItems.length);
+setText('[data-route-outcome]',course.outcome);
+const outcomeList=document.querySelector('#outcomeList');
+outcomeList.innerHTML=course.stages.slice(0,3).map((stage,index)=>`<li><span aria-hidden="true">✓</span><span>${escapeHtml(index===0?`理解${stage.title}的核心概念`:index===1?`完成${stage.title}相关实践`:`掌握${stage.title}并验证学习成果`)}</span></li>`).join('');
+if(route)route.hidden=true;
 
 const avatarMap={
   male:['assets/images/avatars/avatar-male.png','avatar-single'],
@@ -127,16 +135,17 @@ const activateStage=index=>{
     button.toggleAttribute('aria-current',active);
     button.setAttribute('aria-pressed',String(active));
   });
-  renderStage(index);
 };
 
 document.querySelectorAll('[data-stage-index]').forEach(button=>button.addEventListener('click',()=>{
-  const index=Number(button.dataset.stageIndex);
-  activateStage(index);
-  if(window.innerWidth<980)document.querySelector('.stage-roadmap')?.scrollIntoView({behavior:'smooth',block:'start'});
+  const expanded=button.getAttribute('aria-expanded')==='true';
+  const content=document.getElementById(button.getAttribute('aria-controls'));
+  button.setAttribute('aria-expanded',String(!expanded));
+  if(content)content.hidden=expanded;
+  activateStage(Number(button.dataset.stageIndex));
+  const firstLesson=content?.querySelector('.unit-play');
+  if(firstLesson){const start=document.querySelector('.detail-hero .start-button');if(start)start.href=firstLesson.href;}
 }));
-
-renderStage(0);
 
 document.querySelector('#planButton')?.addEventListener('click',event=>{
   const button=event.currentTarget;
@@ -144,5 +153,54 @@ document.querySelector('#planButton')?.addEventListener('click',event=>{
   button.dataset.joined=String(!joined);
   button.innerHTML=joined?'＋ <span>加入计划</span>':'✓ <span>已加入计划</span>';
   button.setAttribute('aria-pressed',String(!joined));
+});
+document.querySelector('#customPlanButton')?.addEventListener('click',()=>document.querySelector('#planButton')?.click());
+document.querySelectorAll('[data-toggle-panel]').forEach(button=>button.addEventListener('click',()=>{
+  const panel=document.getElementById(button.dataset.togglePanel);
+  const expanded=button.getAttribute('aria-expanded')==='true';
+  if(panel)panel.hidden=expanded;
+  button.setAttribute('aria-expanded',String(!expanded));
+  button.innerHTML=expanded?'展开 <span aria-hidden="true">⌄</span>':'收起 <span aria-hidden="true">⌃</span>';
+}));
+const reviewsTab=document.querySelector('#reviewsTab');
+const resourcesTab=document.querySelector('#resourcesTab');
+const reviewsContent=document.querySelector('#reviewsContent');
+const reviewResources=document.querySelector('#reviewResources');
+function setReviewTab(resource,moveFocus=true){
+  reviewsTab.setAttribute('aria-selected',String(!resource));
+  resourcesTab.setAttribute('aria-selected',String(resource));
+  reviewsContent.hidden=false;
+  reviewResources.hidden=!resource;
+  reviewsContent.setAttribute('aria-labelledby',resource?'resourcesTab':'reviewsTab');
+  if(moveFocus)(resource?resourcesTab:reviewsTab).focus({preventScroll:true});
+}
+reviewsTab.addEventListener('click',()=>setReviewTab(false,false));
+resourcesTab.addEventListener('click',()=>setReviewTab(true,false));
+[reviewsTab,resourcesTab].forEach((tab,index)=>tab.addEventListener('keydown',event=>{
+  if(event.key==='ArrowRight'||event.key==='ArrowLeft'){
+    event.preventDefault();setReviewTab(index===0,true);
+  }
+}));
+document.querySelector('#resourceList').innerHTML=resourceItems.map(item=>`<li><span>▤ ${escapeHtml(item.title)}</span><small>${escapeHtml(kindResource[item.kind]||item.kind)} · 单元 ${item.unit} · ${escapeHtml(item.duration)}</small></li>`).join('');
+const reviewSamples=[
+  ['杰克马','4.0','2026-10-20 11:54','哦~ 这真是个不错的课程，对我的学习很有帮助。'],
+  ['张敏峰','3.5','2026-10-20 10:20','很棒的课程！我喜欢浅显易懂的方式讲解概念。实践课也帮助我把理论用起来。']
+];
+const reviewList=document.querySelector('#reviewList');
+function addReview(name,message,time){
+  const article=document.createElement('article');article.className='review-item';
+  const head=document.createElement('div');head.className='review-head';
+  const author=document.createElement('strong');author.textContent=name;
+  const rating=document.createElement('span');rating.className='review-stars';rating.textContent='★★★★★';
+  const date=document.createElement('time');date.textContent=time;
+  head.append(author,rating,date);
+  const body=document.createElement('p');body.textContent=message;
+  const actions=document.createElement('div');actions.className='review-reactions';actions.innerHTML='<span>♡ 有帮助</span><span>回复</span>';
+  article.append(head,body,actions);reviewList.append(article);
+}
+reviewSamples.forEach(item=>addReview(...item));
+document.querySelector('#reviewForm').addEventListener('submit',event=>{
+  event.preventDefault();const input=event.currentTarget.elements.review;const message=input.value.trim();if(!message)return;
+  addReview('我',message,'刚刚');input.value='';document.querySelector('#reviewFeedback').textContent='评论已加入本页预览。发布服务尚未连接。';
 });
 }
