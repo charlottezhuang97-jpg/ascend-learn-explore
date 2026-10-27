@@ -81,3 +81,52 @@ a.skip-link{position:fixed!important;top:-100px!important;left:20px!important;z-
 .dlc-submit svg path{fill:none;stroke:currentColor;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}
 .dlc-submit:hover,.dlc-submit:focus-visible{background:#000;transform:none;outline:none;box-shadow:none}
 @media(max-width:700px){.dlc-submit{width:38px;height:38px;flex-basis:38px}.dlc-submit svg{width:23px;height:23px}}
+
+/* Personal learning activities in the shared developer calendar. */
+.events-toolbar{gap:16px}
+.event-filters{margin-left:auto;gap:12px}
+.event-filters button{white-space:nowrap}
+.add-learning-event{flex:none;border:1px solid #8d78c0;border-radius:20px;background:#fff9;color:#483d6d;padding:8px 14px;font-size:13px;line-height:18px;cursor:pointer}
+.add-learning-event:hover{background:#fff}
+.calendar-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:14px;color:#707680;font-size:11px;line-height:16px}
+.calendar-legend span{display:inline-flex;align-items:center;gap:5px}
+.legend-dot{width:7px;height:7px;display:inline-block;border-radius:50%;background:#8d78ee}
+.legend-dot.course,.event-dot[data-kind="课程学习"]{background:#3e78f5}
+.legend-dot.review,.event-dot[data-kind="AI 学伴复习"]{background:#36a788}
+.legend-dot.exam,.event-dot[data-kind="认证考试"]{background:#e69044}
+.calendar-grid button.has-event:has(.event-dot[data-kind="课程学习"]){background:#eef4ff}
+.calendar-grid button.has-event:has(.event-dot[data-kind="AI 学伴复习"]){background:#edfaf5}
+.calendar-grid button.has-event:has(.event-dot[data-kind="认证考试"]){background:#fff5eb}
+.calendar-grid button[aria-pressed=true]{background:#ded3ff!important}
+.event-item summary{display:flex;align-items:center;flex-wrap:wrap;gap:7px;list-style:none}
+.event-item summary::-webkit-details-marker{display:none}
+.event-item summary:before{content:'▸';color:#8271ef;font-size:15px;transition:transform .15s}
+.event-item[open] summary:before{transform:rotate(90deg)}
+.event-type{flex:none;border-radius:4px;background:#f0ebff;color:#7458c8;padding:2px 6px;font-size:11px;line-height:18px;font-weight:500}
+.event-type[data-kind="课程学习"]{background:#e9f1ff;color:#2e64cc}
+.event-type[data-kind="AI 学伴复习"]{background:#e6f7f0;color:#21866d}
+.event-type[data-kind="认证考试"]{background:#fff0e2;color:#b36d27}
+.sample-mark{margin-left:auto;color:#9498a0;font-size:11px;font-weight:400}
+.personal-event .event-detail{background:#f8f9fc}
+.personal-event .event-detail p{overflow-wrap:anywhere}
+.remove-learning-event{margin-top:8px;padding:3px 0;border:0;background:transparent;color:#7a6aab;font-size:12px;cursor:pointer}
+.remove-learning-event:hover{text-decoration:underline}
+.learning-event-dialog{width:min(440px,calc(100% - 28px));max-height:min(90vh,720px);padding:0;border:1px solid #e5e7ed;border-radius:18px;box-shadow:0 20px 70px #1b224033;color:#252930}
+.learning-event-dialog::backdrop{background:#252a3e8c}
+.learning-event-dialog form{display:grid;gap:12px;padding:24px}
+.learning-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.learning-dialog-head h3{margin:0;font-size:20px;line-height:28px}
+.learning-dialog-head button{width:36px;height:36px;border:0;border-radius:50%;background:#f3f4f7;color:#4c5260;font-size:24px;cursor:pointer}
+.learning-dialog-note{margin:0 0 4px;color:#767d88;font-size:13px}
+.learning-event-dialog label{display:grid;gap:5px;color:#3c434d;font-size:13px;font-weight:500}
+.learning-event-dialog input,.learning-event-dialog select{width:100%;min-height:42px;padding:9px 11px;border:1px solid #d9dde5;border-radius:8px;background:#fff;color:#252930;font:inherit;font-size:14px}
+.learning-event-dialog input:focus,.learning-event-dialog select:focus{outline:2px solid #b5c5ff;outline-offset:1px}
+.learning-time-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.learning-event-dialog [data-learning-fields],.learning-event-dialog [data-exam-fields]{display:grid;gap:12px}
+.learning-event-dialog [hidden]{display:none!important}
+.learning-form-error{margin:0;color:#b23434;font-size:12px}
+.learning-dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:4px}
+.learning-dialog-actions button{min-height:40px;padding:8px 14px;border:1px solid #d9dde5;border-radius:8px;background:#fff;color:#353a43;cursor:pointer}
+.learning-dialog-actions button[type=submit]{border-color:#556ff4;background:#556ff4;color:#fff}
+@media(max-width:1100px){.events-toolbar{gap:8px}.event-filters{gap:6px}.event-filters button{font-size:12px}.add-learning-event{font-size:12px;padding:7px 10px}}
+@media(max-width:700px){.events-toolbar{align-items:center}.event-filters{order:2;margin-left:0;justify-content:flex-start;gap:4px;width:auto;flex:1}.event-filters button{padding:8px 5px;font-size:11px}.add-learning-event{order:3;margin-left:auto;padding:7px 8px;font-size:11px}.calendar-legend{gap:6px 10px;font-size:10px}.event-item summary{font-size:14px;line-height:21px}.event-type{font-size:10px}.learning-event-dialog form{padding:18px}.learning-time-row{gap:8px}}
