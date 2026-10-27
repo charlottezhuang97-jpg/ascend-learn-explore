@@ -7,7 +7,7 @@
   <meta name="description" content="查看昇腾课程介绍、学习目标、课程章节和开发者评价。">
   <title>课程详情 · 昇腾开发者学习中心</title>
   <link rel="icon" href="assets/images/figma-home/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/course-preview.css?v=course-detail-october-1">
+  <link rel="stylesheet" href="assets/css/course-preview.css?v=course-detail-reference-2">
 </head>
 <body class="course-detail-page">
   <header class="preview-header detail-header">
@@ -19,12 +19,10 @@
     <section class="detail-top" aria-labelledby="detailTitle">
       <div class="detail-hero">
         <div class="detail-hero-copy">
-          <span class="unit-badge">课程详情</span>
           <h1 id="detailTitle" data-course-title>昇腾算力与 MindSpore 框架</h1>
           <p data-unit-intro>了解昇腾技术与开发实践，沿着课程模块逐步完成学习目标。</p>
         </div>
         <div class="detail-hero-actions">
-          <a class="start-button" href="learn.html?course=training&unit=1-1">▶ <span>开始学习</span></a>
           <button class="plan-button" id="planButton" type="button" aria-pressed="false">＋ <span>加入学习计划</span></button>
         </div>
       </div>
@@ -35,7 +33,6 @@
         <div class="stat-item"><span aria-hidden="true">◷</span><small>学习时长</small><strong>160 <small>min</small></strong></div>
         <div class="stat-item"><span aria-hidden="true">△</span><small>难度等级</small><strong>中级</strong></div>
       </div>
-      <p class="detail-disclaimer">学习进度与评价为页面演示数据；登录后可记录个人学习状态。</p>
     </section>
 
     <div class="detail-columns">
@@ -47,7 +44,7 @@
         </section>
 
         <section class="curriculum-panel" aria-labelledby="curriculumTitle">
-          <div class="detail-section-heading curriculum-heading"><div><span class="detail-kicker">课程大纲</span><h2 id="curriculumTitle">循序渐进，完成课程学习</h2></div><span class="curriculum-total" id="curriculumTotal"></span></div>
+          <h2 id="curriculumTitle" class="sr-only">课程大纲</h2>
           <ol class="stage-nav module-timeline" id="stageNav" aria-label="课程章节"></ol>
         </section>
 
@@ -65,14 +62,15 @@
       <aside class="detail-side-column" aria-label="学习辅助信息">
         <section class="detail-side-card custom-plan-card"><div><h2>定制我的学习计划</h2><p>根据你的基础和目标，推荐合适的学习路径。</p></div><span aria-hidden="true">›</span><button type="button" id="customPlanButton" class="full-card-button" aria-label="加入学习计划"></button></section>
         <section class="detail-side-card prerequisite-card"><div class="side-card-heading"><span class="side-card-icon" aria-hidden="true">▤</span><div><h2>前置学习</h2><p>建议先了解以下基础课程</p></div></div><a href="course-preview.html?course=agent">生成式 AI 概述 <span>›</span></a><a href="course-preview.html?course=operator">昇腾 AI 基础软硬件平台 <span>›</span></a></section>
-        <section class="detail-side-card peer-card" aria-labelledby="peerTitle"><div class="side-card-heading"><span class="peer-emoji" aria-hidden="true">✦</span><div><h2 id="peerTitle">大家都在学</h2><p><b data-peer-total>1000+</b> 位学习者正在学习，他们的目标和你相似</p></div></div><div class="peer-list" id="peerList"></div><a class="peer-more" href="catalog.html">浏览更多课程 <span aria-hidden="true">›</span></a></section>
-        <section class="share-card" aria-labelledby="shareTitle"><span class="share-sparkle" aria-hidden="true">✦</span><h2 id="shareTitle">分享实践经验，有机会获得奖章</h2><p>把学习心得与实践经验分享给更多同学</p><a href="prototypes/lowfi/developer-contribution-closed-loop.html">分享经验 <span aria-hidden="true">↗</span></a><div class="share-decoration" aria-hidden="true"><span>★</span><span>✧</span><span>✦</span></div></section>
-        <section class="detail-side-card proof-card" aria-labelledby="proofTitle"><div class="side-card-heading"><span class="side-card-icon" aria-hidden="true">✓</span><div><h2 id="proofTitle">真实环境复现</h2><p data-proof-intro>课程关键实践已在真实环境中验证。</p></div></div><div class="proof-metrics" id="proofMetrics"></div><a class="proof-link" href="prototypes/lowfi/knowledge-community.html">查看验证范围 <span aria-hidden="true">›</span></a></section>
+        <section class="detail-side-card peer-card" aria-labelledby="peerTitle"><h2 id="peerTitle">大家都在学 <span aria-hidden="true">🔥</span></h2><p class="peer-summary">1218位学习者正在学习，他们的目标和你相似</p><a class="popular-course" href="course-preview.html?course=inference"><strong>大模型推理服务部署</strong><span>完成模型适配、服务部署与运行验证</span><span class="popular-metrics"><i>☆ <b>4.7分</b></i><i>◷ <b>10小时</b></i><i>♙ <b>1218人学习</b></i></span></a></section>
+        <a class="share-card" href="prototypes/lowfi/developer-contribution-closed-loop.html" aria-label="分享实践经验，有机会获得奖章。把学习心得与实践经验分享给更多同学。分享经验">
+          <img src="assets/images/course-detail/share-experience.png" alt="分享实践经验，有机会获得奖章；把学习心得与实践经验分享给更多同学。">
+        </a>
       </aside>
     </div>
   </main>
 
-  <script src="assets/js/course-preview.js?v=course-detail-october-1"></script>
+  <script src="assets/js/course-preview.js?v=course-detail-reference-2"></script>
   <script src="assets/js/unified-companion.js?v=3"></script>
 </body>
 </html>

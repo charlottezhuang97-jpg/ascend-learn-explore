@@ -90,7 +90,7 @@ const route=document.querySelector('#courseRoute');
 const normalizeUnit=(raw,fallbackNumber)=>Array.isArray(raw)
   ? {number:fallbackNumber,title:raw[1].replace(/^单元\s*\d+[：:]\s*/,''),description:'完成本单元内容并进入对应课节学习。',lessons:[raw]}
   : raw;
-const kindIcon={课程:'▷',实践:'↗',测验:'✓'};
+const kindIcon={课程:'⊙',实践:'▧',测验:'♙'};
 const kindResource={课程:'视频课节',实践:'动手实践',测验:'单元测验'};
 let lessonCount=0;
 let unitCount=0;
@@ -103,31 +103,27 @@ nav.innerHTML=course.stages.map((stage,index)=>{
   unitCount+=units.length;
   const count=units.reduce((sum,unit)=>sum+unit.lessons.length,0);
   lessonCount+=count;
-  const lessonRows=units.map(unit=>{
+  const unitRows=units.map(unit=>{
     const lessons=unit.lessons.map(([kind,title,duration],lessonIndex)=>{
       resourceItems.push({kind,title,duration,unit:unit.number});
-      return `<li class="stage-unit lesson-row" data-kind="${escapeHtml(kind)}"><span class="unit-kind-icon" aria-hidden="true">${kindIcon[kind]||'·'}</span><span class="unit-title">${escapeHtml(title)}</span><span class="unit-duration">${escapeHtml(duration)}</span><a class="unit-play" href="learn.html?course=${encodeURIComponent(courseKey)}&unit=${unit.number}-${lessonIndex+1}" aria-label="开始课节：${escapeHtml(title)}">▶</a></li>`;
+      return `<li class="stage-unit lesson-row" data-kind="${escapeHtml(kind)}"><a class="lesson-link" href="learn.html?course=${encodeURIComponent(courseKey)}&unit=${unit.number}-${lessonIndex+1}"><span class="lesson-play" aria-hidden="true">⊙</span><span class="lesson-number">${lessonIndex+1}.</span><span class="unit-title">${escapeHtml(title)}</span><span class="unit-duration">${escapeHtml(duration)}</span><span class="lesson-status" aria-hidden="true"></span></a></li>`;
     }).join('');
-    return `<li class="unit-card"><div class="unit-card-head"><span class="unit-card-number">${unit.number}</span><div><h4>${escapeHtml(unit.title)}</h4><p>${escapeHtml(unit.description)}</p></div><span class="unit-card-meta">${unit.lessons.length} 项学习内容</span></div><ol class="lesson-list" aria-label="单元 ${unit.number} 的课节">${lessons}</ol></li>`;
+    const heading=units.length>1?`<div class="unit-card-head"><span class="unit-card-number">${unit.number}</span><div><h4>${escapeHtml(unit.title)}</h4><p>${escapeHtml(unit.description)}</p></div></div>`:'';
+    return `<li class="unit-card">${heading}<ol class="lesson-list" aria-label="单元 ${unit.number} 的课节">${lessons}</ol></li>`;
   }).join('');
-  return `<li class="module-item"><button type="button" class="module-toggle" data-stage-index="${index}" aria-controls="module-content-${index}" aria-expanded="true" aria-pressed="${selected}" ${selected?'aria-current="step"':''}><span class="stage-number">${index+1}</span><span class="module-title-wrap"><strong>章节${moduleRoman[index]||index+1}：${escapeHtml(stage.title)}</strong><small>${escapeHtml(stage.unitRange)}</small></span><span class="module-meta">${units.length} 个单元 · ${count} 项学习内容</span><span class="stage-chevron" aria-hidden="true">收起⌃</span></button><div class="module-content" id="module-content-${index}"><div class="module-lead"><div class="module-lead-copy"><h3>${escapeHtml(stage.title)}</h3><p>${escapeHtml(stage.reason)}</p></div><span class="module-count">${units.length} 个单元</span></div><ol class="module-units" aria-label="${escapeHtml(stage.title)}课程单元">${lessonRows}</ol>${index===course.stages.length-1?'<p class="module-certificate">完成课程学习并通过考核后，可获得课程认证。</p>':''}</div></li>`;
+  const phase=index===0?'理论篇':index===course.stages.length-1?'微认证':'实践篇';
+  const start=index===0?`<a class="module-start" href="learn.html?course=${encodeURIComponent(courseKey)}&unit=${units[0]?.number||1}-1">从这开始学</a>`:'';
+  return `<li class="module-item"><span class="timeline-node" aria-hidden="true">▣</span><article class="module-card"><div class="module-card-heading"><div class="module-heading-top"><span class="module-kicker">章节${moduleRoman[index]||index+1}：${phase}</span><div class="module-heading-actions"><span class="module-meta">${count}项学习内容</span><button type="button" class="module-toggle" data-stage-index="${index}" aria-controls="module-content-${index}" aria-expanded="true" aria-pressed="${selected}" ${selected?'aria-current="step"':''}>收起⌃</button></div></div><h3>${escapeHtml(stage.title)}</h3><p>${escapeHtml(stage.reason)}</p>${start}</div><div class="module-content" id="module-content-${index}"><ol class="module-units" aria-label="${escapeHtml(stage.title)}课程内容">${unitRows}</ol>${index===course.stages.length-1?'<p class="module-certificate">完成课程学习并通过考核后，可获得课程认证。</p>':''}</div></article></li>`;
 }).join('');
 const totalLessons=course.stages.reduce((sum,stage)=>sum+stage.units.reduce((inner,raw,index)=>inner+normalizeUnit(raw,index+1).lessons.length,0),0);
-document.querySelector('#curriculumTotal').textContent=`${unitCount} 个单元 · ${totalLessons} 项学习内容`;
+const curriculumTotal=document.querySelector('#curriculumTotal');
+if(curriculumTotal)curriculumTotal.textContent=`${unitCount} 个单元 · ${totalLessons} 项学习内容`;
 document.querySelector('#resourceCount').textContent=String(resourceItems.length);
 setText('[data-route-outcome]',course.outcome);
 const outcomeList=document.querySelector('#outcomeList');
 outcomeList.innerHTML=course.stages.slice(0,3).map((stage,index)=>`<li><span aria-hidden="true">✓</span><span>${escapeHtml(index===0?`理解${stage.title}的核心概念`:index===1?`完成${stage.title}相关实践`:`掌握${stage.title}并验证学习成果`)}</span></li>`).join('');
 if(route)route.hidden=true;
 
-const avatarMap={
-  male:['assets/images/avatars/avatar-male.png','avatar-single'],
-  'female-left':['assets/images/avatars/avatar-female.png','avatar-single'],
-  'female-right':['assets/images/avatars/avatar-female.png','avatar-single']
-};
-const peerList=document.querySelector('#peerList');
-peerList.innerHTML=course.peers.map(([name,stage,progress,avatarKey])=>{const [src,className]=avatarMap[avatarKey]||avatarMap.male;return `<article class="peer-row"><span class="peer-avatar"><img src="${src}" class="${className}" alt="${escapeHtml(name)} 的头像"></span><div><b class="peer-name">${escapeHtml(name)}</b><p class="peer-stage">课程进度 ${Number(progress)}% · 正在学习“${escapeHtml(stage)}”</p><div class="peer-progress" role="progressbar" aria-label="${escapeHtml(name)} 的课程进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Number(progress)}"><span class="peer-progress-track"><span class="peer-progress-fill" style="width:${Number(progress)}%"></span></span></div></div></article>`;}).join('');
-document.querySelector('#proofMetrics').innerHTML=course.proof.map(([value,label,icon])=>`<div class="proof-metric"><span class="metric-icon" aria-hidden="true">${escapeHtml(icon)}</span><span><b>${escapeHtml(value)}</b><span>${escapeHtml(label)}</span></span></div>`).join('');
 
 const activateStage=index=>{
   document.querySelectorAll('[data-stage-index]').forEach(button=>{
@@ -143,8 +139,8 @@ document.querySelectorAll('[data-stage-index]').forEach(button=>button.addEventL
   button.setAttribute('aria-expanded',String(!expanded));
   if(content)content.hidden=expanded;
   activateStage(Number(button.dataset.stageIndex));
-  const firstLesson=content?.querySelector('.unit-play');
-  if(firstLesson){const start=document.querySelector('.detail-hero .start-button');if(start)start.href=firstLesson.href;}
+  const firstLesson=content?.querySelector('.lesson-link');
+  if(firstLesson){const start=document.querySelector('.module-start');if(start)start.href=firstLesson.href;}
 }));
 
 document.querySelector('#planButton')?.addEventListener('click',event=>{
