@@ -32,3 +32,11 @@ a.skip-link{position:fixed!important;top:-100px!important;left:20px!important;z-
 .contribution-banner>img{object-fit:fill;clip-path:inset(0 0 0 13%);mask-image:linear-gradient(to right,transparent 13%,#000 27%)}
 @media(max-width:700px){.fan-center img{inset:0;width:100%;height:100%}.play-icon{top:50%;left:50%}.play-icon svg{width:22px;height:22px}}
 @media(prefers-reduced-motion:reduce){.fan-side:is(:hover,:focus-visible),.fan-center:is(:hover,:focus-visible){transform:none}}
+
+/* Match the supplied homepage search control. */
+.dlc-search input:focus-visible{outline:none!important;outline-offset:0;box-shadow:none!important}
+.dlc-submit{width:46px;height:46px;flex:0 0 46px;padding:0;font-size:0;line-height:0;background:#000;color:#fff;display:grid;place-items:center}
+.dlc-submit svg{display:block;width:26px;height:26px}
+.dlc-submit svg path{fill:none;stroke:currentColor;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}
+.dlc-submit:hover,.dlc-submit:focus-visible{background:#000;transform:none;outline:none;box-shadow:none}
+@media(max-width:700px){.dlc-submit{width:38px;height:38px;flex-basis:38px}.dlc-submit svg{width:23px;height:23px}}

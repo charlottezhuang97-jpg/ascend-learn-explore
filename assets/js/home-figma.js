@@ -183,8 +183,8 @@
     if (mode === nextMode) return;
     mode = nextMode;
     const course = mode === 'course';
-    courseTab.setAttribute('aria-selected', String(course));
-    askTab.setAttribute('aria-selected', String(!course));
+    courseTab?.setAttribute('aria-selected', String(course));
+    askTab?.setAttribute('aria-selected', String(!course));
     document.getElementById('courseFirstFloor').hidden = !course;
     document.getElementById('problemFirstFloor').hidden = course;
     input.placeholder = course ? '今天你想学点什么？使用/获取快捷选项' : '输入正在解决的开发问题，使用/获取常见问题';
@@ -194,8 +194,8 @@
     renderQuickOptions();
   }
 
-  courseTab.addEventListener('click', () => setMode('course'));
-  askTab.addEventListener('click', () => setMode('ask'));
+  courseTab?.addEventListener('click', () => setMode('course'));
+  askTab?.addEventListener('click', () => setMode('ask'));
   const problemSlides = Array.from(document.querySelectorAll('[data-problem-slide]'));
   const problemPrev = document.getElementById('problemPrev');
   const problemNext = document.getElementById('problemNext');

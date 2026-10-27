@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="assets/css/course-conversation.css?v=ai-dialog-rhythm-2">
   <link rel="stylesheet" href="assets/css/home-figma.css?v=knowledge-map-entry-4">
   <link rel="stylesheet" href="assets/css/knowledge-experience.css?v=1">
-  <link rel="stylesheet" href="assets/css/home-october.css?v=spotlight-2">
+  <link rel="stylesheet" href="assets/css/home-october.css?v=hero-reference-3">
 <link rel="icon" href="assets/images/figma-home/certification.svg" type="image/svg+xml">
 </head>
 <body>
@@ -43,10 +43,6 @@
       <div class="dlc-hero-inner">
         <h1 class="dlc-title" id="heroTitle">开发者学习中心<span>DLC</span></h1>
         <p class="dlc-subtitle">你想学习什么，或正在解决什么开发问题？</p>
-        <div class="dlc-mode-tabs october-modes" role="tablist" aria-label="学习方式">
-          <button id="courseTab" type="button" role="tab" aria-selected="true">规划学习</button>
-          <button id="askTab" type="button" role="tab" aria-selected="false">解决问题</button>
-        </div>
         <div class="dlc-search-shell">
           <form class="dlc-search" id="heroForm">
             <span class="dlc-search-icon" aria-hidden="true"></span>
@@ -54,7 +50,7 @@
             <input id="heroInput" type="text" autocomplete="off" aria-label="输入学习目标" placeholder="今天你想学点什么？使用/获取快捷选项">
             <span class="dlc-input-actions" id="inputActions" aria-hidden="true"><kbd>Tab</kbd>切换 <kbd>Enter</kbd>开始搜索</span>
             <kbd class="dlc-shortcut-key">/</kbd>
-            <button class="dlc-submit" type="submit" aria-label="提交学习目标">›</button>
+            <button class="dlc-submit" type="submit" aria-label="提交学习目标"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></button>
             <div class="dlc-quick-menu" id="quickMenu" role="listbox" aria-label="学习快捷选项" hidden>
               <button type="button" role="option" data-label="新手入门" data-prompt="我刚接触昇腾，希望从基础开始学习"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>新手入门</b><small>从环境搭建开始，完成首个昇腾开发任务。</small></span></button>
               <button type="button" role="option" data-label="算子开发" data-prompt="我想学习 Ascend C 算子开发"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>算子开发</b><small>开发、调试和优化昇腾自定义算子。</small></span></button>
@@ -107,7 +103,7 @@
     </section>
     <section class="october-section" id="certifications" aria-labelledby="certTitle"><h2 id="certTitle">按照认证路径学习</h2><p class="section-intro">以下是我们按认证等级设计的进阶路线，从入门到专家逐级递进，帮你在体系化学习中夯实能力、拿下社区认证</p><div class="pill-tabs cert-tabs" role="tablist" aria-label="认证等级"><button role="tab" aria-selected="true" data-cert="ACDA">入门级 ACDA</button><button role="tab" aria-selected="false" data-cert="ACDP">工作级 ACDP</button><button role="tab" aria-selected="false" data-cert="ACDE">专家级 ACDE</button></div><div class="cert-grid" id="certGrid" role="tabpanel" aria-live="polite"></div></section>
     <section class="october-section" id="events" aria-labelledby="eventsTitle"><h2 id="eventsTitle">开发者活动</h2><p class="section-intro">提供面向开发者的系列技术活动，涵盖动手训练营、专家讲座与实战答疑，在实操和互动中快速进阶。</p><div class="events-board"><div class="events-toolbar"><div class="month-controls"><button type="button" id="previousMonth" aria-label="上个月">‹</button><strong id="calendarMonth"></strong><button type="button" id="nextMonth" aria-label="下个月">›</button></div><span class="schedule-label">活动日程 <small>示例</small></span><div class="event-filters" aria-label="活动类型"><button aria-pressed="true" data-kind="全部">全部</button><button aria-pressed="false" data-kind="会议">会议</button><button aria-pressed="false" data-kind="活动">活动</button><button aria-pressed="false" data-kind="峰会">峰会</button></div></div><div class="events-body"><div class="calendar"><div class="weekdays" aria-hidden="true"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div><div class="calendar-grid" id="calendarGrid" aria-label="活动日期"></div></div><div class="event-list" id="eventList" aria-live="polite"></div></div></div><button class="all-events" id="showAllEvents" type="button">查看本月全部活动 <span aria-hidden="true">›</span></button></section>
-    <section class="october-section community-section" id="growth" aria-labelledby="growthTitle"><h2 id="growthTitle">社区经验贡献</h2><p class="section-intro">开发者沉淀的实战经验在这里分享，把踩过的坑变成后来者的路，在分享中放大你的技术影响力。</p><div class="contribution-banner"><div><h3>成为社区贡献者</h3><p>每一次有效贡献，无论是一篇教程、一段答疑，还是一份代码样例，都会累积积分成长值、兑换昇腾算力，为你的开发实验持续供能；当每个人的经验点滴汇入，把全场景 AI 异构计算平台越建越好，共同繁荣软硬件应用生态。</p><div class="contribution-actions"><a class="outline-button" href="prototypes/lowfi/developer-contribution-closed-loop.html">立即贡献</a><a href="prototypes/lowfi/knowledge-community.html">进入SIG中心 <span aria-hidden="true">›</span></a></div></div><img src="assets/images/october-home/community-art.webp" alt="代码、算力与知识连接构成的社区协作网络" loading="lazy"></div></section>
+    <section class="october-section community-section" id="growth" aria-labelledby="growthTitle"><h2 id="growthTitle">社区经验贡献</h2><p class="section-intro">开发者沉淀的实战经验在这里分享，把踩过的坑变成后来者的路，在分享中放大你的技术影响力。</p><div class="contribution-banner"><div><h3>成为社区贡献者</h3><p>每一次有效贡献，无论是一篇教程、一段答疑，还是一份代码样例，都会累积积分成长值、兑换昇腾算力，为你的开发实验持续供能；当每个人的经验点滴汇入，把全场景 AI 异构计算平台越建越好，共同繁荣软硬件应用生态。</p><div class="contribution-actions"><a class="outline-button" href="prototypes/lowfi/developer-contribution-closed-loop.html">立即贡献</a></div></div><img src="assets/images/october-home/community-art.webp" alt="代码、算力与知识连接构成的社区协作网络" loading="lazy"></div></section>
   </main>
 
   <footer class="dlc-footer">
@@ -136,7 +132,7 @@
   </aside>
 
   <script src="assets/js/home-october.js?v=spotlight-2"></script>
-  <script src="assets/js/home-figma.js?v=community-floor-2"></script>
+  <script src="assets/js/home-figma.js?v=hero-reference-3"></script>
   <script src="assets/js/course-outline.js?v=outline-toolbar-1"></script>
   <script src="assets/js/course-compose.js?v=lesson-types-2"></script>
   <script src="assets/js/course-flow.js?v=stream-flow-4"></script>
