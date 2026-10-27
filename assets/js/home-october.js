@@ -145,34 +145,3 @@
     if (visible) wake(); else { pointer.active=false; cancelAnimationFrame(frame); frame=0; }
   }).observe(hero);
 })();
-
-// One shared label avoids putting duplicated labels or artwork into the cards.
-(() => {
-  const label = document.createElement('span');
-  label.className = 'fan-hover-label';
-  label.setAttribute('aria-hidden', 'true');
-  document.body.append(label);
-  let current = null;
-  function position() {
-    if (!current) return;
-    const box = current.getBoundingClientRect();
-    label.style.left = `${box.left + box.width / 2}px`;
-    label.style.top = `${box.top - 12}px`;
-  }
-  function show(card) {
-    current = card;
-    label.textContent = card.classList.contains('fan-right') ? '认证路径' : '课程';
-    position();
-    label.dataset.visible = 'true';
-  }
-  function hide() { label.dataset.visible = 'false'; current = null; }
-  document.querySelectorAll('.october-fan>a').forEach(card => {
-    card.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch') show(card); });
-    card.addEventListener('pointerleave', () => { if (document.activeElement !== card) hide(); });
-    card.addEventListener('focus', () => show(card));
-    card.addEventListener('blur', hide);
-    card.addEventListener('transitionend', position);
-  });
-  addEventListener('scroll', position, {passive:true});
-  addEventListener('resize', hide, {passive:true});
-})();

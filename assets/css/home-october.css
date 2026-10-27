@@ -22,16 +22,57 @@ a.skip-link{position:fixed!important;top:-100px!important;left:20px!important;z-
 .play-icon{left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#edf5ff65,#c9ddff30);backdrop-filter:blur(5px);box-shadow:inset 0 1px 5px #fff9}
 .play-icon svg{width:26px;height:26px;display:block}
 .fan-progress{z-index:1}.fan-progress span{background:#4781ff;box-shadow:inset 0 0 0 1px #2868ef;border-radius:inherit}
-.fan-side,.fan-center{isolation:isolate;transition:transform .24s,box-shadow .24s,filter .24s;outline-offset:5px}
-.fan-center:is(:hover,:focus-visible){transform:translateY(-9px);box-shadow:0 18px 40px #6288db45,0 0 0 2px #ffffffd9;filter:brightness(1.035)}
-.fan-left:is(:hover,:focus-visible){transform:rotate(-6deg) translateY(-9px);box-shadow:0 16px 34px #6288db3d,0 0 0 2px #fff;z-index:3}
-.fan-right:is(:hover,:focus-visible){transform:rotate(6deg) translateY(-9px);box-shadow:0 16px 34px #6288db3d,0 0 0 2px #fff;z-index:3}
-.fan-hover-label{position:fixed;z-index:10001;pointer-events:none;border-radius:7px;background:#18191d;color:#fff;font-size:12px;line-height:20px;padding:6px 14px;box-shadow:0 4px 12px #151a2320;transform:translate(-50%,-100%);opacity:0;transition:opacity .16s;white-space:nowrap}
-.fan-hover-label[data-visible=true]{opacity:1}.fan-hover-label::after{content:"";position:absolute;top:100%;left:50%;margin-left:-4px;border:4px solid transparent;border-top-color:#18191d}
+.october-fan{height:320px;overflow:visible}
+.fan-slot{position:absolute;top:38px;width:350px;height:218px;z-index:1;transition:transform .3s cubic-bezier(.2,.75,.25,1)}
+.fan-slot-left{left:8px}.fan-slot-right{right:8px}
+.fan-slot-center{left:50%;top:16px;width:350px;height:222px;z-index:2;transform:translateX(-50%)}
+.fan-slot .fan-side,.fan-slot .fan-center{position:relative;top:auto;left:auto;right:auto;width:100%;height:100%;display:block;overflow:hidden;isolation:isolate;outline-offset:5px;transition:transform .3s cubic-bezier(.2,.75,.25,1),box-shadow .3s,filter .3s;transform-origin:center top}
+.fan-slot .fan-left{transform:rotate(-6deg)}.fan-slot .fan-right{transform:rotate(6deg)}.fan-slot .fan-center{transform:none}
+.fan-slot:is(:hover,:focus-within){z-index:5}
+.fan-slot:is(:hover,:focus-within) .fan-side,.fan-slot:is(:hover,:focus-within) .fan-center{box-shadow:0 24px 54px #4b648a52,0 0 0 3px #fff;filter:brightness(1.04)}
+.fan-slot-left:is(:hover,:focus-within) .fan-left{transform:scale(1.28)}
+.fan-slot-center:is(:hover,:focus-within) .fan-center{transform:scale(1.28)}
+.fan-slot-right:is(:hover,:focus-within) .fan-right{transform:scale(1.28)}
+.october-fan:has(.fan-slot-left:is(:hover,:focus-within)) .fan-slot-center{transform:translateX(calc(-50% + 90px))}
+.october-fan:has(.fan-slot-left:is(:hover,:focus-within)) .fan-slot-right{transform:translateX(40px)}
+.october-fan:has(.fan-slot-center:is(:hover,:focus-within)) .fan-slot-left{transform:translateX(-100px)}
+.october-fan:has(.fan-slot-center:is(:hover,:focus-within)) .fan-slot-right{transform:translateX(100px)}
+.october-fan:has(.fan-slot-right:is(:hover,:focus-within)) .fan-slot-left{transform:translateX(-40px)}
+.october-fan:has(.fan-slot-right:is(:hover,:focus-within)) .fan-slot-center{transform:translateX(calc(-50% - 90px))}
+.fan-pill{position:absolute;bottom:calc(100% + 12px);left:50%;z-index:2;display:inline-flex;align-items:center;gap:8px;min-height:39px;padding:7px 17px;border-radius:999px;background:#17191d;color:#fff;font-size:16px;font-weight:600;line-height:1;white-space:nowrap;box-shadow:0 8px 22px #20273533;opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,5px);transition:opacity .2s,transform .2s,visibility .2s}
+.fan-pill span{font-size:17px;font-weight:400;line-height:1}.fan-pill::after{content:"";position:absolute;top:100%;left:0;right:0;height:12px}
+.fan-slot:is(:hover,:focus-within) .fan-pill{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0)}
+.fan-pill:hover,.fan-pill:focus-visible{background:#000;color:#fff}
 /* The flattened reference includes text in its leftmost 12%; exclude that area. */
 .contribution-banner>img{object-fit:fill;clip-path:inset(0 0 0 13%);mask-image:linear-gradient(to right,transparent 13%,#000 27%)}
 @media(max-width:700px){.fan-center img{inset:0;width:100%;height:100%}.play-icon{top:50%;left:50%}.play-icon svg{width:22px;height:22px}}
 @media(prefers-reduced-motion:reduce){.fan-side:is(:hover,:focus-visible),.fan-center:is(:hover,:focus-visible){transform:none}}
+@media(max-width:1450px){
+  .october-fan{height:290px}
+  .fan-slot-left,.fan-slot-right{width:300px;height:192px}
+  .fan-slot-center{width:310px;height:208px}
+}
+@media(min-width:701px) and (max-width:850px){
+  .dlc-main{overflow-x:clip}
+  .october-fan{overflow:visible}
+  .fan-slot-left,.fan-slot-right{width:280px}
+  .fan-slot-left{left:0}.fan-slot-right{right:0}
+}
+@media(max-width:700px){
+  .dlc-main{overflow-x:clip}
+  .october-fan{height:210px;margin:28px auto 40px;overflow:visible}
+  .fan-slot-center{top:18px;width:232px;height:166px}
+  .fan-slot-left,.fan-slot-right{top:46px;width:215px;height:150px}
+  .fan-slot-left{left:calc(50% - 240px)}.fan-slot-right{right:calc(50% - 240px)}
+  .fan-pill{min-height:32px;padding:6px 13px;font-size:12px}
+  .fan-pill span{font-size:13px}
+  .fan-slot-left:is(:hover,:focus-within) .fan-left{transform:scale(1.08)}
+  .fan-slot-center:is(:hover,:focus-within) .fan-center{transform:scale(1.08)}
+  .fan-slot-right:is(:hover,:focus-within) .fan-right{transform:scale(1.08)}
+  .october-fan:has(.fan-slot-left:is(:hover,:focus-within)) .fan-slot-center,.october-fan:has(.fan-slot-right:is(:hover,:focus-within)) .fan-slot-center{transform:translateX(-50%)}
+  .october-fan:has(.fan-slot-center:is(:hover,:focus-within)) .fan-slot-left,.october-fan:has(.fan-slot-center:is(:hover,:focus-within)) .fan-slot-right,.october-fan:has(.fan-slot-left:is(:hover,:focus-within)) .fan-slot-right,.october-fan:has(.fan-slot-right:is(:hover,:focus-within)) .fan-slot-left{transform:none}
+}
+@media(prefers-reduced-motion:reduce){.fan-slot,.fan-slot .fan-side,.fan-slot .fan-center,.fan-pill{transition:none}}
 
 /* Match the supplied homepage search control. */
 .dlc-search input:focus-visible{outline:none!important;outline-offset:0;box-shadow:none!important}
