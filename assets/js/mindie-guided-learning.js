@@ -91,7 +91,7 @@
   }
   function render(s){const complete=s.steps.every(r=>r.status==='success'),count=s.steps.filter(r=>r.status==='success').length,preparationDone=s.steps.slice(0,6).every(r=>r.status==='success');
     let html=`<div class="env-flow guide-flow" data-uac-guide-id="${s.id}" data-uac-guide-version="7" data-uac-guide-state="${esc(JSON.stringify(s))}"><div class="env-vertical-head"><b>MindIE 文本生成实验</b><span class="env-demo-label">2 个阶段 · ${count}/7 个小步骤 · 演示</span></div><div class="guide-stages">${stageMarkup(s,true)}${stageMarkup(s,false)}</div>${complete?`<section class="env-summary" role="status"><b>✓ 环境准备与推理交互已完成</b><p>演示记录已保存；真实实验结果请以实际终端和服务响应为准。</p><div class="env-actions">${button('export','导出本次演示记录')}${button('note','保存到预览笔记')}</div></section>`:s.steps[s.current].status==='success'?`<div class="env-summary"><b>${preparationDone&&s.current===5?'环境准备完成，已自动收起':`第 ${s.current+1} 个小步骤完成，已自动收起`}</b><p>继续只进入下一步，不会自动执行后续操作。</p>${button('next',preparationDone&&s.current===5?'开始推理 →':'继续下一步 →',true)}</div>`:''}</div>`;
-    return window.MindIEStepUI.decorate(html);
+    return window.MindIEStepUI.decorate(html.replaceAll('（演示）','').replace(' 个小步骤 · 演示',' 个小步骤'));
   }
   function update(s,messageId){A.updateToolMessage(messageId,render(s));}
   function respond(s,i,record){
