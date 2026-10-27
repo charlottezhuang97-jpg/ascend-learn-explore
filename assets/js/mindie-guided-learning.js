@@ -168,5 +168,6 @@
   document.addEventListener('uac:render',hydrate);hydrate();
   const environmentLabel=document.querySelector('.ide-environment small');if(environmentLabel)environmentLabel.innerHTML='<i></i> HiDevLab A3 环境获取演示 · A2 手册模板兼容性待核对 · 未连接';
   const toolbar=[...document.querySelectorAll('.mindie-practice-link')].find(b=>b.textContent==='AI 实验引导');if(toolbar){toolbar.textContent='实验引导';toolbar.title='先完成环境准备，再开始推理（演示）';}
-  // The previous confirmation-heavy guide remains available from the companion history view.
+  // Dedicated catalog entry: retain the two-stage guide independently of automatic preparation.
+  if(new URLSearchParams(location.search).get('guide')==='open')start({isolated:true});
 })();

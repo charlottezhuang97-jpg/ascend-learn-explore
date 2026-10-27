@@ -51,5 +51,5 @@
   function syncEntry(){const entry=document.querySelector('.uac-environment-entry');if(entry){entry.querySelector('span').textContent='AI 学伴 · 新版';entry.querySelector('b').textContent='自动准备实验环境';entry.querySelector('small').textContent='环境获取 → 模型权重 → 打开 IDE';}}
   document.addEventListener('uac:render',()=>{syncEntry();resume();queueMicrotask(recoverInference);});syncEntry();queueMicrotask(recoverInference);
   const toolbar=[...document.querySelectorAll('.mindie-practice-link')].find(button=>button.textContent==='实验引导');if(toolbar){toolbar.textContent='自动准备环境';toolbar.title='自动演示环境与模型准备，并打开 IDE';}
-  if(new URLSearchParams(location.search).get('guide')==='open'||['environment','inference'].includes(new URLSearchParams(location.search).get('agent')))start();
+  if(new URLSearchParams(location.search).get('guide')!=='open'&&['environment','inference'].includes(new URLSearchParams(location.search).get('agent')))start();
 })();
