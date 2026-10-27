@@ -96,6 +96,7 @@ let lessonCount=0;
 let unitCount=0;
 let resourceItems=[];
 const moduleRoman=['一','二','三','四','五','六','七','八'];
+const timelineBookIcon='<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 8.2c-3.9-2.7-8-2.9-12-2.4v17.5c4-.5 8.1-.3 12 2.4 3.9-2.7 8-2.9 12-2.4V5.8c-4-.5-8.1-.3-12 2.4Z"/><path d="M16 8.2v17.5M20 11.2h5M20 15h5M20 18.8h4"/></svg>';
 nav.innerHTML=course.stages.map((stage,index)=>{
   const selected=index===0;
   const previousUnits=course.stages.slice(0,index).reduce((count,item)=>count+item.units.length,0);
@@ -113,7 +114,7 @@ nav.innerHTML=course.stages.map((stage,index)=>{
   }).join('');
   const phase=index===0?'理论篇':index===course.stages.length-1?'微认证':'实践篇';
   const start=index===0?`<a class="module-start" href="learn.html?course=${encodeURIComponent(courseKey)}&unit=${units[0]?.number||1}-1">从这开始学</a>`:'';
-  return `<li class="module-item"><span class="timeline-node" aria-hidden="true">▣</span><article class="module-card"><div class="module-card-heading"><div class="module-heading-top"><span class="module-kicker">章节${moduleRoman[index]||index+1}：${phase}</span><div class="module-heading-actions"><span class="module-meta">${count}项学习内容</span><button type="button" class="module-toggle" data-stage-index="${index}" aria-controls="module-content-${index}" aria-expanded="true" aria-pressed="${selected}" ${selected?'aria-current="step"':''}>收起⌃</button></div></div><h3>${escapeHtml(stage.title)}</h3><p>${escapeHtml(stage.reason)}</p>${start}</div><div class="module-content" id="module-content-${index}"><ol class="module-units" aria-label="${escapeHtml(stage.title)}课程内容">${unitRows}</ol>${index===course.stages.length-1?'<p class="module-certificate">完成课程学习并通过考核后，可获得课程认证。</p>':''}</div></article></li>`;
+  return `<li class="module-item"><span class="timeline-node" aria-hidden="true">${timelineBookIcon}</span><article class="module-card"><div class="module-card-heading"><div class="module-heading-top"><span class="module-kicker">章节${moduleRoman[index]||index+1}：${phase}</span><div class="module-heading-actions"><span class="module-meta">${count}项学习内容</span><button type="button" class="module-toggle" data-stage-index="${index}" aria-controls="module-content-${index}" aria-expanded="true" aria-pressed="${selected}" ${selected?'aria-current="step"':''}>收起⌃</button></div></div><h3>${escapeHtml(stage.title)}</h3><p>${escapeHtml(stage.reason)}</p>${start}</div><div class="module-content" id="module-content-${index}"><ol class="module-units" aria-label="${escapeHtml(stage.title)}课程内容">${unitRows}</ol>${index===course.stages.length-1?'<p class="module-certificate">完成课程学习并通过考核后，可获得课程认证。</p>':''}</div></article></li>`;
 }).join('');
 const totalLessons=course.stages.reduce((sum,stage)=>sum+stage.units.reduce((inner,raw,index)=>inner+normalizeUnit(raw,index+1).lessons.length,0),0);
 const curriculumTotal=document.querySelector('#curriculumTotal');

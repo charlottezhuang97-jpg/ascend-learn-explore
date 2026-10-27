@@ -213,3 +213,30 @@
 @media(max-width:780px){.detail-layout{width:calc(100% - 30px)}}
 @media(max-width:520px){.learning-progress-block .progress-head{flex-direction:row;align-items:center}.learning-progress-block .progress-head>span{font-size:10px}.learning-progress-block{grid-template-columns:minmax(0,1fr) auto}}
 .curriculum-panel{padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+
+/* Course-detail reference: companion mark, outlined book timeline, and lighter right rail. */
+.detail-ai-button{display:inline-flex;align-items:center;gap:6px;color:#27282d;font-size:14px;font-weight:400;line-height:20px}
+.detail-ai-button img{display:block;width:20px;height:20px;flex:none}
+.detail-side-card h2{font-size:16px;line-height:23px;font-weight:600;letter-spacing:0}
+.detail-side-card p{font-size:14px;line-height:21px;font-weight:400;color:#777b82}
+.custom-plan-card>span{font-size:20px;font-weight:300;line-height:22px}
+.prerequisite-card{gap:8px}
+.prerequisite-card .side-card-heading{display:block;margin-bottom:1px}
+.prerequisite-card .side-card-heading p{margin-top:5px}
+.prerequisite-card>a{font-size:14px;line-height:22px;font-weight:400;padding:2px 0;color:#383b40;text-decoration:none}
+.prerequisite-label{display:inline-flex;align-items:center;gap:8px;min-width:0}
+.prerequisite-label svg{display:block;width:18px;height:18px;flex:none;stroke:#4b4e53;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.prerequisite-card>a>span:last-child{font-size:20px;line-height:20px;color:#42454a;font-weight:300}
+.peer-card h2{font-size:16px;line-height:23px;font-weight:600}
+.peer-card h2 span{font-size:15px}
+.peer-summary{margin:5px 0 12px!important;color:#777b82!important}
+.peer-card .popular-course{gap:6px;padding:13px 14px;border-radius:12px}
+.popular-course strong{font-size:14px;line-height:21px;font-weight:600}
+.popular-course>span:nth-child(2){font-size:12px;line-height:18px}
+.popular-metrics{gap:10px;font-size:11px;line-height:16px}
+.timeline-node{border:2px solid #d4e3ff;background:#e8f0ff;color:#2465ff}
+.timeline-node svg{display:block;width:27px;height:27px;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.module-item:not(:first-child) .timeline-node{border-color:#e3e3e3;background:#f4f4f4;color:#858585}
+@media(min-width:1201px){.detail-layout{position:relative}.detail-top{width:75.81%}.detail-side-column{position:absolute;top:48px;right:0;width:22.04%}}
+@media(max-width:780px){.detail-side-card h2,.peer-card h2{font-size:16px;line-height:23px}.detail-side-card p{font-size:14px;line-height:21px}.prerequisite-card>a{font-size:14px}.timeline-node svg{width:23px;height:23px}}
+@media(max-width:520px){.detail-ai-button{font-size:13px}.detail-ai-button img{width:19px;height:19px}.detail-side-card h2,.peer-card h2{font-size:16px;line-height:23px}.detail-side-card p{font-size:14px;line-height:21px}.prerequisite-card>a{font-size:14px;line-height:22px}.popular-course strong{font-size:14px}.popular-course>span:nth-child(2){font-size:12px;line-height:18px}.popular-metrics{font-size:11px}.timeline-node svg{width:19px;height:19px}}
