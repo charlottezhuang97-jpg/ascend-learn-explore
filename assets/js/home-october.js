@@ -1,16 +1,17 @@
 (() => {
   const art = 'assets/images/october-home/';
+  const featuredIllustration = `${art}operator-art.webp`;
   const scenes = [
-    {title:'Ascend C算子开发',topic:'模型训练 / CANN',course:'operator',tags:['编程模型','编程范式','SIMD模型','矩阵计算'],units:'6单元 | 18讲',steps:['Ascend C 入门简单Vector算子开发','Ascend C 进阶泛化Vector算子开发','Ascend C 高级Cube算子开发','Ascend C 高级CV融合算子']},
+    {title:'Ascend C算子开发',topic:'模型训练 / CANN',course:'operator',image:featuredIllustration,tags:['编程模型','编程范式','SIMD模型','矩阵计算'],units:'6单元 | 18讲',steps:['Ascend C 入门简单Vector算子开发','Ascend C 进阶泛化Vector算子开发','Ascend C 高级Cube算子开发','Ascend C 高级CV融合算子']},
     {title:'大模型分布式训练',topic:'训练开发 / MindSpore',course:'training',tags:['模型构建','训练编排','混合精度','分布式训练'],units:'7单元 | 22讲',steps:['昇腾算力与 MindSpore 框架入门','数据处理与模型训练实践','分布式并行训练与通信优化','大模型混合精度与性能调优']},
-    {title:'大模型推理服务部署',topic:'推理与部署 / MindIE',course:'inference',tags:['模型转换','推理适配','服务部署','性能验证'],units:'5单元 | 16讲',steps:['模型转换与昇腾推理环境搭建','模型适配与推理验证','MindIE 推理服务化部署','推理时延与吞吐性能优化']},
-    {title:'昇腾开发调试与调优',topic:'调试与性能调优 / CANN',course:'operator',tags:['问题定位','精度分析','性能采集','优化验证'],units:'6单元 | 18讲',steps:['开发环境检查与常见问题定位','算子精度分析与调试实践','性能数据采集与瓶颈分析','Tiling 策略与执行效率优化']},
-    {title:'RAG 智能体应用开发',topic:'AI应用与智能体',course:'agent',tags:['模型接入','知识检索','工具调用','应用评估'],units:'5单元 | 14讲',steps:['大模型接入与应用开发基础','知识库构建与 RAG 检索实践','工具调用与智能体工作流编排','AI 应用部署与效果评估']}
+    {title:'大模型推理服务部署',topic:'推理与部署 / MindIE',course:'inference',image:featuredIllustration,tags:['模型转换','推理适配','服务部署','性能验证'],units:'5单元 | 16讲',steps:['模型转换与昇腾推理环境搭建','模型适配与推理验证','MindIE 推理服务化部署','推理时延与吞吐性能优化']},
+    {title:'昇腾开发调试与调优',topic:'调试与性能调优 / CANN',course:'operator',image:featuredIllustration,tags:['问题定位','精度分析','性能采集','优化验证'],units:'6单元 | 18讲',steps:['开发环境检查与常见问题定位','算子精度分析与调试实践','性能数据采集与瓶颈分析','Tiling 策略与执行效率优化']},
+    {title:'RAG 智能体应用开发',topic:'AI应用与智能体',course:'agent',image:featuredIllustration,tags:['模型接入','知识检索','工具调用','应用评估'],units:'5单元 | 14讲',steps:['大模型接入与应用开发基础','知识库构建与 RAG 检索实践','工具调用与智能体工作流编排','AI 应用部署与效果评估']}
   ];
   const tags = list => `<div class="small-tags">${list.map(t=>`<span>${t}</span>`).join('')}</div>`;
   function renderScene(index){
     const s=scenes[index];
-    document.getElementById('scenarioContent').innerHTML=`<a class="scenario-course" href="course-preview.html?course=${s.course}"><img src="${index===0?art+'operator-art.webp':'assets/images/figma-home/continue-course.png'}" alt=""><div class="scenario-course-info"><small><b>◈ 微认证</b>${s.topic}</small><h3>${s.title}</h3>${tags(s.tags)}</div><div class="scenario-course-meta"><span>▤ ${s.units}</span><span>▣ 标准实践</span></div></a><div class="scenario-path">${s.steps.map((t,i)=>`<a class="path-step" href="course-preview.html?course=${s.course}"><span>${['初级','中级','高级','高级'][i]}</span>${t}</a>`).join('')}<a class="path-step" href="course-preview.html?course=${s.course}"><span>实践</span>完成以上课程，将所学知识应用到真实场景，开始你的开发任务 <b aria-hidden="true">›</b></a></div>`;
+    document.getElementById('scenarioContent').innerHTML=`<a class="scenario-course" href="course-preview.html?course=${s.course}"><img src="${s.image||'assets/images/figma-home/continue-course.png'}" alt=""><div class="scenario-course-info"><small><b>◈ 微认证</b>${s.topic}</small><h3>${s.title}</h3>${tags(s.tags)}</div><div class="scenario-course-meta"><span>▤ ${s.units}</span><span>▣ 标准实践</span></div></a><div class="scenario-path">${s.steps.map((t,i)=>`<a class="path-step" href="course-preview.html?course=${s.course}"><span>${['初级','中级','高级','高级'][i]}</span>${t}</a>`).join('')}<a class="path-step" href="course-preview.html?course=${s.course}"><span>实践</span>完成以上课程，将所学知识应用到真实场景，开始你的开发任务 <b aria-hidden="true">›</b></a></div>`;
   }
   const sceneTabs=[...document.querySelectorAll('[data-scene]')];
   const featured=[...document.querySelectorAll('[data-featured]')];

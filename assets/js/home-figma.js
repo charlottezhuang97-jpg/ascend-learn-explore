@@ -113,9 +113,9 @@
   };
 
   const quizSteps = [
-    { question: '你是什么角色？', options: ['AI 初学者', '高校学生', '算法工程师', '应用开发者', '推理部署', '算子开发', '随便看看'] },
-    { question: '你的目标是？', options: ['掌握基础知识', '训练开发', '推理开发', '调试优化', '获取认证', '开发 AI 应用'] },
-    { question: '你当前的水平是？', options: ['零基础', '熟悉 Python', '熟悉 Triton', '熟悉 C++', '熟悉 CUDA / Ascend C'] }
+    { question: '你的昇腾技术经验', description: '简单三步助你快速开启昇腾学习之旅，请选择你目前的昇腾技术经验。', options: ['初学者', '具备昇腾基础知识', '有昇腾平台开发经验'] },
+    { question: '感兴趣的技术领域', description: '很好，您对以下哪些技术领域感兴趣？可选择多项。', options: ['CANN', '算子开发', '模型训练', '模型推理', '应用开发', '平台和工具', '其他'], multiple: true },
+    { question: '你的学习目标', description: '很好，请问你的学习目标是？', options: ['了解产品', '提升开发能力', '获取认证'] }
   ];
 
   function setQuickMenu(open) {
@@ -282,23 +282,70 @@
     hint.textContent = `已记录问题「${value}」。快速问答将在后续版本接入。`;
   });
 
+  const quizRecommendations = {
+    training: { title: '昇腾算力与 MindSpore 框架：大语言模型开发与深度调优全栈指南', description: '从昇腾计算栈出发，完成模型训练、分布式并行与性能调优。', duration: '约 20 小时', path: '大模型分布式训练学习路径', pathDescription: '从框架基础到分布式训练实践，逐步建立训练开发能力。', cert: '训练开发认证' },
+    inference: { title: '大模型推理服务部署', description: '完成模型准备、推理适配、服务部署与性能验证。', duration: '约 11 小时', path: '推理与部署学习路径', pathDescription: '从推理环境搭建到服务部署与性能优化，循序进阶。', cert: '推理开发者认证' },
+    operator: { title: 'Ascend C 算子开发', description: '从算子分析与实现出发，完成部署和性能验收。', duration: '约 13 小时', path: 'Ascend C 算子开发学习路径', pathDescription: '从编程模型到算子工程化与调优，逐步完成开发实践。', cert: '算子开发认证' },
+    agent: { title: 'RAG 智能体应用开发', description: '从知识库构建到工具调用，完成可评估的智能体应用。', duration: '约 8 小时', path: 'AI 应用与智能体学习路径', pathDescription: '从模型接入到应用编排与评估，逐步完成项目实践。', cert: 'AI应用开发者认证' }
+  };
+
+  function quizCourseKey() {
+    const interests = quizAnswers[1] || [];
+    if (interests.includes('模型推理')) return 'inference';
+    if (interests.includes('应用开发')) return 'agent';
+    if (interests.includes('算子开发') || interests.includes('CANN')) return 'operator';
+    return 'training';
+  }
+
+  let quizTimer = 0;
   function renderQuiz() {
-    const isSummary = quizIndex === quizSteps.length;
-    quizProgress.style.width = `${isSummary ? 100 : (quizIndex / quizSteps.length) * 100}%`;
+    window.clearTimeout(quizTimer);
+    const isGenerating = quizIndex === quizSteps.length;
+    const isSummary = quizIndex > quizSteps.length;
+    quizDialog.classList.toggle('quiz-dialog-results', isSummary);
+    quizDialog.classList.toggle('quiz-dialog-generating', isGenerating);
+    quizProgress.style.width = `${isSummary || isGenerating ? 100 : (quizIndex / quizSteps.length) * 100}%`;
+    if (isGenerating) {
+      const tags = [quizAnswers[0], ...(quizAnswers[1] || []), quizAnswers[2]];
+      quizStage.innerHTML = `<div class="quiz-generating" role="status" aria-live="polite"><p class="quiz-step">3 步已完成</p><h2>正在生成你的学习方案</h2><p>根据你的经验、兴趣和学习目标，整理适合你的课程、路径与认证。</p><div class="quiz-answer-tags">${tags.map(answer => `<span>${answer}</span>`).join('')}</div><div class="quiz-loading" aria-hidden="true"><i></i><i></i><i></i></div><span class="quiz-loading-label">正在匹配学习内容…</span></div>`;
+      quizTimer = window.setTimeout(() => { quizIndex += 1; renderQuiz(); quizDialog.focus(); }, 1800);
+      return;
+    }
     if (isSummary) {
-      quizStage.innerHTML = `<div class="quiz-summary"><div class="quiz-summary-mark" aria-hidden="true">✓</div><h2>为你整理好了学习方向</h2><p>将以官方内容为主，为你生成可继续调整的专属课程。</p><div class="quiz-answer-tags">${quizAnswers.map(answer => `<span>${answer}</span>`).join('')}</div><button class="quiz-primary" id="quizComplete" type="button">查看专属课程</button></div>`;
-      document.getElementById('quizComplete').addEventListener('click', completeQuiz);
+      const [experience, interests, goal] = quizAnswers;
+      const course = quizCourseKey();
+      const rec = quizRecommendations[course];
+      const profile = encodeURIComponent(`${experience}，关注${interests.join('、')}，希望${goal}`);
+      const base = `course-preview.html?course=${course}&source=quiz&profile=${profile}`;
+      const cards = [
+        { type: '课程', title: rec.title, description: rec.description, duration: rec.duration, relevance: 96, href: base, action: '查看课程', pattern: 'course' },
+        { type: '学习路径', title: rec.path, description: rec.pathDescription, duration: rec.duration, relevance: 93, href: base, action: '查看学习路径', pattern: 'path' },
+        { type: '认证', title: rec.cert, description: '通过认证学习与能力验证，检验并证明你的开发能力。', duration: '待确定', relevance: 89, href: `${base}&certification=ACDA`, action: '查看认证', pattern: 'cert' }
+      ];
+      quizStage.innerHTML = `<div class="quiz-results"><div class="quiz-results-heading"><span class="quiz-results-kicker">YOUR LEARNING PLAN</span><h2>为你推荐的学习方案</h2><p>根据你的学习目标，匹配适合的学习内容。</p></div><div class="quiz-goal"><span>你的学习目标</span><strong>${goal}</strong><small>${experience} · ${interests.join("、")}</small></div><div class="quiz-result-grid">${cards.map(card => `<article class="quiz-result-card"><div class="quiz-card-art quiz-card-art--${card.pattern}"><span>${card.type}</span><i aria-hidden="true"></i></div><div class="quiz-card-body"><h3>${card.title}</h3><p>${card.description}</p><div class="quiz-card-meta"><span>${card.type === '认证' ? '预计备考时长' : '学习时长'}</span><strong>${card.duration}</strong></div><div class="quiz-card-relevance"><span>与你的目标相关性</span><strong>${card.relevance}%</strong></div><div class="quiz-card-track" aria-hidden="true"><span style="width:${card.relevance}%"></span></div><a href="${card.href}">${card.action}<span aria-hidden="true">↗</span></a></div></article>`).join('')}</div><button class="quiz-edit" type="button">← 修改测评答案</button></div>`;
+      quizStage.querySelector('.quiz-edit').addEventListener('click', () => { quizIndex = 0; renderQuiz(); quizDialog.focus(); });
       return;
     }
     const step = quizSteps[quizIndex];
-    quizStage.innerHTML = `<div class="quiz-content"><p class="quiz-step">第 ${quizIndex + 1} 步 / 共 ${quizSteps.length} 步</p><h2>${step.question}</h2><p>选择最符合你当前情况的一项。</p><div class="quiz-options">${step.options.map(option => `<button class="quiz-option" type="button" data-answer="${option}" aria-pressed="false">${option}</button>`).join('')}</div></div>`;
+    const chosen = step.multiple ? (quizAnswers[quizIndex] || []) : quizAnswers[quizIndex];
+    quizStage.innerHTML = `<div class="quiz-content"><p class="quiz-step">第 ${quizIndex + 1} 步 / 共 ${quizSteps.length} 步</p><h2>${step.question}</h2><p class="quiz-description">${step.description}</p><div class="quiz-options ${step.multiple?'quiz-options--multiple':'quiz-options--single'}">${step.options.map(option => `<button class="quiz-option" type="button" data-answer="${option}" aria-pressed="${step.multiple?chosen.includes(option):chosen===option}">${option}</button>`).join('')}</div><div class="quiz-step-actions">${quizIndex>0?'<button class="quiz-back" type="button">上一步</button>':''}${step.multiple?'<button class="quiz-next" type="button" '+(chosen.length?'':'disabled')+'>下一步 →</button>':''}</div></div>`;
     quizStage.querySelectorAll('.quiz-option').forEach(button => {
       button.addEventListener('click', () => {
+        if (step.multiple) {
+          const current = quizAnswers[quizIndex] || [];
+          quizAnswers[quizIndex] = current.includes(button.dataset.answer) ? current.filter(answer => answer !== button.dataset.answer) : [...current, button.dataset.answer];
+          button.setAttribute('aria-pressed', String(quizAnswers[quizIndex].includes(button.dataset.answer)));
+          quizStage.querySelector('.quiz-next').disabled = quizAnswers[quizIndex].length === 0;
+          return;
+        }
         quizStage.querySelectorAll('.quiz-option').forEach(option => option.setAttribute('aria-pressed', String(option === button)));
         quizAnswers[quizIndex] = button.dataset.answer;
-        window.setTimeout(() => { quizIndex += 1; renderQuiz(); quizDialog.focus(); }, 140);
+        window.clearTimeout(quizTimer);
+        quizTimer = window.setTimeout(() => { quizIndex += 1; renderQuiz(); quizDialog.focus(); }, 160);
       });
     });
+    quizStage.querySelector('.quiz-back')?.addEventListener('click', () => { quizIndex -= 1; renderQuiz(); quizDialog.focus(); });
+    quizStage.querySelector('.quiz-next')?.addEventListener('click', () => { quizIndex += 1; renderQuiz(); quizDialog.focus(); });
   }
 
   function openQuiz() {
@@ -307,23 +354,15 @@
     quizAnswers = [];
     renderQuiz();
     quiz.hidden = false;
-    [document.querySelector('.site-nav'), document.querySelector('main'), document.querySelector('footer')].forEach(element => { if (element) element.inert = true; });
+    [document.querySelector('.october-nav'), document.querySelector('main'), document.querySelector('footer')].forEach(element => { if (element) element.inert = true; });
     quizDialog.focus();
   }
 
   function closeQuiz() {
+    window.clearTimeout(quizTimer);
     quiz.hidden = true;
-    [document.querySelector('.site-nav'), document.querySelector('main'), document.querySelector('footer')].forEach(element => { if (element) element.inert = false; });
+    [document.querySelector('.october-nav'), document.querySelector('main'), document.querySelector('footer')].forEach(element => { if (element) element.inert = false; });
     if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
-  }
-
-  function completeQuiz() {
-    const [role, goal, level] = quizAnswers;
-    const generatedGoal = `${role}，希望${goal}，当前${level}`;
-    const profile = `${role || ''} ${goal || ''} ${level || ''}`;
-    const course = /推理/.test(profile) ? 'inference' : /应用/.test(profile) ? 'agent' : /算子|Ascend C|Triton|CUDA/.test(profile) ? 'operator' : 'training';
-    closeQuiz();
-    window.location.assign(`course-preview.html?course=${course}&source=quiz&profile=${encodeURIComponent(generatedGoal)}`);
   }
 
   openQuizButton.addEventListener('click', event => {
@@ -335,7 +374,7 @@
   quiz.addEventListener('keydown', event => {
     if (event.key === 'Escape') { event.preventDefault(); closeQuiz(); }
     if (event.key === 'Tab') {
-      const focusables = [...quiz.querySelectorAll('button:not([disabled])')];
+      const focusables = [...quiz.querySelectorAll('button:not([disabled]), a[href]')];
       if (!focusables.length) return;
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
