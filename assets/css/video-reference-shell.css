@@ -214,4 +214,4 @@ body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .ua
 .iv-note-section:nth-child(2) .iv-note-content>p{margin-bottom:12px}
 .iv-voice,.iv-search{background-image:url('../images/video-learning-reference/transcript-v2.webp');background-size:1920px 1080px}
 @media(max-width:1300px){.iv-board-viewport{left:32px;right:32px}.iv-summary-sections{margin-left:26px;margin-right:0}.iv-knowledge-card h5{font-size:14px}.iv-summary-section{padding:12px}.iv-summary-section>summary{font-size:14px}}
-@media(max-width:800px){.iv-board-viewport{left:16px;right:16px;top:94px}.iv-board-mode .iv-course-header{top:14px}.iv-board-mode .iv-canvas-tools{top:52px}}
+@media(max-width:800px){.iv-board-viewport{left:16px;right:16px;top:94px}.iv-board-mode .iv-course-header{top:14px}.iv-board-mode .iv-canvas-tools{top:52px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel:is([data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]){top:auto!important;right:12px!important;bottom:12px!important}}

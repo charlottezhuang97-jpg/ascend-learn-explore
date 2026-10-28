@@ -106,6 +106,13 @@
   new MutationObserver(()=>{const entry=surface.querySelector('[data-iv-open]');entry.hidden=!panel.hidden;if(panel.hidden&&referenceView()&&panel.contains(document.activeElement))entry.focus({preventScroll:true});}).observe(panel,{attributes:true,attributeFilter:['hidden']});
   document.addEventListener('uac:render',()=>{renderedFeature='';decorate();});
   document.addEventListener('uac:open',decorate);
+  document.addEventListener('learning:time-update',event=>{
+    const seconds=Number(event.detail?.seconds);if(!Number.isFinite(seconds)||seconds<0)return;
+    const time=[Math.floor(seconds/3600),Math.floor(seconds/60)%60,Math.floor(seconds)%60].map(n=>String(n).padStart(2,'0')).join(':');
+    surface.querySelector('.iv-player-controls time').textContent=time;
+    for(let i=0;i<rows.length;i++){const [h,m,s]=rows[i][0].split(':').map(Number);if(h*3600+m*60+s<=seconds)selectedRow=i;}
+    panel.querySelectorAll('.iv-transcript-list [aria-current]').forEach((b,i)=>b.setAttribute('aria-current',String(i===selectedRow)));
+  });
   panel.querySelector('.uac-mode-switch').addEventListener('toggle',event=>{if(event.target.open){menu.hidden=true;header.querySelector('[data-iv-tool-menu]').setAttribute('aria-expanded','false');}});
   panel.addEventListener('click',event=>{
     const type=event.target.closest('[data-uac-action="assistant-mode"]');if(type){assistant.showHome();return;}
