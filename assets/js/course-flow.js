@@ -492,6 +492,11 @@
   }
 
   window.openCourseFlow = value => {
+    // A specific certification goal opens its designed path without the search interview.
+    if (/(?:工作级|ACDP)/i.test(value) && /推理/.test(value) && /(?:认证|考取|考证)/.test(value)) {
+      location.assign('certification-path.html?track=inference&level=ACDP');
+      return;
+    }
     goal = value;
     goalElement.textContent = value;
     questions = /算子|Ascend\s*C/i.test(value) ? topicQuestions.operator : /推理|部署|服务化/i.test(value) ? topicQuestions.inference : trainingQuestions;
