@@ -11,6 +11,7 @@
   },
   "pages": [
     {"id":"home","title":"首页","status":"current","source":"index.html","publicPath":"index.html","description":"目标输入、继续学习与通往全屏个人知识地图的入口"},
+    {"id":"certification-path","title":"推理开发者认证（工作级）","status":"current","source":"certification-path.html","publicPath":"certification-path.html?track=inference&level=ACDP","description":"首页输入工作级推理认证目标后直接进入的认证路径，按本地 Pixso 设计稿还原理论学习、考试与证书节点。"},
     {"id":"course-preview","title":"课程预览","status":"current","source":"course-preview.html","publicPath":"course-preview.html?course=training","description":"课程模块、单元、课程覆盖区域、真实环境复现与社区经验链路"},
     {"id":"learn","title":"沉浸式学习","status":"current","source":"learn.html","publicPath":"learn.html?course=training","description":"白板、视频、IDE 与 AI 学伴协作学习"},
     {"id":"learn-stepwise","title":"AI 学伴 · 实验模式","status":"current","source":"learn-stepwise.html","publicPath":"learn-stepwise.html?course=mindie&mode=video&guide=open","description":"按设计方案呈现 MindIE 文本生成实验的环境准备、权重与镜像、推理配置、实验执行四组任务；保留七项操作的逐项确认与结果预览。"},

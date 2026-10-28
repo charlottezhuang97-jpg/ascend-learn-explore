@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>推理开发者认证（工作级）· 昇腾</title>
+  <meta name="description" content="推理开发者认证工作级学习路径：理论学习、理论考试、编程考试与认证。">
+  <link rel="stylesheet" href="assets/css/certification-path.css?v=1">
+</head>
+<body class="certification-page">
+  <div class="path-viewport" id="pathViewport">
+    <main class="path-canvas" id="pathCanvas" aria-labelledby="pathTitle">
+      <header class="path-navigation">
+        <a href="index.html"><span class="path-icon icon-back" aria-hidden="true"></span>退出认证路径</a>
+        <button type="button" data-uac-entry><span class="path-icon icon-assistant" aria-hidden="true"></span>AI 学伴</button>
+      </header>
+      <section class="path-intro">
+        <h1 id="pathTitle">推理开发者认证（工作级）</h1>
+        <div class="path-actions">
+          <button class="path-add-plan" id="addPathPlan" type="button" aria-pressed="false"><span class="path-icon icon-plus" aria-hidden="true"></span><span>加入学习计划</span></button>
+          <button class="path-edit" id="editPath" type="button"><span class="path-icon icon-edit" aria-hidden="true"></span>编辑路径</button>
+        </div>
+        <span class="path-badge path-icon" role="img" aria-label="认证学习路径徽章"></span>
+      </section>
+      <div class="path-map" aria-label="认证学习路径图">
+        <svg class="path-connections" viewBox="0 0 1920 2556" aria-hidden="true"><defs><linearGradient id="spineColor" gradientUnits="userSpaceOnUse" x1="960" y1="318" x2="960" y2="2107"><stop stop-color="#d4d5d7"/><stop offset=".1" stop-color="#5385ff"/><stop offset="1" stop-color="#5385ff"/></linearGradient></defs><path class="path-spine" d="M960 318V2107"/><g id="branchConnections"></g></svg>
+        <h2 class="path-phase phase-learning">理论学习</h2>
+        <h2 class="path-phase phase-theory">理论考试</h2>
+        <h2 class="path-phase phase-programming">编程考试</h2>
+        <div id="pathNodes"></div>
+      </div>
+    </main>
+  </div>
+  <p class="path-toast" id="pathToast" role="status" hidden></p>
+  <dialog class="path-dialog" id="pathDialog" aria-labelledby="pathDialogTitle">
+    <form method="dialog"><button class="path-dialog-close" aria-label="关闭" type="submit">×</button></form>
+    <h2 id="pathDialogTitle"></h2><div id="pathDialogBody"></div>
+  </dialog>
+  <script src="assets/js/certification-path.js?v=1"></script>
+  <script src="assets/js/unified-companion.js?v=immersive-v2-fresh-start"></script>
+</body>
+</html>
