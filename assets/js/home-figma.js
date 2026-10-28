@@ -11,10 +11,9 @@
   const quizHelper = document.getElementById('quizHelper');
   const openQuizButton = document.getElementById('openQuiz');
   const quiz = document.getElementById('learningQuiz');
-  const quizClose = document.getElementById('quizClose');
+  const quizBackButton = document.getElementById('quizBack');
   const quizDialog = quiz.querySelector('.quiz-dialog');
   const quizStage = document.getElementById('quizStage');
-  const quizProgress = document.getElementById('quizProgress');
   let quickOptions = [...quickMenu.querySelectorAll('button')];
   let mode = 'course';
   let quickIndex = -1;
@@ -113,8 +112,8 @@
   };
 
   const quizSteps = [
-    { question: '你的昇腾技术经验', description: '简单三步助你快速开启昇腾学习之旅，请选择你的昇腾技术经验。', options: ['初学者', '具备生产基础知识', '有生产平台开发经验'] },
-    { question: '感兴趣的技术领域', description: '很好，您对以下哪些技术领域感兴趣？可选择多项。', options: ['CANN', '算子开发', '模型训练', '模型推理', '应用开发', '平台和工具', '其他'], multiple: true },
+    { question: '你的昇腾技术经验', description: '简单三步助你快速开启昇腾学习之旅，请选择你的昇腾技术经验。', options: ['初学者', '具备生产基础知识', '有生产平台开发经验'], avatars: true },
+    { question: '感兴趣的技术领域', description: '很好，您对以下哪些技术领域感兴趣？', options: ['CANN', '算子开发', '模型训练', '模型推理', '应用开发', '平台和工具', '其他'] },
     { question: '你的学习目标', description: '很好，请问你的学习目标是？', options: ['了解产品', '提升开发能力', '获取认证'] }
   ];
 
@@ -304,10 +303,10 @@
     const isSummary = quizIndex > quizSteps.length;
     quizDialog.classList.toggle('quiz-dialog-results', isSummary);
     quizDialog.classList.toggle('quiz-dialog-generating', isGenerating);
-    quizProgress.style.width = `${isSummary || isGenerating ? 100 : (quizIndex / quizSteps.length) * 100}%`;
     if (isGenerating) {
-      const tags = [quizAnswers[0], ...(quizAnswers[1] || []), quizAnswers[2]];
-      quizStage.innerHTML = `<div class="quiz-generating" role="status" aria-live="polite"><p class="quiz-step">3 步已完成</p><h2>AI 正在为你生成学习路径</h2><p>根据你的经验、兴趣和学习目标，整理适合你的课程、路径与认证。</p><div class="quiz-answer-tags">${tags.map(answer => `<span>${answer}</span>`).join('')}</div><div class="quiz-loading" aria-hidden="true"><i></i><i></i><i></i></div><span class="quiz-loading-label">正在匹配学习内容…</span></div>`;
+      const tags = quizAnswers.slice(0, quizSteps.length);
+      const avatarIndex = quizSteps[0].options.indexOf(quizAnswers[0]);
+      quizStage.innerHTML = `<div class="quiz-generating" role="status" aria-live="polite"><h2>AI 正在为你生成学习路径</h2><div class="quiz-loading" aria-hidden="true"><i></i><i></i><i></i></div><div class="quiz-answer-tags"><span class="quiz-answer-profile"><span class="quiz-avatar quiz-avatar--small" data-avatar="${avatarIndex}" aria-hidden="true"></span><span>${tags[0]}</span></span>${tags.slice(1).map(answer => `<span>${answer}</span>`).join('')}</div><ul class="quiz-generation-checks"><li>分析你的角色与基础...</li><li>匹配适合的学习任务...</li><li>检查前置依赖知识...</li></ul></div>`;
       quizTimer = window.setTimeout(() => { quizIndex += 1; renderQuiz(); quizDialog.focus(); }, 1800);
       return;
     }
@@ -327,25 +326,16 @@
       return;
     }
     const step = quizSteps[quizIndex];
-    const chosen = step.multiple ? (quizAnswers[quizIndex] || []) : quizAnswers[quizIndex];
-    quizStage.innerHTML = `<div class="quiz-content"><p class="quiz-step">第 ${quizIndex + 1} 步 / 共 ${quizSteps.length} 步</p><h2>${step.question}</h2><p class="quiz-description">${step.description}</p><div class="quiz-options ${step.multiple?'quiz-options--multiple':'quiz-options--single'}">${step.options.map(option => `<button class="quiz-option" type="button" data-answer="${option}" aria-pressed="${step.multiple?chosen.includes(option):chosen===option}">${option}</button>`).join('')}</div><div class="quiz-step-actions">${quizIndex>0?'<button class="quiz-back" type="button">上一步</button>':''}${step.multiple?'<button class="quiz-next" type="button" '+(chosen.length?'':'disabled')+'>下一步 →</button>':''}</div></div>`;
+    const chosen = quizAnswers[quizIndex];
+    quizStage.innerHTML = `<div class="quiz-content"><div class="quiz-prompt"><h2 aria-label="${step.question}">${step.description}</h2></div><div class="quiz-options ${step.avatars?'quiz-options--avatars':'quiz-options--numbered'} quiz-options--count-${step.options.length}">${step.options.map((option,index) => `<button class="quiz-option" type="button" data-answer="${option}" aria-pressed="${chosen===option}">${step.avatars?`<span class="quiz-avatar" data-avatar="${index}" aria-hidden="true"></span>`:`<span class="quiz-option-number" aria-hidden="true">${index+1}</span>`}<span class="quiz-option-label">${option}</span><span class="quiz-option-check" aria-hidden="true">✓</span></button>`).join('')}</div></div>`;
     quizStage.querySelectorAll('.quiz-option').forEach(button => {
       button.addEventListener('click', () => {
-        if (step.multiple) {
-          const current = quizAnswers[quizIndex] || [];
-          quizAnswers[quizIndex] = current.includes(button.dataset.answer) ? current.filter(answer => answer !== button.dataset.answer) : [...current, button.dataset.answer];
-          button.setAttribute('aria-pressed', String(quizAnswers[quizIndex].includes(button.dataset.answer)));
-          quizStage.querySelector('.quiz-next').disabled = quizAnswers[quizIndex].length === 0;
-          return;
-        }
         quizStage.querySelectorAll('.quiz-option').forEach(option => option.setAttribute('aria-pressed', String(option === button)));
         quizAnswers[quizIndex] = button.dataset.answer;
         window.clearTimeout(quizTimer);
         quizTimer = window.setTimeout(() => { quizIndex += 1; renderQuiz(); quizDialog.focus(); }, 160);
       });
     });
-    quizStage.querySelector('.quiz-back')?.addEventListener('click', () => { quizIndex -= 1; renderQuiz(); quizDialog.focus(); });
-    quizStage.querySelector('.quiz-next')?.addEventListener('click', () => { quizIndex += 1; renderQuiz(); quizDialog.focus(); });
   }
 
   function openQuiz() {
@@ -370,7 +360,16 @@
     event.stopPropagation();
     openQuiz();
   });
-  quizClose.addEventListener('click', closeQuiz);
+  quizBackButton.addEventListener('click', () => {
+    if (quizIndex > 0 && quizIndex <= quizSteps.length) {
+      window.clearTimeout(quizTimer);
+      quizIndex -= 1;
+      renderQuiz();
+      quizDialog.focus();
+      return;
+    }
+    closeQuiz();
+  });
   quiz.addEventListener('keydown', event => {
     if (event.key === 'Escape') { event.preventDefault(); closeQuiz(); }
     if (event.key === 'Tab') {
