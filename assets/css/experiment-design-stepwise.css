@@ -1,0 +1,58 @@
+/* Pixso 设计方案 / 实验模式：四组任务共享原七步演示状态。 */
+body.experiment-stepwise.fixed1030{--fixed1030-aside:clamp(390px,27vw,520px)}
+body.experiment-stepwise.fixed1030 .uac-panel{background:#fff}
+body.experiment-stepwise.fixed1030 .uac-body{padding:14px 15px 24px;background:#fff}
+body.experiment-stepwise .uac-message.assistant>span{display:flex;align-items:center;gap:8px;color:#262b34;font-size:13px;font-weight:600}
+body.experiment-stepwise .uac-message.assistant>span:before{content:'✦';display:grid;width:28px;height:28px;place-items:center;border-radius:50%;background:linear-gradient(135deg,#aa7cff,#6854e8);color:#fff;font-size:18px}
+body.experiment-stepwise .uac-message.user>div{background:#f0eaff;color:#343144}
+body.experiment-stepwise .guide-flow{color:#303540;font-size:13px;line-height:1.6}
+.guide-design-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:4px 0 9px;padding:0 3px;color:#303540}
+.guide-design-title>span{font-size:15px;font-weight:700}
+.guide-design-title>small{color:#828a98;font-size:10px;white-space:nowrap}
+.guide-design-groups{overflow:hidden;border:1px solid #e7e9ee;border-radius:13px;background:#fff}
+.guide-design-group{position:relative;margin:0;border:0;border-bottom:1px solid #e9ebef;border-radius:0;background:#fff}
+.guide-design-group:last-child{border-bottom:0}
+.guide-design-group>summary{display:flex;align-items:center;gap:10px;min-height:63px;padding:11px 12px;list-style:none;cursor:pointer;background:#fff}
+.guide-design-group>summary::-webkit-details-marker,.guide-design-next>summary::-webkit-details-marker{display:none}
+.guide-design-group>summary:focus-visible,.guide-design-next>summary:focus-visible{outline:2px solid #347bff;outline-offset:-3px}
+.guide-design-group>summary:hover{background:#f8f9fb}
+.guide-design-group>summary>b{flex:1;min-width:0;color:#343943;font-size:13px;line-height:1.35}
+.guide-design-group>summary>small{color:#7d858f;font-size:10px;white-space:nowrap}
+.guide-design-status{display:grid;flex:none;width:29px;height:29px;place-items:center;border:2px solid #b9bec7;border-radius:50%;color:#b9bec7;font-size:18px;line-height:1}
+.guide-design-group.pass .guide-design-status{border-color:#d9f6e9;background:#e7fff3;color:#11aa72;font-weight:700}
+.guide-design-group.current .guide-design-status{border-color:#d9e5ff;background:#e9f1ff;color:#347bff;font-weight:700}
+.guide-design-group.fail .guide-design-status{border-color:#ffdbde;background:#fff0f1;color:#d65c68;font-weight:700}
+.guide-design-chevron{flex:none;color:#7b838f;font-size:19px;line-height:1;transition:transform .15s}
+.guide-design-group[open] .guide-design-chevron{transform:rotate(180deg)}
+.guide-design-group-body{padding:0 12px 12px 51px}
+.guide-design-group-body .env-vertical-steps{padding:0}
+.guide-design-group-body .env-vertical-step{padding:0;margin:0 0 7px;border:0;border-radius:9px;background:#f8f9fa}
+.guide-design-group-body .env-vertical-step:last-child{margin-bottom:0}
+.guide-design-group-body .env-vertical-step>summary{min-height:42px;padding:8px 10px;gap:5px}
+.guide-design-group-body .env-vertical-step>summary .env-step-number{display:none}
+.guide-design-group-body .env-vertical-step>summary>b{font-size:12px}
+.guide-design-group-body .env-vertical-step>summary>small{font-size:10px}
+.guide-design-group-body .env-step-content{padding:8px 10px 12px}
+.guide-design-group-body .guide-compact-card{padding:0}
+.guide-design-group-body .guide-prep-step{background:#f8f9fa}
+.guide-design-group[data-uac-guide-stage=execution] .env-vertical-step{background:#fff}
+.guide-design-group[data-uac-guide-stage=execution] .env-vertical-step>summary{display:none}
+.guide-design-group[data-uac-guide-stage=execution] .env-step-content{padding:0}
+.guide-design-brief{display:grid;gap:9px;margin:0 0 14px}
+.guide-design-brief>section{padding:12px;border:1px solid #ebedf0;border-radius:9px;background:#fafafa}
+.guide-design-brief>section.guide-design-goal{border-color:#dfe8ff;background:#eaf1ff}
+.guide-design-brief b{display:block;margin-bottom:5px;color:#313640;font-size:12px}
+.guide-design-brief p{margin:0;color:#626a77;font-size:11px}
+.guide-design-brief ol{margin:0;padding-left:17px;color:#67707d;font-size:11px}
+.guide-design-brief pre{max-height:165px;margin:0;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;color:#6c7480;font:11px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}
+.guide-design-next{margin-top:12px;border:1px solid #e7e9ee;border-radius:11px;background:#f8f8f9}
+.guide-design-next>summary{padding:13px 14px;cursor:pointer;color:#3a404b;font-size:13px;font-weight:600}
+.guide-design-next>summary:after{content:'›';float:right;font-size:20px;line-height:1;color:#767f8b}
+.guide-design-next[open]>summary:after{transform:rotate(90deg)}
+.guide-design-next>p{margin:0;padding:0 14px 13px;color:#7a838e;font-size:11px}
+body.experiment-stepwise .uac-message .env-actions button.env-primary{border-color:#242936;background:#242936;color:#fff}
+body.experiment-stepwise .guide-flow .env-command{background:#f8f9fa}
+body.experiment-stepwise .uac-footer{box-shadow:0 -5px 20px #1c253014}
+@media(max-width:980px){body.experiment-stepwise.fixed1030{--fixed1030-aside:390px}.guide-design-title{display:block}.guide-design-title>small{display:block;margin-top:3px}}
+@media(max-width:720px){body.experiment-stepwise.fixed1030{--fixed1030-aside:0px}.guide-design-title>small{display:block}.guide-design-group-body{padding-left:10px}.guide-design-group>summary>small{display:none}}
+@media(prefers-reduced-motion:reduce){.guide-design-chevron{transition:none}}

@@ -9,7 +9,7 @@ node "$repo_root/scripts/build-page-registry-data.mjs"
 rm -rf "$dist"
 mkdir -p "$dist" "$dist/archive/legacy-v1" "$dist/prototypes/lowfi" "$dist/research" "$dist/lab"
 
-cp "$repo_root/index.html" "$repo_root/course-preview.html" "$repo_root/learn.html" "$repo_root/ai-companion.html" "$repo_root/knowledge-map.html" "$repo_root/catalog.html" "$repo_root/page-registry.json" "$dist/"
+cp "$repo_root/index.html" "$repo_root/course-preview.html" "$repo_root/learn.html" "$repo_root/learn-stepwise.html" "$repo_root/ai-companion.html" "$repo_root/knowledge-map.html" "$repo_root/catalog.html" "$repo_root/page-registry.json" "$dist/"
 cp -R "$repo_root/assets" "$dist/assets"
 cp -R "$repo_root/design-system" "$dist/design-system"
 cp -R "$repo_root/docs" "$dist/docs"

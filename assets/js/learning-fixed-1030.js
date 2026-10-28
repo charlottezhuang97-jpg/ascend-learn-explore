@@ -12,7 +12,8 @@
   const title=document.querySelector('.board-header .lesson-title');
   const header=document.createElement('header');header.className='fixed1030-header';
   const isPreview=location.pathname.endsWith('/learn-1030.html');
-  header.innerHTML='<a class="room-close" href="index.html" aria-label="返回课程首页">‹</a><div class="fixed1030-lesson"></div>'+(isPreview?'<span class="fixed1030-badge">1030 预览</span><a class="fixed1030-production" href="../../learn.html?course=mindie">正式版 ↗</a>':'');
+  const isStepwise=location.pathname.endsWith('/learn-stepwise.html');
+  header.innerHTML='<a class="room-close" href="index.html" aria-label="返回课程首页">‹</a><div class="fixed1030-lesson"></div>'+(isPreview?'<span class="fixed1030-badge">1030 预览</span><a class="fixed1030-production" href="../../learn.html?course=mindie">正式版 ↗</a>':isStepwise?'<span class="fixed1030-badge">实验模式</span><a class="fixed1030-production" href="learn.html?course=mindie&amp;mode=video">沉浸式版本 ↗</a>':'');
   header.querySelector('.fixed1030-lesson').append(title);document.body.prepend(header);
   const footer=document.createElement('footer');footer.className='fixed1030-footer';
   const icon={video:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/>',board:'<path d="M4 4h16v12H4zM12 16v5M8 21h8M7 8h10M7 11h6"/>',ide:'<rect x="2" y="4" width="20" height="16" rx="3"/><path d="m8 9-3 3 3 3m8-6 3 3-3 3m-3-8-2 10"/>'};
