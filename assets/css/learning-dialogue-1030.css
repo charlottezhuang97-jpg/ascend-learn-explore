@@ -1,0 +1,10 @@
+/* Explicit speaker alignment, independent of the card content. */
+.fixed1030 .uac-chat{display:flex;flex-direction:column;align-items:stretch;gap:4px}
+.fixed1030 .uac-message{min-width:0;width:100%;margin:5px 0 22px}
+.fixed1030 .uac-message.assistant{align-self:flex-start;width:calc(100% - 12px);margin-right:12px}
+.fixed1030 .uac-message.assistant>span{text-align:left;color:#263d5c}
+.fixed1030 .uac-message.user{align-self:flex-end;width:calc(100% - 36px);margin-left:36px}
+.fixed1030 .uac-message.user>span{text-align:right}
+.fixed1030 .uac-message.user>div{background:#f0f5ff;border-radius:16px 16px 4px 16px;padding:12px 14px}
+.fixed1030 .uac-message.user p{white-space:pre-wrap;margin-bottom:0}
+.fixed1030 .guide-response .env-summary{margin-top:12px}

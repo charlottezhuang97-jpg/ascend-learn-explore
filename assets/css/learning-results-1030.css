@@ -1,0 +1,115 @@
+/* Decorative document/check watermark: no interaction or status semantics. */
+.fixed1030 .env-flow .env-result,
+.fixed1030 .env-flow .env-comparison,
+.fixed1030 .env-flow .env-summary {
+  background-color: #f6f7f9;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22160%22%20viewBox%3D%220%200%20160%20160%22%20fill%3D%22none%22%3E%3Cg%20transform%3D%22rotate(-13%2080%2080)%22%20stroke%3D%22%23e7ebf2%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M42%2017h61l22%2024v99H42z%22%2F%3E%3Cpath%20d%3D%22M101%2018v26h23M58%2063h45M58%2080h32%22%2F%3E%3Cpath%20d%3D%22m61%20107%2012%2012%2023-24%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-size: 152px 152px;
+  background-position: right -14px top -24px;
+  border-radius: 20px;
+}
+
+.fixed1030 .env-flow .env-result {
+  border-color: #e4e8ee;
+  box-shadow: none;
+}
+
+.fixed1030 .env-flow .env-result > header {
+  min-height: 66px;
+  flex-wrap: wrap;
+  align-content: center;
+  background: transparent;
+  border-bottom-color: #e3e7ee;
+}
+
+.fixed1030 .env-flow .env-result-body {
+  background: transparent;
+}
+
+.fixed1030 .env-flow .env-result details,
+.fixed1030 .env-flow .env-result .env-command-name {
+  background: rgb(255 255 255 / 35%);
+  border-top-color: #e3e7ee;
+}
+
+.fixed1030 .env-flow .env-facts > div {
+  background: rgb(255 255 255 / 65%);
+}
+
+/* Match the existing dark code suggestions, including restored chat records. */
+.fixed1030 .env-flow {
+  --guide-code-bg: #10151a;
+  --guide-code-text: #dbe4ee;
+  --guide-code-border: #46505c;
+}
+
+.fixed1030 .env-flow pre,
+.fixed1030 .env-flow .env-result pre {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  max-height: 320px;
+  margin: 12px 0;
+  padding: 18px;
+  overflow: auto;
+  border: 1px solid var(--guide-code-border);
+  border-radius: 16px;
+  background: var(--guide-code-bg);
+  color: var(--guide-code-text);
+  font: 12px/1.9 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
+  tab-size: 2;
+  scrollbar-color: #596778 var(--guide-code-bg);
+}
+
+.fixed1030 .env-flow pre code {
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  white-space: inherit;
+}
+
+.fixed1030 .env-flow .env-command {
+  background: var(--guide-code-bg);
+  border-color: var(--guide-code-border);
+  border-radius: 16px;
+}
+
+.fixed1030 .env-flow .env-command > div {
+  color: #b7c5d6;
+  border-bottom-color: #303a46;
+}
+
+.fixed1030 .env-flow .env-command pre,
+.fixed1030 .env-flow .env-code-advice pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.fixed1030 .env-flow .env-comparison {
+  border-color: #d4e3dc;
+}
+
+.fixed1030 .env-flow .env-comparison.fail,
+.fixed1030 .env-flow .env-summary.error {
+  border-color: #e6cdd1;
+}
+
+.fixed1030 .env-flow .env-comparison-title {
+  min-height: 48px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 520px) {
+  .fixed1030 .env-flow .env-result,
+  .fixed1030 .env-flow .env-comparison,
+  .fixed1030 .env-flow .env-summary {
+    background-size: 124px 124px;
+    background-position: right -16px top -16px;
+    border-radius: 16px;
+  }
+}

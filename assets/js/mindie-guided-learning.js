@@ -1,0 +1,173 @@
+/* Two-stage, seven-task teaching workflow. No fetch, eval, shell or model execution. */
+(() => {
+  const C=window.MindIEGuideContent,A=window.AscendCompanion,L=window.AscendLearning;
+  if(!C||!A||new URLSearchParams(location.search).get('course')!=='mindie'||!/(?:learn|learn-1030)\.html$/.test(location.pathname))return;
+  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('../css/mindie-guided-learning.css?v=5',document.currentScript.src);document.head.append(sheet);
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const running=new Map(),goals=new Map();let hydrating=false;
+  const plainCopy=value=>String(value??'').replaceAll('本分支模拟证据符合预期，未连接真实主机。','本项检查已通过，未连接真实主机。').replaceAll('证据符合','已完成').replaceAll('静态检查','配置检查');
+  const find=id=>document.querySelector(`[data-uac-guide-id="${id}"]`);
+  const button=(key,label,primary=false,disabled=false)=>`<button type="button" data-uac-guide-action="${key}" ${disabled?'disabled':''} class="${primary?'env-primary':''}">${label}</button>`;
+  const text=(p,key,label,type='text')=>`<label class="guide-field"><span>${label}</span><input type="${type}" data-uac-guide-field="${key}" value="${esc(p[key])}" maxlength="500" autocomplete="off"></label>`;
+  const select=(p,key,label,choices)=>`<label class="guide-field"><span>${label}</span><select data-uac-guide-field="${key}">${choices.map(([value,title])=>`<option value="${value}" ${p[key]===value?'selected':''}>${title}</option>`).join('')}</select></label>`;
+  const check=(p,key,label)=>`<label class="guide-check"><input type="checkbox" data-uac-guide-field="${key}" ${p[key]?'checked':''}><span>${label}</span></label>`;
+  function read(root){try{const s=JSON.parse(root.dataset.uacGuideState);return /^[\w-]+$/.test(s.id)&&s.steps?.length===7?s:null;}catch{return null;}}
+  function fields(s,i){const p=s.config,row=s.steps[i];let html='';
+    if(i===0)html=select(p,'host','HiDevLab 演示主机',[['A','A3 CANN 环境 · 主机 A（模拟）'],['B','A3 CANN 环境 · 主机 B（模拟）']])+'<p>此处仅检查演示环境；真实设备、Docker 和 CANN 版本需实际查询。</p>';
+    if(i===1)html=select(p,'weightsMethod','权重准备方式',[['server','服务器已有权重'],['local','本地已有，需要上传'],['download','尚未下载，先网页下载再上传']])+text(p,'weightsPath','服务器权重目录（以 / 结尾）')+(p.weightsMethod==='server'?'':`<p>在外部完成下载/上传后再确认。</p>${button('model-repo','打开手册模型仓 ↗')}`+check(p,'filesPrepared','我已在外部准备并上传（用户确认，尚未验证）'));
+    if(i===2)html=select(p,'imageMode','镜像准备方式',[['cached','复用本地已有镜像'],['pull','从仓库拉取镜像']])+select(p,'architecture','示例主机架构（需按真实机器核对）',[['aarch64','aarch64'],['x86_64','x86_64']])+text(p,'image','完整镜像标识（手册历史版本）')+(p.imageMode==='pull'?select(p,'access','仓库权限',[['granted','用户确认已有权限'],['pending','尚需申请 / 等待审核']])+check(p,'loginConfirmed','我已在安全终端完成登录（不向对话提供凭据）'):'');
+    if(i===3)html=select(p,'containerMode','容器处理方式',[['create','创建新容器'],['reuse','复用并检查现有容器']])+text(p,'container','容器名（后续统一引用）')+text(p,'device','主机 NPU 设备编号')+`<p>只读挂载：${esc(p.weightsPath)} → /home/weights/</p>`+(p.containerMode==='create'?check(p,'allowPrivileged','确认手册实验中的 privileged 高权限影响')+check(p,'allowHostNetwork','确认使用主机网络；不默认视为生产安全配置'):'<p>复用前核对名称、镜像、设备和挂载；不会删除或重建。</p>');
+    if(i===4)html=row.phase==='initialize'?`<p>先由主机进入容器 <b>${esc(p.container)}</b>。五条 source 与后续服务必须属于同一容器会话。</p>`:text(p,'containerDevice','容器内可见设备编号（不得从主机编号自动推导）')+check(p,'mappingConfirmed','我已核对容器可见设备；本演示使用 1 张卡')+check(p,'allowHttp','确认仅在隔离实验中使用 httpsEnabled=false')+'<p>worldSize=1，trustRemoteCode=false；以下 JSON 仅为字段合并片段，不可覆盖完整配置。</p>';
+    if(i===5)html=select(p,'logPolicy','已有日志处理方式',[['new','使用新日志；同名时应停止'],['append','追加日志，保留既有内容'],['overwrite','覆盖同名日志（需单独确认）']])+text(p,'logFile','容器日志文件名')+(p.logPolicy==='overwrite'?check(p,'overwriteLog','我确认覆盖这个日志文件的风险（仅演示）'):'')+'<p>预期端口 1025；不自动终止已有进程，不假设存在健康检查接口。</p>';
+    if(i===6)html=`<label class="guide-field"><span>本次提示词</span><textarea data-uac-guide-field="prompt" maxlength="500">${esc(p.prompt)}</textarea></label>`+text(p,'maxTokens','max_tokens（本演示 1–2048）','number')+'<p>请求地址：127.0.0.1:1025/generate，指实验执行环境，不是浏览器本机。不计量或编造真实 Token 数。</p>';
+    const scenarios=i===4?C.steps[i].scenarios.filter(([k])=>k==='ok'||k===(row.phase==='config'?'path':'script')):C.steps[i].scenarios;
+    html+=select({scenario:row.scenario},'scenario','预览场景（仅模拟）',scenarios);
+    return `<div class="guide-fields">${html}<p class="guide-draft" data-uac-guide-draft role="status">参数修改后须更新预览；授权只对应当前预览。</p>${button('preview','更新参数预览')}</div>`;
+  }
+  function context(s,i){return i===0&&C.acquisition.some(x=>x.key===s.steps[0].phase)?'HiDevLab 环境控制台（未连接）':i<4?'HiDevLab 示例主机 '+s.config.host:i===4&&s.steps[i].phase==='initialize'?'主机进入 '+s.config.container+' 后在同一容器会话执行':'容器 '+s.config.container+' · 示例会话';}
+  function learningText(i){const t=C.syllabus[i],sections=[['前置准备',t.before],['AI 学伴协助内容',t.ai],['需要你确认',t.confirm],['结果卡片与回显',t.evidence],['异常处理',t.failure]];return `<section class="guide-learning-text"><p>${esc(t.intro)}</p><p><b>执行位置：</b>${esc(t.location)}</p>${sections.map(([title,items])=>`<h3>${title}</h3><ul>${items.map(item=>`<li>${esc(item)}</li>`).join('')}</ul>`).join('')}<h3>完成条件</h3><p>${esc(t.finish)}</p><small>内容依据：${esc(t.source)}</small></section>`;}
+  function preview(s,i){const def=C.steps[i],phase=s.steps[i].phase,configState={...s,steps:s.steps.map((r,n)=>n===i?{...r,phase:'config'}:r)},expected=C.fixture({...s,steps:s.steps.map((r,n)=>n===i?{...r,scenario:'ok'}:r)},i);
+    return `<section class="guide-preview"><b>学习目标</b><p>${esc(def.goal)}</p><b>本步内容</b><ol>${def.tasks.map(t=>`<li>${esc(t)}</li>`).join('')}</ol><b>命令 / 操作预览（只读）</b><pre>${esc(C.command(s,i))}${i===4&&phase!=='config'?'\n\n配置合并片段：\n'+esc(C.command(configState,i)):''}</pre><b>预期结果示例 · 非运行记录</b><pre>${esc(expected.output)}</pre><p>${esc(def.impact)}</p><small>可提前查看，不跳过前置步骤，也不会执行命令。</small></section>`;
+  }
+  function acquisition(s){const row=s.steps[0],stage=C.acquisition.find(x=>x.key===row.phase);if(!stage)return '';
+    return `<section class="guide-acquisition"><h3>HiDevLab 环境获取</h3><p>按本次方案演示：申请 100 卡时 A3 算力 → 创建 CANN 环境 → 开机 → NPU / Docker 检查。不是平台实时额度或版本承诺。</p>${C.acquisition.map((item,n)=>{const done=row.records.some(r=>r.checks.some(c=>c.name===item.task)&&r.passed),current=item.key===row.phase;return `<details ${current?'open':''}><summary><span>${done?'✓':n+1}</span> ${item.title}</summary><p>${esc(item.plan)}</p>${done?`<p>✓ ${esc(item.result)}</p>`:current?`<p>需要你的确认：只演示本阶段，不自动申请资源、不产生费用。</p><div class="env-actions">${button('authorize',item.button,true)}${button('manual','我来操作')}${button('cancel','取消')}</div>`:'<p>等待上一阶段完成；可查看，不自动操作。</p>'}</details>`;}).join('')}</section>`;
+  }
+  function resultCard(record){return `<section class="env-result"><header><b>${esc(record.title)}</b><span class="env-status ${record.passed?'success':'error'}">${record.passed?'已完成':'遇到问题'}</span><span class="env-demo-label">演示数据</span></header><div class="env-result-body"><small>${esc(record.context)} · 授权 ${esc(record.authorization)}</small><ul class="guide-checks">${record.checks.map(c=>`<li class="${c.status}"><b>${c.status==='fail'?'✕':c.status==='skip'?'—':c.status==='user'?'◌':'✓'} ${esc(c.name)}</b><span>${esc(plainCopy(c.detail))}</span></li>`).join('')}</ul>${record.advice?`<p class="guide-error">${esc(record.advice)}</p>`:''}</div><details ${record.passed?'':'open'}><summary>查看命令 / 配置与模拟结果</summary><pre>${esc(record.command)}\n\n${esc(record.output)}</pre></details></section>`;}
+  function progressLine(label,state,note=''){const names={done:'演示完成',active:'正在进行',error:'遇到问题'};return `<li class="${state}"><span class="guide-progress-mark" role="img" aria-label="${names[state]||'待开始'}"></span><span>${esc(label)}${note?`<small>${esc(note)}</small>`:''}</span></li>`;}
+  function manualControls(row){return `<p class="guide-compact-note">请在自己的环境中操作；提供的回显仅作个人记录。</p><label class="guide-field"><span>脱敏回显（可选）</span><textarea data-uac-guide-manual maxlength="4000"></textarea></label>${row.manual?`<p>已保存用户提供的回显，尚未验证。</p>`:''}<div class="env-actions">${button('save-manual','保存回显')}${button('ready','返回演示')}</div>`;}
+  function compactEnvironment(s){const row=s.steps[0],items=[['request','申请 HiDevLab 100 卡时 A3 算力','正在申请 100 卡时 A3 算力'],['create','创建 CANN 环境','正在创建 CANN 环境'],['power','启动 CANN 实验环境','正在启动 CANN 实验环境'],['checks','检查 NPU 与 Docker','正在检查 NPU 与 Docker']],current=row.status==='success'?items.length:Math.max(0,items.findIndex(([key])=>key===row.phase));
+    if(row.status==='success'&&!row.records.some(record=>record.checks.some(check=>check.name===C.acquisition[0].task)))return '<div class="guide-compact-card"><p>这条历史演示记录只包含主机检查，未记录 HiDevLab 申请、创建和开机。旧回显可在终端查看。</p>'+button('revise','重新演示完整环境获取')+'</div>';
+    let html='<div class="guide-compact-card"><p>申请 HiDevLab 算力 → 创建 CANN 环境 → 开机 → 检查主机。</p><ul class="guide-progress-list">'+items.slice(0,Math.min(current+1,items.length)).map(([key,done,running],n)=>progressLine(n<current?`已完成：${done}`:row.status==='running'?`${running}`:row.status==='error'?`${done}遇到问题`:`待进行：${done}`,n<current||row.status==='success'?'done':row.status==='error'?'error':'active')).join('')+'</ul>';
+    if(row.status==='success')html+='<p class="guide-compact-result">环境获取与主机检查的演示已完成。设备和 Docker 的详细回显见终端。</p>';
+    else if(row.status==='manual')html+=manualControls(row);
+    else if(row.status==='running')html+=button('pause','暂停演示');
+    else{const stage=C.acquisition.find(x=>x.key===row.phase),gate=C.gate(s,0);if(row.error)html+=`<p class="guide-error" role="status">${esc(row.error)}</p>`;if(gate)html+=`<p class="guide-error">${esc(gate)}</p>`;html+=`<div class="env-actions">${button('authorize',stage?stage.button:'检查 NPU 与 Docker',true,!!gate)}${button('manual','我来操作')}</div>`;}
+    return html+'<small class="guide-compact-note">未连接 HiDevLab 或真实主机。</small></div>';
+  }
+  function compactWeights(s){const row=s.steps[1],path=s.config.weightsPath,items=[['download','下载 Qwen2-7B 模型权重','正在从 Hugging Face 下载模型权重'],['upload','上传权重到示例目录 '+path,'正在上传权重到示例目录 '+path],['verify','检查示例文件清单','正在检查示例文件清单']],current=row.status==='success'?items.length:Math.max(0,items.findIndex(([key])=>key===row.phase));
+    if(row.status==='success'&&!row.records.some(record=>['download','upload'].includes(record.phase)))return `<div class="guide-compact-card"><p>此前的模型权重准备记录已保留；本次页面未重新下载或上传。旧回显可在终端查看，真实文件状态需在服务器核对。</p>${button('revise','重新演示权重准备')}</div>`;
+    let html='<div class="guide-compact-card"><p>下载 Qwen2-7B → 上传到 '+esc(path)+' → 查看示例文件清单。</p><ul class="guide-progress-list">'+items.slice(0,Math.min(current+1,items.length)).map(([key,done,running],n)=>progressLine(n<current?`已完成：${done}`:row.status==='running'?`${running}`:row.status==='error'?`${done}遇到问题`:`待进行：${done}`,n<current||row.status==='success'?'done':row.status==='error'?'error':'active')).join('')+'</ul>';
+    if(row.status==='success')html+=`<p class="guide-compact-result">结果：下载和上传流程已演示，目标目录为 ${esc(path)}。真实文件是否存在，需在你的服务器核对。</p>`;
+    else if(row.status==='manual')html+=manualControls(row);
+    else if(row.status==='running')html+=button('pause','暂停演示');
+    else{const gate=C.gate(s,1),label=row.phase==='upload'?'继续上传演示':row.phase==='verify'?'查看示例文件清单':'开始下载演示';if(row.error)html+=`<p class="guide-error" role="status">${esc(row.error)}</p>`;if(gate)html+=`<p class="guide-error">${esc(gate)}</p>`;html+=`<div class="env-actions">${button('authorize',label,true,!!gate)}${row.phase==='download'?button('model-repo','查看模型仓 ↗'):''}${button('manual','我来操作')}</div>`;}
+    return html+'<small class="guide-compact-note">终端记录操作与示例文件清单；本页不会下载或上传模型文件。</small></div>';
+  }
+  function compactOther(s,i){const row=s.steps[i],def=C.steps[i];if(row.status==='idle')return `<div class="guide-compact-card"><b>${esc(def.name)}</b><p>等待前一个小步骤完成。</p></div>`;
+    let html=`<div class="guide-compact-card"><p>${esc(def.goal)}</p>`;
+    if(row.records.length)html+=`<ul class="guide-progress-list">${row.records.map(record=>progressLine(record.passed?`${record.title}已完成`:`${record.title}遇到问题`,record.passed?'done':'error')).join('')}</ul>`;
+    if(row.status==='success')html+=`<p class="guide-compact-result">本项已完成演示。命令、配置和回显可在终端查看。</p>${button('revise','重新查看本步参数')}`;
+    else if(row.status==='manual')html+=manualControls(row);
+    else if(row.status==='running')html+=`<p role="status">正在处理本步演示，详细进度见终端。</p>${button('pause','暂停演示')}`;
+    else if(row.status==='watching')html+=`<p>服务启动结果已写入终端。结束日志观察后进入下一步。</p>${button('stop-watch','停止日志观察',true)}`;
+    else{const gate=C.gate(s,i);if(row.error)html+=`<p class="guide-error" role="status">${esc(row.error)}</p>`;if(gate)html+=`<p class="guide-error">${esc(gate)}</p>`;html+=`<details class="guide-compact-settings" ${gate?'open':''}><summary>选择本步参数与预览场景</summary>${fields(s,i)}</details><div class="env-actions">${button('authorize',row.status==='error'?'重新尝试':'确认并开始',true,!!gate)}${button('manual','我来操作')}</div>`;}
+    return html+'<small class="guide-compact-note">详细操作与结果写入终端；未连接真实主机。</small></div>';
+  }
+  function compactPrepBody(s,i){if(s.steps[i].status==='idle')return `<div class="guide-compact-card"><b>${esc(C.steps[i].name)}</b><p>等待前一个小步骤完成。</p></div>`;return i===0?compactEnvironment(s):i===1?compactWeights(s):compactOther(s,i);}
+  function body(s,i){const row=s.steps[i],def=C.steps[i],locked=i!==s.current;
+    if(i<6)return compactPrepBody(s,i);
+    if(row.status==='idle')return learningText(i)+preview(s,i)+`<p>${row.invalidated?'上游参数已变化，旧结果失效，需要重新验证。':'未执行。完成前一步后点击“继续下一步”进入操作。'}</p>${row.archive?.length?`<details class="guide-archive"><summary>查看已失效的旧参数记录</summary>${row.archive.map(resultCard).join('')}</details>`:''}`;
+    let html=`<p>${esc(def.goal)}</p><small>子任务 ${def.tasks.length} 个：${def.tasks.map(esc).join(' → ')}</small>`;
+    html+=`<details class="guide-text-details"><summary>本步完整学习说明 · 选择 / 授权 / 回显 / 异常</summary>${learningText(i)}</details>`+row.records.map(resultCard).join('');
+    if(row.status==='success')return html+(i===0&&!row.records.some(r=>r.checks.some(c=>c.name===C.acquisition[0].task))?'<p class="guide-notice">这条旧记录未包含新增的 HiDevLab 环境获取；可点击下方重新验证，不会自动补为已申请。</p>':'')+button('revise','修改本步参数 / 重新验证');
+    if(locked)return html+'<p>本步尚未激活，请先处理当前依赖步骤。</p>';
+    if(row.status==='manual')return html+`<p>请在自己的安全环境操作。粘贴内容只作为“用户提供”的记录，不能证明服务器执行成功；不要包含凭据。</p><label class="guide-field"><span>脱敏回显（可选）</span><textarea data-uac-guide-manual maxlength="4000"></textarea></label>${row.manual?`<pre>用户提供（未验证）：\n${esc(row.manual)}</pre>`:''}<div class="env-actions">${button('save-manual','保存用户回显')}${button('ready','返回授权演示')}</div>`;
+    if(row.status==='running')return html+`<div class="env-run" role="status"><div><span class="env-spinner" aria-hidden="true"></span><span>正在展示授权后的模拟过程，不执行真实命令…</span></div></div>${button('pause','暂停演示')}`;
+    if(row.status==='watching')return html+'<p role="status">本次模拟新日志、进程及端口已核对。请停止日志观察；后台服务不会因此停止。</p>'+button('stop-watch','停止日志观察',true);
+    if(row.status==='paused'||row.status==='cancelled')html+=`<p class="guide-notice" role="status">${row.status==='paused'?'演示已暂停 / 刷新后中断，未生成后续结果。':'已取消，本阶段未执行。'} 需要重新确认授权才能继续。</p>`;
+    if(i===0&&C.acquisition.some(x=>x.key===row.phase))return html+acquisition(s);
+    if(i===0)html+='<h3>NPU 与 Docker 检查</h3><p>后续手册镜像原为 A2 实验模板，不能据此认定兼容 A3；真实实验须另核对配套版本。</p>';
+    if(i===4)html+=`<h3>${row.phase==='initialize'?'5A · 进入容器并初始化环境':'5B · 确认配置差异并配置检查'}</h3>`;
+    html+=fields(s,i);
+    const gate=C.gate(s,i);
+    html+=`<section class="env-authorization"><header><b>确认本次${i===4&&row.phase==='config'?'配置合并':'操作'}范围</b></header><dl class="env-meta"><dt>执行位置</dt><dd>${esc(context(s,i))}</dd><dt>影响范围</dt><dd>${esc(def.impact)}</dd><dt>本次授权</dt><dd>仅本步、本参数版本 v${s.revision}；不包含后续步骤或自动重试。</dd></dl><div class="env-command"><div><span>${i===4&&row.phase==='config'?'JSON 合并片段（不是完整文件）':'命令预览 · 不会执行'}</span><span>手册 / 标注的补充检查</span></div><pre>${esc(C.command(s,i))}</pre></div><div class="env-actions">${button('copy','复制预览')}${button('insert','置入对应 IDE 文件')}${s.editorBackup?button('undo','撤销上次置入'):''}</div><p class="guide-source">${i===1?'目录 ls 为补充检查；下载上传命令未在手册提供，不自行编造。':i===3?'ll 为手册别名写法，真实环境若无此别名需另行确认等价查询。容器名按后文统一。':i===4&&row.phase==='config'?'备份、读取完整配置和真正字段合并需执行器；当前仅模拟检查，不覆盖真实文件。':i===5?'新日志的 test 防覆盖条件、追加方案为产品补充；启动、tail 命令来自手册。':''}</p>${gate?`<p class="guide-notice" role="status">${esc(gate)}</p>`:''}<p data-uac-guide-error class="guide-error" role="status">${esc(row.error||'')}</p><div class="env-actions">${button('authorize',row.status==='error'?'重新授权本步':'授权本步',true,!!gate)}${button('manual','我来操作')}${button('cancel','取消')}</div></section>`;
+    if(row.archive?.length)html+=`<details class="guide-archive"><summary>查看已失效的旧参数结果（${row.archive.length} 条）</summary>${row.archive.map(resultCard).join('')}</details>`;
+    return html;
+  }
+  function stepMarkup(s,i){const row=s.steps[i],done=row.status==='success',active=i===s.current,weightDemo=row.records.some(record=>['download','upload'].includes(record.phase)),label=i===1&&done?(weightDemo?'已下载并上传模型权重':'模型权重准备已完成'):C.steps[i].name;return `<details class="env-vertical-step ${i<6?'guide-prep-step':''} ${done?'pass':row.status==='error'?'fail':active?'current':'not-run'}" ${active&&!done?'open':''} data-uac-guide-step="${i}"><summary><span class="env-step-number">${i+1}</span><b>${label}</b><small>${done?'演示完成':active?'进行中':'未执行'}</small></summary><div class="env-step-content">${body(s,i)}</div></details>`;}
+  function stageMarkup(s,preparation){const indices=preparation?[0,1,2,3,4,5]:[6],done=indices.every(i=>s.steps[i].status==='success'),count=indices.filter(i=>s.steps[i].status==='success').length,failed=indices.some(i=>s.steps[i].status==='error'),active=indices.includes(s.current),status=done?'pass':failed?'fail':active?'current':'not-run',open=preparation?!done:active&&!done;
+    const preparationDone=s.steps.slice(0,6).every(row=>row.status==='success'),label=preparation?'环境准备':'开始推理',progress=preparation?`${count}/6 个小步骤已完成`:done?'已完成':active?'进行中':preparationDone?'待开始':'等待环境准备',note=preparation?'依次完成环境获取、权重、镜像、容器、配置和服务启动。':'环境准备完成后，发送请求并检查模型返回的文本。';
+    return `<details class="guide-stage ${status}" data-uac-guide-stage="${preparation?'preparation':'inference'}" ${open?'open':''}><summary><span class="guide-stage-number">${preparation?'1':'2'}</span><b>${label}</b><small>${progress}</small><span class="env-step-state ${done?'done':failed?'error':active?'active':'idle'}" role="img" aria-label="${done?'已完成':failed?'遇到问题':active?'进行中':'未开始'}"></span></summary><div class="guide-stage-body"><p class="guide-stage-note">${note}</p><div class="env-vertical-steps">${indices.map(i=>stepMarkup(s,i)).join('')}</div></div></details>`;
+  }
+  function render(s){const complete=s.steps.every(r=>r.status==='success'),count=s.steps.filter(r=>r.status==='success').length,preparationDone=s.steps.slice(0,6).every(r=>r.status==='success');
+    let html=`<div class="env-flow guide-flow" data-uac-guide-id="${s.id}" data-uac-guide-version="7" data-uac-guide-state="${esc(JSON.stringify(s))}"><div class="env-vertical-head"><b>MindIE 文本生成实验</b><span class="env-demo-label">2 个阶段 · ${count}/7 个小步骤 · 演示</span></div><div class="guide-stages">${stageMarkup(s,true)}${stageMarkup(s,false)}</div>${complete?`<section class="env-summary" role="status"><b>✓ 环境准备与推理交互已完成</b><p>演示记录已保存；真实实验结果请以实际终端和服务响应为准。</p><div class="env-actions">${button('export','导出本次演示记录')}${button('note','保存到预览笔记')}</div></section>`:s.steps[s.current].status==='success'?`<div class="env-summary"><b>${preparationDone&&s.current===5?'环境准备完成，已自动收起':`第 ${s.current+1} 个小步骤完成，已自动收起`}</b><p>继续只进入下一步，不会自动执行后续操作。</p>${button('next',preparationDone&&s.current===5?'开始推理 →':'继续下一步 →',true)}</div>`:''}</div>`;
+    return window.MindIEStepUI.decorate(html.replaceAll('（演示）','').replace(' 个小步骤 · 演示',' 个小步骤'));
+  }
+  function update(s,messageId){A.updateToolMessage(messageId,render(s));}
+  function respond(s,i,record){
+    if(i<6)return;
+    const row=s.steps[i],done=row.status==='success',all=s.steps.every(x=>x.status==='success');
+    const heading=all?'环境准备与推理交互已完成':done&&i===5?'环境准备完成，已自动收起':done?`第 ${i+1} 个小步骤完成，已自动收起`:row.status==='error'?'这一步遇到问题':row.status==='watching'?'服务已启动，请结束日志观察':'本次操作已完成，请确认下一阶段';
+    const action=all?'':done?button('next',i===5?'开始推理 →':'继续下一步 →',true):row.status==='watching'?button('stop-watch','停止日志观察',true):button('current',row.status==='error'?'查看问题并修改':'继续本步骤 →',true);
+    A.addToolMessage('assistant',`<div class="env-flow guide-response" data-uac-guide-ref="${s.id}" data-uac-guide-step-ref="${i}" data-uac-guide-revision="${s.revision}">${resultCard(record)}<section class="env-summary ${row.status==='error'?'error':''}"><b>${heading}</b><p>${done?'继续只进入下一步，不会自动执行。':'所有结果均为演示，下一次操作仍需你的确认。'}</p>${action}</section></div>`);
+  }
+  function invalidate(s,i){const token=running.get(s.id);if(token){token.cancelled=true;clearTimeout(token.timer);running.delete(s.id);}for(let n=i;n<7;n++){const r=s.steps[n];if(r.records.length){r.archive=[...(r.archive||[]),...r.records].slice(-3);r.invalidated=true;}r.records=[];r.status=n===i?'ready':'idle';r.error='';if(n===0)r.phase='request';if(n===1)r.phase='download';if(n===4)r.phase='initialize';}s.current=i;s.revision++;}
+  function locate(s,i){L.setView('video');L.setVideoPerspective('ide');const index=i===4?(s.steps[i].phase==='config'?5:4):C.steps[i].files[0];document.querySelector(`.ide-tabs [data-mindie-step="${index}"]`)?.click();return window.MindIELab.steps[index].file;}
+  function terminal(s,i,status,output,command=C.command(s,i)){window.MindIETerminal?.write({id:`guide:${s.id}:${s.revision}:${i}:${s.steps[i].phase||'main'}:${command.startsWith('Ctrl+C')?'stop':'run'}`,host:s.config.host,command,status,output:'[环境准备与推理 · 演示记录 · 未执行真实操作]\n位置：'+context(s,i)+'\n'+output},{reveal:true});}
+  function finish(s,i,messageId,authorization){const row=s.steps[i],result=C.fixture(s,i);
+    const record={...result,phase:row.phase,title:(i===0?C.acquisition.find(x=>x.key===row.phase)?.title||C.steps[i].name:i===1?row.phase==='download'?'下载模型权重':row.phase==='upload'?'上传模型权重':'检查权重文件':C.steps[i].name)+(i===4?(row.phase==='initialize'?' · 初始化':' · 配置合并'):''),context:context(s,i),authorization,command:C.command(s,i)};
+    row.records.push(record);row.error='';row.invalidated=false;
+    terminal(s,i,result.passed?'success':'error',result.output+(i<6?'\n\n检查记录：\n'+result.checks.map(check=>(check.status==='fail'?'✕ ':check.status==='skip'?'— ':'✓ ')+check.name+'：'+plainCopy(check.detail)).join('\n'):'')+(result.advice?'\n建议：'+result.advice:''));
+    if(!result.passed){row.status='error';row.error=result.advice;}
+    else if(i===0&&C.acquisition.some(x=>x.key===row.phase)){const n=C.acquisition.findIndex(x=>x.key===row.phase);row.phase=C.acquisition[n+1]?.key||'checks';row.status='ready';}
+    else if(i===1&&row.phase==='download'){row.phase='upload';row.status='ready';}
+    else if(i===1&&row.phase==='upload'){row.phase='verify';row.status='ready';}
+    else if(i===4&&row.phase==='initialize'){row.phase='config';row.scenario='ok';row.status='ready';}
+    else if(i===5){row.status='watching';}
+    else row.status='success';
+    if(row.status==='success'&&i<5){s.current=i+1;s.steps[i+1].status='ready';locate(s,i+1);}
+    update(s,messageId);
+    respond(s,i,record);
+  }
+  function authorize(s,i,messageId){const row=s.steps[i],blocked=C.validate(s.config)||C.gate(s,i);if(blocked){row.error=blocked;update(s,messageId);return;}
+    row.status='running';row.error='';const authorization=crypto.randomUUID().slice(0,8),token={session:A.getSessionId(),revision:s.revision,cancelled:false};running.set(s.id,token);update(s,messageId);
+    if(i===6)A.addToolMessage('user',`<p>授权演示推理请求，位置为${esc(context(s,i))}，只限当前参数 v${s.revision}。</p>`);
+    terminal(s,i,'running','正在展示模拟过程…');
+    token.timer=setTimeout(()=>{if(token.cancelled||running.get(s.id)!==token)return;running.delete(s.id);if(A.getSessionId()!==token.session)return;finish(s,i,messageId,authorization);},i<2?1600:900);
+  }
+  function start({isolated=false}={}){
+    A.showToolMessage?.();const existing=[...document.querySelectorAll('[data-uac-guide-id]')].at(-1);
+    if(existing){existing.scrollIntoView({block:'start'});L.setView('video');L.setVideoPerspective('ide');return;}
+    const s={id:crypto.randomUUID(),revision:1,current:0,config:{...C.defaults},steps:C.steps.map((_,i)=>({status:i===0?'ready':'idle',phase:i===0?'request':i===1?'download':i===4?'initialize':'',scenario:'ok',records:[],archive:[],error:''}))};
+    L.setView('video');L.setVideoPerspective('ide');(isolated?A.beginIsolatedTool:A.beginTool)('历史版本：请按实验手册逐步引导我完成 MindIE 文本生成实验。',render(s));locate(s,0);
+  }
+  function requestGoal(){const roots=[...document.querySelectorAll('[data-uac-guide-id]')];const s=roots.length?read(roots.at(-1)):null;const goal=s?{prompt:s.config.prompt,maxTokens:Number(s.config.maxTokens),url:'http://127.0.0.1:1025/generate'}:goals.get(A.getSessionId());if(goal)goals.set(A.getSessionId(),goal);return goal;}
+  window.MindIEGuidedLearning={start,requestGoal};window.MindIEEnvironmentPreview.start=start;
+  document.addEventListener('input',e=>{const root=e.target.closest('[data-uac-guide-id]');if(!root||!e.target.matches('[data-uac-guide-field]'))return;root.dataset.uacGuideDirty='true';root.querySelectorAll('[data-uac-guide-action="authorize"]').forEach(b=>b.disabled=true);const notice=root.querySelector('[data-uac-guide-draft]');if(notice)notice.textContent='有未保存参数：请先点击“更新参数预览”，旧授权不能复用。';});
+  document.addEventListener('change',e=>{if(e.target.matches('[data-uac-guide-field]'))e.target.dispatchEvent(new Event('input',{bubbles:true}));});
+  document.addEventListener('click',async e=>{const b=e.target.closest('[data-uac-guide-action]');if(!b)return;if(b.dataset.uacGuideAction==='open-full'){start();return;}const ref=b.closest('[data-uac-guide-ref]'),root=b.closest('[data-uac-guide-id]')||(ref&&find(ref.dataset.uacGuideRef)),s=root&&read(root);if(!s)return;const key=b.dataset.uacGuideAction,i=Number(b.closest('[data-uac-guide-step]')?.dataset.uacGuideStep??ref?.dataset.uacGuideStepRef??s.current),row=s.steps[i],messageId=Number(root.closest('[data-uac-message]').dataset.uacMessage);if(ref&&(Number(ref.dataset.uacGuideRevision)!==s.revision||i!==s.current))return;if(key==='current'){const target=root.querySelector(`[data-uac-guide-step="${s.current}"]`);target.closest('[data-uac-guide-stage]')?.setAttribute('open','');target.open=true;target.scrollIntoView({block:'start'});return;}
+    if(key==='model-repo'){window.open('https://huggingface.co/Qwen/Qwen2-7B/tree/main','_blank','noopener,noreferrer');return;}
+    if(key==='preview'){
+      const config={...s.config};let scenario=row.scenario;
+      for(const field of b.closest('[data-uac-guide-step]').querySelectorAll('[data-uac-guide-field]')){const k=field.dataset.uacGuideField;if(k==='scenario')scenario=field.value;else config[k]=field.type==='checkbox'?field.checked:field.value;}
+      const error=C.validate(config);if(error){const notice=b.closest('[data-uac-guide-step]').querySelector('[data-uac-guide-error]');if(notice)notice.textContent=error;else L.showToast(error);return;}
+      const changed=JSON.stringify(config)!==JSON.stringify(s.config)||scenario!==row.scenario;
+      if(changed){const phase=row.phase,initialization=row.records.filter(r=>r.title.includes('初始化'));const acquisitionRecords=row.records.filter(r=>r.checks.some(c=>C.acquisition.some(x=>x.task===c.name))),sameConfig=JSON.stringify(config)===JSON.stringify(s.config);invalidate(s,i);if(i===0&&sameConfig){s.steps[0].phase=phase;s.steps[0].records=acquisitionRecords;}if(i===4&&phase==='config'){s.steps[4].phase='config';s.steps[4].records=initialization;}s.config=config;s.steps[i].scenario=scenario;}
+      update(s,messageId);return;
+    }
+    if(key==='revise'){invalidate(s,i);update(s,messageId);locate(s,i);return;}
+    if(key==='next'){if(i!==s.current||row.status!=='success'||i>=6)return;A.addToolMessage('user',i===5?'<p>环境准备已完成，开始推理交互。</p>':`<p>继续环境准备的第 ${i+2} 个小步骤：${C.steps[i+1].name}。</p>`);s.current=i+1;s.steps[i+1].status='ready';update(s,messageId);locate(s,i+1);find(s.id)?.querySelector(`[data-uac-guide-step="${i+1}"]`)?.scrollIntoView({block:'start'});return;}
+    if(key==='copy'){try{await navigator.clipboard.writeText(C.command(s,i));b.textContent='已复制';}catch{L.showToast('复制失败，请手动选择预览代码');}return;}
+    if(key==='insert'){if(i===0&&C.acquisition.some(x=>x.key===row.phase))return;const target=locate(s,i),editor=document.getElementById('ideEditor'),before=editor.value,after=C.command(s,i);editor.value=after;editor.dispatchEvent(new Event('input',{bubbles:true}));s.editorBackup={file:target,before,after};update(s,messageId);L.showToast('预览已置入 '+target+'，可撤销；未执行命令');return;}
+    if(key==='undo'){const backup=s.editorBackup;if(!backup)return;const tab=document.querySelector(`.ide-tabs [data-ide-file="${backup.file}"]`);tab?.click();const editor=document.getElementById('ideEditor');if(editor.value!==backup.after){L.showToast('IDE 内容已变化，未覆盖，请手动核对');return;}editor.value=backup.before;editor.dispatchEvent(new Event('input',{bubbles:true}));delete s.editorBackup;update(s,messageId);return;}
+    if(key==='export'){const blob=new Blob([JSON.stringify({source:'1030 引导演示，非真实执行',...s},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mindie-guided-demo.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;}
+    if(key==='note'){try{localStorage.setItem('ascend-1030-guided-note',JSON.stringify({source:'仅演示',config:s.config,records:s.steps.map(r=>r.records)}));L.showToast('本次演示记录已保存到预览笔记（本机）');}catch{L.showToast('浏览器未允许保存，可导出记录');}return;}
+    if(i!==s.current||s.steps.slice(0,i).some(r=>r.status!=='success'))return;
+    if(key==='authorize'){if(root.dataset.uacGuideDirty==='true'){L.showToast('请先更新参数预览');return;}if(['ready','paused','cancelled','error'].includes(row.status))authorize(s,i,messageId);return;}
+    if(key==='pause'){const token=running.get(s.id);if(token){token.cancelled=true;clearTimeout(token.timer);running.delete(s.id);}row.status='paused';terminal(s,i,'paused','演示暂停；未生成后续回显。');update(s,messageId);return;}
+    if(key==='cancel'){row.status='cancelled';update(s,messageId);A.addToolMessage('user','<p>取消本阶段操作；不授权执行。</p>');return;}
+    if(key==='manual'){row.status='manual';update(s,messageId);A.addToolMessage('user','<p>本阶段我来操作，暂不授权自动执行。</p>');return;}
+    if(key==='save-manual'){const value=root.querySelector('[data-uac-guide-manual]')?.value.trim();if(!value)return;row.manual=value.replace(/((?:password|token|authorization)\s*[:=]\s*)[^\n]+/ig,'$1[已隐藏]').slice(0,4000);update(s,messageId);L.showToast('已保存用户提供的回显，未自动判定通过');return;}
+    if(key==='ready'){row.status='ready';update(s,messageId);return;}
+    if(key==='stop-watch'&&row.status==='watching'){row.records.push({title:'停止日志观察',passed:true,context:context(s,i),authorization:row.records.at(-1).authorization,command:'Ctrl+C（仅退出 tail 观察）',output:'已停止日志观察。后台服务仍运行（模拟），未执行停止服务操作。',checks:[{name:C.steps[i].tasks[3],status:'pass',detail:'仅停止本次模拟日志观察；不等于停止后台服务。'}]});row.status='success';terminal(s,i,'success','已停止观察；后台服务仍在运行（模拟）。','Ctrl+C（仅退出 tail）');update(s,messageId);respond(s,i,row.records.at(-1));}
+  });
+  function hydrate(){if(hydrating)return;hydrating=true;try{for(const flow of document.querySelectorAll('.guide-flow')){const walker=document.createTreeWalker(flow,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode())node.nodeValue=node.nodeValue.replaceAll('（演示）','').replace(' 个小步骤 · 演示',' 个小步骤');}for(const legacy of document.querySelectorAll('.env-flow:not(.guide-flow):not(.guide-response)')){if(!legacy.querySelector('[data-uac-guide-action="open-full"]')){const banner=document.createElement('div');banner.className='guide-notice';banner.innerHTML='<p>这是先前的单步示例。查看环境准备与推理交互的完整内容，请进入分阶段引导。</p>'+button('open-full','打开完整引导',true);legacy.prepend(banner);}}requestGoal();for(const root of [...document.querySelectorAll('[data-uac-guide-id]')]){const s=read(root);if(!s)continue;const legacy=!['2','3','4','5','6','7'].includes(root.dataset.uacGuideVersion);let changed=root.dataset.uacGuideVersion!=='7'||!!root.querySelector('.guide-step-nav');if(legacy&&s.steps[0].status!=='success'&&!C.acquisition.some(x=>x.key===s.steps[0].phase)){s.steps[0].phase='request';s.steps[0].records=[];s.steps[0].status='ready';}if(!s.steps[1].phase&&s.steps[1].status!=='success'){s.steps[1].phase='download';changed=true;}for(const row of s.steps){if(row.status==='running'&&!running.has(s.id)){row.status='paused';changed=true;}}if(changed)update(s,Number(root.closest('[data-uac-message]').dataset.uacMessage));}
+    for(const ref of document.querySelectorAll('[data-uac-guide-ref]')){const s=read(find(ref.dataset.uacGuideRef));const stale=!s||s.current!==Number(ref.dataset.uacGuideStepRef)||s.revision!==Number(ref.dataset.uacGuideRevision);for(const b of ref.querySelectorAll('[data-uac-guide-action]'))b.disabled=stale||(b.dataset.uacGuideAction==='next'&&s.steps[s.current].status!=='success')||(b.dataset.uacGuideAction==='stop-watch'&&s.steps[s.current].status!=='watching');}
+    for(const entry of document.querySelectorAll('.uac-environment-entry')){entry.querySelector('b').textContent='文本生成实验 · 环境准备与推理';entry.querySelector('small').textContent='2 个阶段 · 7 个小步骤 · 逐项确认与查看结果 →';}
+  }finally{hydrating=false;}}
+  document.addEventListener('uac:render',hydrate);hydrate();
+  const environmentLabel=document.querySelector('.ide-environment small');if(environmentLabel)environmentLabel.innerHTML='<i></i> HiDevLab A3 环境获取演示 · A2 手册模板兼容性待核对 · 未连接';
+  const toolbar=[...document.querySelectorAll('.mindie-practice-link')].find(b=>b.textContent==='AI 实验引导');if(toolbar){toolbar.textContent='实验引导';toolbar.title='先完成环境准备，再开始推理';}
+  // Dedicated catalog entry: retain the two-stage guide independently of automatic preparation.
+  if(new URLSearchParams(location.search).get('guide')==='open')start({isolated:true});
+})();

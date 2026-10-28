@@ -1,0 +1,57 @@
+.fixed1030-floors{position:fixed;top:64px;left:0;right:var(--fixed1030-aside);bottom:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin;background:#fff;--reviews-learning-height:calc(100dvh - 64px)}
+.fixed1030-floor-learning{position:relative;height:var(--reviews-learning-height);min-height:300px}
+body.fixed1030 .fixed1030-floor-learning .learning-room,body.fixed1030 .fixed1030-floor-learning .video-workspace{position:absolute!important;top:0;left:0;right:0;bottom:var(--fixed1030-footer)!important}
+body.fixed1030 .fixed1030-floor-learning .fixed1030-footer{position:absolute;left:0;right:0;bottom:0}
+body.fixed1030 .fixed1030-floor-learning .mindie-glass-progress{position:absolute!important;left:8px!important;right:8px!important;bottom:52px!important}
+.course-reviews-floor{min-height:var(--reviews-learning-height);padding:30px 32px 50px;box-sizing:border-box;color:#26364b;background:#fff;font:14px/1.7 -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif}
+.reviews-floor-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 14px}
+.reviews-floor-head span{display:block;font-size:11px;letter-spacing:.1em;color:#7b8ca2}
+.reviews-floor-head h2{font-size:24px;margin:3px 0;font-weight:600;color:#202c3e}
+.course-reviews-floor button,.course-reviews-floor textarea,.course-reviews-floor select{font:inherit;box-sizing:border-box}
+.course-reviews-floor button{cursor:pointer;min-height:36px;padding:7px 14px;border-radius:7px;border:1px solid #d8e1ed;background:#fff;color:#456487}
+.course-reviews-floor button:hover{background:#f0f5fc;border-color:#aac3e7}
+.course-reviews-floor button:focus-visible,.course-reviews-floor select:focus-visible,.course-reviews-floor textarea:focus-visible,.reviews-floor-head h2:focus-visible{outline:2px solid #6295dc;outline-offset:3px}
+.reviews-source{font-size:11px;color:#7f8da0;margin:0 0 18px}
+.reviews-overview{display:flex;align-items:center;gap:30px;padding:24px 26px;border-radius:16px;background:#f8f8f9}
+.reviews-score{flex:0 0 145px;text-align:center}
+.reviews-score>span,.reviews-score strong,.reviews-score small{display:block}
+.reviews-score>span{font-size:12px;color:#079bce}
+.reviews-score strong{font-size:42px;line-height:1.25;letter-spacing:-1px;font-weight:600;color:#30343b}
+.reviews-score small{font-size:11px;color:#969ba5;margin-top:4px}
+.reviews-distribution{flex:1;max-width:510px;min-width:0}
+.reviews-distribution>div{display:flex;align-items:center;gap:10px;margin:9px 0}
+.reviews-distribution>div>span{flex:none;width:28px;font-size:12px;color:#69727d}
+.reviews-distribution [role=meter]{height:6px;flex:1;border-radius:99px;background:#e9eaed;overflow:hidden}
+.reviews-distribution i{display:block;height:100%;min-width:2px;border-radius:inherit;background:#ffba00}
+.course-reviews-floor .reviews-write{align-self:flex-start;margin-left:auto;flex:none;border:0;border-radius:20px;background:#00b9ec;color:#fff;font-size:12px}
+.reviews-compose{display:flex;align-items:flex-start;gap:12px;margin:38px 0 24px}
+.review-avatar{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;border-radius:50%;background:#009cab;color:#fff;font-size:21px;line-height:1}
+.reviews-compose>div{flex:1;min-width:0}
+.reviews-compose>div>label{display:block;font-size:12px;color:#526880;margin-bottom:7px}
+.reviews-compose textarea{display:block;width:100%;min-height:100px;resize:vertical;padding:13px 15px;border:1px solid #cdd8e7;border-radius:8px;background:#fff;color:#273c57;font-size:15px;line-height:1.7}
+.reviews-compose textarea::placeholder{color:#8c98a8}
+.reviews-compose fieldset{display:flex;align-items:center;gap:18px;flex-wrap:wrap;border:0;padding:0;margin:14px 0}
+.reviews-compose legend{float:left;margin-right:16px;font-size:12px;color:#7c8796}
+.reviews-compose fieldset label{cursor:pointer;font-size:13px;display:flex;align-items:center;gap:5px}
+.reviews-compose input{accent-color:#416fbc;width:15px;height:15px}
+.reviews-publish{display:flex;align-items:center;gap:12px}
+.course-reviews-floor .reviews-publish button{background:#5475da;border-color:#5475da;color:#fff}
+.reviews-publish small{font-size:11px;color:#8c98a8}
+.reviews-compose [role=status]{color:#347254;font-size:12px;min-height:18px;margin:8px 0 0}
+.reviews-list-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:28px;padding-top:20px;border-top:1px solid #edf0f4}
+.reviews-list-head h3{font-size:16px;margin:0;font-weight:600}
+.reviews-list-head h3 small{display:inline-block;margin-left:10px;font-size:11px;color:#8b96a5;font-weight:400}
+.reviews-list-head>label{display:flex;align-items:center;gap:8px;font-size:12px;color:#637286}
+.reviews-list-head select{max-width:140px;min-height:34px;padding:4px 8px;border:1px solid #d7dfe9;border-radius:6px;background:#fff;color:#344b66}
+.review-item{display:flex;gap:12px;padding:24px 0;border-bottom:1px solid #edf0f4}
+.review-item .review-avatar{width:30px;height:30px;flex-basis:30px;font-size:13px}
+.review-item .review-avatar.sample{background:#315294}
+.review-item>div{flex:1;min-width:0}
+.review-item header{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.review-item header b{font-size:13px;font-weight:500}
+.review-item header small{font-size:11px;color:#939ba6}
+.review-rating{margin-left:auto;color:#a47b22;font-size:11px}
+.review-rating.neutral{color:#7b8795}.review-rating.bad{color:#a56363}
+.review-item p{margin:10px 0 0;font-size:13px;color:#52627a;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:1000px){.course-reviews-floor{padding:24px 20px 40px}.reviews-overview{gap:18px;padding:22px 18px}.reviews-score{flex-basis:110px}.reviews-score strong{font-size:34px}.reviews-overview{flex-wrap:wrap}.reviews-distribution{min-width:180px}}
+@media(max-width:720px){.fixed1030-floors{right:0;bottom:44dvh;--reviews-learning-height:calc(56dvh - 64px)}.course-reviews-floor{padding:20px 16px 32px}.reviews-floor-head h2{font-size:21px}.reviews-overview{gap:14px;padding:16px}.reviews-score{flex-basis:100px}.reviews-distribution{min-width:100px}.reviews-write{order:3}.reviews-compose{gap:9px;margin-top:26px}.review-avatar{flex-basis:32px;width:32px;height:32px;font-size:17px}.reviews-list-head{align-items:flex-start}.reviews-list-head h3 small{display:block;margin-left:0}.reviews-list-head select{max-width:104px}.reviews-list-head>label{gap:4px}.reviews-compose fieldset{gap:10px}}
