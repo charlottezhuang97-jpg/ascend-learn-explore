@@ -365,6 +365,14 @@ if __name__ == '__main__':
     referenceDrawer.setAttribute('aria-hidden', 'true');
     showToast(`已定位到视频 ${time}，板书位置已保留`);
   }
+  document.addEventListener('learning:locate-video', event => {
+    const {time, text} = event.detail || {};
+    if (!time) return;
+    setView('video');
+    setVideoPerspective('teacher');
+    seekVideo(time);
+    if (text) document.querySelector('.teacher-subtitle').textContent = text;
+  });
   document.querySelectorAll('.learning-mode-tabs button').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
   document.getElementById('boardToVideo').addEventListener('click', event => seekVideo(event.currentTarget.dataset.time));
   document.getElementById('openDocument').addEventListener('click', () => {

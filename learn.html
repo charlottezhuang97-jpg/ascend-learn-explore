@@ -219,9 +219,22 @@
           </section>
         </div>
       </section>
-      <div class="teacher-timeline" aria-label="课程播放进度与学习节点">
+      <div class="teacher-timeline" aria-label="课程进度与语义学习节点">
         <span class="timeline-time" id="timelineCurrentTime">00:00</span>
-        <div class="teacher-timeline-track"><span class="video-played" id="videoPlayed"></span><button type="button" class="timeline-marker key" data-seek="03:20" aria-label="重点：03:20 拆分 mini-batch" title="重点 · 03:20 拆分 mini-batch"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 15h6M8 18h4M10 2a5 5 0 0 0-3 9c.8.6 1 1.5 1 2h4c0-.5.2-1.4 1-2a5 5 0 0 0-3-9Z"/></svg></button><button type="button" class="timeline-marker code" data-seek="05:05" aria-label="代码：05:05 同步局部梯度" title="代码 · 05:05 同步局部梯度"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 5-5 5 5 5m6-10 5 5-5 5m-2-12-2 14"/></svg></button><button type="button" class="timeline-marker practice" data-seek="08:24" aria-label="实践：08:24 环境检查" title="实践 · 08:24 环境检查"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 18V3m0 1c3-2 5 2 8 0v9c-3 2-5-2-8 0"/></svg></button></div>
+        <div class="teacher-timeline-track"><span class="video-played" id="videoPlayed"></span>
+          <button type="button" class="timeline-marker knowledge" style="--at:2%" data-seek="00:02" data-label="知识" aria-label="知识：00:02 算子的数学含义" title="知识 · 00:02 算子的数学含义"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h5l2 2 2-2h5v8h-5l-2 2-2-2H3zM10 8v6"/></svg></button>
+          <button type="button" class="timeline-marker knowledge" style="--at:7%" data-seek="00:11" aria-label="知识：00:11 昇腾算子开发" title="知识 · 00:11 昇腾算子开发"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h5l2 2 2-2h5v8h-5l-2 2-2-2H3zM10 8v6"/></svg></button>
+          <button type="button" class="timeline-marker knowledge" style="--at:13%" data-seek="00:29" aria-label="知识：00:29 Ascend C 两种模式" title="知识 · 00:29 Ascend C 两种模式"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h5l2 2 2-2h5v8h-5l-2 2-2-2H3zM10 8v6"/></svg></button>
+          <button type="button" class="timeline-marker knowledge" style="--at:19%" data-seek="01:18" aria-label="知识：01:18 CPU 模式与 NPU 模式" title="知识 · 01:18 CPU 模式与 NPU 模式"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h5l2 2 2-2h5v8h-5l-2 2-2-2H3zM10 8v6"/></svg></button>
+          <button type="button" class="timeline-marker code" style="--at:27%" data-seek="03:20" data-label="实践" aria-label="实践：03:20 拆分 mini-batch" title="实践 · 03:20 拆分 mini-batch"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 5-5 5 5 5m6-10 5 5-5 5m-2-12-2 14"/></svg></button>
+          <button type="button" class="timeline-marker knowledge" style="--at:35%" data-seek="04:12" aria-label="知识：04:12 数据并行流程" title="知识 · 04:12 数据并行流程"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h5l2 2 2-2h5v8h-5l-2 2-2-2H3zM10 8v6"/></svg></button>
+          <button type="button" class="timeline-marker practice" style="--at:48%" data-seek="05:05" aria-label="实践：05:05 同步局部梯度" title="实践 · 05:05 同步局部梯度"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 18V3m0 1c3-2 5 2 8 0v9c-3 2-5-2-8 0"/></svg></button>
+          <button type="button" class="timeline-marker knowledge" style="--at:57%" data-seek="06:44" aria-label="知识：06:44 梯度平均" title="知识 · 06:44 梯度平均"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h5l2 2 2-2h5v8h-5l-2 2-2-2H3zM10 8v6"/></svg></button>
+          <button type="button" class="timeline-marker practice" style="--at:70%" data-seek="08:24" aria-label="实践：08:24 检查运行环境" title="实践 · 08:24 检查运行环境"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 18V3m0 1c3-2 5 2 8 0v9c-3 2-5-2-8 0"/></svg></button>
+          <button type="button" class="timeline-marker knowledge" style="--at:79%" data-seek="10:12" aria-label="知识：10:12 确认可用设备" title="知识 · 10:12 确认可用设备"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h5l2 2 2-2h5v8h-5l-2 2-2-2H3zM10 8v6"/></svg></button>
+          <button type="button" class="timeline-marker practice" style="--at:88%" data-seek="13:40" aria-label="实践：13:40 完成版本核验" title="实践 · 13:40 完成版本核验"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 18V3m0 1c3-2 5 2 8 0v9c-3 2-5-2-8 0"/></svg></button>
+          <button type="button" class="timeline-marker note" style="--at:97%" data-seek="17:42" data-label="笔记" aria-label="笔记：17:42 本节回顾" title="笔记 · 17:42 本节回顾"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 3h9l3 3v11H4zM13 3v4h4M7 10h6M7 13h4"/></svg></button>
+        </div>
         <span class="timeline-duration">18:40</span>
       </div>
     </section>
@@ -245,7 +258,7 @@
   <script src="assets/js/mindie-learning-integration.js?v=direct-entry-1"></script>
   <script src="assets/js/mindie-ide-tools.js?v=terminal-sync-6"></script>
   <script src="assets/js/learning-study-tools.js?v=unified-companion-1"></script>
-  <script src="assets/js/unified-companion.js?v=immersive-v2-fresh-start"></script>
+  <script src="assets/js/unified-companion.js?v=subtitle-float-v3-fresh-start"></script>
   <script src="assets/js/mindie-environment-preview.js?v=code-advice-6"></script>
   <script src="assets/js/mindie-inference-preview.js?v=guided-goal-6"></script>
   <script src="assets/js/mindie-development-assist.js?v=selection-actions-6"></script>
