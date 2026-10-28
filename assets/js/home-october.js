@@ -93,7 +93,7 @@
   document.getElementById('previousMonth').addEventListener('click',()=>moveMonth(-1));document.getElementById('nextMonth').addEventListener('click',()=>moveMonth(1));
   filters.addEventListener('click',event=>{const button=event.target.closest('button[data-scope]');if(!button)return;scope=button.dataset.scope;selected=null;filters.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));renderCalendar();});
   document.getElementById('showAllEvents').addEventListener('click',()=>{selected=null;renderCalendar();});
-  document.querySelector('.nav-search').addEventListener('click',()=>{document.getElementById('top').scrollIntoView({behavior:'smooth'});document.getElementById('heroInput').focus({preventScroll:true});});
+  document.querySelector('.nav-search')?.addEventListener('click',()=>{document.getElementById('top').scrollIntoView({behavior:'smooth'});document.getElementById('heroInput').focus({preventScroll:true});});
   // Roving focus follows the WAI-ARIA tab keyboard convention.
   document.querySelectorAll('.pill-tabs,.scenario-subtabs').forEach(group=>{const tabs=[...group.querySelectorAll('[role=tab]')];function sync(){tabs.forEach(t=>t.tabIndex=t.getAttribute('aria-selected')==='true'?0:-1);}sync();tabs.forEach((b,i)=>{b.addEventListener('click',sync);b.addEventListener('keydown',e=>{let j;if(e.key==='ArrowRight')j=(i+1)%tabs.length;else if(e.key==='ArrowLeft')j=(i-1+tabs.length)%tabs.length;else if(e.key==='Home')j=0;else if(e.key==='End')j=tabs.length-1;else return;e.preventDefault();tabs[j].click();tabs[j].focus();});});});
   renderScene(0);renderCert('ACDA');renderCalendar();
