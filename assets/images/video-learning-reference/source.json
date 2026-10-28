@@ -1,7 +1,33 @@
 {
   "source": "/Users/zhuangzhiyi/Downloads/视频学习汇总/视频学习1/index.html",
-  "frames": {"default":"166:33823", "assistantTypeMenu":"193:45133", "transcript":"166:43595"},
-  "logicalSize": {"width":1920,"height":1080},
-  "assistant": {"x":1428,"y":32,"width":480,"height":1016},
-  "artwork": "Original default WebP and transcript PNG copied unchanged; artwork positions in CSS use the export's logical coordinates."
+  "frames": {
+    "default": "166:33823",
+    "assistantTypeMenu": "193:45133",
+    "transcript": "166:43595"
+  },
+  "logicalSize": {
+    "width": 1920,
+    "height": 1080
+  },
+  "assistant": {
+    "x": 1428,
+    "y": 32,
+    "width": 480,
+    "height": 1016
+  },
+  "artwork": "Original default WebP and transcript PNG copied unchanged; artwork positions in CSS use the export's logical coordinates.",
+  "videoLearning2": {
+    "source": "视频学习汇总/视频学习2/index.html",
+    "frames": {
+      "notes": "166:66101",
+      "cards": "166:61553",
+      "summary": "166:57524",
+      "transcript": "166:49281"
+    },
+    "canvas": {
+      "width": 1920,
+      "height": 1080
+    },
+    "assets": "Original WebP exports copied unchanged; CSS clips original illustrations and icons. All sidebar text and controls are HTML."
+  }
 }

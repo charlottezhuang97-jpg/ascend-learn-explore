@@ -1,15 +1,18 @@
-/* 视频学习1: 默认状态 / 视频字幕 / 容器 91336737. */
+/* Shared immersive surface: original exports from video learning 1 and 2. */
 (() => {
   if(!location.pathname.endsWith('/learn.html'))return;
   const learning=window.AscendLearning,assistant=window.AscendCompanion;
   const panel=document.getElementById('unifiedCompanion'),floor=document.querySelector('.fixed1030-floor-learning');
   if(!learning||!assistant||!panel||!floor)return;
   const root=new URL('../../',document.currentScript.src),asset=p=>new URL(p,root).href;
-  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=asset('assets/css/video-reference-shell.css?v=1');document.head.append(sheet);
+  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=asset('assets/css/video-reference-shell.css?v=2');document.head.append(sheet);
   document.body.classList.add('reference-immersive');
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const icon=name=>`<span class="iv-source iv-${name}" aria-hidden="true"></span>`;
+  const referenceView=()=>['video','board'].includes(document.body.dataset.fixedView);
   const tools={course:'课程总结',chapter:'章节总结',summary:'智能摘要',notes:'笔记',transcript:'视频字幕',cards:'知识卡片',quiz:'测一测'};
+  const featureTitles={...tools,cards:'知识点'};
+  const referenceFeatures=new Set(['notes','cards','summary','transcript']);
   const rows=[
     ['00:00:02','voice','这章节我们主要讲的是样例的一些演示'],
     ['00:00:06','','我们首先通过一个hello word这样的一个样例'],
@@ -29,7 +32,8 @@
   surface.innerHTML=`<header class="iv-course-header"><a class="iv-course-back" href="course-preview.html?course=${encodeURIComponent(new URLSearchParams(location.search).get('course')||'operator')}" aria-label="返回课程详情">${icon('back')}</a><button type="button" class="iv-course-name">Ascend C 算子开发基础 ${icon('course-chevron')}</button></header>
     <div class="iv-canvas-tools" aria-label="画布工具"><button type="button" data-iv-open hidden>${icon('logo')}学习助手</button><button type="button" data-iv-zoom="-1" aria-label="缩小视频">${icon('zoom-out')}</button><span data-iv-scale>50%</span><button type="button" data-iv-zoom="1" aria-label="放大视频">${icon('zoom-in')}</button><i></i><button type="button" data-iv-settings aria-label="学习设置">${icon('settings')}</button><button type="button" data-iv-help aria-label="学习帮助">${icon('help')}</button></div>
     <h1 class="iv-part-title">Part 1. CANN、达芬奇架构与算子</h1>
-    <section class="iv-video-frame" aria-label="Ascend C 算子开发课程视频"><div class="iv-video-art"><img class="iv-default-cover" src="${asset('assets/images/video-learning-reference/default.webp')}" alt="Ascend C 算子开发：机器人与儿童课程封面"><img class="iv-subtitle-cover" src="${asset('assets/images/immersive-learning/ascend-c-subtitle-frame.webp')}" alt="什么是算子：算子的数学含义与 Tanh、ReLU、Sigmoid 函数图像" hidden></div><div class="iv-player-controls"><button type="button" data-iv-play aria-label="播放课程视频">${icon('play')}</button><button type="button" data-iv-sound aria-label="切换声音">${icon('sound')}</button><time>01:00:00</time><button type="button" class="iv-caption-button" data-iv-transcript aria-label="查看视频字幕">${icon('caption')}</button><button type="button" data-iv-fullscreen aria-label="全屏观看">${icon('fullscreen')}</button></div></section>
+    <section class="iv-video-frame" aria-label="Ascend C 算子开发课程视频"><div class="iv-video-art"><img class="iv-default-cover" src="${asset('assets/images/video-learning-reference/default.webp')}" alt="Ascend C 算子开发：机器人与儿童课程封面"><img class="iv-subtitle-cover" src="${asset('assets/images/video-learning-reference/knowledge.webp')}" alt="什么是算子：算子的数学含义与 Tanh、ReLU、Sigmoid 函数图像" hidden></div><div class="iv-player-controls"><button type="button" data-iv-play aria-label="播放课程视频">${icon('play')}</button><button type="button" data-iv-sound aria-label="切换声音">${icon('sound')}</button><time>01:00:00</time><button type="button" class="iv-caption-button" data-iv-transcript aria-label="查看视频字幕">${icon('caption')}</button><button type="button" data-iv-fullscreen aria-label="全屏观看">${icon('fullscreen')}</button></div></section>
+    <section class="iv-board-viewport" aria-label="AI Core whiteboard" hidden><div class="iv-board-art"><img src="${asset('assets/images/video-learning-reference/notes.webp')}" alt="AI Core: Scalar, Vector, Cube, DMA, Local Memory, Global Memory"></div></section>
     <div class="iv-timeline" aria-label="课程语义进度节点"><div class="iv-timeline-background"></div><span class="iv-timeline-duration">${icon('history')}28:25:20</span>${nodes.map(([type,time,at,label])=>`<button type="button" class="iv-node iv-node-${type}" style="--at:${at}%" data-iv-seek="${time}" aria-label="${type==='knowledge'?'知识':type==='note'?'笔记':'实践'} ${time}">${label?`<span class="iv-node-label">${label}</span>`:''}<i></i>${icon(type)}</button>`).join('')}<span class="iv-timeline-cursor" style="left:40.2%"><i></i><small>AI Core 硬件架构</small></span></div>
     <footer class="iv-footer"><nav aria-label="学习视角"><button type="button" class="active" data-iv-mode="video" aria-current="page">视频</button><button type="button" data-iv-mode="board">白板</button><button type="button" data-iv-mode="ide">实验</button></nav><div><button type="button" data-iv-comments>${icon('comment')}课程评论</button><button type="button" data-iv-resources>${icon('resources')}学习资料</button></div></footer>`;
   floor.append(surface);
@@ -38,17 +42,36 @@
   const menu=document.createElement('div');menu.className='iv-tools-menu';menu.hidden=true;menu.setAttribute('aria-label','学习工具切换');
   menu.innerHTML=Object.entries(tools).map(([key,label])=>`<button type="button" data-iv-tool="${key}">${label}</button>`).join('');panel.append(menu);
   const search=document.createElement('form');search.className='iv-transcript-search';search.hidden=true;search.setAttribute('role','search');search.innerHTML=`${icon('search')}<input aria-label="搜索视频字幕" placeholder="搜索" autocomplete="off">`;panel.append(search);
-  const floating=window.AscendFloatingWindow.mount(panel,header.querySelector('.iv-assistant-drag'),{enabled:()=>document.body.dataset.fixedView==='video'});
-  let selectedRow=0,scale=50,transcriptRendered=false,lastVideo=null;
+  const capture=document.createElement('div');capture.className='iv-note-capture';capture.hidden=true;capture.setAttribute('aria-label','添加学习笔记');
+  capture.innerHTML=`<button type="button" data-iv-capture="camera" aria-label="添加图片笔记">${icon('note-camera')}</button><button type="button" data-iv-capture="voice" aria-label="语音记录笔记">${icon('note-microphone')}</button><button type="button" data-iv-capture="phone" aria-label="拍摄图片笔记">${icon('note-phone')}</button><input type="file" accept="image/*" hidden>`;panel.append(capture);
+  // Existing course-resource entry forwards to this action without exposing another header icon.
+  const resourcesAction=document.createElement('button');resourcesAction.type='button';resourcesAction.hidden=true;resourcesAction.dataset.uacAction='resources';panel.append(resourcesAction);
+  const floating=window.AscendFloatingWindow.mount(panel,header.querySelector('.iv-assistant-drag'),{enabled:referenceView});
+  let selectedRow=0,scale=50,lastVideo=null,lastFeature='',renderedFeature='';
+  const noteAttachments=[];let voiceNotes=[];
+  try{const saved=JSON.parse(localStorage.getItem('ascend-reference-voice-notes')||'[]');if(Array.isArray(saved))voiceNotes=saved.filter(v=>typeof v==='string');}catch{}
+  function appendUserNotes(){
+    const target=panel.querySelector('.iv-note-content');if(!target)return;
+    for(const text of voiceNotes){const p=document.createElement('p');p.className='iv-note-recorded';p.textContent=text;target.append(p);}
+    for(const attachment of noteAttachments){const img=document.createElement('img');img.className='iv-note-upload';img.src=attachment.src;img.alt=attachment.name;target.append(img);}
+  }
   function renderTranscript(){
     const content=panel.querySelector('.uac-body');content.className='uac-body iv-transcript-body';
     content.innerHTML=`<h3 class="iv-transcript-title">已为你生成【HelloWorld】视频字幕。</h3><ol class="iv-transcript-list">${rows.map(([time,type,text],i)=>`<li data-iv-transcript-row="${i}"><button type="button" data-uac-time="${time.slice(3)}" aria-current="${i===selectedRow}" aria-label="定位到 ${time} ${esc(text)}"><span class="iv-row-icon">${type?icon(type):''}</span><span class="iv-row-copy"><time>${time}</time><span>${esc(text)}</span></span></button></li>`).join('')}</ol>`;
-    transcriptRendered=true;search.querySelector('input').value='';
+    search.querySelector('input').value='';
+  }
+  function setMode(mode){document.querySelector(`.fixed1030-footer [data-fixed-view="${mode}"]`)?.click();}
+  function renderReferenceFeature(feature){
+    if(feature==='transcript'){renderTranscript();return;}
+    const render=window.AscendVideoReferenceContent?.[feature];if(!render)return;
+    const content=panel.querySelector('.uac-body');content.className='uac-body iv-feature-body iv-'+feature+'-body';content.innerHTML=render(asset);content.scrollTop=0;
+    if(feature==='notes')appendUserNotes();
   }
   function decorate(){
-    const video=document.body.dataset.fixedView==='video';if(!video)return;
     const feature=panel.dataset.feature||'',transcript=feature==='transcript';
-    const active=header.querySelector('.iv-selected-tool');active.hidden=!feature;active.textContent=tools[feature]||'';
+    if(feature!==lastFeature){lastFeature=feature;if(referenceFeatures.has(feature))setMode(feature==='notes'?'board':'video');}
+    if(!referenceView())return;
+    const active=header.querySelector('.iv-selected-tool');active.hidden=!feature;active.textContent=featureTitles[feature]||'';
     header.querySelector('[data-uac-action="close"]').hidden=false;
     const modeName=header.querySelector('h2').textContent;
     header.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String((b.dataset.mode==='smart'?'智能助手':'学习助手')===modeName)));
@@ -62,21 +85,26 @@
     const mic=panel.querySelector('.uac-mic');if(mic)mic.innerHTML=icon('mic');
     const send=panel.querySelector('.uac-input button[type="submit"]');if(send)send.innerHTML=icon('send');
     search.hidden=!transcript;panel.classList.toggle('iv-is-transcript',transcript);
-    surface.classList.toggle('iv-show-subtitle',transcript);
-    surface.querySelector('.iv-default-cover').hidden=transcript;surface.querySelector('.iv-subtitle-cover').hidden=!transcript;
-    if(transcript&&!transcriptRendered)renderTranscript();
-    if(!transcript)transcriptRendered=false;
+    capture.hidden=feature!=='notes';
+    const showLesson=referenceFeatures.has(feature);
+    surface.classList.toggle('iv-show-subtitle',showLesson);
+    surface.querySelector('.iv-default-cover').hidden=showLesson;surface.querySelector('.iv-subtitle-cover').hidden=!showLesson;
+    if(referenceFeatures.has(feature)&&renderedFeature!==feature){renderedFeature=feature;renderReferenceFeature(feature);}
+    if(!referenceFeatures.has(feature)){renderedFeature='';}
   }
   function viewChanged(){
-    const video=document.body.dataset.fixedView==='video';surface.hidden=!video;
-    if(!video){floating.reset();menu.hidden=true;search.hidden=true;panel.classList.remove('iv-is-transcript');header.querySelector('[data-uac-action="close"]').hidden=true;header.querySelector('.iv-selected-tool').hidden=true;transcriptRendered=false;if(lastVideo===true&&!panel.hidden)assistant.open();}
+    const video=referenceView(),mode=document.body.dataset.fixedView;surface.hidden=!video;
+    surface.classList.toggle('iv-board-mode',mode==='board');surface.setAttribute('aria-label',mode==='board'?'白板学习视角':'视频学习视角');
+    surface.querySelector('.iv-board-viewport').hidden=mode!=='board';surface.querySelector('.iv-video-frame').hidden=mode==='board';surface.querySelector('.iv-part-title').hidden=mode==='board';
+    surface.querySelectorAll('[data-iv-mode]').forEach(b=>{b.classList.toggle('active',b.dataset.ivMode===mode);if(b.dataset.ivMode===mode)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+    if(!video){floating.reset();menu.hidden=true;search.hidden=true;capture.hidden=true;panel.classList.remove('iv-is-transcript');header.querySelector('[data-uac-action="close"]').hidden=true;header.querySelector('.iv-selected-tool').hidden=true;renderedFeature='';if(lastVideo===true&&!panel.hidden)assistant.open();}
     else decorate();
     surface.querySelector('[data-iv-open]').hidden=!panel.hidden;
     lastVideo=video;
   }
   new MutationObserver(viewChanged).observe(document.body,{attributes:true,attributeFilter:['data-fixed-view']});
-  new MutationObserver(()=>{const entry=surface.querySelector('[data-iv-open]');entry.hidden=!panel.hidden;if(panel.hidden&&document.body.dataset.fixedView==='video'&&panel.contains(document.activeElement))entry.focus({preventScroll:true});}).observe(panel,{attributes:true,attributeFilter:['hidden']});
-  document.addEventListener('uac:render',()=>{transcriptRendered=false;decorate();});
+  new MutationObserver(()=>{const entry=surface.querySelector('[data-iv-open]');entry.hidden=!panel.hidden;if(panel.hidden&&referenceView()&&panel.contains(document.activeElement))entry.focus({preventScroll:true});}).observe(panel,{attributes:true,attributeFilter:['hidden']});
+  document.addEventListener('uac:render',()=>{renderedFeature='';decorate();});
   document.addEventListener('uac:open',decorate);
   panel.querySelector('.uac-mode-switch').addEventListener('toggle',event=>{if(event.target.open){menu.hidden=true;header.querySelector('[data-iv-tool-menu]').setAttribute('aria-expanded','false');}});
   panel.addEventListener('click',event=>{
@@ -85,13 +113,53 @@
     if(menuButton){menu.hidden=!menu.hidden;menuButton.setAttribute('aria-expanded',String(!menu.hidden));panel.querySelector('.uac-mode-switch').open=false;return;}
     const tool=event.target.closest('[data-iv-tool]');if(tool){menu.hidden=true;header.querySelector('[data-iv-tool-menu]').setAttribute('aria-expanded','false');assistant.launch(tool.dataset.ivTool);return;}
     const row=event.target.closest('[data-iv-transcript-row]');if(row){selectedRow=Number(row.dataset.ivTranscriptRow);panel.querySelectorAll('.iv-transcript-list [aria-current]').forEach((b,i)=>b.setAttribute('aria-current',String(i===selectedRow)));}
+    if(event.target.closest('[data-iv-note-video]')){setMode('video');document.dispatchEvent(new CustomEvent('learning:locate-video',{detail:{time:'00:11'}}));}
+    const action=event.target.closest('[data-iv-summary-action]');
+    if(action){
+      const key=action.dataset.ivSummaryAction;
+      if(key==='regenerate'){renderReferenceFeature('summary');learning.showToast('已根据当前课程重新整理摘要');}
+      if(key==='copy'){
+        const text=panel.querySelector('.iv-summary-body').innerText;
+        if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>learning.showToast('摘要已复制')).catch(()=>learning.showToast('未能复制，请选中文字后复制'));
+        else learning.showToast('请选中摘要文字后复制');
+      }
+      if(key==='like'||key==='dislike'){
+        const pressed=action.getAttribute('aria-pressed')!=='true';
+        panel.querySelectorAll('[data-iv-summary-action=like],[data-iv-summary-action=dislike]').forEach(b=>b.setAttribute('aria-pressed',String(b===action&&pressed)));
+        try{localStorage.setItem('ascend-reference-summary-feedback',pressed?key:'');}catch{}
+        learning.showToast(pressed?'反馈已保存在本机':'已取消反馈');
+      }
+      if(key==='report')learning.showToast('可通过课程评论描述摘要中的问题');
+    }
+  });
+  capture.addEventListener('click',event=>{
+    const button=event.target.closest('[data-iv-capture]');if(!button)return;
+    if(button.dataset.ivCapture==='voice'){
+      const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+      if(!Speech){learning.showToast('当前浏览器不支持语音笔记，请使用图片记录');return;}
+      const recognition=new Speech();recognition.lang='zh-CN';recognition.interimResults=false;
+      recognition.onstart=()=>button.classList.add('is-recording');recognition.onend=()=>button.classList.remove('is-recording');
+      recognition.onerror=()=>learning.showToast('语音记录未完成，请检查麦克风权限');
+      recognition.onresult=event=>{
+        const p=document.createElement('p');p.className='iv-note-recorded';p.textContent=event.results[0][0].transcript;
+        panel.querySelector('.iv-note-content')?.append(p);
+        voiceNotes.push(p.textContent);try{localStorage.setItem('ascend-reference-voice-notes',JSON.stringify(voiceNotes));}catch{}
+      };
+      try{recognition.start();}catch{learning.showToast('无法开启语音记录，请重试');}return;
+    }
+    const input=capture.querySelector('input');if(button.dataset.ivCapture==='phone')input.setAttribute('capture','environment');else input.removeAttribute('capture');input.click();
+  });
+  capture.querySelector('input').addEventListener('change',event=>{
+    const file=event.target.files?.[0];if(!file)return;
+    if(!file.type.startsWith('image/')){learning.showToast('请选择图片文件');return;}
+    const reader=new FileReader();reader.onload=()=>{const img=document.createElement('img');img.className='iv-note-upload';img.src=String(reader.result);img.alt=file.name;noteAttachments.push({src:img.src,name:file.name});panel.querySelector('.iv-note-content')?.append(img);learning.showToast('图片已加入当前笔记');};reader.onerror=()=>learning.showToast('图片未能读取，请重试');reader.readAsDataURL(file);event.target.value='';
   });
   document.addEventListener('click',event=>{
     if(!header.contains(event.target)&&!menu.contains(event.target)){menu.hidden=true;header.querySelector('[data-iv-tool-menu]').setAttribute('aria-expanded','false');}
     const types=panel.querySelector('.uac-mode-switch');if(!types.contains(event.target))types.open=false;
   });
   window.addEventListener('keydown',event=>{
-    if(event.key!=='Escape'||document.body.dataset.fixedView!=='video')return;
+    if(event.key!=='Escape'||!referenceView())return;
     const types=panel.querySelector('.uac-mode-switch');if(!menu.hidden||types.open){event.preventDefault();event.stopImmediatePropagation();menu.hidden=true;types.open=false;header.querySelector('[data-iv-tool-menu]').setAttribute('aria-expanded','false');}
   },true);
   search.addEventListener('submit',event=>event.preventDefault());
@@ -103,11 +171,11 @@
     if(button.hasAttribute('data-iv-transcript'))assistant.launch('transcript');
     if(button.hasAttribute('data-iv-comments'))document.querySelector('.fixed1030-footer [data-fixed-comment]')?.click();
     if(button.hasAttribute('data-iv-resources'))document.querySelector('.fixed1030-footer [data-fixed-resources]')?.click();
-    if(button.dataset.ivSeek){document.dispatchEvent(new CustomEvent('learning:locate-video',{detail:{time:button.dataset.ivSeek}}));surface.querySelector('.iv-timeline-cursor').style.left=button.style.getPropertyValue('--at');}
+    if(button.dataset.ivSeek){document.dispatchEvent(new CustomEvent('learning:locate-video',{detail:{time:button.dataset.ivSeek}}));surface.querySelector('.iv-timeline-cursor').style.left=button.style.getPropertyValue('--at');if(button.classList.contains('iv-node-note'))assistant.launch('notes');else if(button.classList.contains('iv-node-knowledge'))assistant.launch('cards');else if(button.classList.contains('iv-node-practice'))setMode('ide');}
     if(button.hasAttribute('data-iv-play'))document.getElementById('teacherPlay').click();
     if(button.hasAttribute('data-iv-sound')){const muted=button.getAttribute('aria-pressed')!=='true';button.setAttribute('aria-pressed',String(muted));button.setAttribute('aria-label',muted?'声音已关闭，点击开启':'声音已开启，点击关闭');}
     if(button.hasAttribute('data-iv-fullscreen')){if(document.fullscreenElement)document.exitFullscreen?.();else surface.querySelector('.iv-video-frame').requestFullscreen?.();}
-    if(button.dataset.ivZoom){scale=Math.max(30,Math.min(100,scale+Number(button.dataset.ivZoom)*10));surface.querySelector('[data-iv-scale]').textContent=scale+'%';surface.querySelector('.iv-video-art').style.setProperty('--zoom',scale/50);}
+    if(button.dataset.ivZoom){scale=Math.max(30,Math.min(100,scale+Number(button.dataset.ivZoom)*10));surface.querySelector('[data-iv-scale]').textContent=scale+'%';surface.querySelector('.iv-video-art').style.setProperty('--zoom',scale/50);surface.querySelector('.iv-board-art').style.setProperty('--zoom',scale/50);}
     if(button.hasAttribute('data-iv-settings'))learning.showToast('可使用右侧学习助手整理本节内容');
     if(button.hasAttribute('data-iv-help'))learning.showToast('选择进度节点定位内容；通过右侧助手查看字幕与学习工具');
     if(button.classList.contains('iv-course-name'))document.querySelector('.fixed1030-lesson .lesson-directory-trigger')?.click();
