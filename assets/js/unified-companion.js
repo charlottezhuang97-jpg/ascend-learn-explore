@@ -47,7 +47,7 @@
     if(view==='resources'){content.innerHTML=`<div class="uac-resource-home"><p>与${hasCourse()?esc(title()):'当前学习'}关联的资料</p>${[['errors','常见错误码','定位问题与排查顺序'],['quiz','随堂测试','检验理解，不计认证成绩'],['docs','相关文档','查看手册依据与课程资料'],['notes','我的笔记','记录想法，保留学习摘录']].map(([key,label,description])=>`<button type="button" data-uac-resource="${key}"><b>${label}</b><small>${description}</small><span>›</span></button>`).join('')}</div>`;return;}
     content.innerHTML=`<div class="uac-chat" role="log" aria-label="AI 学伴对话">${messages.map(m=>`<article class="uac-message ${m.role}" data-uac-message="${m.id}"><span>${m.role==='user'?'你':'AI 学伴'}</span><div>${m.html}</div></article>`).join('')}</div>${showCards?cards():''}`;
     content.classList.toggle('uac-empty',!messages.length);
-    if(messages.length)content.scrollTop=content.scrollHeight;
+    content.scrollTop=messages.length?content.scrollHeight:0;
     document.dispatchEvent(new CustomEvent('uac:render'));
   }
   function setOpen(value,trigger){open=value;if(trigger)lastTrigger=trigger;panel.hidden=!open;fab.hidden=open;fab.setAttribute('aria-expanded',String(open));document.querySelectorAll('[data-uac-entry],#openIdeAssist,#homeCompanionFab').forEach(b=>b.setAttribute('aria-expanded',String(open)));if(open){render();panel.querySelector('[data-uac-action="close"]').focus({preventScroll:true});document.dispatchEvent(new CustomEvent('uac:open'));}else lastTrigger?.focus({preventScroll:true});}
