@@ -28,13 +28,39 @@
         <a class="room-close" href="index.html" aria-label="关闭课程">×</a><a class="stepwise-version-link" href="learn-stepwise.html?course=mindie&amp;mode=ide&amp;guide=open" aria-label="切换到实验模式">实验模式</a>
         <button type="button" class="lesson-title lesson-directory-trigger" aria-controls="lessonDirectory" aria-expanded="false"><span>课节 1</span><strong id="lessonTitle">昇腾处理器的逻辑结构拆解</strong><span class="lesson-directory-chevron" aria-hidden="true">⌄</span></button>
         <div class="board-tools" aria-label="板书辅助功能">
-          <nav class="learning-mode-tabs" aria-label="学习形式"><button type="button" class="active" data-view="board">白板</button><button type="button" data-view="video">视频</button></nav>
+          <nav class="learning-mode-tabs" aria-label="学习形式"><button type="button" class="active" data-view="board">白板</button><button type="button" data-view="video">视频</button><button type="button" data-view="experiment">实验</button></nav>
           <button type="button" aria-label="缩小板书">−</button><span class="zoom-value">100%</span><button type="button" aria-label="放大板书">＋</button>
           <button type="button" id="previousBoardPage" aria-label="上一页板书">‹</button><span class="page-value" id="boardPageValue" aria-live="polite">1 / 5</span><button type="button" id="nextBoardPage" aria-label="下一页板书">›</button>
           <button type="button" aria-label="下载板书">⇩</button><button type="button" aria-label="AI 学伴">✦</button><button type="button" id="toggleBoardSound" aria-label="声音：已开启，点击静音" aria-pressed="false" title="声音：已开启，点击静音"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4Z"/><g data-sound-waves><path d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14"/></g><path data-sound-muted d="m16 9 6 6m0-6-6 6" hidden/></svg></button>
         </div>
       </header>
       <section class="whiteboard" id="whiteboard" aria-label="课程板书画布">
+        <section class="operator-board-v2" aria-label="Ascend C 算子开发白板">
+          <div class="operator-board-column">
+            <p class="operator-board-lead">Ascend C 入门要点：异构系统上的核函数（Kernel）写在 Device / AI Core 侧，Host 负责调度与数据搬运。</p>
+            <h2>AI Core 内部并行计算架构抽象</h2>
+            <h3>异步指令流</h3>
+            <p>Scalar 计算单元读取指令序列，并把向量计算、矩阵计算、数据搬运指令发射给对应单元。向量计算单元、矩阵计算单元、数据搬运单元异步并行执行接收到的指令。</p>
+            <h3>同步信号流</h3>
+            <p>指令间可能会存在依赖关系。为了保证不同指令队列间的指令按照正确的逻辑关系执行，Scalar 计算单元也会给对应单元下发同步指令。</p>
+            <h3>计算数据流</h3>
+            <p>DMA 搬入单元把数据搬运到 Local Memory，Vector / Cube 计算单元完成数据计算，并把结果写回 Global Memory。</p>
+            <div class="operator-architecture" aria-label="AI Core 内部并行计算架构示意"><strong>AI Core</strong><div class="operator-command">指令序列 ↓ Scalar 计算单元</div><div class="operator-units"><span>Vector<br>计算单元</span><span>Cube<br>计算单元</span><span>DMA<br>搬运单元</span></div><div class="operator-memory">Local Memory → Global Memory</div></div>
+          </div>
+          <div class="operator-board-column">
+            <h3>本节课路线图</h3>
+            <ul><li>AI Core 三流并行</li><li>问题 1：谁在发指令？</li><li>问题 2：算力单元怎么协同？</li><li>问题 3：数据从哪来，到哪去？</li></ul>
+            <h3>核心概念 1</h3>
+            <p><mark>知识卡片：异步指令流</mark></p><p>定义：Scalar 读取指令序列，分发到各指令队列。</p><p>要点：Vector / Cube / DMA 可异步并行执行。</p>
+            <h3>核心概念 2</h3>
+            <table><caption>三类单元的职责</caption><thead><tr><th>概念</th><th>职责</th><th>一句话</th></tr></thead><tbody><tr><td>Scalar</td><td>读指令、分发、发同步</td><td>指挥官</td></tr><tr><td>Vector / Cube</td><td>矢量 / 矩阵计算</td><td>干活的</td></tr><tr><td>DMA</td><td>Global ↔ Local 搬运</td><td>搬运工</td></tr></tbody></table>
+          </div>
+          <div class="operator-board-column">
+            <h3>核心概念 3</h3><h4>三流怎么咬合</h4><p><mark>指令流：</mark>Scalar → 各单元队列（蓝）</p><p><mark>同步流：</mark>依赖信号，单元握手（黄）</p><p><mark>数据流：</mark>DMA ↔ Local ↔ 计算单元（红）</p>
+            <h3>案例：一次矢量计算</h3><p>能动侧：Vector / Cube 在 Local 上算。</p><p>结构侧：必须先 DMA 搬入，算完再搬回。</p><p>对应流水：CopyIn → Compute → CopyOut。</p><p><mark>约束：没有 Local，矢量 API 无法落脚。</mark></p>
+            <h3>理解重点</h3><p>误区纠正：只盯着算力单元。</p><p>误区：以为 AI Core = Vector + Cube。</p><p>真相：指令 + 同步 + 数据三流缺一不可。</p>
+          </div>
+        </section>
         <nav class="learning-anchor" aria-label="当前板书关联内容">
           <span><i aria-hidden="true"></i>板书 01 · 数据流</span>
           <button type="button" id="boardToVideo" data-time="03:20"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 7 5-7 5z"/><rect x="3" y="4" width="18" height="16" rx="3"/></svg>对应视频 03:20–05:45</button>
@@ -116,7 +142,7 @@
           </ol>
         </nav>
       </aside>
-      <footer class="board-footer"><button type="button" id="toggleLessonOutline" aria-expanded="false" aria-controls="lessonOutline" hidden>☷ 本节大纲</button><span>长按画布中的文字，可加入我的笔记</span></footer>
+      <footer class="board-footer"><button type="button" id="toggleLessonOutline" aria-expanded="false" aria-controls="lessonOutline" hidden>☷ 本节大纲</button><div class="immersive-board-timeline" aria-label="课程学习节点"><span>28:25:20</span><div><button type="button" data-seek="03:20" aria-label="定位知识点 03:20">◇</button><button type="button" data-seek="05:05" aria-label="定位代码 05:05">◇</button><button type="button" data-seek="08:24" aria-label="定位实践 08:24">▣</button></div><span>知识 · 实践 · 笔记</span></div><nav class="learning-mode-tabs immersive-bottom-modes" aria-label="学习形式"><button type="button" data-view="video">视频</button><button type="button" class="active" data-view="board">白板</button><button type="button" data-view="experiment">实验</button></nav></footer>
     </section>
     <aside class="companion" aria-label="本节课学习辅助">
       <header><strong>AI 学伴</strong><button type="button" aria-label="收起辅助面板">×</button></header>
@@ -132,9 +158,11 @@
     </aside>
   </main>
   <main class="video-workspace teacher-mode" id="videoWorkspace" aria-label="视频学习工作台" hidden>
+    <nav class="learning-mode-tabs immersive-video-mode" aria-label="学习形式"><button type="button" data-view="board">白板</button><button type="button" class="active" data-view="video">视频</button><button type="button" data-view="experiment">实验</button></nav>
     <section class="video-dock" id="videoDock" aria-label="视频和 IDE 核心工作区，附带可移动辅助面板">
       <button type="button" class="teacher-backdrop-target" id="enterIdeFromBackdrop" aria-label="切换到 IDE 实践视角"></button>
       <section class="video-column" aria-label="老师讲解视频">
+        <h1 class="immersive-part-title" id="immersivePartTitle">Part 1. CANN、达芬奇架构与算子</h1>
         <div class="video-player">
           <div class="video-meta"><span>课节 1 · <span id="videoCurrentTime">00:00 / 18:40</span></span><button type="button" class="enter-ide-practice" id="enterIdePractice">查看 IDE 实践 <span aria-hidden="true">→</span></button></div>
           <div class="video-stage"><img src="assets/images/video-teacher-cover.png" alt="课程视频封面：悬浮的多媒体卡片与点击播放的手势"><button type="button" id="teacherPlay" aria-label="播放老师讲解视频"></button><p class="teacher-subtitle">从运行环境开始，理解本节实践会用到的代码与设备。</p></div>
@@ -145,7 +173,7 @@
         <header class="ide-toolbar">
           <div class="ide-lesson-nav"><a class="ide-course-exit" href="index.html" aria-label="退出课程" title="退出课程">×</a><button type="button" class="ide-lesson-title lesson-directory-trigger" aria-controls="lessonDirectory" aria-expanded="false"><span>课节 1</span><strong id="videoLessonTitle">昇腾处理器的逻辑结构拆解</strong><span class="lesson-directory-chevron" aria-hidden="true">⌄</span></button><button type="button" class="back-to-teacher" id="backToTeacher" hidden>← 回到讲解</button></div>
           <div class="ide-environment"><span class="ide-brand" aria-hidden="true">H</span><div><strong>HiDevLab 在线环境</strong><small><i></i> Ascend 910B · CANN 8.0 · 已连接</small></div></div>
-          <div class="ide-actions"><nav class="learning-mode-tabs" aria-label="学习形式"><button type="button" data-view="board">白板</button><button type="button" class="active" data-view="video">视频</button></nav><button type="button" class="ide-assist-trigger" id="openIdeAssist" aria-controls="ideAssistPanel" aria-expanded="false">✦ AI 学伴</button><button type="button" class="primary" id="runCode">▶ 运行</button><button type="button" class="ide-stop">■ 停止</button><button type="button" class="ide-save">保存</button><details class="ide-more-tools"><summary aria-label="更多课程工具" title="更多课程工具">⋯</summary><div class="ide-tools-menu"><button type="button" class="video-tool" aria-label="视频播放速度">播放速度 <span>1.0×</span></button><button type="button" class="video-tool" aria-label="下载本节资料">⇩ 下载本节资料</button><button type="button" class="video-tool" aria-label="学习设置">⚙ 学习设置</button><button type="button" id="resetWorkspaceLayout">↺ 恢复默认布局</button></div></details></div>
+          <div class="ide-actions"><nav class="learning-mode-tabs" aria-label="学习形式"><button type="button" data-view="board">白板</button><button type="button" data-view="video">视频</button><button type="button" data-view="experiment" class="active">实验</button></nav><button type="button" class="ide-assist-trigger" id="openIdeAssist" aria-controls="ideAssistPanel" aria-expanded="false">✦ 智能助手</button><button type="button" class="primary" id="runCode">▶ 运行</button><button type="button" class="ide-stop">■ 停止</button><button type="button" class="ide-save">保存</button><details class="ide-more-tools"><summary aria-label="更多课程工具" title="更多课程工具">⋯</summary><div class="ide-tools-menu"><button type="button" class="video-tool" aria-label="视频播放速度">播放速度 <span>1.0×</span></button><button type="button" class="video-tool" aria-label="下载本节资料">⇩ 下载本节资料</button><button type="button" aria-label="学习设置">⚙ 学习设置</button><button type="button" id="resetWorkspaceLayout">↺ 恢复默认布局</button></div></details></div>
         </header>
         <div class="ide-body">
           <aside class="ide-explorer"><header><span>资源管理器</span><button type="button" aria-label="更多资源管理器操作">…</button></header><strong class="folder open">⌄ TRAINING-LAB</strong><strong class="folder">› scripts</strong><strong class="folder open">⌄ src</strong><strong class="folder nested">› ascendc</strong><button type="button" class="ide-file active" data-ide-file="data_parallel.py">PY data_parallel.py</button><button type="button" class="ide-file" data-ide-file="gradient_sync.py">PY gradient_sync.py</button><div class="ide-file-row"><button type="button" class="ide-file" data-ide-file="check_env.py">PY check_env.py</button><button type="button" class="file-video-jump" id="fileVideoJump" aria-label="查看 check_env.py 对应视频：08 分 24 秒" aria-describedby="fileVideoTooltip"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="12" rx="2"/><path d="m8 7 5 3-5 3z"/></svg></button><span class="file-video-tooltip" id="fileVideoTooltip" role="tooltip">视频：08 分 24 秒</span></div><button type="button" class="ide-file" data-ide-file="README.md">MD README.md</button></aside>
@@ -197,6 +225,7 @@
         <span class="timeline-duration">18:40</span>
       </div>
     </section>
+    <nav class="learning-mode-tabs immersive-bottom-modes immersive-video-bottom" aria-label="学习形式"><button type="button" class="active" data-view="video">视频</button><button type="button" data-view="board">白板</button><button type="button" data-view="experiment">实验</button></nav>
     <aside class="ai-fix-panel" id="aiFixPanel" aria-label="AI 修复建议" aria-hidden="true">
       <header><div><span>AI 学伴</span><strong>建议修复 E-DEMO-102</strong></div><button type="button" id="closeFixPanel" aria-label="关闭修复建议">×</button></header>
       <div class="fix-context">已带入：check_env.py 第 8 行、演示错误码 E-DEMO-102、视频 05:05</div>
@@ -211,12 +240,12 @@
   </main>
   <script src="assets/js/course-preview.js?v=shared-catalog-1"></script>
   <script src="assets/js/mindie-lab-content.js?v=1"></script>
-  <script src="assets/js/learning-room.js?v=direct-entry-2"></script>
+  <script src="assets/js/learning-room.js?v=immersive-v2"></script>
   <script src="assets/js/learning-directory.js?v=direct-entry-1"></script>
   <script src="assets/js/mindie-learning-integration.js?v=direct-entry-1"></script>
   <script src="assets/js/mindie-ide-tools.js?v=terminal-sync-6"></script>
   <script src="assets/js/learning-study-tools.js?v=unified-companion-1"></script>
-  <script src="assets/js/unified-companion.js?v=selection-notes-6"></script>
+  <script src="assets/js/unified-companion.js?v=immersive-v2"></script>
   <script src="assets/js/mindie-environment-preview.js?v=code-advice-6"></script>
   <script src="assets/js/mindie-inference-preview.js?v=guided-goal-6"></script>
   <script src="assets/js/mindie-development-assist.js?v=selection-actions-6"></script>
@@ -226,5 +255,6 @@
   <script src="assets/js/mindie-auto-preparation.js?v=auto-route-5"></script>
   <script src="assets/js/learning-timeline-1030.js?v=reviews-floor-2"></script>
   <script src="assets/js/learning-reviews-1030.js?v=1"></script>
+  <script src="assets/js/immersive-learning-v2.js?v=1"></script>
 </body>
 </html>

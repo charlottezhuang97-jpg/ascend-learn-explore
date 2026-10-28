@@ -1,5 +1,8 @@
 (() => {
   const params = new URLSearchParams(window.location.search);
+  document.body.dataset.immersiveCourse = params.get('course') || 'training';
+  const immersivePartTitle = document.getElementById('immersivePartTitle');
+  if (immersivePartTitle) immersivePartTitle.textContent = ({operator:'Part 1. CANN、达芬奇架构与算子',training:'Part 1. 大模型分布式训练',mindie:'Part 1. MindIE 服务部署与推理'})[params.get('course')] || 'Part 1. 昇腾开发实践';
   const isMindIECourse = params.get('course') === 'mindie';
   const isTrainingCourse = params.get('course') === 'training';
   const courseName = params.get('title') || (isTrainingCourse ? '大模型分布式训练' : '昇腾学习课程');
@@ -178,10 +181,16 @@ if __name__ == '__main__':
     toastTimer = window.setTimeout(() => { toastNode.hidden = true; }, 2400);
   }
   function setView(view) {
-    const video = view === 'video';
-    boardRoom.hidden = video;
-    videoRoom.hidden = !video;
-    if (video) setVideoPerspective('teacher');
+    if (view === 'experiment') {
+      boardRoom.hidden = true;
+      videoRoom.hidden = false;
+      setVideoPerspective('ide');
+    } else {
+      const video = view === 'video';
+      boardRoom.hidden = video;
+      videoRoom.hidden = !video;
+      if (video) setVideoPerspective('teacher');
+    }
     document.querySelectorAll('.learning-mode-tabs button').forEach(button => button.classList.toggle('active', button.dataset.view === view));
     document.dispatchEvent(new CustomEvent('learning:view-change',{detail:{view}}));
   }
@@ -191,6 +200,7 @@ if __name__ == '__main__':
     videoRoom.classList.toggle('ide-mode', !teacher);
     backToTeacher.hidden = teacher;
     ideMiniVideo.hidden = teacher;
+    if (!videoRoom.hidden) document.querySelectorAll('.learning-mode-tabs button').forEach(button => button.classList.toggle('active', button.dataset.view === (teacher ? 'video' : 'experiment')));
     if (teacher) setIdeAssistOpen(false, false);
   }
   document.getElementById('enterIdePractice').addEventListener('click', () => {
