@@ -172,7 +172,7 @@ button.iv-note-image{padding:0;cursor:pointer}
 .iv-note-microphone{width:20px;height:20px;background-position:-1676px -990px}
 .iv-note-phone{width:20px;height:20px;background-position:-1712px -990px}
 .iv-card-book{background-image:url('../images/video-learning-reference/knowledge.webp');background-position:-1456px -266px}
-.iv-knowledge-heading{margin:32px 0 16px;color:#333;font-size:20px;line-height:28px;font-weight:600}
+.iv-knowledge-heading{margin:24px 0 16px;color:#333;font-size:20px;line-height:28px;font-weight:600}
 .iv-knowledge-card{position:relative;isolation:isolate;min-height:240px;padding:0 16px 16px;border-radius:16px;background:#f4f8ff;box-shadow:0 4px 9px #00000029;clip-path:polygon(0 0,calc(100% - 32px) 0,100% 32px,100% 100%,0 100%)}
 .iv-knowledge-card:before{content:"";position:absolute;z-index:-1;right:0;top:0;width:32px;height:32px;background:linear-gradient(45deg,#fff,#f8faff);box-shadow:-3px 3px 8px #0000001a}
 .iv-knowledge-card:after{content:"";position:absolute;z-index:-2;inset:0;background-image:linear-gradient(#a6b8d014 1px,transparent 1px),linear-gradient(90deg,#a6b8d014 1px,transparent 1px);background-size:4px 4px;mask-image:linear-gradient(135deg,#000,transparent 50%)}
@@ -183,7 +183,7 @@ button.iv-note-image{padding:0;cursor:pointer}
 .iv-knowledge-tag.extension{background:#e8cffe99;color:#8a21bc}
 .iv-knowledge-copy p{margin:8px 0 16px;font-size:14px;line-height:22px;color:#777}
 .iv-knowledge-copy p:last-child{margin-bottom:0}
-.iv-extension-heading{margin-top:44px}
+.iv-extension-heading{margin-top:48px}
 .iv-knowledge-extension{background:#f9f6ff;min-height:284px}
 .iv-knowledge-extension h5{background:linear-gradient(90deg,transparent,#e9e2f8)}
 .iv-summary-body .iv-feature-intro{margin-top:22px}
@@ -213,5 +213,20 @@ body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .ua
 .iv-note-section:nth-child(2) .iv-note-content{margin-top:14px}
 .iv-note-section:nth-child(2) .iv-note-content>p{margin-bottom:12px}
 .iv-voice,.iv-search{background-image:url('../images/video-learning-reference/transcript-v2.webp');background-size:1920px 1080px}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-header #uacTitle:after{content:none}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-header>.iv-assistant-drag{gap:8px}
+.iv-chevron{background-position:-1560px -62px}
+.iv-knowledge-card{padding-top:2px;box-shadow:none}
+.iv-knowledge-stack{position:relative;isolation:isolate;filter:drop-shadow(0 4px 5px #00000029)}
+.iv-knowledge-stack:before,.iv-knowledge-stack:after{content:"";position:absolute;z-index:-1;height:48px;border-radius:16px;background:#f6f6fa}
+.iv-knowledge-stack:before{left:12px;right:12px;bottom:-12px}
+.iv-knowledge-stack:after{left:24px;right:24px;bottom:-24px;opacity:.5}
+.iv-knowledge-extension{min-height:280px}
+.iv-summary-sections{margin-top:21px;margin-right:15px}
+.iv-summary-section[open]>summary{padding-bottom:11px}
+.iv-summary-section>div p{max-width:345px}
+.iv-summary-current{border:0;outline:1px solid #d9e0ff}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .iv-transcript-list button{align-items:flex-start}
+.iv-transcript-list button[aria-current=true] .iv-row-copy{padding-left:16px}
 @media(max-width:1300px){.iv-board-viewport{left:32px;right:32px}.iv-summary-sections{margin-left:26px;margin-right:0}.iv-knowledge-card h5{font-size:14px}.iv-summary-section{padding:12px}.iv-summary-section>summary{font-size:14px}}
 @media(max-width:800px){.iv-board-viewport{left:16px;right:16px;top:94px}.iv-board-mode .iv-course-header{top:14px}.iv-board-mode .iv-canvas-tools{top:52px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel:is([data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]){top:auto!important;right:12px!important;bottom:12px!important}}

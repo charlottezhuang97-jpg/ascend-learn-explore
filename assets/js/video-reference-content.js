@@ -11,12 +11,12 @@
         <div class="iv-note-content"><p>要点：异购系统上的核函数（Kernel ）写在 Device / AI Core 侧，Host 负责调度与数据搬运。</p>
         <div class="iv-note-image iv-note-diagram" role="img" aria-label="AI Core 硬件架构示意图"><img src="${asset('assets/images/video-learning-reference/notes.webp')}" alt="Scalar、Vector、Cube、DMA 及 Local Memory、Global Memory"></div></div></details></div>`,
     cards:()=>`<h3 class="iv-feature-title">已为你生成【一、CANN、达芬奇架构与算子】知识点。</h3><p class="iv-feature-intro">${intro}</p>
-      <h4 class="iv-knowledge-heading">学习要点</h4><article class="iv-knowledge-card"><h5>${icon('card-book')}<span>Ascend C 算子开发的层级定位</span></h5>
+      <h4 class="iv-knowledge-heading">学习要点</h4><div class="iv-knowledge-stack"><article class="iv-knowledge-card"><h5>${icon('card-book')}<span>Ascend C 算子开发的层级定位</span></h5>
         <div class="iv-knowledge-copy"><span class="iv-knowledge-tag">关键要点</span><p>Ascend C 算子开发位于硬件使能栈的倒数第二层，是CANN中的算子编程语言与开发方式。CANN是昇腾软件栈的基础平台，Ascend C是其中编写算子的专用语言，不等同于整个CANN。</p>
-        <span class="iv-knowledge-tag prerequisite">学习前提</span><p>初学者建议先具备C/C++基础，并了解算子的基本概念。</p></div></article>
-      <h4 class="iv-knowledge-heading iv-extension-heading">知识拓展</h4><article class="iv-knowledge-card iv-knowledge-extension"><h5>${icon('card-book')}<span>算子的数据载体 - Tensor四要素</span></h5>
+        <span class="iv-knowledge-tag prerequisite">学习前提</span><p>初学者建议先具备C/C++基础，并了解算子的基本概念。</p></div></article></div>
+      <h4 class="iv-knowledge-heading iv-extension-heading">知识拓展</h4><div class="iv-knowledge-stack"><article class="iv-knowledge-card iv-knowledge-extension"><h5>${icon('card-book')}<span>算子的数据载体 - Tensor四要素</span></h5>
         <div class="iv-knowledge-copy"><span class="iv-knowledge-tag extension">拓展理解</span><p>在算子开发中，Tensor的四个属性会直接影响数据读取、计算方式与性能表现。形状决定参与计算的元素范围；数据类型影响精度与内存占用；数据排布格式会影响内存访问效率，常见格式包括ND、NCHW、NHWC等。理解Tensor属性，是阅读算子接口和理解算子输入输出关系的基础。</p>
-        <span class="iv-knowledge-tag prerequisite">注意点</span><p>算子输入和输出通常都是Tensor，不是普通单个数值。</p></div></article>`,
+        <span class="iv-knowledge-tag prerequisite">注意点</span><p>算子输入和输出通常都是Tensor，不是普通单个数值。</p></div></article></div>`,
     summary:()=>`<h3 class="iv-feature-title">已为你生成【一、CANN、达芬奇架构与算子】AI智能摘要。</h3><p class="iv-feature-intro">${intro}</p>
       <div class="iv-summary-sections"><details class="iv-summary-section" open><summary>一、基础支持${icon('summary-chevron')}</summary>
         <div><p>CANN架构：CANN是昇腾AI的基础软件平台，Ascend C算子开发位于CANN的倒数第二层，负责对接AI框架和硬件。</p><p>AI处理器：AI处理器的核心是AI core，具有耦合和分离两种架构，分别包含cube、vector和scaler等计算单元。</p></div></details>
