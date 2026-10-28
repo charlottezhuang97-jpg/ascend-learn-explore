@@ -65,5 +65,5 @@
     progress[current.id]=Math.max(getProgress(current),Math.round(event.detail.seconds/current.seconds*100));try{localStorage.setItem(storageKey,JSON.stringify(progress));}catch{}
     panel.querySelectorAll('[data-directory-progress]').forEach(node=>{const ids=node.dataset.directoryProgress.split(',');node.textContent=`${aggregate(lessons.filter(l=>ids.includes(l.id)))}%`;});
   });
-  if(params.get('view')){document.getElementById('modeOverlay').hidden=true;document.querySelector(`.learning-mode-tabs [data-view="${params.get('view')==='board'?'board':'video'}"]`)?.click();}
+  if(params.get('view')){const overlay=document.getElementById('modeOverlay');if(overlay)overlay.hidden=true;document.querySelector(`.learning-mode-tabs [data-view="${params.get('view')==='board'?'board':'video'}"]`)?.click();}
 })();

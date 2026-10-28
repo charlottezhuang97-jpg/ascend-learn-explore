@@ -3,7 +3,8 @@
   const isMindIECourse = params.get('course') === 'mindie';
   const isTrainingCourse = params.get('course') === 'training';
   const courseName = params.get('title') || (isTrainingCourse ? '大模型分布式训练' : '昇腾学习课程');
-  document.getElementById('courseName').textContent = courseName;
+  const courseNameLabel = document.getElementById('courseName');
+  if (courseNameLabel) courseNameLabel.textContent = courseName;
   document.getElementById('lessonTitle').textContent = '昇腾处理器的逻辑结构拆解';
   document.getElementById('videoLessonTitle').textContent = '昇腾处理器的逻辑结构拆解';
   document.title = `${courseName} · 学习`;
@@ -50,22 +51,24 @@
       }
     })();
   }
-  let selectedMode = 'board';
   const overlay = document.getElementById('modeOverlay');
   const enter = document.getElementById('enterLearning');
-  document.querySelectorAll('.mode-option').forEach(button => button.addEventListener('click', () => {
-    selectedMode = button.dataset.mode;
-    document.querySelectorAll('.mode-option').forEach(item => {
-      const active = item === button;
-      item.classList.toggle('selected', active);
-      item.setAttribute('aria-checked', String(active));
+  if (overlay && enter) {
+    let selectedMode = 'board';
+    document.querySelectorAll('.mode-option').forEach(button => button.addEventListener('click', () => {
+      selectedMode = button.dataset.mode;
+      document.querySelectorAll('.mode-option').forEach(item => {
+        const active = item === button;
+        item.classList.toggle('selected', active);
+        item.setAttribute('aria-checked', String(active));
+      });
+      enter.textContent = selectedMode === 'board' ? '进入白板学习' : '进入视频学习';
+    }));
+    enter.addEventListener('click', () => {
+      overlay.hidden = true;
+      setView(selectedMode);
     });
-    enter.textContent = selectedMode === 'board' ? '进入白板学习' : '进入视频学习';
-  }));
-  enter.addEventListener('click', () => {
-    overlay.hidden = true;
-    setView(selectedMode);
-  });
+  }
 
   const boardRoom = document.getElementById('learningRoom');
   const videoRoom = document.getElementById('videoWorkspace');
@@ -315,7 +318,7 @@ if __name__ == '__main__':
     input.value = '';
   });
   if (isTrainingCourse) {
-    overlay.hidden = true;
+    if (overlay) overlay.hidden = true;
     setView('video');
   }
   function seekVideo(time) {
