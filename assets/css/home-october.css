@@ -136,9 +136,12 @@ a.skip-link{position:fixed!important;top:-100px!important;left:20px!important;z-
 
 /* Three-step learning assessment and the handoff to its recommendation cards. */
 .quiz-content .quiz-description{max-width:46ch;margin:9px 0 24px;color:#687383;font-size:14px;line-height:1.6}
-.quiz-options--single{grid-template-columns:1fr}
-.quiz-options--multiple{grid-template-columns:repeat(2,minmax(0,1fr))}
-.quiz-options--single .quiz-option{min-height:54px}
+.quiz-content{text-align:center}
+.quiz-content .quiz-description{margin-right:auto;margin-left:auto}
+.quiz-options--single,.quiz-options--multiple{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.quiz-options--single .quiz-option,.quiz-options--multiple .quiz-option{display:inline-flex;align-items:center;justify-content:center;min-height:42px;width:auto;max-width:100%;border-radius:999px;padding:9px 18px;text-align:center;white-space:normal}
+.quiz-options--single .quiz-option[aria-pressed="true"],.quiz-options--multiple .quiz-option[aria-pressed="true"]{border-color:#315cff;background:#eef3ff;color:#244ab5;box-shadow:0 0 0 2px #315cff22}
+.quiz-options .quiz-option[aria-pressed="true"]:after{content:"✓";float:none;margin-left:8px;color:inherit;font-size:13px}
 .quiz-step-actions{display:flex;justify-content:space-between;gap:12px;margin-top:22px}
 .quiz-step-actions:empty{display:none}
 .quiz-step-actions button{min-height:42px;border-radius:9px;padding:8px 16px;font-size:14px;cursor:pointer}
@@ -157,5 +160,5 @@ a.skip-link{position:fixed!important;top:-100px!important;left:20px!important;z-
 .quiz-loading i:nth-child(3){animation-delay:.3s}
 .quiz-loading-label{margin-top:8px;color:#7b8492;font-size:12px}
 @keyframes quiz-pulse{0%,70%,100%{opacity:.35;transform:scale(.75)}35%{opacity:1;transform:scale(1.15)}}
-@media(max-width:600px){.quiz-options--multiple{grid-template-columns:1fr 1fr}.quiz-options--multiple .quiz-option{font-size:12px;padding:9px}.quiz-generating{padding:24px 18px}.quiz-generating h2{font-size:21px}}
+@media(max-width:600px){.quiz-options--single,.quiz-options--multiple{gap:8px}.quiz-options--single .quiz-option,.quiz-options--multiple .quiz-option{min-height:38px;padding:8px 12px;font-size:12px}.quiz-generating{padding:24px 18px}.quiz-generating h2{font-size:21px}}
 @media(prefers-reduced-motion:reduce){.quiz-loading i{animation:none;opacity:1}}
