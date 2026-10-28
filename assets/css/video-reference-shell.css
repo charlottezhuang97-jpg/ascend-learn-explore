@@ -1,0 +1,130 @@
+@font-face{font-family:IVHarmony;src:url('../fonts/HarmonyOS_Sans_SC_Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:IVHarmony;src:url('../fonts/HarmonyOS_Sans_SC_Medium.woff2') format('woff2');font-weight:600;font-display:swap}
+.iv-source{display:inline-block;flex:none;width:16px;height:16px;background:url('../images/video-learning-reference/default.webp') no-repeat;background-size:1920px 1080px;vertical-align:middle}
+.iv-logo{width:28px;height:28px;background-position:-1452px -56px}
+.iv-chevron{background-position:-1574px -62px}.iv-course-chevron{background-position:-251px -22px}
+.iv-rating{background-position:-1804px -62px}.iv-list{background-position:-1836px -62px}.iv-close{background-position:-1868px -62px}
+.iv-blue-tool{width:40px;height:40px;background-position:-1480px -298px}.iv-purple-tool{width:40px;height:40px;background-position:-1480px -396px}.iv-transcript-tool{width:40px;height:40px;background-position:-1480px -494px}
+.iv-think{background-position:-1458px -996px}.iv-mic{width:18px;height:18px;background-position:-1821px -995px}.iv-send{width:28px;height:28px;background-position:-1852px -990px}
+.iv-back{width:32px;height:32px;background-position:-24px -14px}.iv-back-small{background-position:-32px -22px}
+.iv-zoom-out{background-position:-1224px -38px}.iv-zoom-in{background-position:-1300px -38px}.iv-settings{background-position:-1348px -38px}.iv-help{background-position:-1380px -38px}
+.iv-play{width:24px;height:24px;background-position:-56px -865px}.iv-sound{width:24px;height:24px;background-position:-92px -865px}
+.iv-caption{width:24px;height:24px;background-position:-1316px -865px}.iv-fullscreen{width:24px;height:24px;background-position:-1352px -865px}
+.iv-history{width:20px;height:20px;background-position:-49px -955px}
+.iv-knowledge{background-position:-228px -956px}.iv-practice{background-position:-534px -956px}.iv-note{background-position:-1330px -956px}
+.iv-comment{background-position:-1200px -1019px}.iv-resources{background-position:-1312px -1019px}
+.iv-voice,.iv-search{background-image:url('../images/video-learning-reference/transcript.png');background-size:1919px 1080px}
+.iv-voice{background-position:-1455px -171px}.iv-search{width:24px;height:24px;background-position:-1473px -984px}
+body.reference-immersive[data-fixed-view=video]{--iv-aside:504px;background:#fafafa;font-family:IVHarmony,'PingFang SC',sans-serif}
+body.reference-immersive[data-fixed-view=video] .fixed1030-header{display:none}
+body.reference-immersive[data-fixed-view=video] .fixed1030-floors{top:0;right:0;bottom:0;background:#fafafa;--reviews-learning-height:100dvh}
+body.reference-immersive[data-fixed-view=video] .fixed1030-floor-learning{height:100dvh;min-height:600px}
+body.reference-immersive[data-fixed-view=video] #videoWorkspace{visibility:hidden!important}
+body.reference-immersive[data-fixed-view=video] .fixed1030-floor-learning>.fixed1030-footer,body.reference-immersive[data-fixed-view=video] .mindie-glass-progress{display:none!important}
+.iv-surface{position:absolute;z-index:181;inset:0 var(--iv-aside) 0 0;min-width:0;color:#191919;font:14px/22px IVHarmony,'PingFang SC',sans-serif;background-color:#fafafa;background-image:radial-gradient(#d0d0d0 1px,transparent 1px);background-size:26px 26px;background-position:-10px -8px}
+.iv-surface[hidden]{display:none!important}
+.iv-surface button,.iv-surface a{font:inherit;cursor:pointer;color:inherit}
+.iv-surface button{border:0;background:transparent}
+.iv-surface button:focus-visible,.iv-surface a:focus-visible{outline:2px solid #527bff;outline-offset:3px}
+.iv-course-header{position:absolute;left:24px;top:14px;display:flex;align-items:center;gap:16px;height:32px}
+.iv-course-back{display:block;width:32px;height:32px;border-radius:50%;box-shadow:0 1px 5px #00000014}
+.iv-course-name{display:flex;align-items:center;gap:8px;padding:0!important;font-size:16px!important;font-weight:600!important;line-height:24px!important}
+.iv-canvas-tools{position:absolute;z-index:2;top:35px;right:20px;display:flex;align-items:center;gap:16px;height:22px;color:#777}
+.iv-canvas-tools button{display:flex;align-items:center;justify-content:center;gap:6px;width:16px;height:22px;padding:0}
+.iv-canvas-tools [data-iv-open]{width:auto;padding:0 8px;background:#fff;border:1px solid #e8e8ed;border-radius:8px}
+.iv-canvas-tools>span{min-width:28px;text-align:center;font-size:14px}.iv-canvas-tools>i{width:1px;height:16px;background:#e1e1e1;margin:0}
+.iv-part-title{position:absolute;left:32px;right:16px;top:80px;margin:0;font-size:20px;line-height:28px;font-weight:600;color:#3d3d3d}
+.iv-video-frame{position:absolute;left:32px;right:16px;top:132px;bottom:179px;overflow:hidden;border:1px solid #e6e6e6;border-radius:8px;background:#f6faff}
+.iv-video-art{position:absolute;inset:0 0 48px;overflow:hidden;transform:scale(var(--zoom,1));transform-origin:center}
+.iv-video-art .iv-default-cover{position:absolute;left:-2.339181%;top:-18.307905%;width:140.350877%;height:149.791956%;max-width:none;object-fit:fill}
+.iv-video-art .iv-subtitle-cover{display:block;width:100%;height:100%;object-fit:fill}
+.iv-video-art [hidden]{display:none!important}
+.iv-player-controls{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;gap:12px;height:48px;padding:0 24px;background:#1c233344;color:#fff}
+.iv-player-controls button{display:grid;place-items:center;flex:none;width:24px;height:32px;padding:0;color:#fff}
+.iv-player-controls time{font-size:16px;margin-left:12px}.iv-player-controls .iv-caption-button{margin-left:auto}
+.iv-video-frame:fullscreen{inset:0;border-radius:0}
+.iv-timeline{position:absolute;left:32px;right:16px;bottom:73px;height:89px}
+.iv-timeline-background{position:absolute;left:0;right:0;top:27px;height:40px;border-radius:8px;background:#f3f4f8}
+.iv-timeline-duration{position:absolute;top:36px;left:16px;display:flex;align-items:center;gap:12px;font-size:14px;line-height:22px;color:#333}
+.iv-node{position:absolute;left:var(--at);top:27px;display:grid;place-items:center;width:32px;height:40px;padding:0!important;transform:translateX(-50%)}
+.iv-node>i{position:absolute;top:0;bottom:0;left:calc(50% - 2px);width:4px;background:#ccece1}
+.iv-node>.iv-source{position:relative;z-index:1}
+.iv-node-practice>i{background:#edd6ff}.iv-node-note>i{background:#d1e0ff}
+.iv-node-label{position:absolute;left:50%;top:-27px;transform:translateX(-50%);padding:0 9px;border-radius:10px;background:#d4eee4;color:#39a385;font-size:12px;line-height:20px;white-space:nowrap}
+.iv-node-label:after{content:"";position:absolute;bottom:-4px;left:calc(50% - 4px);border:4px solid transparent;border-top-color:#d4eee4;border-bottom:0}
+.iv-node-practice .iv-node-label{color:#b656ed;background:#efdafa}.iv-node-practice .iv-node-label:after{border-top-color:#efdafa}
+.iv-node-note .iv-node-label{color:#5089ef;background:#d6e4ff}.iv-node-note .iv-node-label:after{border-top-color:#d6e4ff}
+.iv-timeline-cursor{position:absolute;top:15px;height:52px;width:1px;background:#252525;pointer-events:none}
+.iv-timeline-cursor>i{position:absolute;left:-3px;top:0;width:7px;height:10px;border-radius:2px;background:#252525;clip-path:polygon(0 0,100% 0,100% 75%,50% 100%,0 75%)}
+.iv-timeline-cursor small{position:absolute;top:59px;left:50%;transform:translateX(-50%);color:#777;font-size:12px;line-height:18px;white-space:nowrap}
+.iv-footer{position:absolute;left:32px;right:16px;bottom:32px;display:flex;align-items:center;justify-content:space-between;height:40px}
+.iv-footer nav{display:flex;gap:4px;padding:4px;border-radius:24px;background:#f2f2f2}
+.iv-footer nav button{height:32px;padding:4px 16px;border-radius:20px;color:#777;font-size:18px;line-height:24px}
+.iv-footer nav button.active{background:#fff;box-shadow:0 1px 6px #00000014;color:#191919;font-weight:600;font-size:16px}
+.iv-footer>div{display:flex;gap:24px}.iv-footer>div button{display:flex;align-items:center;gap:8px;padding:0;height:32px;font-size:16px;line-height:24px}
+/* Floating assistant geometry is shared with the homepage window; content is the video reference. */
+body.reference-immersive[data-fixed-view=video] .uac-panel{position:fixed!important;z-index:220;top:32px!important;right:12px!important;bottom:32px!important;left:auto!important;width:480px!important;height:calc(100dvh - 64px)!important;max-height:none;border:0!important;border-radius:16px!important;background:linear-gradient(110deg,#f5fcfc 0%,#fff 50%,#f8f4ff 100%) 0 0/100% 205px no-repeat,#fff;box-shadow:0 1px 6px #00000014!important;color:#191919;font:14px/22px IVHarmony,'PingFang SC',sans-serif}
+body.reference-immersive[data-fixed-view=video] .uac-panel .uac-header{height:76px;padding:16px 16px 16px 24px;border:0;background:transparent;gap:0}
+body.reference-immersive[data-fixed-view=video] .uac-header .uac-back{display:none!important}
+.iv-assistant-drag{display:flex;align-items:center;gap:8px;flex:1;min-width:0;align-self:stretch;cursor:grab;touch-action:none;user-select:none;border-radius:6px}
+.iv-assistant-drag:focus-visible{outline:2px solid #5e7df1;outline-offset:2px}
+body.reference-immersive[data-fixed-view=video] .uac-header .uac-logo{width:28px;height:28px;background:none;box-shadow:none}
+body.reference-immersive[data-fixed-view=video] .uac-header .uac-heading{flex:none!important;gap:8px}
+body.reference-immersive[data-fixed-view=video] .uac-header h2{flex:none;font-size:16px;font-weight:600;line-height:24px;color:#191919}
+body.reference-immersive[data-fixed-view=video] .uac-header .uac-header-actions{flex:none;gap:0}
+body.reference-immersive[data-fixed-view=video] .uac-header-actions button{width:32px;height:32px;padding:8px;background:transparent;border-radius:6px}
+body.reference-immersive[data-fixed-view=video] .uac-header-actions button:hover{background:#f1eff7}
+body.reference-immersive[data-fixed-view=video] .uac-mode-switch{position:relative}
+body.reference-immersive[data-fixed-view=video] .uac-mode-switch summary{width:16px;height:24px;padding:0;background:transparent;list-style:none;display:grid;place-items:center;cursor:pointer}
+body.reference-immersive[data-fixed-view=video] .uac-mode-switch>div{position:absolute;z-index:10;top:33px;left:-76px;width:136px;padding:4px;border:0;border-radius:12px;background:#fff;box-shadow:0 5px 22px #17232626;display:grid;gap:0}
+body.reference-immersive[data-fixed-view=video] .uac-mode-switch>div button{display:flex;align-items:center;gap:12px;width:128px;height:40px;padding:8px 12px;background:#fff;color:#333;border-radius:8px;font-size:16px;line-height:24px;text-align:left}
+body.reference-immersive[data-fixed-view=video] .uac-mode-switch>div button:hover{background:#f5f6fa}
+.iv-type-check{display:block;width:16px;height:16px;flex:none}
+[data-mode][aria-pressed=true] .iv-type-check{background:url('../images/video-learning-reference/check.svg') center/16px 16px no-repeat}
+.iv-selected-tool{border-left:1px solid #ddd;padding-left:16px;margin-left:8px;white-space:nowrap;font-size:16px;font-weight:600;line-height:16px}
+body.reference-immersive[data-fixed-view=video] .uac-body{padding:0 24px 16px;scrollbar-width:thin}
+body.reference-immersive[data-fixed-view=video] .uac-body.uac-empty{display:block;padding:97px 40px 16px;justify-content:initial}
+body.reference-immersive[data-fixed-view=video] .uac-assistant-intro{margin:0 0 40px;text-align:center}
+body.reference-immersive[data-fixed-view=video] .uac-assistant-intro h3{margin:0;font-size:24px;line-height:32px;font-weight:600;color:#191919}
+body.reference-immersive[data-fixed-view=video] .uac-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+body.reference-immersive[data-fixed-view=video] .uac-cards>button{display:flex;align-items:center;gap:8px;min-height:82px;height:82px;padding:12px;border:1px solid #efefef;border-radius:16px;background:#f7f7f7;box-shadow:none;color:#191919;transform:none;text-align:left}
+body.reference-immersive[data-fixed-view=video] .uac-cards>button:hover{background:#f0f2fa;border-color:#d5dcf1}
+body.reference-immersive[data-fixed-view=video] .uac-cards>button:last-child:nth-child(odd){grid-column:1/-1}
+body.reference-immersive[data-fixed-view=video] .uac-card-watermark,body.reference-immersive[data-fixed-view=video] .uac-cards.compact .uac-card-watermark{position:static;display:block;flex:none;width:40px;height:40px;opacity:1;background:transparent;transform:none;border-radius:0}
+body.reference-immersive[data-fixed-view=video] .uac-card-copy{display:grid;gap:8px;min-width:0}
+body.reference-immersive[data-fixed-view=video] .uac-card-copy strong{font-size:14px;font-weight:600;line-height:22px;color:#191919}
+body.reference-immersive[data-fixed-view=video] .uac-card-copy small{display:block;color:#777;font-size:12px;line-height:16px;overflow:visible;white-space:nowrap;letter-spacing:-.2px}
+.iv-fast-card{font-size:12px;line-height:16px;font-weight:400;border-radius:4px;padding:0 4px;background:#dee7ff;color:#333;margin-right:4px}
+body.reference-immersive[data-fixed-view=video] .uac-environment-actions{display:none}
+body.reference-immersive[data-fixed-view=video] .uac-panel .uac-footer{height:114px;padding:0 16px 18px;border:0;background:transparent}
+body.reference-immersive[data-fixed-view=video] .uac-footer>small,body.reference-immersive[data-fixed-view=video] .uac-more{display:none!important}
+body.reference-immersive[data-fixed-view=video] .uac-input{display:grid;grid-template-columns:100px minmax(0,1fr) 28px 28px;grid-template-rows:44px 28px;gap:12px 8px;width:100%;height:96px;padding:0 12px 12px;border:1px solid #d3caff;border-radius:16px;background:#fff;box-shadow:0 1px 4px #7064d914}
+body.reference-immersive[data-fixed-view=video] .uac-input input{grid-column:1/-1;grid-row:1;width:100%;height:44px;padding:0;border:0;background:transparent;font-size:14px;color:#333}
+body.reference-immersive[data-fixed-view=video] .uac-input input::placeholder{color:#aaa}
+body.reference-immersive[data-fixed-view=video] .uac-input>button:first-child,body.reference-immersive[data-fixed-view=video] .uac-command{display:none}
+body.reference-immersive[data-fixed-view=video] .uac-input>button{height:28px;width:28px;padding:0;border:0;background:transparent;box-shadow:none}
+body.reference-immersive[data-fixed-view=video] .uac-input .uac-think{grid-column:1;grid-row:2;display:flex;align-items:center;justify-content:center;gap:4px;width:100px;border:1px solid #eee;border-radius:16px;background:#fff;color:#333;font-size:14px;line-height:22px}
+body.reference-immersive[data-fixed-view=video] .uac-input .uac-mic{grid-column:3;grid-row:2}
+body.reference-immersive[data-fixed-view=video] .uac-input button[type=submit]{grid-column:4;grid-row:2;margin:0;background:transparent}
+body.reference-immersive[data-fixed-view=video] .uac-panel.is-dragging{user-select:none;box-shadow:0 10px 36px #20385929!important}
+body.reference-immersive[data-fixed-view=video] .uac-panel.is-dragging .iv-assistant-drag{cursor:grabbing}
+.iv-tools-menu{position:absolute;z-index:20;right:16px;top:74px;display:grid;gap:4px;width:160px;padding:4px;border:0;border-radius:12px;background:#fff;box-shadow:0 4px 12px #0003}
+.iv-tools-menu[hidden]{display:none!important}.iv-tools-menu button{display:block;width:100%;height:36px;border:0;border-radius:6px;background:#fff;text-align:left;padding:7px 8px;color:#191919;font-size:14px;line-height:22px}
+.iv-tools-menu button:hover{background:#f3f5fa}
+body.reference-immersive[data-fixed-view=video] .uac-panel.iv-is-transcript{background:#fff}
+body.reference-immersive[data-fixed-view=video] .iv-transcript-body{padding:0 20px 0 24px!important}
+.iv-transcript-title{margin:0 0 24px;color:#191919;font-size:16px;line-height:24px;font-weight:600}
+.iv-transcript-list{padding:0;margin:0;list-style:none}.iv-transcript-list li{padding:0;margin:0}
+.iv-transcript-list li[hidden]{display:none!important}
+body.reference-immersive[data-fixed-view=video] .iv-transcript-list button{display:flex;align-items:center;gap:4px;width:100%;height:50px;padding:0;border:0;background:transparent;color:#777;text-align:left;cursor:pointer}
+.iv-row-icon{display:grid;place-items:center;flex:none;width:32px;height:32px}
+.iv-row-copy{display:flex;align-items:flex-start;gap:16px;flex:1;min-width:0;padding:12px;border-radius:8px;font-size:14px;line-height:22px}
+.iv-row-copy time{flex:none;min-width:58px;font-weight:600;font-variant-numeric:tabular-nums}
+.iv-row-copy>span{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+[aria-current=true]>.iv-row-copy{background:#e9ecff;color:#2165ff}
+.iv-transcript-search{flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:8px 16px;margin:24px 28px 32px;border:1px solid #c7c7c7;border-radius:24px;background:#fff}
+.iv-transcript-search[hidden]{display:none!important}.iv-transcript-search input{width:100%;min-width:0;height:24px;padding:0;border:0;outline:0;background:transparent;font:16px/24px IVHarmony,sans-serif;color:#333}
+.iv-transcript-search:focus-within{outline:2px solid #aac1ff;outline-offset:1px}.iv-transcript-search input::placeholder{color:#aaa}
+@media(max-width:1300px){body.reference-immersive[data-fixed-view=video]{--iv-aside:404px}body.reference-immersive[data-fixed-view=video] .uac-panel{width:380px!important}body.reference-immersive[data-fixed-view=video] .uac-body.uac-empty{padding:70px 20px 16px}body.reference-immersive[data-fixed-view=video] .uac-assistant-intro h3{font-size:22px}body.reference-immersive[data-fixed-view=video] .uac-card-copy small{font-size:10px}.iv-selected-tool{font-size:14px;padding-left:8px;margin-left:0}.iv-part-title{font-size:18px}.iv-course-name{font-size:14px!important}.iv-footer>div{gap:12px}.iv-footer>div button{font-size:14px}.iv-footer nav button{font-size:14px;padding-inline:12px}}
+@media(max-width:800px){body.reference-immersive[data-fixed-view=video]{--iv-aside:0px}.iv-surface{right:0}.iv-video-frame{left:16px;right:16px}.iv-part-title{left:16px}.iv-timeline{left:16px;right:16px}.iv-footer{left:16px;right:16px}.iv-canvas-tools{right:16px;top:52px}.iv-course-header{left:16px}.iv-footer>div button{font-size:12px}.iv-footer>div{gap:8px}body.reference-immersive[data-fixed-view=video] .uac-panel{top:auto!important;bottom:12px!important;right:12px!important;left:12px!important;width:calc(100vw - 24px)!important;height:min(720px,calc(100dvh - 80px))!important}body.reference-immersive[data-fixed-view=video] .uac-body.uac-empty{padding-top:40px}}
+@media(prefers-reduced-motion:reduce){.iv-surface *{scroll-behavior:auto!important}}

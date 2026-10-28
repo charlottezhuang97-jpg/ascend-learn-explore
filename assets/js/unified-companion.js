@@ -107,7 +107,7 @@
   document.addEventListener('click',e=>{const trigger=e.target.closest('#openIdeAssist,#homeCompanionFab,#openWorkspaceCompanion,[data-uac-entry],.board-tools button[aria-label="AI 学伴"],a[href*="ai-companion.html"]');if(!trigger||panel.contains(trigger))return;e.preventDefault();e.stopImmediatePropagation();setOpen(true,trigger);},true);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&open){e.preventDefault();e.stopImmediatePropagation();if(view!=='chat'){view='chat';render();}else setOpen(false);}},true);
   window.addEventListener('message',e=>{const iframe=content.querySelector('iframe');if(e.origin!==location.origin||e.source!==iframe?.contentWindow)return;if(['close-ai-companion','back-smart-assistant'].includes(e.data?.type)){view='chat';render();}});
-  window.AscendCompanion={open:()=>setOpen(true),close:()=>setOpen(false),launch:key=>{setOpen(true);launch(key);},
+  window.AscendCompanion={open:()=>setOpen(true),close:()=>setOpen(false),showHome:()=>{startNew();setOpen(true);},launch:key=>{setOpen(true);launch(key);},
     beginTool:(question,html)=>{setOpen(true);view='chat';showCards=false;append('user',`<p>${esc(question)}</p>`);append('assistant',html);render();return messages.at(-1).id;},
     beginIsolatedTool:(question,html)=>{startNew();setOpen(true);view='chat';showCards=false;append('user',`<p>${esc(question)}</p>`);append('assistant',html);render();return messages.at(-1).id;},
     addToolMessage:(role,html)=>{append(role,html);render();return messages.at(-1).id;},
