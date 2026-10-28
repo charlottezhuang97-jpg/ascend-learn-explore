@@ -1,0 +1,81 @@
+/* 首页-学伴 · 155:5349. All artwork is sampled from the supplied Pixso export. */
+.ha-source{display:inline-block;flex:none;background-image:url('../images/home-assistant/reference.webp');background-size:1920px 1140px;background-repeat:no-repeat;vertical-align:middle}
+.ha-logo{width:28px;height:28px;background-position:-1461px -131px}
+.ha-chevron{width:16px;height:16px;background-position:-1583px -137px}
+.ha-person-icon{width:16px;height:16px;background-position:-1813px -137px}
+.ha-list-icon{width:16px;height:16px;background-position:-1845px -137px}
+.ha-close-icon{width:16px;height:16px;background-position:-1877px -137px}
+.ha-portrait{width:128px;height:128px;background-position:-1461px -179px}
+.ha-badges{width:200px;height:36px;background-position:-1605px -255px}
+.ha-magic-icon{width:16px;height:18px;background-position:-1469px -413px}
+.ha-up-icon{width:12px;height:12px;background-position:-1685px -356px}
+.ha-down-icon{width:12px;height:12px;background-position:-1816px -356px}
+.ha-calendar-icon{width:16px;height:16px;background-position:-1477px -1084px}
+.ha-clock-icon{width:16px;height:16px;background-position:-1578px -1084px}
+.ha-clipboard-icon{width:16px;height:16px;background-position:-1645px -1084px}
+.ha-check-icon{width:32px;height:32px;background-position:-1845px -1061px}
+.ha-next-icon{width:12px;height:12px;background-position:-1849px -875px}
+.home-assistant-trigger{display:flex;flex:none;align-items:center;gap:8px;padding:8px 0;border:0;background:transparent;color:#191919;font:600 16px/24px var(--font);white-space:nowrap}
+.home-assistant-trigger:hover{color:#6255df}
+.home-assistant-window,.home-assistant-window *{box-sizing:border-box}
+.home-assistant-window{position:fixed;z-index:150;top:107px;right:8px;display:flex;flex-direction:column;width:480px;height:min(1016px,calc(100dvh - 123px));min-height:240px;overflow:hidden;border:1px solid #edf0f5;border-radius:16px;background:#fff;color:#191919;box-shadow:0 1px 6px #00000014;font:14px/22px var(--font)}
+.home-assistant-window[hidden]{display:none!important}
+.home-assistant-window::before{content:"";position:absolute;inset:0 0 auto;height:278px;pointer-events:none;background:radial-gradient(ellipse at 3% 43%,#edfcffb3,transparent 68%),radial-gradient(ellipse at 90% 78%,#eee8ffb0,transparent 60%),linear-gradient(#f8fbff,#fff)}
+.ha-header{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;flex:none;height:64px;padding:20px 16px 8px 24px}
+.ha-drag-handle{display:flex;align-items:center;gap:8px;flex:1;min-width:0;height:36px;margin-right:16px;cursor:grab;touch-action:none;user-select:none;border-radius:7px;outline-offset:3px}
+.ha-drag-handle h2{margin:0;font-size:16px;line-height:24px;font-weight:600}
+.ha-drag-handle .ha-chevron{margin-left:8px}
+.ha-actions{display:flex;align-items:center;gap:0}
+.ha-actions button{display:grid;place-items:center;width:32px;height:32px;padding:8px;border:0;border-radius:7px;background:transparent}
+.ha-actions button:hover{background:#f0eff9}
+.home-assistant-window.is-dragging{user-select:none;box-shadow:0 12px 32px #233b6024}
+.home-assistant-window.is-dragging .ha-drag-handle{cursor:grabbing}
+.ha-content{position:relative;z-index:1;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#dce1e9 transparent;padding:8px 24px 24px}
+.ha-welcome{display:flex;align-items:flex-start;gap:16px;height:128px}
+.ha-welcome-copy{flex:1;min-width:0;padding-top:10px}
+.ha-welcome h3{font-size:20px;line-height:28px;font-weight:600;margin:0 0 8px}
+.ha-welcome p{color:#777;font-size:14px;line-height:22px;margin:0 0 8px;white-space:nowrap;letter-spacing:-.25px}
+.ha-metrics{display:flex;justify-content:space-between;gap:12px;height:78px;padding:12px 16px;background:#ffffffc9;border-radius:16px;box-shadow:0 4px 12px #142c4e08}
+.ha-metric{min-width:0}
+.ha-metric>span{display:block;color:#979b9f;font-size:12px;line-height:18px;white-space:nowrap}
+.ha-metric>div{display:flex;align-items:baseline;gap:9px;margin-top:4px;height:32px;line-height:32px}
+.ha-metric strong{color:#202124;font-size:26px;line-height:32px;font-weight:600}
+.ha-metric strong small{font-size:14px;margin-left:3px;font-weight:400}
+.ha-ticks{display:flex;gap:2px;align-self:center;margin-left:15px}
+.ha-ticks i{display:block;width:3px;height:12px;background:#dedfe3;border-radius:1px}
+.ha-ticks i:nth-child(-n+4){background:#1767ff}
+.ha-change{display:inline-flex;align-items:center;gap:2px;font-size:12px;line-height:20px;color:#27a879}
+.ha-change.down{color:#f5222d}
+.ha-diagnosis{display:flex;align-items:flex-start;gap:8px;min-height:64px;padding:10px 15px 10px 7px;margin:16px 0;border:1px solid #ece7ff;border-radius:12px;background:#f8f6ff}
+.ha-diagnosis .ha-magic-icon{margin-top:2px}
+.ha-diagnosis p{margin:0;color:#666;font-size:14px;line-height:22px}
+.ha-diagnosis b{color:#7860ff;font-weight:600}
+.ha-card{position:relative;padding:16px;margin:0 0 16px;border:1px solid #eee;border-radius:12px;background:#fff;overflow:hidden}
+.ha-card h3{position:relative;margin:0 0 8px;font-size:16px;line-height:24px;font-weight:600;color:#4c4c4c}
+.ha-ability{height:220px}
+.ha-radar{display:block;width:250px;height:170px;margin:-22px auto 0;background-position:-1553px -507px}
+.ha-analysis{min-height:260px}
+.ha-ai-watermark{position:absolute;top:0;right:16px;width:93px;height:93px;background-position:-1784px -717px;pointer-events:none}
+.ha-analysis-row{position:relative;display:flex;align-items:center;gap:8px;min-height:40px;font-size:14px;line-height:22px}
+.ha-analysis-row+ .ha-analysis-row{border-top:1px solid #f1f1f1}
+.ha-tag{flex:none;padding:2px 8px;border-radius:3px;font-size:12px;line-height:16px}
+.ha-tag.positive{color:#29a370;background:#c9ecd7}
+.ha-tag.gap{color:#e05034;background:#fbcaca}
+.ha-recommendation{margin-top:8px;padding:16px;border:1px solid #eee;border-radius:8px;background:#f9f9f9}
+.ha-recommendation-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.ha-recommendation-head strong{font-size:16px;line-height:24px;font-weight:600;color:#4c4c4c}
+.ha-duration{padding:2px 8px;border-radius:12px;background:#e9e4ff;color:#5841a3;font-size:12px;line-height:20px}
+.ha-study-link{display:flex;align-items:center;gap:4px;margin-left:auto;font-size:12px;line-height:20px;white-space:nowrap;color:#4c4c4c}
+.ha-study-link:hover{color:#5674e8}
+.ha-recommendation p{margin:0;color:#777;font-size:14px;line-height:22px}
+.ha-plan{min-height:220px;margin-bottom:0}
+.ha-plan-row{display:flex;align-items:center;gap:16px;min-height:72px}
+.ha-plan-info{flex:1;min-width:0}
+.ha-plan-title{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:14px;line-height:22px}
+.ha-plan-title>span{padding:1px 8px;border-radius:3px;background:#f5f5f5;font-size:12px;line-height:20px}
+.ha-plan-meta{display:flex;flex-wrap:wrap;gap:16px;color:#777;font-size:12px;line-height:20px}
+.ha-plan-meta>span{display:flex;align-items:center;gap:4px}
+.ha-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:1250px){.october-nav-main{gap:20px}.home-assistant-trigger{font-size:14px}.home-assistant-trigger .ha-logo{flex:none}}
+@media(max-width:700px){.home-assistant-trigger{margin-left:auto;font-size:13px}.home-assistant-window{top:124px;right:8px;width:calc(100vw - 16px);height:calc(100dvh - 140px)}.ha-header{padding-left:16px}.ha-content{padding-inline:16px}.ha-welcome{gap:10px}.ha-welcome h3{font-size:17px}.ha-welcome p{font-size:12px;white-space:normal;line-height:18px}.ha-welcome-copy{padding-top:5px}.ha-metrics{padding-inline:12px;gap:8px}.ha-metric>span{font-size:10px}.ha-metric strong{font-size:24px}.ha-ticks{margin-left:2px}.ha-metric>div{gap:4px}.ha-recommendation-head strong{font-size:14px}.ha-study-link{margin-left:0}.ha-analysis-row{font-size:12px}.ha-plan-meta{gap:8px}}
+@media(prefers-reduced-motion:reduce){.home-assistant-window{scroll-behavior:auto}}

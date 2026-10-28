@@ -29,13 +29,14 @@
   <link rel="stylesheet" href="assets/css/home-figma.css?v=knowledge-map-entry-4">
   <link rel="stylesheet" href="assets/css/knowledge-experience.css?v=1">
   <link rel="stylesheet" href="assets/css/home-october.css?v=community-art-bottom-2">
+  <link rel="stylesheet" href="assets/css/home-learning-assistant.css?v=source-1">
 <link rel="icon" href="assets/images/figma-home/certification.svg" type="image/svg+xml">
 </head>
 <body>
   <a class="skip-link" href="#scenes">跳至学习内容</a>
   <header class="site-nav october-nav">
     <div class="utility-bar"><a href="index.html">昇腾社区首页</a><div class="utility-user"><a class="user-avatar-link" href="prototypes/lowfi/personal-center-knowledge-assets.html" aria-label="个人中心"><img src="assets/images/figma-home/user-avatar.png" alt=""></a></div></div>
-    <div class="october-nav-main"><a class="brand-logo" href="index.html"><img src="assets/images/figma-home/nav-logo.png" alt="Ascend"></a><a class="brand-title" href="index.html">开发者学习中心</a><nav aria-label="主导航"><a href="#top" aria-current="page">主页</a><a href="catalog.html">查找学习资源</a><a href="#scenes">学习路径</a><a href="catalog.html">自主学习课程</a><a href="#events">讲师指导培训</a><a href="#certifications">开发者认证</a></nav></div>
+    <div class="october-nav-main"><a class="brand-logo" href="index.html"><img src="assets/images/figma-home/nav-logo.png" alt="Ascend"></a><a class="brand-title" href="index.html">开发者学习中心</a><nav aria-label="主导航"><a href="#top" aria-current="page">主页</a><a href="catalog.html">查找学习资源</a><a href="#scenes">学习路径</a><a href="catalog.html">自主学习课程</a><a href="#events">讲师指导培训</a><a href="#certifications">开发者认证</a></nav><button type="button" class="home-assistant-trigger" id="homeAssistantTrigger" aria-controls="homeAssistantWindow" aria-expanded="false"><span class="ha-source ha-logo" aria-hidden="true"></span>学习助手</button></div>
   </header>
 
   <main class="dlc-main" id="top">
@@ -134,9 +135,20 @@
     <div class="flow-main"><div class="flow-goal" id="flowGoal"></div><div id="flowStage"></div><p class="flow-note">探索版交互示例：选择结果仅在当前页面使用，尚未接入 AI 生成或实时资料检索。</p></div>
   </section>
 
-  <button class="home-companion-fab" id="homeCompanionFab" type="button" aria-label="打开 AI 学伴" aria-expanded="false">✦</button>
-  <aside class="home-companion-panel" id="homeCompanionPanel" aria-hidden="true" aria-label="AI 学伴">
-    <iframe title="AI 学伴个人学习分析" src="ai-companion.html?embedded=1"></iframe>
+  <aside class="home-assistant-window" id="homeAssistantWindow" role="dialog" aria-modal="false" aria-labelledby="homeAssistantTitle" hidden>
+    <header class="ha-header">
+      <div class="ha-drag-handle" tabindex="0" role="group" aria-label="移动学习助手窗口" aria-describedby="homeAssistantMoveHint"><span class="ha-source ha-logo" aria-hidden="true"></span><h2 id="homeAssistantTitle">学习助手</h2><span class="ha-source ha-chevron" aria-hidden="true"></span></div>
+      <div class="ha-actions"><button type="button" data-ha-section="homeAssistantAbility" aria-label="查看我的能力"><span class="ha-source ha-person-icon" aria-hidden="true"></span></button><button type="button" data-ha-section="homeAssistantPlan" aria-label="查看学习计划"><span class="ha-source ha-list-icon" aria-hidden="true"></span></button><button type="button" data-ha-close aria-label="关闭学习助手"><span class="ha-source ha-close-icon" aria-hidden="true"></span></button></div>
+    </header>
+    <p class="ha-sr" id="homeAssistantMoveHint">拖动标题栏移动窗口，也可使用方向键移动，按 Home 恢复默认位置。</p>
+    <div class="ha-content">
+      <div class="ha-welcome"><span class="ha-source ha-portrait" role="img" aria-label="向你挥手的学习助手"></span><div class="ha-welcome-copy"><h3>嗨，我是你的学习助手</h3><p>自动分析你对昇腾能力的掌握程度和学习进度~</p><span class="ha-source ha-badges" role="img" aria-label="已获得三枚学习徽章，还有两枚待解锁"></span></div></div>
+      <div class="ha-metrics"><div class="ha-metric"><span>分布式训练学习进度</span><div><strong>35<small>%</small></strong><span class="ha-ticks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div></div><div class="ha-metric"><span>本周掌握知识点</span><div><strong>12</strong><span class="ha-change"><span class="ha-source ha-up-icon" aria-hidden="true"></span><span aria-label="增加5个">5</span></span></div></div><div class="ha-metric"><span>本周验证实践</span><div><strong>2</strong><span class="ha-change down"><span class="ha-source ha-down-icon" aria-hidden="true"></span><span aria-label="减少1个">1</span></span></div></div></div>
+      <div class="ha-diagnosis"><span class="ha-source ha-magic-icon" aria-hidden="true"></span><p><b>AI诊断：</b>你在模型训练上领先同级30%，但算子开发明显拖后腿，需要进行补强。</p></div>
+      <section class="ha-card ha-ability" id="homeAssistantAbility" aria-labelledby="homeAbilityTitle"><h3 id="homeAbilityTitle">我的能力</h3><div class="ha-source ha-radar" role="img" aria-label="能力雷达图：Ascend C 基础、LLM 训练、生成式 AI、应用开发部署、推理开发"></div></section>
+      <section class="ha-card ha-analysis" aria-labelledby="homeAnalysisTitle"><span class="ha-source ha-ai-watermark" aria-hidden="true"></span><h3 id="homeAnalysisTitle">AI分析与学习建议</h3><div class="ha-analysis-row"><span class="ha-tag positive">优势</span><span>模型训练 - 贡献实践密度最高</span></div><div class="ha-analysis-row"><span class="ha-tag gap">缺口</span><span>算子开发 - 缺少可验证实践证据</span></div><div class="ha-recommendation"><div class="ha-recommendation-head"><strong>重点补强算子开发能力</strong><span class="ha-duration">预计3周</span><a class="ha-study-link" href="course-preview.html?course=operator">立即学习<span class="ha-source ha-next-icon" aria-hidden="true"></span></a></div><p>因为你已经学习了算子开发初阶，但缺乏成熟的开发能力，所以建议你学习进阶</p></div></section>
+      <section class="ha-card ha-plan" id="homeAssistantPlan" aria-labelledby="homePlanTitle"><h3 id="homePlanTitle">学习计划</h3><div class="ha-plan-row"><div class="ha-plan-info"><p class="ha-plan-title"><span>课程</span>单卡Pytorch训练迁移</p><div class="ha-plan-meta"><span><span class="ha-source ha-calendar-icon" aria-hidden="true"></span>2026-10-20</span><span><span class="ha-source ha-clock-icon" aria-hidden="true"></span>2小时</span><span><span class="ha-source ha-clipboard-icon" aria-hidden="true"></span>两周完成</span></div></div><span class="ha-source ha-check-icon" role="img" aria-label="已完成"></span></div></section>
+    </div>
   </aside>
 
   <script src="assets/js/home-october.js?v=hero-spotlight-restore-1"></script>
@@ -144,7 +156,6 @@
   <script src="assets/js/course-outline.js?v=outline-toolbar-1"></script>
   <script src="assets/js/course-compose.js?v=lesson-types-2"></script>
   <script src="assets/js/course-flow.js?v=stream-flow-4"></script>
-  <script src="assets/js/home-companion.js?v=1"></script>
-  <script src="assets/js/unified-companion.js?v=3"></script>
+  <script src="assets/js/home-learning-assistant.js?v=source-1"></script>
 </body>
 </html>
