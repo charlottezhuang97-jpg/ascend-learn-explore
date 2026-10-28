@@ -206,3 +206,6 @@ a.skip-link{position:fixed!important;top:-100px!important;left:20px!important;z-
 .quiz-step-next:focus-visible{outline:3px solid #b8a3ff;outline-offset:3px}
 .quiz-step-next:disabled{background:#dedfe3;color:#92949a;cursor:not-allowed}
 @media(max-width:760px){.quiz-prompt:has(.quiz-multi-hint){min-height:0}.quiz-step-actions{margin-top:16px}}
+/* Crop the built-in top gutter in the community illustration so its visible frame reaches the banner edge. */
+@media(min-width:701px){.contribution-banner>img{top:-6%;height:106%}}
+@media(max-width:700px){.contribution-banner>img{top:auto;bottom:0;height:130px}}
