@@ -5,11 +5,12 @@
   const panel=document.getElementById('unifiedCompanion'),floor=document.querySelector('.fixed1030-floor-learning');
   if(!learning||!assistant||!panel||!floor)return;
   const root=new URL('../../',document.currentScript.src),asset=p=>new URL(p,root).href;
-  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=asset('assets/css/video-reference-shell.css?v=3');document.head.append(sheet);
+  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=asset('assets/css/video-reference-shell.css?v=4');document.head.append(sheet);
   document.body.classList.add('reference-immersive');
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const icon=name=>`<span class="iv-source iv-${name}" aria-hidden="true"></span>`;
   const referenceView=()=>['video','board'].includes(document.body.dataset.fixedView);
+  const assistantReferenceView=()=>['video','board','ide'].includes(document.body.dataset.fixedView);
   const tools={course:'课程总结',chapter:'章节总结',summary:'智能摘要',notes:'笔记',transcript:'视频字幕',cards:'知识卡片',quiz:'测一测'};
   const featureTitles={...tools,cards:'知识点'};
   const referenceFeatures=new Set(['notes','cards','summary','transcript']);
@@ -46,7 +47,7 @@
   capture.innerHTML=`<button type="button" data-iv-capture="camera" aria-label="添加图片笔记">${icon('note-camera')}</button><button type="button" data-iv-capture="voice" aria-label="语音记录笔记">${icon('note-microphone')}</button><button type="button" data-iv-capture="phone" aria-label="拍摄图片笔记">${icon('note-phone')}</button><input type="file" accept="image/*" hidden>`;panel.append(capture);
   // Existing course-resource entry forwards to this action without exposing another header icon.
   const resourcesAction=document.createElement('button');resourcesAction.type='button';resourcesAction.hidden=true;resourcesAction.dataset.uacAction='resources';panel.append(resourcesAction);
-  const floating=window.AscendFloatingWindow.mount(panel,header.querySelector('.iv-assistant-drag'),{enabled:referenceView});
+  const floating=window.AscendFloatingWindow.mount(panel,header.querySelector('.iv-assistant-drag'),{enabled:assistantReferenceView});
   let selectedRow=0,scale=50,lastVideo=null,lastFeature='',renderedFeature='';
   const noteAttachments=[];let voiceNotes=[];
   try{const saved=JSON.parse(localStorage.getItem('ascend-reference-voice-notes')||'[]');if(Array.isArray(saved))voiceNotes=saved.filter(v=>typeof v==='string');}catch{}
@@ -70,7 +71,7 @@
   function decorate(){
     const feature=panel.dataset.feature||'',transcript=feature==='transcript';
     if(feature!==lastFeature){lastFeature=feature;if(referenceFeatures.has(feature))setMode(feature==='notes'?'board':'video');}
-    if(!referenceView())return;
+    if(!assistantReferenceView())return;
     const active=header.querySelector('.iv-selected-tool');active.hidden=!feature;active.textContent=featureTitles[feature]||'';
     header.querySelector('[data-uac-action="close"]').hidden=false;
     const modeName=header.querySelector('h2').textContent;
@@ -97,13 +98,13 @@
     surface.classList.toggle('iv-board-mode',mode==='board');surface.setAttribute('aria-label',mode==='board'?'白板学习视角':'视频学习视角');
     surface.querySelector('.iv-board-viewport').hidden=mode!=='board';surface.querySelector('.iv-video-frame').hidden=mode==='board';surface.querySelector('.iv-part-title').hidden=mode==='board';
     surface.querySelectorAll('[data-iv-mode]').forEach(b=>{b.classList.toggle('active',b.dataset.ivMode===mode);if(b.dataset.ivMode===mode)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
-    if(!video){floating.reset();menu.hidden=true;search.hidden=true;capture.hidden=true;panel.classList.remove('iv-is-transcript');header.querySelector('[data-uac-action="close"]').hidden=true;header.querySelector('.iv-selected-tool').hidden=true;renderedFeature='';if(lastVideo===true&&!panel.hidden)assistant.open();}
+    if(!video){menu.hidden=true;search.hidden=true;capture.hidden=true;panel.classList.remove('iv-is-transcript');renderedFeature='';if(mode!=='ide')floating.reset();if(lastVideo===true&&!panel.hidden)assistant.open();if(mode==='ide')decorate();}
     else decorate();
     surface.querySelector('[data-iv-open]').hidden=!panel.hidden;
     lastVideo=video;
   }
   new MutationObserver(viewChanged).observe(document.body,{attributes:true,attributeFilter:['data-fixed-view']});
-  new MutationObserver(()=>{const entry=surface.querySelector('[data-iv-open]');entry.hidden=!panel.hidden;if(panel.hidden&&referenceView()&&panel.contains(document.activeElement))entry.focus({preventScroll:true});}).observe(panel,{attributes:true,attributeFilter:['hidden']});
+  new MutationObserver(()=>{const entry=surface.querySelector('[data-iv-open]');entry.hidden=!panel.hidden;if(panel.hidden&&assistantReferenceView()&&panel.contains(document.activeElement))entry.focus({preventScroll:true});}).observe(panel,{attributes:true,attributeFilter:['hidden']});
   document.addEventListener('uac:render',()=>{renderedFeature='';decorate();});
   document.addEventListener('uac:open',decorate);
   document.addEventListener('learning:time-update',event=>{
@@ -166,7 +167,7 @@
     const types=panel.querySelector('.uac-mode-switch');if(!types.contains(event.target))types.open=false;
   });
   window.addEventListener('keydown',event=>{
-    if(event.key!=='Escape'||!referenceView())return;
+    if(event.key!=='Escape'||!assistantReferenceView())return;
     const types=panel.querySelector('.uac-mode-switch');if(!menu.hidden||types.open){event.preventDefault();event.stopImmediatePropagation();menu.hidden=true;types.open=false;header.querySelector('[data-iv-tool-menu]').setAttribute('aria-expanded','false');}
   },true);
   search.addEventListener('submit',event=>event.preventDefault());

@@ -1,0 +1,14 @@
+{
+  "source": "实验模式+agent+认证链路/实验模式/index.html",
+  "frames": {
+    "error": "189:3969",
+    "suggestion": "189:7885",
+    "applied": "189:38295",
+    "success": "189:46529"
+  },
+  "canvas": [
+    1920,
+    1080
+  ],
+  "artwork": "Original SVG and PNG exports copied unchanged; UI and editable code rendered in HTML."
+}

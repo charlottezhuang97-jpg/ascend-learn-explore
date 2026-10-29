@@ -15,12 +15,12 @@
 .iv-comment{background-position:-1200px -1019px}.iv-resources{background-position:-1312px -1019px}
 .iv-voice,.iv-search{background-image:url('../images/video-learning-reference/transcript.png');background-size:1919px 1080px}
 .iv-voice{background-position:-1455px -171px}.iv-search{width:24px;height:24px;background-position:-1473px -984px}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]){--iv-aside:504px;background:#fafafa;font-family:IVHarmony,'PingFang SC',sans-serif}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .fixed1030-header{display:none}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .fixed1030-floors{top:0;right:0;bottom:0;background:#fafafa;--reviews-learning-height:100dvh}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .fixed1030-floor-learning{height:100dvh;min-height:600px}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) #videoWorkspace{visibility:hidden!important}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .fixed1030-floor-learning>.fixed1030-footer,body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .mindie-glass-progress{display:none!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]){--iv-aside:504px;background:#fafafa;font-family:IVHarmony,'PingFang SC',sans-serif}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .fixed1030-header{display:none}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .fixed1030-floors{top:0;right:0;bottom:0;background:#fafafa;--reviews-learning-height:100dvh}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .fixed1030-floor-learning{height:100dvh;min-height:600px}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) #videoWorkspace{visibility:hidden!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .fixed1030-floor-learning>.fixed1030-footer,body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .mindie-glass-progress{display:none!important}
 .iv-surface{position:absolute;z-index:181;inset:0 var(--iv-aside) 0 0;min-width:0;color:#191919;font:14px/22px IVHarmony,'PingFang SC',sans-serif;background-color:#fafafa;background-image:radial-gradient(#d0d0d0 1px,transparent 1px);background-size:26px 26px;background-position:-10px -8px}
 .iv-surface[hidden]{display:none!important}
 .iv-surface button,.iv-surface a{font:inherit;cursor:pointer;color:inherit}
@@ -63,60 +63,60 @@ body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .fi
 .iv-footer nav button.active{background:#fff;box-shadow:0 1px 6px #00000014;color:#191919;font-weight:600;font-size:16px}
 .iv-footer>div{display:flex;gap:24px}.iv-footer>div button{display:flex;align-items:center;gap:8px;padding:0;height:32px;font-size:16px;line-height:24px}
 /* Floating assistant geometry is shared with the homepage window; content is the video reference. */
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel{position:fixed!important;z-index:220;top:32px!important;right:12px!important;bottom:32px!important;left:auto!important;width:480px!important;height:calc(100dvh - 64px)!important;max-height:none;border:0!important;border-radius:16px!important;background:linear-gradient(110deg,#f5fcfc 0%,#fff 50%,#f8f4ff 100%) 0 0/100% 205px no-repeat,#fff;box-shadow:0 1px 6px #00000014!important;color:#191919;font:14px/22px IVHarmony,'PingFang SC',sans-serif}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel .uac-header{height:76px;padding:16px 16px 16px 24px;border:0;background:transparent;gap:0}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-header .uac-back{display:none!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel{position:fixed!important;z-index:220;top:32px!important;right:12px!important;bottom:32px!important;left:auto!important;width:480px!important;height:calc(100dvh - 64px)!important;max-height:none;border:0!important;border-radius:16px!important;background:linear-gradient(110deg,#f5fcfc 0%,#fff 50%,#f8f4ff 100%) 0 0/100% 205px no-repeat,#fff;box-shadow:0 1px 6px #00000014!important;color:#191919;font:14px/22px IVHarmony,'PingFang SC',sans-serif}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel .uac-header{height:76px;padding:16px 16px 16px 24px;border:0;background:transparent;gap:0}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-header .uac-back{display:none!important}
 .iv-assistant-drag{display:flex;align-items:center;gap:8px;flex:1;min-width:0;align-self:stretch;cursor:grab;touch-action:none;user-select:none;border-radius:6px}
 .iv-assistant-drag:focus-visible{outline:2px solid #5e7df1;outline-offset:2px}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-header .uac-logo{width:28px;height:28px;background:none;box-shadow:none}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-header .uac-heading{flex:none!important;gap:8px}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-header h2{flex:none;font-size:16px;font-weight:600;line-height:24px;color:#191919}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-header .uac-header-actions{flex:none;gap:0}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-header-actions button{width:32px;height:32px;padding:8px;background:transparent;border-radius:6px}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-header-actions button:hover{background:#f1eff7}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-mode-switch{position:relative}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-mode-switch summary{width:16px;height:24px;padding:0;background:transparent;list-style:none;display:grid;place-items:center;cursor:pointer}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-mode-switch>div{position:absolute;z-index:10;top:33px;left:-76px;width:136px;padding:4px;border:0;border-radius:12px;background:#fff;box-shadow:0 5px 22px #17232626;display:grid;gap:0}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-mode-switch>div button{display:flex;align-items:center;gap:12px;width:128px;height:40px;padding:8px 12px;background:#fff;color:#333;border-radius:8px;font-size:16px;line-height:24px;text-align:left}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-mode-switch>div button:hover{background:#f5f6fa}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-header .uac-logo{width:28px;height:28px;background:none;box-shadow:none}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-header .uac-heading{flex:none!important;gap:8px}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-header h2{flex:none;font-size:16px;font-weight:600;line-height:24px;color:#191919}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-header .uac-header-actions{flex:none;gap:0}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-header-actions button{width:32px;height:32px;padding:8px;background:transparent;border-radius:6px}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-header-actions button:hover{background:#f1eff7}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-mode-switch{position:relative}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-mode-switch summary{width:16px;height:24px;padding:0;background:transparent;list-style:none;display:grid;place-items:center;cursor:pointer}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-mode-switch>div{position:absolute;z-index:10;top:33px;left:-76px;width:136px;padding:4px;border:0;border-radius:12px;background:#fff;box-shadow:0 5px 22px #17232626;display:grid;gap:0}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-mode-switch>div button{display:flex;align-items:center;gap:12px;width:128px;height:40px;padding:8px 12px;background:#fff;color:#333;border-radius:8px;font-size:16px;line-height:24px;text-align:left}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-mode-switch>div button:hover{background:#f5f6fa}
 .iv-type-check{display:block;width:16px;height:16px;flex:none}
 [data-mode][aria-pressed=true] .iv-type-check{background:url('../images/video-learning-reference/check.svg') center/16px 16px no-repeat}
 .iv-selected-tool{border-left:1px solid #ddd;padding-left:16px;margin-left:8px;white-space:nowrap;font-size:16px;font-weight:600;line-height:16px}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-body{padding:0 24px 16px;scrollbar-width:thin}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-body.uac-empty{display:block;padding:97px 40px 16px;justify-content:initial}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-assistant-intro{margin:0 0 40px;text-align:center}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-assistant-intro h3{margin:0;font-size:24px;line-height:32px;font-weight:600;color:#191919}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-cards>button{display:flex;align-items:center;gap:8px;min-height:82px;height:82px;padding:12px;border:1px solid #efefef;border-radius:16px;background:#f7f7f7;box-shadow:none;color:#191919;transform:none;text-align:left}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-cards>button:hover{background:#f0f2fa;border-color:#d5dcf1}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-cards>button:last-child:nth-child(odd){grid-column:1/-1}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-card-watermark,body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-cards.compact .uac-card-watermark{position:static;display:block;flex:none;width:40px;height:40px;opacity:1;background:transparent;transform:none;border-radius:0}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-card-copy{display:grid;gap:8px;min-width:0}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-card-copy strong{font-size:14px;font-weight:600;line-height:22px;color:#191919}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-card-copy small{display:block;color:#777;font-size:12px;line-height:16px;overflow:visible;white-space:nowrap;letter-spacing:-.2px}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-body{padding:0 24px 16px;scrollbar-width:thin}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-body.uac-empty{display:block;padding:97px 40px 16px;justify-content:initial}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-assistant-intro{margin:0 0 40px;text-align:center}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-assistant-intro h3{margin:0;font-size:24px;line-height:32px;font-weight:600;color:#191919}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-cards>button{display:flex;align-items:center;gap:8px;min-height:82px;height:82px;padding:12px;border:1px solid #efefef;border-radius:16px;background:#f7f7f7;box-shadow:none;color:#191919;transform:none;text-align:left}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-cards>button:hover{background:#f0f2fa;border-color:#d5dcf1}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-cards>button:last-child:nth-child(odd){grid-column:1/-1}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-card-watermark,body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-cards.compact .uac-card-watermark{position:static;display:block;flex:none;width:40px;height:40px;opacity:1;background:transparent;transform:none;border-radius:0}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-card-copy{display:grid;gap:8px;min-width:0}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-card-copy strong{font-size:14px;font-weight:600;line-height:22px;color:#191919}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-card-copy small{display:block;color:#777;font-size:12px;line-height:16px;overflow:visible;white-space:nowrap;letter-spacing:-.2px}
 .iv-fast-card{font-size:12px;line-height:16px;font-weight:400;border-radius:4px;padding:0 4px;background:#dee7ff;color:#333;margin-right:4px}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-environment-actions{display:none}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel .uac-footer{height:114px;padding:0 16px 18px;border:0;background:transparent}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-footer>small,body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-more{display:none!important}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-input{display:grid;grid-template-columns:100px minmax(0,1fr) 28px 28px;grid-template-rows:44px 28px;gap:12px 8px;width:100%;height:96px;padding:0 12px 12px;border:1px solid #d3caff;border-radius:16px;background:#fff;box-shadow:0 1px 4px #7064d914}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-input input{grid-column:1/-1;grid-row:1;width:100%;height:44px;padding:0;border:0;background:transparent;font-size:14px;color:#333}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-input input::placeholder{color:#aaa}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-input>button:first-child,body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-command{display:none}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-input>button{height:28px;width:28px;padding:0;border:0;background:transparent;box-shadow:none}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-input .uac-think{grid-column:1;grid-row:2;display:flex;align-items:center;justify-content:center;gap:4px;width:100px;border:1px solid #eee;border-radius:16px;background:#fff;color:#333;font-size:14px;line-height:22px}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-input .uac-mic{grid-column:3;grid-row:2}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-input button[type=submit]{grid-column:4;grid-row:2;margin:0;background:transparent}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel.is-dragging{user-select:none;box-shadow:0 10px 36px #20385929!important}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel.is-dragging .iv-assistant-drag{cursor:grabbing}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-environment-actions{display:none}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel .uac-footer{height:114px;padding:0 16px 18px;border:0;background:transparent}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-footer>small,body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-more{display:none!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-input{display:grid;grid-template-columns:100px minmax(0,1fr) 28px 28px;grid-template-rows:44px 28px;gap:12px 8px;width:100%;height:96px;padding:0 12px 12px;border:1px solid #d3caff;border-radius:16px;background:#fff;box-shadow:0 1px 4px #7064d914}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-input input{grid-column:1/-1;grid-row:1;width:100%;height:44px;padding:0;border:0;background:transparent;font-size:14px;color:#333}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-input input::placeholder{color:#aaa}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-input>button:first-child,body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-command{display:none}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-input>button{height:28px;width:28px;padding:0;border:0;background:transparent;box-shadow:none}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-input .uac-think{grid-column:1;grid-row:2;display:flex;align-items:center;justify-content:center;gap:4px;width:100px;border:1px solid #eee;border-radius:16px;background:#fff;color:#333;font-size:14px;line-height:22px}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-input .uac-mic{grid-column:3;grid-row:2}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-input button[type=submit]{grid-column:4;grid-row:2;margin:0;background:transparent}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel.is-dragging{user-select:none;box-shadow:0 10px 36px #20385929!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel.is-dragging .iv-assistant-drag{cursor:grabbing}
 .iv-tools-menu{position:absolute;z-index:20;right:16px;top:74px;display:grid;gap:4px;width:160px;padding:4px;border:0;border-radius:12px;background:#fff;box-shadow:0 4px 12px #0003}
 .iv-tools-menu[hidden]{display:none!important}.iv-tools-menu button{display:block;width:100%;height:36px;border:0;border-radius:6px;background:#fff;text-align:left;padding:7px 8px;color:#191919;font-size:14px;line-height:22px}
 .iv-tools-menu button:hover{background:#f3f5fa}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel.iv-is-transcript{background:#fff}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .iv-transcript-body{padding:0 20px 0 24px!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel.iv-is-transcript{background:#fff}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .iv-transcript-body{padding:0 20px 0 24px!important}
 .iv-transcript-title{margin:0 0 24px;color:#191919;font-size:16px;line-height:24px;font-weight:600}
 .iv-transcript-list{padding:0;margin:0;list-style:none}.iv-transcript-list li{padding:0;margin:0}
 .iv-transcript-list li[hidden]{display:none!important}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .iv-transcript-list button{display:flex;align-items:center;gap:4px;width:100%;height:50px;padding:0;border:0;background:transparent;color:#777;text-align:left;cursor:pointer}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .iv-transcript-list button{display:flex;align-items:center;gap:4px;width:100%;height:50px;padding:0;border:0;background:transparent;color:#777;text-align:left;cursor:pointer}
 .iv-row-icon{display:grid;place-items:center;flex:none;width:32px;height:32px}
 .iv-row-copy{display:flex;align-items:flex-start;gap:16px;flex:1;min-width:0;padding:12px;border-radius:8px;font-size:14px;line-height:22px}
 .iv-row-copy time{flex:none;min-width:58px;font-weight:600;font-variant-numeric:tabular-nums}
@@ -125,8 +125,8 @@ body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .iv
 .iv-transcript-search{flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:8px 16px;margin:24px 28px 32px;border:1px solid #c7c7c7;border-radius:24px;background:#fff}
 .iv-transcript-search[hidden]{display:none!important}.iv-transcript-search input{width:100%;min-width:0;height:24px;padding:0;border:0;outline:0;background:transparent;font:16px/24px IVHarmony,sans-serif;color:#333}
 .iv-transcript-search:focus-within{outline:2px solid #aac1ff;outline-offset:1px}.iv-transcript-search input::placeholder{color:#aaa}
-@media(max-width:1300px){body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]){--iv-aside:404px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel{width:380px!important}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-body.uac-empty{padding:70px 20px 16px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-assistant-intro h3{font-size:22px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-card-copy small{font-size:10px}.iv-selected-tool{font-size:14px;padding-left:8px;margin-left:0}.iv-part-title{font-size:18px}.iv-course-name{font-size:14px!important}.iv-footer>div{gap:12px}.iv-footer>div button{font-size:14px}.iv-footer nav button{font-size:14px;padding-inline:12px}}
-@media(max-width:800px){body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]){--iv-aside:0px}.iv-surface{right:0}.iv-video-frame{left:16px;right:16px}.iv-part-title{left:16px}.iv-timeline{left:16px;right:16px}.iv-footer{left:16px;right:16px}.iv-canvas-tools{right:16px;top:52px}.iv-course-header{left:16px}.iv-footer>div button{font-size:12px}.iv-footer>div{gap:8px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel{top:auto!important;bottom:12px!important;right:12px!important;left:12px!important;width:calc(100vw - 24px)!important;height:min(720px,calc(100dvh - 80px))!important}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-body.uac-empty{padding-top:40px}}
+@media(max-width:1300px){body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]){--iv-aside:404px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel{width:380px!important}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-body.uac-empty{padding:70px 20px 16px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-assistant-intro h3{font-size:22px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-card-copy small{font-size:10px}.iv-selected-tool{font-size:14px;padding-left:8px;margin-left:0}.iv-part-title{font-size:18px}.iv-course-name{font-size:14px!important}.iv-footer>div{gap:12px}.iv-footer>div button{font-size:14px}.iv-footer nav button{font-size:14px;padding-inline:12px}}
+@media(max-width:800px){body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]){--iv-aside:0px}.iv-surface{right:0}.iv-video-frame{left:16px;right:16px}.iv-part-title{left:16px}.iv-timeline{left:16px;right:16px}.iv-footer{left:16px;right:16px}.iv-canvas-tools{right:16px;top:52px}.iv-course-header{left:16px}.iv-footer>div button{font-size:12px}.iv-footer>div{gap:8px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel{top:auto!important;bottom:12px!important;right:12px!important;left:12px!important;width:calc(100vw - 24px)!important;height:min(720px,calc(100dvh - 80px))!important}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-body.uac-empty{padding-top:40px}}
 @media(prefers-reduced-motion:reduce){.iv-surface *{scroll-behavior:auto!important}}
 
 /* Video learning 2: notes / knowledge / summary / transcript, 1920 x 1080. */
@@ -138,11 +138,11 @@ body.reference-immersive[data-fixed-view=board] #learningRoom{visibility:hidden!
 .iv-board-art img{position:absolute;left:-6.065712%;top:-12.80654%;width:161.752317%;height:147.138965%;max-width:none;object-fit:fill}
 .iv-board-mode .iv-course-header{top:32px}
 .iv-board-mode .iv-canvas-tools{top:33px;padding:6px 16px;height:34px;border-radius:24px;background:#fff;box-shadow:0 1px 6px #00000014}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel[data-feature=notes],
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel[data-feature=cards],
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel[data-feature=summary]{background:linear-gradient(110deg,#f5fcfc 0%,#fff 50%,#f8f4ff 100%) 0 0/100% 105px no-repeat,#fff}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel:is([data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]) .uac-footer{display:none!important}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-body.iv-feature-body{display:block;padding:0 24px 32px;min-height:0;color:#777;font:16px/24px IVHarmony,'PingFang SC',sans-serif}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=notes],
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=cards],
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=summary]{background:linear-gradient(110deg,#f5fcfc 0%,#fff 50%,#f8f4ff 100%) 0 0/100% 105px no-repeat,#fff}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel:is([data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]) .uac-footer{display:none!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-body.iv-feature-body{display:block;padding:0 24px 32px;min-height:0;color:#777;font:16px/24px IVHarmony,'PingFang SC',sans-serif}
 .iv-feature-title{margin:0;color:#191919;font-size:16px;font-weight:600;line-height:24px}
 .iv-feature-intro{margin:12px 0 0;font-size:16px;line-height:24px;color:#777}
 .iv-notes-body .iv-feature-title{margin-top:10px}
@@ -203,18 +203,18 @@ button.iv-note-image{padding:0;cursor:pointer}
 .iv-summary-actions .iv-source,.iv-summary-chevron{background-image:url('../images/video-learning-reference/summary.webp');background-size:1920px 1080px}
 .iv-summary-chevron{width:20px;height:20px;background-position:-1830px -236px}
 .iv-summary-regenerate{width:20px;height:20px;background-position:-1501px -704px}.iv-summary-copy{background-position:-1535px -706px}.iv-summary-like{background-position:-1567px -706px}.iv-summary-dislike{background-position:-1599px -706px}.iv-summary-report{background-position:-1631px -706px}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel:is([data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]){right:8px!important}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel[data-feature=notes]{top:34px!important}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel[data-feature=cards]{top:28px!important}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel[data-feature=summary]{top:27px!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel:is([data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]){right:8px!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=notes]{top:34px!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=cards]{top:28px!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=summary]{top:27px!important}
 .iv-notes-body .iv-feature-title{margin-top:8px}
 .iv-note-content{margin-top:12px}
 .iv-note-content>p{margin-bottom:10px}
 .iv-note-section:nth-child(2) .iv-note-content{margin-top:14px}
 .iv-note-section:nth-child(2) .iv-note-content>p{margin-bottom:12px}
 .iv-voice,.iv-search{background-image:url('../images/video-learning-reference/transcript-v2.webp');background-size:1920px 1080px}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-header #uacTitle:after{content:none}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-header>.iv-assistant-drag{gap:8px}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-header #uacTitle:after{content:none}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-header>.iv-assistant-drag{gap:8px}
 .iv-chevron{background-position:-1560px -62px}
 .iv-knowledge-card{padding-top:2px;box-shadow:none}
 .iv-knowledge-stack{position:relative;isolation:isolate;filter:drop-shadow(0 4px 5px #00000029)}
@@ -226,7 +226,7 @@ body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .ua
 .iv-summary-section[open]>summary{padding-bottom:11px}
 .iv-summary-section>div p{max-width:345px}
 .iv-summary-current{border:0;outline:1px solid #d9e0ff}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .iv-transcript-list button{align-items:flex-start}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .iv-transcript-list button{align-items:flex-start}
 .iv-transcript-list button[aria-current=true] .iv-row-copy{padding-left:16px}
 @media(max-width:1300px){.iv-board-viewport{left:32px;right:32px}.iv-summary-sections{margin-left:26px;margin-right:0}.iv-knowledge-card h5{font-size:14px}.iv-summary-section{padding:12px}.iv-summary-section>summary{font-size:14px}}
-@media(max-width:800px){.iv-board-viewport{left:16px;right:16px;top:94px}.iv-board-mode .iv-course-header{top:14px}.iv-board-mode .iv-canvas-tools{top:52px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board]) .uac-panel:is([data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]){top:auto!important;right:12px!important;bottom:12px!important}}
+@media(max-width:800px){.iv-board-viewport{left:16px;right:16px;top:94px}.iv-board-mode .iv-course-header{top:14px}.iv-board-mode .iv-canvas-tools{top:52px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel:is([data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]){top:auto!important;right:12px!important;bottom:12px!important}}
