@@ -4,7 +4,7 @@
   const floor=document.querySelector('.fixed1030-floor-learning'),assistant=window.AscendCompanion,panel=document.getElementById('unifiedCompanion');
   if(!floor||!assistant||!panel)return;
   const root=new URL('../../',document.currentScript.src),asset=p=>new URL(p,root).href;
-  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=asset('assets/css/experiment-reference.css?v=1');document.head.append(sheet);
+  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=asset('assets/css/experiment-reference.css?v=2');document.head.append(sheet);
   const icon=name=>`<span class="ex-icon ex-${name}" aria-hidden="true"></span>`;
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const filename='config.patch.json',hostPath='/home/lgy/Qwen2-7B/',containerPath='/home/weights/';
@@ -77,7 +77,7 @@
   new MutationObserver(sync).observe(panel,{attributes:true,attributeFilter:['hidden']});
   document.addEventListener('uac:render',()=>{if(showRepair)paintAssistant();});
   panel.addEventListener('click',event=>{if(event.target.closest('[data-uac-action],[data-iv-tool],[data-uac-feature]'))showRepair=false;},true);
-  input.addEventListener('input',()=>{clearTimeout(runTimer);clearTimeout(generationTimer);runTimer=null;generationTimer=null;runId++;code=input.value;stage='idle';proposal='';paint();status('代码已修改，请重新运行检查');});
+  input.addEventListener('input',()=>{clearTimeout(runTimer);clearTimeout(generationTimer);runTimer=null;generationTimer=null;runId++;surface._undo=null;code=input.value;stage='idle';proposal='';paint();status('代码已修改，请重新运行检查');});
   input.addEventListener('scroll',()=>render.style.transform=`translate(${-input.scrollLeft}px,${-input.scrollTop}px)`);
   input.addEventListener('keydown',event=>{if(event.key==='Tab'){event.preventDefault();input.setRangeText('  ',input.selectionStart,input.selectionEnd,'end');input.dispatchEvent(new Event('input'));}if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='z'&&surface._undo){event.preventDefault();code=surface._undo;surface._undo=null;input.value=code;stage='idle';proposal='';paint();status('已撤销置入');}});
   async function copy(){try{await navigator.clipboard.writeText(proposal||code);window.AscendLearning.showToast('代码已复制');}catch{window.AscendLearning.showToast('请选中编辑器中的代码后复制');}}

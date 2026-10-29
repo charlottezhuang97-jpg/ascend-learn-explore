@@ -129,6 +129,27 @@ body.reference-immersive[data-fixed-view=ide] .uac-body.ex-assistant-repair{padd
 .ex-feedback>button[aria-pressed=true]{background:#dedfff;border-radius:4px}
 .ex-generated-snippet{display:block;max-width:100%;overflow:auto;margin-top:12px;font:12px/20px ui-monospace,monospace;white-space:pre}
 .ex-generated-code{margin-top:20px;color:#777;font-size:12px;line-height:20px}.ex-generated-code summary{cursor:pointer}.ex-generated-code pre{max-width:100%;overflow:auto;padding:12px;border:1px solid #eee;border-radius:12px;background:#fafafa;font:12px/20px ui-monospace,monospace}
+.ex-workbench{border:0;outline:1px solid #e9e9e9}
+.ex-menu{gap:4px}.ex-menu>nav{margin-left:20px}
+.ex-code-caption{height:31px;padding-top:11px;align-items:flex-start}
+.ex-code-viewport{top:31px}
+.ex-editor-split{overflow:visible}
+.ex-proposal{overflow:visible}
+.ex-proposal>header{position:absolute;z-index:4;left:0;right:0;top:-26px}
+.ex-proposal-code{height:calc(100% - 31px)}
+.ex-proposal-code{padding-left:12px}
+.ex-proposal .ex-line-number{width:41px}
+.ex-proposal>.ex-code-caption{padding-left:31px}
+.ex-code-line{margin-right:14px}
+.ex-proposal>header .ex-ai{background-size:1097.142857px 617.142857px;background-position:-832px -45.714286px}
+.ex-compare-toggle{top:48%}
+.ex-selection-actions{top:284px;transform:translateX(-42%);gap:8px;padding:8px 10px}
+.ex-code-line.invalid{box-shadow:0 -3px #f8c2d9,0 3px #f8c2d9}
+.ex-code-line.verified{box-shadow:0 -3px #b4e4d7,0 3px #b4e4d7}
+.ex-request>p{padding-block:11px;margin-bottom:4px}
+.ex-request>code{padding-block:0}
+.ex-assistant-repair>h3{margin-bottom:12px}
+.ex-explanation p{margin-top:10px}
 @media(max-width:1500px){.ex-menu>nav{gap:8px;margin-left:8px}.ex-environment{gap:8px}.ex-environment>span:first-child{display:none}.ex-workbench{grid-template-columns:40px 220px minmax(0,1fr)}.ex-tabs>[data-ex-tab]{font-size:12px;padding-inline:4px}}
 @media(max-width:1300px){.ex-environment>span:not(:first-child){display:none}.ex-menu{padding-inline:12px}.ex-menu>nav button{font-size:12px}.ex-menu>nav{gap:6px}.ex-workbench{grid-template-columns:36px 180px minmax(0,1fr)}.ex-tabs>[data-ex-tab]:not(.active){display:none}.ex-breadcrumb{gap:4px;font-size:10px}.ex-terminal>nav{gap:8px}.ex-terminal>nav button{font-size:11px}.ex-footer{padding:20px 16px}.ex-footer>div{gap:12px}.ex-footer>div button{font-size:14px}.ex-code-input,.ex-code-render,.ex-proposal-code{font-size:12px}.ex-course>button{font-size:14px}.ex-request>code{font-size:11px}}
 @media(max-width:800px){.ex-workbench{right:8px;grid-template-columns:36px minmax(0,1fr);grid-template-rows:48px minmax(0,1fr) 64px}.ex-explorer{display:none}.ex-editor{grid-column:2;grid-template-rows:40px 26px minmax(0,1fr) 120px}.ex-menu>nav{display:none}.ex-editor-split.is-comparing{grid-template-columns:minmax(0,1fr)}.ex-editor-split.is-comparing .ex-current{display:none}.ex-proposal{grid-column:1}.ex-compare-toggle{display:none}.ex-footer{padding:12px}.ex-footer>div{gap:8px}.ex-footer>div button{font-size:11px}.ex-footer>nav>button{font-size:14px;padding-inline:10px}.ex-terminal>nav>[data-ex-console=DebugConsole],.ex-terminal>nav>[data-ex-console=Event]{display:none}body.reference-immersive[data-fixed-view=ide] .uac-panel{top:auto!important;bottom:12px!important;right:12px!important;height:min(720px,calc(100dvh - 80px))!important}.ex-course .ex-assistant-entry{font-size:12px}}
