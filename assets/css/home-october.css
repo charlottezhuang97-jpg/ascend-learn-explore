@@ -209,3 +209,12 @@ a.skip-link{position:fixed!important;top:-100px!important;left:20px!important;z-
 /* Crop the built-in top gutter in the community illustration so its visible frame reaches the banner edge. */
 @media(min-width:701px){.contribution-banner>img{top:-6%;height:106%}}
 @media(max-width:700px){.contribution-banner>img{top:auto;bottom:0;height:130px}}
+
+/* Developer activity calendar header */
+.events-toolbar{background:#171717;color:#fff}
+.events-toolbar .month-controls button,
+.events-toolbar .schedule-label,
+.events-toolbar .event-filters button{color:#fff}
+.events-toolbar .event-filters button[aria-pressed=true]{color:#fff;border-bottom-color:#fff}
+.events-toolbar .add-learning-event{background:transparent;border-color:#fff;color:#fff}
+.events-toolbar .add-learning-event:hover{background:#333}
