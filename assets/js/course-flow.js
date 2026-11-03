@@ -492,9 +492,11 @@
   }
 
   window.openCourseFlow = value => {
-    // A specific certification goal opens its designed path without the search interview.
-    if (/(?:工作级|ACDP)/i.test(value) && /推理/.test(value) && /(?:认证|考取|考证)/.test(value)) {
-      location.assign('certification-path.html?track=inference&level=ACDP');
+    if (value.includes('认证')) {
+      const params = new URLSearchParams({track:'inference',level:'ACDP'});
+      const preset = /(?:工作级|ACDP)/i.test(value) && /推理/.test(value);
+      if (!preset) params.set('title',value.slice(0,100));
+      location.assign(`certification-path.html?${params}`);
       return;
     }
     goal = value;

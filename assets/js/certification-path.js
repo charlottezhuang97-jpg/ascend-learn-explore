@@ -4,6 +4,9 @@
   const nodes=document.getElementById('pathNodes'),connections=document.getElementById('branchConnections');
   const dialog=document.getElementById('pathDialog'),dialogTitle=document.getElementById('pathDialogTitle'),dialogBody=document.getElementById('pathDialogBody');
   const planButton=document.getElementById('addPathPlan'),toastNode=document.getElementById('pathToast');
+  const requestedTitle=new URLSearchParams(location.search).get('title');
+  const pathTitle=requestedTitle&&requestedTitle.includes('认证')?requestedTitle.trim().slice(0,100):'推理开发者认证（工作级）';
+  document.getElementById('pathTitle').textContent=pathTitle;
   const planKey='ascend-certification-inference-acdp-plan-v1',orderKey='ascend-certification-inference-acdp-order-v1';
   const courses=[
     {id:'vllm-deploy',title:'vLLM-ascend推理部署与调优',url:'https://www.hiascend.com/developer/courses/detail/2071428481241497602'},
@@ -66,7 +69,7 @@
   planButton.addEventListener('click',()=>{
     try {
       if(savedPlan)localStorage.removeItem(planKey);
-      else localStorage.setItem(planKey,JSON.stringify({title:'推理开发者认证（工作级）',level:'ACDP',track:'inference',courses:order,addedAt:new Date().toISOString()}));
+      else localStorage.setItem(planKey,JSON.stringify({title:pathTitle,level:'ACDP',track:'inference',courses:order,addedAt:new Date().toISOString()}));
       savedPlan=!savedPlan;updatePlanButton();toast(savedPlan?'已加入学习计划，再次打开时可继续查看。':'已从学习计划移除。');
     } catch {toast('当前浏览器无法保存学习计划，请允许本地存储后重试。');}
   });
