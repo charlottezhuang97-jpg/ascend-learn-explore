@@ -5,7 +5,7 @@
   const panel=document.getElementById('unifiedCompanion'),floor=document.querySelector('.fixed1030-floor-learning');
   if(!learning||!assistant||!panel||!floor)return;
   const root=new URL('../../',document.currentScript.src),asset=p=>new URL(p,root).href;
-  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=asset('assets/css/video-reference-shell.css?v=4');document.head.append(sheet);
+  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=asset('assets/css/video-reference-shell.css?v=5');document.head.append(sheet);
   document.body.classList.add('reference-immersive');
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const icon=name=>`<span class="iv-source iv-${name}" aria-hidden="true"></span>`;
@@ -34,7 +34,7 @@
     <div class="iv-canvas-tools" aria-label="画布工具"><button type="button" data-iv-open hidden>${icon('logo')}学习助手</button><button type="button" data-iv-zoom="-1" aria-label="缩小视频">${icon('zoom-out')}</button><span data-iv-scale>50%</span><button type="button" data-iv-zoom="1" aria-label="放大视频">${icon('zoom-in')}</button><i></i><button type="button" data-iv-settings aria-label="学习设置">${icon('settings')}</button><button type="button" data-iv-help aria-label="学习帮助">${icon('help')}</button></div>
     <h1 class="iv-part-title">Part 1. CANN、达芬奇架构与算子</h1>
     <section class="iv-video-frame" aria-label="Ascend C 算子开发课程视频"><div class="iv-video-art"><img class="iv-default-cover" src="${asset('assets/images/video-learning-reference/default.webp')}" alt="Ascend C 算子开发：机器人与儿童课程封面"><img class="iv-subtitle-cover" src="${asset('assets/images/video-learning-reference/knowledge.webp')}" alt="什么是算子：算子的数学含义与 Tanh、ReLU、Sigmoid 函数图像" hidden></div><div class="iv-player-controls"><button type="button" data-iv-play aria-label="播放课程视频">${icon('play')}</button><button type="button" data-iv-sound aria-label="切换声音">${icon('sound')}</button><time>01:00:00</time><button type="button" class="iv-caption-button" data-iv-transcript aria-label="查看视频字幕">${icon('caption')}</button><button type="button" data-iv-fullscreen aria-label="全屏观看">${icon('fullscreen')}</button></div></section>
-    <section class="iv-board-viewport" aria-label="AI Core whiteboard" hidden><div class="iv-board-art"><img src="${asset('assets/images/video-learning-reference/notes.webp')}" alt="AI Core: Scalar, Vector, Cube, DMA, Local Memory, Global Memory"></div></section>
+    <section class="iv-board-viewport" aria-label="AI Core whiteboard" hidden><div class="iv-board-art"><img src="${asset('assets/images/video-learning-reference/notes.webp')}" alt="AI Core: Scalar, Vector, Cube, DMA, Local Memory, Global Memory"><div class="iv-board-selectable" aria-label="可划选的 AI Core 三流概念"><p class="iv-board-lead">Ascend C 入门要点：异构系统上的核函数写在 Device / AI Core 侧，Host 负责调度与数据搬运。</p><h2>AI Core内部并行计算架构抽象</h2><h3>异步指令流</h3><p>Scalar 计算单元读取指令序列，并把向量计算、矩阵计算、数据搬运指令发射给对应单元的指令队列。向量计算单元、矩阵计算单元和数据搬运单元异步并行执行接收到的指令。</p><h3>同步信号流</h3><p>指令间可能存在依赖关系。为保证不同指令队列中的指令按正确的逻辑关系执行，Scalar 计算单元也会向对应单元下发同步指令。</p><h3>计算数据流</h3><p>DMA 搬入单元把数据从 Global Memory 搬运到 Local Memory；Vector / Cube 计算单元完成数据计算，并把结果写回 Local Memory；DMA 搬出单元将处理好的数据搬运返回 Global Memory。</p></div><div class="iv-board-selectable iv-board-concept-three" aria-label="可划选的三流怎么咬合"><h3>核心概念 3</h3><strong>三流怎么咬合</strong><p>指令流：Scalar → 各单元队列</p><p>同步流：依赖放行，单元握手</p><p>数据流：DMA ↔ Local ↔ 计算单元</p><h3>实例：一次矢量计算</h3><p>先搬入数据，再在 Vector 单元计算，完成后搬出结果；同步信号确保依赖顺序正确。</p></div></div></section>
     <div class="iv-timeline" aria-label="课程语义进度节点"><div class="iv-timeline-background"></div><span class="iv-timeline-duration">${icon('history')}28:25:20</span>${nodes.map(([type,time,at,label])=>`<button type="button" class="iv-node iv-node-${type}" style="--at:${at}%" data-iv-seek="${time}" aria-label="${type==='knowledge'?'知识':type==='note'?'笔记':'实践'} ${time}">${label?`<span class="iv-node-label">${label}</span>`:''}<i></i>${icon(type)}</button>`).join('')}<span class="iv-timeline-cursor" style="left:40.2%"><i></i><small>AI Core 硬件架构</small></span></div>
     <footer class="iv-footer"><nav aria-label="学习视角"><button type="button" class="active" data-iv-mode="video" aria-current="page">视频</button><button type="button" data-iv-mode="board">白板</button><button type="button" data-iv-mode="ide">实验</button></nav><div><button type="button" data-iv-comments>${icon('comment')}课程评论</button><button type="button" data-iv-resources>${icon('resources')}学习资料</button></div></footer>`;
   floor.append(surface);
@@ -114,8 +114,32 @@
     for(let i=0;i<rows.length;i++){const [h,m,s]=rows[i][0].split(':').map(Number);if(h*3600+m*60+s<=seconds)selectedRow=i;}
     panel.querySelectorAll('.iv-transcript-list [aria-current]').forEach((b,i)=>b.setAttribute('aria-current',String(i===selectedRow)));
   });
+  const conceptQuestions=[
+    ['三流怎么咬合？','Scalar 发出指令后，数据流负责把数据搬到计算单元可使用的位置；不同队列有依赖时，同步信号协调执行先后。三者一起让搬运与计算能够并行，同时保证结果正确。'],
+    ['指令流、同步流和数据流分别是什么意思？','指令流是发给 Vector、Cube、DMA 等单元的操作序列；同步流表达跨队列的依赖和放行条件；数据流描述数据在 Global Memory、Local Memory 和计算单元之间的搬运与处理。'],
+    ['它们用在哪里？','在 Ascend C 算子开发中，理解三流有助于安排数据搬运、Vector / Cube 计算，以及不同指令队列之间的同步。例如实现搬入、计算、搬出的流水线时会同时涉及三者。'],
+    ['理解三流有什么意义？','它帮助你区分性能瓶颈来自指令发射、队列等待还是数据搬运，也能避免在异步并行执行时遗漏必要的同步。']
+  ];
+  let lastBoardSelection='';
+  function offerSelectedConcept(){
+    if(document.body.dataset.fixedView!=='board')return;
+    const selection=window.getSelection();
+    const target=selection?.anchorNode?.parentElement?.closest('.iv-board-selectable');
+    if(!selection||selection.isCollapsed||!target||!target.contains(selection.focusNode))return;
+    const quote=selection.toString().replace(/\s+/g,' ').trim().slice(0,100);
+    if(quote.length<2||quote===lastBoardSelection)return;
+    lastBoardSelection=quote;
+    const chips=conceptQuestions.map(([question],index)=>`<button type="button" data-uac-selection-question="${index}">${esc(question)}</button>`).join('');
+    assistant.beginIsolatedTool(`我划选了「${quote}」`,`<div class="iv-selection-guide"><p class="iv-selection-quote">选中的内容：<strong>${esc(quote)}</strong></p><h3>对这个概念有疑问吗？</h3><p>可以从下面的问题开始：</p><div class="iv-selection-questions">${chips}</div></div>`);
+  }
+  surface.querySelectorAll('.iv-board-selectable').forEach(area=>{
+    area.addEventListener('pointerup',offerSelectedConcept);
+    area.addEventListener('keyup',event=>{if(event.key==='Shift'||event.key.startsWith('Arrow'))offerSelectedConcept();});
+  });
   panel.querySelector('.uac-mode-switch').addEventListener('toggle',event=>{if(event.target.open){menu.hidden=true;header.querySelector('[data-iv-tool-menu]').setAttribute('aria-expanded','false');}});
   panel.addEventListener('click',event=>{
+    const question=event.target.closest('[data-uac-selection-question]');
+    if(question){const item=conceptQuestions[Number(question.dataset.uacSelectionQuestion)];if(item){assistant.addToolMessage('user',`<p>${esc(item[0])}</p>`);assistant.addToolMessage('assistant',`<p>${esc(item[1])}</p>`);}return;}
     const type=event.target.closest('[data-uac-action="assistant-mode"]');if(type){assistant.showHome();return;}
     const menuButton=event.target.closest('[data-iv-tool-menu]');
     if(menuButton){menu.hidden=!menu.hidden;menuButton.setAttribute('aria-expanded',String(!menu.hidden));panel.querySelector('.uac-mode-switch').open=false;return;}
