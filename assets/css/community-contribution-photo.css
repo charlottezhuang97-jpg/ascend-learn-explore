@@ -1,0 +1,29 @@
+.contribution-banner > div { width: 50%; }
+
+.contribution-banner > img {
+  top: 0;
+  width: 51%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 43%;
+  clip-path: none;
+  mask-image: linear-gradient(to right, transparent, #000 8%);
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+
+@media (max-width: 700px) {
+  .contribution-banner { display: block; min-height: 0; padding-bottom: 0; }
+  .contribution-banner > div { width: 100%; }
+  .contribution-banner > img {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    display: block;
+    width: calc(100% + 48px);
+    height: auto;
+    margin: 32px -24px 0;
+    object-position: center;
+    mask-image: none;
+  }
+}
