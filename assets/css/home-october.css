@@ -29,16 +29,16 @@ a.skip-link{position:fixed!important;top:-100px!important;left:20px!important;z-
 .fan-slot .fan-side,.fan-slot .fan-center{position:relative;top:auto;left:auto;right:auto;width:100%;height:100%;display:block;overflow:hidden;isolation:isolate;outline-offset:5px;transition:transform .3s cubic-bezier(.2,.75,.25,1),box-shadow .3s,filter .3s;transform-origin:center top}
 .fan-slot .fan-left{transform:rotate(-6deg)}.fan-slot .fan-right{transform:rotate(6deg)}.fan-slot .fan-center{transform:none}
 .fan-slot:is(:hover,:focus-within){z-index:5}
-.fan-slot:is(:hover,:focus-within) .fan-side,.fan-slot:is(:hover,:focus-within) .fan-center{box-shadow:0 24px 54px #4b648a52,0 0 0 3px #fff;filter:brightness(1.04)}
-.fan-slot-left:is(:hover,:focus-within) .fan-left{transform:scale(1.28)}
-.fan-slot-center:is(:hover,:focus-within) .fan-center{transform:scale(1.28)}
-.fan-slot-right:is(:hover,:focus-within) .fan-right{transform:scale(1.28)}
-.october-fan:has(.fan-slot-left:is(:hover,:focus-within)) .fan-slot-center{transform:translateX(calc(-50% + 90px))}
-.october-fan:has(.fan-slot-left:is(:hover,:focus-within)) .fan-slot-right{transform:translateX(40px)}
-.october-fan:has(.fan-slot-center:is(:hover,:focus-within)) .fan-slot-left{transform:translateX(-100px)}
-.october-fan:has(.fan-slot-center:is(:hover,:focus-within)) .fan-slot-right{transform:translateX(100px)}
-.october-fan:has(.fan-slot-right:is(:hover,:focus-within)) .fan-slot-left{transform:translateX(-40px)}
-.october-fan:has(.fan-slot-right:is(:hover,:focus-within)) .fan-slot-center{transform:translateX(calc(-50% - 90px))}
+.fan-slot:is(:hover,:focus-within) .fan-side,.fan-slot:is(:hover,:focus-within) .fan-center{box-shadow:0 18px 38px #4b648a38,0 0 0 2px #fff;filter:brightness(1.02)}
+.fan-slot-left:is(:hover,:focus-within) .fan-left{transform:scale(1.14)}
+.fan-slot-center:is(:hover,:focus-within) .fan-center{transform:scale(1.14)}
+.fan-slot-right:is(:hover,:focus-within) .fan-right{transform:scale(1.14)}
+.october-fan:has(.fan-slot-left:is(:hover,:focus-within)) .fan-slot-center{transform:translateX(calc(-50% + 45px))}
+.october-fan:has(.fan-slot-left:is(:hover,:focus-within)) .fan-slot-right{transform:translateX(20px)}
+.october-fan:has(.fan-slot-center:is(:hover,:focus-within)) .fan-slot-left{transform:translateX(-50px)}
+.october-fan:has(.fan-slot-center:is(:hover,:focus-within)) .fan-slot-right{transform:translateX(50px)}
+.october-fan:has(.fan-slot-right:is(:hover,:focus-within)) .fan-slot-left{transform:translateX(-20px)}
+.october-fan:has(.fan-slot-right:is(:hover,:focus-within)) .fan-slot-center{transform:translateX(calc(-50% - 45px))}
 .fan-pill{position:absolute;bottom:calc(100% + 12px);left:50%;z-index:2;display:inline-flex;align-items:center;gap:8px;min-height:39px;padding:7px 17px;border-radius:999px;background:#17191d;color:#fff;font-size:16px;font-weight:600;line-height:1;white-space:nowrap;box-shadow:0 8px 22px #20273533;opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,5px);transition:opacity .2s,transform .2s,visibility .2s}
 .fan-pill span{font-size:17px;font-weight:400;line-height:1}.fan-pill::after{content:"";position:absolute;top:100%;left:0;right:0;height:12px}
 .fan-slot:is(:hover,:focus-within) .fan-pill{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0)}

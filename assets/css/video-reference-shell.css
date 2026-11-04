@@ -153,7 +153,8 @@ body.reference-immersive[data-fixed-view=board] #learningRoom{visibility:hidden!
 .iv-selection-guide .iv-selection-quote{margin:0;padding:12px 14px;border-radius:12px;background:#f2f5ff;line-height:1.6;overflow-wrap:anywhere}
 .iv-selection-guide h3{margin:4px 0 0;color:#181b21;font-size:17px}
 .iv-selection-guide>p:not(.iv-selection-quote){margin:0;color:#737987}
-.iv-selection-questions{display:flex;flex-wrap:wrap;gap:9px}
+.iv-selection-questions{position:absolute;z-index:3;left:16px;right:16px;bottom:114px;display:flex;flex-wrap:wrap;gap:9px;padding:12px 8px 10px;background:linear-gradient(0deg,#fff 82%,#ffffffed);border-radius:14px 14px 0 0;box-shadow:0 -8px 18px #24344f0b}
+body.reference-immersive .uac-panel:has(.iv-selection-questions) .uac-body{padding-bottom:120px}
 body.reference-immersive .uac-message .iv-selection-questions button{border:1px solid #ccd5ec;border-radius:999px;background:#fff;color:#375185;padding:9px 13px;font-size:13px;line-height:1.4;text-align:left;cursor:pointer}
 body.reference-immersive .uac-message .iv-selection-questions button:hover,body.reference-immersive .uac-message .iv-selection-questions button:focus-visible{background:#ecf2ff;border-color:#7c9cef;outline:2px solid #7c9cef;outline-offset:2px}
 @media(max-width:1100px){.iv-board-selectable{width:42%;font-size:13px}.iv-board-selectable h2{font-size:18px}}
