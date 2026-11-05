@@ -1,0 +1,7 @@
+.detail-ai-button{gap:9px;font-size:18px;font-weight:600;color:#191919}
+.detail-ai-button .iv-logo{width:28px;height:28px}
+.course-detail-page .uac-panel{width:min(480px,calc(100vw - 24px))!important}
+.course-detail-page .uac-header .uac-logo{width:28px;height:28px}
+.course-detail-page .uac-body.uac-empty{padding-top:97px}
+.course-detail-page .iv-feature-body{padding:0 24px 32px}
+@media(max-width:800px){.course-detail-page .uac-panel{top:8px!important;right:8px!important;bottom:8px!important;width:calc(100vw - 16px)!important;height:calc(100dvh - 16px)!important}}
