@@ -57,7 +57,7 @@
   }
   document.addEventListener('uac:render',()=>{rendered='';decorate();});
   document.addEventListener('uac:open',()=>{
-    if(firstOpen){firstOpen=false;window.AscendCompanion.showHome();return;}
+    if(firstOpen){firstOpen=false;window.AscendCompanion.showHome();header.querySelector('[data-uac-action=ability]').click();return;}
     decorate();
   });
   decorate();
