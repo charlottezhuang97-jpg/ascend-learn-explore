@@ -5,7 +5,21 @@
   const asset=path=>new URL('../../'+path,document.currentScript.src).href;
   const icon=name=>`<span class="iv-source iv-${name}" aria-hidden="true"></span>`;
   const header=panel.querySelector('.uac-header');
-  header.innerHTML=`<button type="button" class="uac-back" data-uac-action="back" aria-label="返回学习助手首页" hidden></button><span class="uac-logo">${icon('logo')}</span><div class="uac-heading"><h2 id="uacTitle">学习助手</h2><details class="uac-mode-switch"><summary aria-label="选择助手类型">${icon('chevron')}</summary><div><button type="button" data-uac-action="assistant-mode" data-mode="smart">智能助手</button><button type="button" data-uac-action="assistant-mode" data-mode="study">学习助手</button></div></details></div><div class="uac-header-actions"><button type="button" data-uac-action="history" aria-label="历史对话">${icon('rating')}</button><button type="button" data-uac-action="resources" aria-label="学习资源">${icon('list')}</button><button type="button" data-uac-action="close" aria-label="关闭学习助手">${icon('close')}</button></div>`;
+  header.innerHTML=`<button type="button" class="uac-back" data-uac-action="back" aria-label="返回学习助手首页" hidden></button><span class="uac-logo">${icon('logo')}</span><div class="uac-heading"><h2 id="uacTitle">学习助手</h2><details class="uac-mode-switch"><summary aria-label="选择助手类型">${icon('chevron')}</summary><div><button type="button" data-uac-action="assistant-mode" data-mode="smart">智能助手</button><button type="button" data-uac-action="assistant-mode" data-mode="study">学习助手</button></div></details></div><div class="uac-header-actions"><button type="button" data-uac-action="ability" aria-label="查看我的能力" title="查看我的能力"><img class="detail-ability-icon" src="${asset('assets/images/course-detail/person-lightning.svg')}" alt=""></button><button type="button" data-course-tool-toggle aria-label="展开学习工具" aria-controls="detailAssistantTools" aria-expanded="false" title="学习工具">${icon('list')}</button><button type="button" data-uac-action="close" aria-label="关闭学习助手">${icon('close')}</button></div>`;
+  const toolNames={course:'课程总结',chapter:'章节总结',summary:'智能摘要',notes:'笔记',transcript:'视频字幕',cards:'知识点',quiz:'测一测'};
+  const toolHints={course:'智能分析复用策略',chapter:'智能分析复用策略',summary:'快速对比通信/计算',notes:'智能分析复用策略',transcript:'输入问题，检索知识',cards:'智能分析复用策略',quiz:'# 快慢卡 · 快速对比通信/计算差异'};
+  const menu=document.createElement('div');menu.id='detailAssistantTools';menu.className='detail-assistant-tools';menu.hidden=true;menu.setAttribute('aria-label','学习工具');
+  menu.innerHTML=Object.entries(toolNames).map(([key,label])=>`<button type="button" data-course-tool="${key}"><span class="detail-tool-icon">${icon(key==='summary'||key==='quiz'?'purple-tool':key==='transcript'?'transcript-tool':'blue-tool')}</span><span><strong>${label}</strong><small>${toolHints[key]}</small></span></button>`).join('');
+  panel.append(menu);
+  const toggle=header.querySelector('[data-course-tool-toggle]');
+  function closeMenu(){menu.hidden=true;toggle.setAttribute('aria-expanded','false');}
+  panel.addEventListener('click',event=>{
+    if(event.target.closest('[data-course-tool-toggle]')){menu.hidden=!menu.hidden;toggle.setAttribute('aria-expanded',String(!menu.hidden));return;}
+    const tool=event.target.closest('[data-course-tool]');
+    if(tool){closeMenu();window.AscendCompanion.launch(tool.dataset.courseTool);return;}
+    if(!event.target.closest('.detail-assistant-tools'))closeMenu();
+  });
+  document.addEventListener('click',event=>{if(!panel.contains(event.target))closeMenu();});
   const referenceFeatures=new Set(new URLSearchParams(location.search).get('course')==='operator'?['summary','notes','cards','transcript']:[]);
   const transcript=[
     ['00:00:02','这章节我们主要讲的是样例的一些演示'],
