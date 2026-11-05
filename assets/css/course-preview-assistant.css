@@ -1,5 +1,6 @@
 .detail-ai-button{gap:9px;font-size:18px;font-weight:600;color:#191919}
 .detail-ai-button .iv-logo{width:28px;height:28px}
+.course-detail-page .uac-fab{display:none!important}
 body.course-detail-page.reference-immersive[data-fixed-view=video] .uac-panel{width:min(480px,calc(100vw - 24px))!important}
 .course-detail-page .uac-header .uac-logo{width:28px;height:28px}
 .course-detail-page .uac-header-actions{margin-left:auto;display:flex;align-items:center;gap:4px}
