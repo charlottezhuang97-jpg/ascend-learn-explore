@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>自定义认证学习路径 · 昇腾</title>
+  <link rel="stylesheet" href="assets/css/custom-path.css?v=1">
+</head>
+<body>
+  <header class="cp-topbar"><a id="backToPath" href="certification-path.html?track=inference&amp;level=ACDP">← 返回认证路径</a><span>自定义学习路径</span><button type="button" id="resetPath">恢复推荐路径</button></header>
+  <main class="cp-main">
+    <div class="cp-intro"><span class="cp-eyebrow">推理开发者认证 · 工作级</span><h1>编辑你的学习路径</h1><p>以课程为单位调整顺序与内容；CANN、生成式 AI、智能体三大知识领域始终保留在版图中。</p><div class="cp-intro-actions"><button type="button" id="savePath" class="cp-primary">保存到本机</button><span id="saveStatus" role="status" aria-live="polite">尚未保存本次修改</span></div></div>
+    <section class="cp-canvas" aria-labelledby="mapTitle"><div class="cp-canvas-head"><div><span>01 / 知识版图</span><h2 id="mapTitle">三个领域如何连接目标</h2></div><p>领域是知识范围；下方每张卡片是一门可编辑的课程。</p></div><div class="cp-recommend"><small>AI 推荐路线 · 可调整</small><strong id="routeSummary">CANN → 生成式 AI → 智能体 → 认证证据</strong><span>依据当前目标组合，课程顺序可由你决定</span></div><div class="cp-domains" id="domainMap"></div><div class="cp-shared">共享基础：Python · 深度学习 · 数据工程 · 部署运维 <small>跨领域知识作为依赖提示，不自动增加课程</small></div></section>
+    <section class="cp-route" aria-labelledby="routeTitle"><div class="cp-route-head"><div><span>02 / 课程路径</span><h2 id="routeTitle">逐门调整课程</h2><p>“编辑”调整这门课的信息，“替换”换成同领域课程，“AI 调整”提出可接受或撤销的建议。</p></div><button type="button" id="addCourse">＋ 添加课程</button></div><div class="cp-course-list" id="courseList"></div></section>
+    <aside class="cp-note">本页是本地交互原型。课程名称与先修关系用于讨论路径编辑方式；保存仅写入当前浏览器，不会修改正式认证要求。</aside>
+  </main>
+  <dialog id="courseDialog" class="cp-dialog" aria-labelledby="dialogTitle"><form id="courseForm"><div class="cp-dialog-top"><h2 id="dialogTitle"></h2><button type="button" id="closeDialog" aria-label="关闭">×</button></div><div id="dialogFields"></div><div class="cp-dialog-actions"><button type="button" id="cancelDialog">取消</button><button type="submit" class="cp-primary">确认</button></div></form></dialog>
+  <script src="assets/js/custom-path.js?v=operator-certification-1"></script>
+</body>
+</html>

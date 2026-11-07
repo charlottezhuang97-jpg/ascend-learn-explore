@@ -493,8 +493,9 @@
 
   window.openCourseFlow = value => {
     if (value.includes('认证')) {
-      const params = new URLSearchParams({track:'inference',level:'ACDP'});
-      const preset = /(?:工作级|ACDP)/i.test(value) && /推理/.test(value);
+      const operator = /算子/.test(value);
+      const params = new URLSearchParams({track:operator?'operator':'inference',level:'ACDP'});
+      const preset = operator || (/(?:工作级|ACDP)/i.test(value) && /推理/.test(value));
       if (!preset) params.set('title',value.slice(0,100));
       location.assign(`certification-path.html?${params}`);
       return;

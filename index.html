@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="assets/css/home-figma.css?v=knowledge-map-entry-4">
   <link rel="stylesheet" href="assets/css/knowledge-experience.css?v=1">
   <link rel="stylesheet" href="assets/css/home-october.css?v=fan-motion-2">
-  <link rel="stylesheet" href="assets/css/home-quiz-prompt.css?v=1">
+  <link rel="stylesheet" href="assets/css/home-quiz-prompt.css?v=2">
   <link rel="stylesheet" href="assets/css/community-contribution-photo.css?v=3">
   <link rel="stylesheet" href="assets/css/home-learning-assistant.css?v=source-1">
 <link rel="icon" href="assets/images/figma-home/certification.svg" type="image/svg+xml">
@@ -45,7 +45,7 @@
     <section class="dlc-hero" aria-labelledby="heroTitle">
       <div class="dlc-hero-inner">
         <h1 class="dlc-title" id="heroTitle">开发者学习中心<span>DLC</span></h1>
-        <p class="dlc-subtitle">你想学习什么，或正在解决什么开发问题？</p>
+        <p class="dlc-search-helper" id="quizHelper"><svg class="quiz-helper-spark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 2 2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2L12 2Z"/><path d="m19 2 .7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7L19 2Z"/></svg><span class="quiz-helper-copy">不知道从哪开始？</span><button id="openQuiz" type="button">开启</button><span class="quiz-helper-copy">3 步测验，为你推荐专属学习内容</span></p>
         <div class="dlc-search-shell">
           <form class="dlc-search" id="heroForm">
             <span class="dlc-selected-prompt" id="selectedPrompt" hidden><span class="selected-prompt-mark" aria-hidden="true"></span><span id="selectedPromptText"></span><button id="clearShortcut" type="button" aria-label="清除快捷选项">×</button></span>
@@ -61,7 +61,6 @@
               <button type="button" role="option" data-label="生成式AI应用开发与部署" data-prompt="我想开发一个 RAG 智能体应用，并部署到昇腾环境"><span class="quick-menu-mark" aria-hidden="true"></span><span><b>生成式AI应用开发与部署</b><small>学习大模型、RAG 和智能体应用开发与部署。</small></span></button>
             </div>
           </form>
-          <p class="dlc-search-helper" id="quizHelper"><svg class="quiz-helper-spark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 2 2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2L12 2Z"/><path d="m19 2 .7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7L19 2Z"/></svg><span class="quiz-helper-copy">不知道从哪开始？</span><button id="openQuiz" type="button">开启</button><span class="quiz-helper-copy">3 步测验，为你推荐专属学习内容</span></p>
           <p class="dlc-search-hint" id="searchFeedback" role="status" aria-live="polite"></p>
         </div>
       </div>
@@ -156,7 +155,7 @@
   <script src="assets/js/home-figma.js?v=quiz-multiselect-avatar-1"></script>
   <script src="assets/js/course-outline.js?v=outline-toolbar-1"></script>
   <script src="assets/js/course-compose.js?v=lesson-types-2"></script>
-  <script src="assets/js/course-flow.js?v=certification-direct-1"></script>
+  <script src="assets/js/course-flow.js?v=operator-certification-1"></script>
   <script src="assets/js/floating-assistant-window.js?v=1"></script>
   <script src="assets/js/home-learning-assistant.js?v=source-2"></script>
 </body>
