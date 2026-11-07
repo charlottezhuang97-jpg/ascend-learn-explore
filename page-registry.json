@@ -27,6 +27,7 @@
 
     {"id":"companion-unified-lowfi","title":"AI 学伴统一交互","status":"lowfi","source":"prototypes/lowfi/ai-companion-unified.html","publicPath":"prototypes/lowfi/ai-companion-unified.html","description":"气泡、完整学伴、课程预览、白板、IDE、主动提醒与知识地图的统一交互"},
     {"id":"course-completion-highlight-lowfi","title":"课程完成与本次点亮结果","status":"lowfi","source":"prototypes/lowfi/course-completion-highlight.html","publicPath":"prototypes/lowfi/course-completion-highlight.html","description":"课程完成后的新增知识点、实践证据、能力变化与知识地图定位"},
+    {"id":"emotional-motivation-journey-lowfi","title":"学习激励与情感化六节点","status":"lowfi","source":"prototypes/lowfi/emotional-motivation-journey.html","publicPath":"prototypes/lowfi/emotional-motivation-journey.html","description":"初次进入、提问、停留、视频暂停、完课与获证的连续低保真设计"},
     {"id":"personal-center-assets-lowfi","title":"个人中心与长期知识资产","status":"lowfi","source":"prototypes/lowfi/personal-center-knowledge-assets.html","publicPath":"prototypes/lowfi/personal-center-knowledge-assets.html","description":"个人长期知识资产、实践证据、学习路线与贡献记录"},
     {"id":"companion-entry-lowfi","title":"AI 学伴统一入口（旧版）","status":"legacy","source":"prototypes/lowfi/ai-companion.html","publicPath":"prototypes/lowfi/ai-companion.html","description":"早期首页卡片、气泡与完整学伴中心方案，已合并到统一交互"},
     {"id":"companion-touchpoints-lowfi","title":"AI 学伴触点与知识地图（旧版）","status":"legacy","source":"prototypes/lowfi/ai-companion-touchpoints.html","publicPath":"prototypes/lowfi/ai-companion-touchpoints.html","description":"早期六触点和三地图视窗方案，已合并到统一交互"},
