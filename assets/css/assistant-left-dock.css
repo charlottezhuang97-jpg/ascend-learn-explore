@@ -1,0 +1,27 @@
+@media (min-width:801px) {
+  body.reference-immersive.assistant-left-docked:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .iv-surface,
+  body.reference-immersive.assistant-left-docked[data-fixed-view=ide] .ex-surface {
+    left:var(--iv-aside)!important;
+    right:0!important;
+    transition:left .25s ease,right .25s ease;
+  }
+  body.reference-immersive.assistant-left-docked:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel:not([hidden]) {
+    left:8px!important;
+    right:auto!important;
+    top:32px!important;
+    bottom:32px!important;
+    width:calc(var(--iv-aside) - 20px)!important;
+    height:calc(100dvh - 64px)!important;
+  }
+  body.reference-immersive.assistant-left-docked[data-fixed-view=ide] .uac-panel:not([hidden]) {
+    top:56px!important;
+    bottom:8px!important;
+    height:calc(100dvh - 64px)!important;
+  }
+  body.reference-immersive.assistant-left-docked:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel.is-dragging {
+    transition:none;
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  body.assistant-left-docked .iv-surface,body.assistant-left-docked .ex-surface{transition:none!important}
+}

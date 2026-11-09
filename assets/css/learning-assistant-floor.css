@@ -1,0 +1,11 @@
+body.assistant-reviews-floor #unifiedCompanion{display:none!important}
+.learning-assistant-floor-bubble{position:fixed;z-index:201;top:20px;right:24px;display:flex;align-items:center;gap:10px;width:300px;max-width:calc(100vw - 32px);min-height:64px;padding:10px 14px;border:1px solid #e7e8ef;border-radius:18px;background:#fff;box-shadow:0 8px 28px #26386318;color:#1d2433;text-align:left;cursor:pointer;font:14px/1.4 IVHarmony,'PingFang SC',sans-serif}
+.learning-assistant-floor-bubble[hidden]{display:none!important}
+.learning-assistant-floor-bubble:hover{border-color:#bac6f8;box-shadow:0 10px 32px #26386322}
+.learning-assistant-floor-bubble:focus-visible{outline:2px solid #527bff;outline-offset:3px}
+.learning-assistant-floor-icon{display:grid;place-items:center;flex:none;width:36px;height:36px;color:#745ce6}
+.learning-assistant-floor-icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7}
+.learning-assistant-floor-copy{display:grid;gap:2px;min-width:0}.learning-assistant-floor-copy strong{font-size:14px;font-weight:600}.learning-assistant-floor-copy>span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#6d7481;font-size:12px}
+.learning-assistant-floor-arrow{margin-left:auto;color:#6c67b7;font-size:19px}
+body.assistant-reviews-floor .reviews-floor-head{padding-right:310px;min-height:64px}
+@media(max-width:720px){.learning-assistant-floor-bubble{top:10px;right:10px;width:246px;min-height:54px;padding:7px 10px}body.assistant-reviews-floor .reviews-floor-head{padding-right:0;padding-top:64px}}

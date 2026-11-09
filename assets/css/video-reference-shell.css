@@ -163,8 +163,10 @@ body.reference-immersive .uac-message .iv-selection-questions button:hover,body.
 .iv-board-mode .iv-canvas-tools{top:33px;padding:6px 16px;height:34px;border-radius:24px;background:#fff;box-shadow:0 1px 6px #00000014}
 body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=notes],
 body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=cards],
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=course],
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=chapter],
 body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=summary]{background:linear-gradient(110deg,#f5fcfc 0%,#fff 50%,#f8f4ff 100%) 0 0/100% 105px no-repeat,#fff}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel:is([data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]) .uac-footer{display:none!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel:is([data-feature=course],[data-feature=chapter],[data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]) .uac-footer{display:none!important}
 body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-body.iv-feature-body{display:block;padding:0 24px 32px;min-height:0;color:#777;font:16px/24px IVHarmony,'PingFang SC',sans-serif}
 .iv-feature-title{margin:0;color:#191919;font-size:16px;font-weight:600;line-height:24px}
 .iv-feature-intro{margin:12px 0 0;font-size:16px;line-height:24px;color:#777}
@@ -220,16 +222,18 @@ button.iv-note-image{padding:0;cursor:pointer}
 .iv-summary-section>div p{margin:12px 0 0;color:inherit;font-size:14px;line-height:22px}
 .iv-summary-current{border:1px solid #d9e0ff;background:#e7ebff;color:#0959f7}
 .iv-summary-current:before{left:-37px;top:21px;width:16px;height:16px;border:0;border-radius:0;background:url('../images/video-learning-reference/transcript-v2.webp') -1455px -171px/1920px 1080px no-repeat}
+.iv-summary-source{margin:0 0 24px 8px;color:#777;font-size:12px;line-height:18px}.iv-summary-source a{color:#4468c9;text-decoration:none}.iv-summary-source a:hover,.iv-summary-source a:focus-visible{text-decoration:underline}
 .iv-summary-actions{display:flex;align-items:center;gap:16px;margin:-12px 0 0 8px}
 .iv-summary-actions button{display:grid;place-items:center;width:16px;height:24px;padding:0;border:0;background:transparent;cursor:pointer}
 .iv-summary-actions button[aria-pressed=true]{background:#e1e8ff;border-radius:4px}
 .iv-summary-actions .iv-source,.iv-summary-chevron{background-image:url('../images/video-learning-reference/summary.webp');background-size:1920px 1080px}
 .iv-summary-chevron{width:20px;height:20px;background-position:-1830px -236px}
 .iv-summary-regenerate{width:20px;height:20px;background-position:-1501px -704px}.iv-summary-copy{background-position:-1535px -706px}.iv-summary-like{background-position:-1567px -706px}.iv-summary-dislike{background-position:-1599px -706px}.iv-summary-report{background-position:-1631px -706px}
-body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel:is([data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]){right:8px!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel:is([data-feature=course],[data-feature=chapter],[data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]){right:8px!important}
 body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=notes]{top:34px!important}
 body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=cards]{top:28px!important}
 body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel[data-feature=summary]{top:27px!important}
+body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel:is([data-feature=course],[data-feature=chapter]){top:27px!important}
 .iv-notes-body .iv-feature-title{margin-top:8px}
 .iv-note-content{margin-top:12px}
 .iv-note-content>p{margin-bottom:10px}
@@ -252,4 +256,4 @@ body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[dat
 body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .iv-transcript-list button{align-items:flex-start}
 .iv-transcript-list button[aria-current=true] .iv-row-copy{padding-left:16px}
 @media(max-width:1300px){.iv-board-viewport{left:32px;right:32px}.iv-summary-sections{margin-left:26px;margin-right:0}.iv-knowledge-card h5{font-size:14px}.iv-summary-section{padding:12px}.iv-summary-section>summary{font-size:14px}}
-@media(max-width:800px){.iv-board-viewport{left:16px;right:16px;top:94px}.iv-board-mode .iv-course-header{top:14px}.iv-board-mode .iv-canvas-tools{top:52px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel:is([data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]){top:auto!important;right:12px!important;bottom:12px!important}}
+@media(max-width:800px){.iv-board-viewport{left:16px;right:16px;top:94px}.iv-board-mode .iv-course-header{top:14px}.iv-board-mode .iv-canvas-tools{top:52px}body.reference-immersive:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .uac-panel:is([data-feature=course],[data-feature=chapter],[data-feature=notes],[data-feature=cards],[data-feature=summary],[data-feature=transcript]){top:auto!important;right:12px!important;bottom:12px!important}}

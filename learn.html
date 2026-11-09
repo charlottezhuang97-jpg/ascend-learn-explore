@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="immersive-booting">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -20,8 +20,18 @@
   <link rel="stylesheet" href="assets/css/learning-reviews-1030.css?v=1">
   <link rel="stylesheet" href="assets/css/learning-version-switch.css?v=stepwise-version-1">
   <link rel="stylesheet" href="assets/css/ide-experiment-latest.css?v=2">
+  <link rel="stylesheet" href="assets/css/video-reference-shell.css?v=8">
+  <link rel="stylesheet" href="assets/css/board-selection-ui.css?v=1">
+  <link rel="stylesheet" href="assets/css/board-typewriter.css?v=1">
+  <link rel="stylesheet" href="assets/css/assistant-docked-input.css?v=1">
+  <link rel="stylesheet" href="assets/css/assistant-left-dock.css?v=1">
+  <link rel="stylesheet" href="assets/css/experiment-reference.css?v=3">
+  <link rel="stylesheet" href="assets/css/learning-assistant-floor.css?v=1">
+  <link rel="stylesheet" href="assets/css/emotional-learning-demo.css?v=1">
+  <style>html.immersive-booting body{background:#fafafa}html.immersive-booting :is(#learningRoom,#videoWorkspace,#unifiedCompanion,.fixed1030-header,.fixed1030-footer,.mindie-glass-progress){visibility:hidden!important}</style>
+  <script>addEventListener('load',()=>{if(document.documentElement.classList.contains('immersive-booting')){document.body.classList.remove('reference-immersive');document.documentElement.classList.remove('immersive-booting')}})</script>
 </head>
-<body>
+<body class="reference-immersive">
   <main class="learning-room" id="learningRoom" aria-label="沉浸式课程学习">
     <div class="room-topbar" aria-hidden="true"></div>
     <section class="board-area" aria-label="讲课区域">
@@ -271,10 +281,15 @@
   <script src="assets/js/learning-timeline-1030.js?v=reviews-floor-2"></script>
   <script src="assets/js/learning-reviews-1030.js?v=1"></script>
   <script src="assets/js/immersive-learning-v2.js?v=1"></script>
-  <script src="assets/js/floating-assistant-window.js?v=1"></script>
-  <script src="assets/js/video-reference-content.js?v=3"></script>
-  <script src="assets/js/video-reference-shell.js?v=6"></script>
-  <script src="assets/js/experiment-reference.js?v=3"></script>
+  <script src="assets/js/floating-assistant-window.js?v=2"></script>
+  <script src="assets/js/video-reference-content.js?v=4"></script>
+  <script src="assets/js/video-reference-shell.js?v=10"></script>
+  <script src="assets/js/board-typewriter.js?v=1"></script>
+  <script src="assets/js/experiment-reference.js?v=4"></script>
   <script src="assets/js/mindie-prompt-lab.js?v=1"></script>
+  <script src="assets/js/learning-assistant-floor.js?v=2"></script>
+  <script src="assets/js/emotional-learning-demo.js?v=2"></script>
+  <script src="assets/js/assistant-docked-input.js?v=1"></script>
+  <script src="assets/js/assistant-left-dock.js?v=1"></script>
 </body>
 </html>

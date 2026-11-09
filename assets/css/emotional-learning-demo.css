@@ -1,0 +1,35 @@
+/* Scenario remote: intentionally dark so it is distinct from learning controls. */
+body.reference-immersive[data-fixed-view=video] .emotion-remote{display:block}
+.emotion-remote{display:none;position:fixed;z-index:250;top:72px;right:calc(var(--iv-aside,504px) + 20px);width:154px;padding:6px;border:1px solid #3b414c;border-radius:16px;background:#181c24;color:#fff;box-shadow:0 12px 32px #17223b29;font:13px/1.45 IVHarmony,'PingFang SC',sans-serif;transition:width .18s ease}
+.emotion-remote.is-expanded{width:min(322px,calc(100vw - 48px))}
+.emotion-remote button{font:inherit;color:inherit;cursor:pointer}
+.emotion-remote-toggle{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:38px;padding:4px 9px;border:0;border-radius:10px;background:transparent;text-align:left}
+.emotion-remote-toggle:hover,.emotion-remote-toggle:focus-visible{background:#303744}
+.emotion-remote-icon{display:grid;place-items:center;flex:none;width:27px;height:27px;border:1px solid #78839a;border-radius:7px;color:#d8e4ff;font-size:17px}
+.emotion-remote-caption{flex:1;white-space:nowrap;font-weight:600}
+.emotion-remote-options{padding:5px 4px 4px}
+.emotion-remote-options[hidden]{display:none}
+.emotion-remote-options p{margin:2px 8px 8px;color:#aeb8ca;font-size:12px}
+.emotion-remote-options button{display:flex;align-items:center;gap:10px;width:100%;min-height:43px;padding:8px 10px;border:0;border-radius:9px;background:transparent;text-align:left}
+.emotion-remote-options button:hover,.emotion-remote-options button:focus-visible,.emotion-remote-options button[aria-pressed=true]{background:#30384a}
+.emotion-remote-options button b{display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:#4b5680;color:#fff;font-size:11px}
+.emotion-remote-options button span{flex:1}
+.emotion-remote-options .emotion-remote-reset{min-height:34px;margin-top:5px;border-top:1px solid #414756;border-radius:0;color:#b9c4d9;font-size:12px}
+.emotion-remote :focus-visible,.emotion-nudge :focus-visible,.emotion-chat-action:focus-visible{outline:2px solid #95b4ff;outline-offset:2px}
+.emotion-nudge{position:absolute;z-index:210;right:32px;bottom:194px;width:min(348px,calc(100% - 64px));padding:17px 19px;border:1px solid #d6ddf4;border-radius:18px;background:linear-gradient(120deg,#f3fbff,#fff 55%,#f8f3ff);box-shadow:0 12px 32px #263d5c1c;color:#26344d;font:14px/1.5 IVHarmony,'PingFang SC',sans-serif}
+.emotion-nudge[hidden]{display:none}
+.emotion-nudge-source{display:flex;align-items:center;gap:7px;color:#6555bd;font-size:12px;font-weight:600}
+.emotion-assistant-icon{width:28px;height:28px}
+.emotion-nudge p{margin:10px 0 5px;font-size:18px;font-weight:600;color:#1b2941}
+.emotion-nudge small{display:block;color:#758198;font-size:12px}
+.emotion-nudge>div{display:flex;gap:8px;margin-top:15px}
+.emotion-nudge button{padding:7px 12px;border:1px solid #cfd8ee;border-radius:9px;background:#fff;color:#3d5a91;font-size:13px;cursor:pointer}
+.emotion-nudge button:first-child{border-color:#466fd4;background:#466fd4;color:#fff}
+.emotion-nudge .emotion-nudge-actions{align-items:center}
+.emotion-nudge .emotion-nudge-actions button:first-child{border-color:#161616;background:#161616;color:#fff}
+.emotion-nudge .emotion-nudge-actions button[data-emotion-action=dismiss]{padding-inline:4px;border-color:transparent;background:transparent;color:#334b75}
+.emotion-nudge .emotion-nudge-actions label{display:flex;align-items:center;gap:5px;margin-left:auto;color:#697589;font-size:12px;white-space:nowrap;cursor:pointer}
+.emotion-nudge .emotion-nudge-actions input{accent-color:#161616}
+.emotion-related{margin-top:14px!important;color:#657ab1;font-size:12px}
+.emotion-chat-action{margin-top:8px;padding:8px 12px;border:1px solid #d3dcf2;border-radius:9px;background:#f5f8ff;color:#375da5;font:13px IVHarmony,'PingFang SC',sans-serif;cursor:pointer}
+@media(max-width:800px){.emotion-remote{top:8px;right:16px}.emotion-nudge{right:16px;bottom:176px;width:min(348px,calc(100% - 32px))}}

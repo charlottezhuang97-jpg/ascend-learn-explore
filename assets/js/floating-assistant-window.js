@@ -1,11 +1,12 @@
 /* Shared movement for home and immersive assistant windows. */
 (() => {
   window.AscendFloatingWindow = {
-    mount(panel, handle, {enabled=()=>true,onReset=()=>{}}={}) {
+    mount(panel, handle, {enabled=()=>true,onReset=()=>{},onMove=()=>{},allowOffscreen=false}={}) {
       let drag=null,moved=false;
       function place(left,top) {
+        onMove();
         const x=Math.max(8,Math.min(left,Math.max(8,innerWidth-panel.offsetWidth-8)));
-        const y=Math.max(8,Math.min(top,Math.max(8,innerHeight-panel.offsetHeight-8)));
+        const y=Math.max(8,Math.min(top,allowOffscreen?innerHeight-80:Math.max(8,innerHeight-panel.offsetHeight-8)));
         panel.style.setProperty('left',`${x}px`,'important');
         panel.style.setProperty('top',`${y}px`,'important');
         panel.style.setProperty('right','auto','important');

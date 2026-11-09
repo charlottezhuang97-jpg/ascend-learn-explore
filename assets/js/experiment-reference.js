@@ -4,7 +4,6 @@
   const floor=document.querySelector('.fixed1030-floor-learning'),assistant=window.AscendCompanion,panel=document.getElementById('unifiedCompanion');
   if(!floor||!assistant||!panel)return;
   const root=new URL('../../',document.currentScript.src),asset=p=>new URL(p,root).href;
-  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=asset('assets/css/experiment-reference.css?v=2');document.head.append(sheet);
   const icon=name=>`<span class="ex-icon ex-${name}" aria-hidden="true"></span>`;
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const filename='config.patch.json',hostPath='/home/lgy/Qwen2-7B/',containerPath='/home/weights/';
@@ -105,4 +104,5 @@
   surface.addEventListener('click',click);panel.addEventListener('click',click);
   surface.querySelector('[data-ex-run]').title='运行和调试 · 本地配置检查示例';
   paint();sync();
+  if(document.querySelector('.iv-surface'))document.documentElement.classList.remove('immersive-booting');
 })();

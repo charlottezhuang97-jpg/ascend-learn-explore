@@ -5,7 +5,6 @@
   const panel=document.getElementById('unifiedCompanion'),floor=document.querySelector('.fixed1030-floor-learning');
   if(!learning||!assistant||!panel||!floor)return;
   const root=new URL('../../',document.currentScript.src),asset=p=>new URL(p,root).href;
-  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=asset('assets/css/video-reference-shell.css?v=6');document.head.append(sheet);
   document.body.classList.add('reference-immersive');
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const icon=name=>`<span class="iv-source iv-${name}" aria-hidden="true"></span>`;
@@ -13,7 +12,7 @@
   const assistantReferenceView=()=>['video','board','ide'].includes(document.body.dataset.fixedView);
   const tools={course:'课程总结',chapter:'章节总结',summary:'智能摘要',notes:'笔记',transcript:'视频字幕',cards:'知识卡片',quiz:'测一测'};
   const featureTitles={...tools,cards:'知识点'};
-  const referenceFeatures=new Set(['notes','cards','summary','transcript']);
+  const referenceFeatures=new Set(['course','chapter','notes','cards','summary','transcript']);
   const rows=[
     ['00:00:02','voice','这章节我们主要讲的是样例的一些演示'],
     ['00:00:06','','我们首先通过一个hello word这样的一个样例'],
@@ -29,6 +28,15 @@
     ['00:00:42','','它是要具体的去跑在某个芯片或者硬件上']
   ];
   const nodes=[['knowledge','00:02',14.9,'知识'],['knowledge','00:11',28.2],['knowledge','00:21',32.75],['practice','00:29',37.3,'实践'],['knowledge','00:38',43.1],['knowledge','04:12',52.8],['practice','05:05',67.2],['knowledge','06:44',70.6],['knowledge','13:40',84.8],['note','17:42',95.5,'笔记']];
+  const timeSeconds=time=>{const parts=time.split(':').map(Number);return parts.reduce((total,part)=>total*60+part,0);};
+  const timelinePosition=seconds=>{
+    const points=[[0,0],...nodes.map(([,time,at])=>[timeSeconds(time),at]),[28*60+25,100]];
+    for(let i=1;i<points.length;i++){
+      const [endTime,endAt]=points[i], [startTime,startAt]=points[i-1];
+      if(seconds<=endTime)return `${Math.max(0,Math.min(100,startAt+(endAt-startAt)*(seconds-startTime)/(endTime-startTime)))}%`;
+    }
+    return '100%';
+  };
   const surface=document.createElement('main');surface.className='iv-surface';surface.setAttribute('aria-label','视频学习视角');
   surface.innerHTML=`<header class="iv-course-header"><a class="iv-course-back" href="course-preview.html?course=${encodeURIComponent(new URLSearchParams(location.search).get('course')||'operator')}" aria-label="返回课程详情">${icon('back')}</a><button type="button" class="iv-course-name">Ascend C 算子开发基础 ${icon('course-chevron')}</button></header>
     <div class="iv-canvas-tools" aria-label="画布工具"><button type="button" data-iv-open hidden>${icon('logo')}学习助手</button><button type="button" data-iv-zoom="-1" aria-label="缩小视频">${icon('zoom-out')}</button><span data-iv-scale>50%</span><button type="button" data-iv-zoom="1" aria-label="放大视频">${icon('zoom-in')}</button><i></i><button type="button" data-iv-settings aria-label="学习设置">${icon('settings')}</button><button type="button" data-iv-help aria-label="学习帮助">${icon('help')}</button></div>
@@ -47,12 +55,13 @@
   capture.innerHTML=`<button type="button" data-iv-capture="camera" aria-label="添加图片笔记">${icon('note-camera')}</button><button type="button" data-iv-capture="voice" aria-label="语音记录笔记">${icon('note-microphone')}</button><button type="button" data-iv-capture="phone" aria-label="拍摄图片笔记">${icon('note-phone')}</button><input type="file" accept="image/*" hidden>`;panel.append(capture);
   // Existing course-resource entry forwards to this action without exposing another header icon.
   const resourcesAction=document.createElement('button');resourcesAction.type='button';resourcesAction.hidden=true;resourcesAction.dataset.uacAction='resources';panel.append(resourcesAction);
-  const floating=window.AscendFloatingWindow.mount(panel,header.querySelector('.iv-assistant-drag'),{enabled:assistantReferenceView});
+  const floating=window.AscendFloatingWindow.mount(panel,header.querySelector('.iv-assistant-drag'),{enabled:assistantReferenceView,allowOffscreen:true,onMove:()=>document.body.classList.remove('assistant-left-docked'),onReset:()=>document.body.classList.remove('assistant-left-docked')});
   let selectedRow=0,scale=50,lastVideo=null,lastFeature='',renderedFeature='';
   const noteAttachments=[];let voiceNotes=[];
   try{const saved=JSON.parse(localStorage.getItem('ascend-reference-voice-notes')||'[]');if(Array.isArray(saved))voiceNotes=saved.filter(v=>typeof v==='string');}catch{}
   function appendUserNotes(){
     const target=panel.querySelector('.iv-note-content');if(!target)return;
+    try{for(const value of JSON.parse(localStorage.getItem('ascend-unified-notes')||'[]')){if(typeof value!=='string')continue;const p=document.createElement('p');p.className='iv-note-recorded';p.textContent=value;target.append(p);}}catch{}
     for(const text of voiceNotes){const p=document.createElement('p');p.className='iv-note-recorded';p.textContent=text;target.append(p);}
     for(const attachment of noteAttachments){const img=document.createElement('img');img.className='iv-note-upload';img.src=attachment.src;img.alt=attachment.name;target.append(img);}
   }
@@ -109,8 +118,10 @@
   document.addEventListener('uac:open',decorate);
   document.addEventListener('learning:time-update',event=>{
     const seconds=Number(event.detail?.seconds);if(!Number.isFinite(seconds)||seconds<0)return;
+    surface.querySelector('.iv-timeline-cursor').style.left=timelinePosition(seconds);
     const time=[Math.floor(seconds/3600),Math.floor(seconds/60)%60,Math.floor(seconds)%60].map(n=>String(n).padStart(2,'0')).join(':');
     surface.querySelector('.iv-player-controls time').textContent=time;
+    selectedRow=0;
     for(let i=0;i<rows.length;i++){const [h,m,s]=rows[i][0].split(':').map(Number);if(h*3600+m*60+s<=seconds)selectedRow=i;}
     panel.querySelectorAll('.iv-transcript-list [aria-current]').forEach((b,i)=>b.setAttribute('aria-current',String(i===selectedRow)));
   });
@@ -120,22 +131,38 @@
     ['它们用在哪里？','在 Ascend C 算子开发中，理解三流有助于安排数据搬运、Vector / Cube 计算，以及不同指令队列之间的同步。例如实现搬入、计算、搬出的流水线时会同时涉及三者。'],
     ['理解三流有什么意义？','它帮助你区分性能瓶颈来自指令发射、队列等待还是数据搬运，也能避免在异步并行执行时遗漏必要的同步。']
   ];
-  let lastBoardSelection='';
+  const selectionActions=document.createElement('div');selectionActions.className='iv-board-selection-actions';selectionActions.hidden=true;
+  selectionActions.innerHTML='<button type="button" data-iv-selection-action="question">有疑问</button><button type="button" data-iv-selection-action="note">记笔记</button>';
+  surface.append(selectionActions);
+  let selectedBoardQuote='';
   function offerSelectedConcept(){
     if(document.body.dataset.fixedView!=='board')return;
     const selection=window.getSelection();
     const target=selection?.anchorNode?.parentElement?.closest('.iv-board-selectable');
     if(!selection||selection.isCollapsed||!target||!target.contains(selection.focusNode))return;
     const quote=selection.toString().replace(/\s+/g,' ').trim().slice(0,100);
-    if(quote.length<2||quote===lastBoardSelection)return;
-    lastBoardSelection=quote;
-    const chips=conceptQuestions.map(([question],index)=>`<button type="button" data-uac-selection-question="${index}">${esc(question)}</button>`).join('');
-    assistant.beginIsolatedTool(`我划选了「${quote}」`,`<div class="iv-selection-guide"><p class="iv-selection-quote">选中的内容：<strong>${esc(quote)}</strong></p><h3>对这个概念有疑问吗？</h3><p>可以从下面的问题开始：</p><div class="iv-selection-questions">${chips}</div></div>`);
+    if(quote.length<2)return;
+    selectedBoardQuote=quote;
+    const rect=selection.getRangeAt(0).getBoundingClientRect();
+    selectionActions.hidden=false;
+    selectionActions.style.left=`${Math.max(8,Math.min(innerWidth-selectionActions.offsetWidth-8,rect.left))}px`;
+    selectionActions.style.top=`${Math.max(8,Math.min(innerHeight-54,rect.bottom+8))}px`;
   }
-  surface.querySelectorAll('.iv-board-selectable').forEach(area=>{
-    area.addEventListener('pointerup',offerSelectedConcept);
-    area.addEventListener('keyup',event=>{if(event.key==='Shift'||event.key.startsWith('Arrow'))offerSelectedConcept();});
+  function askSelectedConcept(){
+    if(!selectedBoardQuote)return;
+    const chips=conceptQuestions.map(([question],index)=>`<button type="button" data-uac-selection-question="${index}">${esc(question)}</button>`).join('');
+    assistant.beginIsolatedTool(`我划选了「${selectedBoardQuote}」`,`<div class="iv-selection-guide"><p>对这个概念有疑问吗？</p><p>可以从下面的问题开始：</p><div class="iv-selection-questions">${chips}</div></div>`);
+    selectionActions.hidden=true;
+  }
+  surface.addEventListener('pointerup',event=>{if(event.target.closest('.iv-board-selectable'))offerSelectedConcept();});
+  surface.addEventListener('keyup',event=>{if(event.target.closest('.iv-board-selectable')&&(event.key==='Shift'||event.key.startsWith('Arrow')))offerSelectedConcept();});
+  selectionActions.addEventListener('click',event=>{
+    const action=event.target.closest('[data-iv-selection-action]')?.dataset.ivSelectionAction;
+    if(action==='question')askSelectedConcept();
+    if(action==='note'&&selectedBoardQuote){assistant.saveNote(selectedBoardQuote);assistant.launch('notes');selectionActions.hidden=true;}
   });
+  document.addEventListener('pointerdown',event=>{if(!selectionActions.contains(event.target)&&!event.target.closest('.iv-board-selectable'))selectionActions.hidden=true;});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')selectionActions.hidden=true;});
   panel.querySelector('.uac-mode-switch').addEventListener('toggle',event=>{if(event.target.open){menu.hidden=true;header.querySelector('[data-iv-tool-menu]').setAttribute('aria-expanded','false');}});
   panel.addEventListener('click',event=>{
     const question=event.target.closest('[data-uac-selection-question]');
@@ -149,9 +176,9 @@
     const action=event.target.closest('[data-iv-summary-action]');
     if(action){
       const key=action.dataset.ivSummaryAction;
-      if(key==='regenerate'){renderReferenceFeature('summary');learning.showToast('已根据当前课程重新整理摘要');}
+      if(key==='regenerate'){renderReferenceFeature(panel.dataset.feature||'summary');learning.showToast('已根据当前课程重新整理内容');}
       if(key==='copy'){
-        const text=panel.querySelector('.iv-summary-body').innerText;
+        const text=panel.querySelector('.iv-summary-body,.iv-course-body,.iv-chapter-body')?.innerText||'';
         if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>learning.showToast('摘要已复制')).catch(()=>learning.showToast('未能复制，请选中文字后复制'));
         else learning.showToast('请选中摘要文字后复制');
       }

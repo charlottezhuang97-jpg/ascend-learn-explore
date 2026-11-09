@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="assets/css/knowledge-experience.css?v=1">
   <link rel="stylesheet" href="assets/css/home-october.css?v=fan-motion-2">
   <link rel="stylesheet" href="assets/css/home-quiz-prompt.css?v=2">
+  <link rel="stylesheet" href="assets/css/home-hero-typewriter.css?v=1">
   <link rel="stylesheet" href="assets/css/community-contribution-photo.css?v=3">
   <link rel="stylesheet" href="assets/css/home-learning-assistant.css?v=source-1">
 <link rel="icon" href="assets/images/figma-home/certification.svg" type="image/svg+xml">
@@ -38,14 +39,14 @@
   <a class="skip-link" href="#scenes">跳至学习内容</a>
   <header class="site-nav october-nav">
     <div class="utility-bar"><a href="index.html">昇腾社区首页</a><div class="utility-user"><a class="user-avatar-link" href="prototypes/lowfi/personal-center-knowledge-assets.html" aria-label="个人中心"><img src="assets/images/figma-home/user-avatar.png" alt=""></a></div></div>
-    <div class="october-nav-main"><a class="brand-logo" href="index.html"><img src="assets/images/figma-home/nav-logo.png" alt="Ascend"></a><a class="brand-title" href="index.html">开发者学习中心</a><nav aria-label="主导航"><a href="#top" aria-current="page">主页</a><a href="catalog.html">查找学习资源</a><a href="#scenes">学习路径</a><a href="catalog.html">自主学习课程</a><a href="#events">讲师指导培训</a><a href="#certifications">开发者认证</a></nav><button type="button" class="home-assistant-trigger" id="homeAssistantTrigger" aria-controls="homeAssistantWindow" aria-expanded="false"><span class="ha-source ha-logo" aria-hidden="true"></span>学习助手</button></div>
+    <div class="october-nav-main"><a class="brand-logo" href="index.html"><img src="assets/images/figma-home/nav-logo.png" alt="Ascend"></a><a class="brand-title" href="index.html">开发者学习中心</a><nav aria-label="主导航"><a href="#top" aria-current="page">主页</a><a href="https://www.hiascend.com/developer/edu/find-resource">查找学习资源</a><a href="https://www.hiascend.com/edu/growth">学习路径</a><a href="https://www.hiascend.com/edu/courses">自主学习课程</a><a href="#events">讲师指导培训</a><a href="#certifications">开发者认证</a></nav><button type="button" class="home-assistant-trigger" id="homeAssistantTrigger" aria-controls="homeAssistantWindow" aria-expanded="false"><span class="ha-source ha-logo" aria-hidden="true"></span>学习助手</button></div>
   </header>
 
   <main class="dlc-main" id="top">
     <section class="dlc-hero" aria-labelledby="heroTitle">
       <div class="dlc-hero-inner">
         <h1 class="dlc-title" id="heroTitle">开发者学习中心<span>DLC</span></h1>
-        <p class="dlc-search-helper" id="quizHelper"><svg class="quiz-helper-spark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 2 2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2L12 2Z"/><path d="m19 2 .7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7L19 2Z"/></svg><span class="quiz-helper-copy">不知道从哪开始？</span><button id="openQuiz" type="button">开启</button><span class="quiz-helper-copy">3 步测验，为你推荐专属学习内容</span></p>
+        <p class="dlc-rotating-question" aria-label="你想学习算子开发，或正在解决算子调优问题？"><span>你想学习</span><span class="dlc-topic dlc-topic-learning" data-topic-learning>算子开发</span><span>，或正在解决</span><span class="dlc-topic dlc-topic-problem" data-topic-problem>算子调优问题</span><span>？</span></p>
         <div class="dlc-search-shell">
           <form class="dlc-search" id="heroForm">
             <span class="dlc-selected-prompt" id="selectedPrompt" hidden><span class="selected-prompt-mark" aria-hidden="true"></span><span id="selectedPromptText"></span><button id="clearShortcut" type="button" aria-label="清除快捷选项">×</button></span>
@@ -63,6 +64,7 @@
           </form>
           <p class="dlc-search-hint" id="searchFeedback" role="status" aria-live="polite"></p>
         </div>
+        <p class="dlc-search-helper" id="quizHelper"><svg class="quiz-helper-spark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 2 2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2L12 2Z"/><path d="m19 2 .7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7L19 2Z"/></svg><span class="quiz-helper-copy">不知道从哪开始？</span><button id="openQuiz" type="button">开启</button><span class="quiz-helper-copy">3 步测验，为你推荐专属学习内容</span></p>
       </div>
     </section>
 
@@ -152,6 +154,7 @@
   </aside>
 
   <script src="assets/js/home-october.js?v=scenario-cover-cert-particles-1"></script>
+  <script src="assets/js/home-hero-typewriter.js?v=1"></script>
   <script src="assets/js/home-figma.js?v=quiz-multiselect-avatar-1"></script>
   <script src="assets/js/course-outline.js?v=outline-toolbar-1"></script>
   <script src="assets/js/course-compose.js?v=lesson-types-2"></script>

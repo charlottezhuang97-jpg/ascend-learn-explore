@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <base href="../../">
+  <script src="assets/js/artifact-status.js" data-status="lowfi" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>课程完成 · 下一步实验</title>
+  <style>
+    :root{--ink:#172033;--text:#526077;--muted:#7d899b;--line:#d8e0ea;--bg:#f3f5f8;--paper:#fff;--blue:#2e5fc7;--blue-soft:#edf3ff;--green:#28785e;--green-soft:#edf8f3}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"HarmonyOS Sans SC","PingFang SC",Arial,sans-serif;font-size:14px;line-height:1.55}a{color:inherit;text-decoration:none}
+    .top{height:62px;display:flex;align-items:center;gap:18px;padding:0 28px;border-bottom:1px solid var(--line);background:#fff}.top a{padding:7px 10px;border:1px solid var(--line);border-radius:8px;font-size:12px}.top b{font-size:15px}.top small{margin-left:auto;color:var(--muted)}
+    main{width:min(1100px,calc(100% - 36px));margin:30px auto 60px}.eyebrow{color:var(--blue);font-size:12px;font-weight:700}.title{text-align:center;margin:0 auto 22px;max-width:700px}.title h1{margin:8px 0;font-size:27px;line-height:1.3}.title p{margin:0;color:var(--text)}
+    .result{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:16px;align-items:center;padding:22px 24px;border:1px solid #cfe5da;border-radius:14px;background:var(--green-soft)}.check{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:#fff;color:var(--green);font-size:27px;font-weight:700}.result h2{margin:0 0 3px;font-size:19px}.result p{margin:0;color:var(--text);font-size:13px}.result-tag{padding:7px 10px;border:1px solid #bddaca;border-radius:99px;background:#fff;color:var(--green);font-size:11px;white-space:nowrap}
+    .columns{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.panel{padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}.panel h3{margin:0;font-size:16px}.sub{margin:4px 0 15px;color:var(--muted);font-size:12px}.list{display:grid;gap:10px}.item{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:9px}.mark{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--blue-soft);color:var(--blue);font-size:12px;font-weight:700}.item b,.item small{display:block}.item b{font-size:13px}.item small{color:var(--muted);font-size:11px}.level{padding:4px 7px;border-radius:99px;background:#f0f2f5;color:#596579;font-size:10px;white-space:nowrap}
+    .next{position:relative;overflow:hidden;border-color:#c8d7f1;background:linear-gradient(145deg,#fff,#f5f8ff)}.next:before{content:"02";position:absolute;right:18px;top:10px;color:#e3eaf6;font-size:52px;font-weight:700;line-height:1}.next-head{position:relative;display:flex;align-items:center;gap:8px;color:var(--blue);font-size:11px;font-weight:700}.next h3{position:relative;margin:9px 0 7px;font-size:18px}.next p{position:relative;margin:0;color:var(--text);font-size:12px;line-height:1.7}.outcomes{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}.outcomes span{padding:5px 8px;border-radius:6px;background:#fff;border:1px solid #e0e6f0;color:#586985;font-size:11px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}.button{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 14px;border:1px solid var(--ink);border-radius:8px;background:var(--ink);color:#fff;font-size:12px;font-weight:600}.button.secondary{border-color:var(--line);background:#fff;color:var(--ink)}
+    .journey{margin-top:16px;padding:17px 20px;border:1px solid var(--line);border-radius:12px;background:#fff}.journey-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.journey h3{margin:0;font-size:14px}.journey small{color:var(--muted);font-size:11px}.track{display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr;align-items:center;gap:8px;margin-top:14px}.node{min-height:58px;display:grid;align-content:center;gap:2px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fafbfc}.node b{font-size:11px}.node span{color:var(--muted);font-size:10px}.node.done{border-color:#cfe5da;background:var(--green-soft)}.node.current{border:2px solid var(--blue);background:var(--blue-soft)}.arrow{text-align:center;color:#98a3b3}
+    .note{margin:12px 2px 0;color:var(--muted);font-size:11px}
+    @media(max-width:700px){main{width:calc(100% - 24px);margin-top:20px}.top{padding:0 12px;gap:9px}.top small{font-size:10px}.title h1{font-size:23px}.result{grid-template-columns:44px 1fr;padding:16px;gap:11px}.check{width:40px;height:40px;font-size:21px}.result h2{font-size:16px}.result-tag{grid-column:2;justify-self:start}.columns{grid-template-columns:1fr}.panel{padding:15px}.track{grid-template-columns:1fr 18px 1fr 18px 1fr;gap:3px}.node{padding:6px 5px;min-height:55px}.node b{font-size:10px}.node span{font-size:9px}.journey{padding:14px}}
+  </style>
+</head>
+<body>
+  <header class="top"><a href="learn.html?course=mindie">← 返回学习</a><b>课程完成</b><small>MindIE 服务部署与模型推理</small></header>
+  <main>
+    <header class="title"><span class="eyebrow">本次学习已完成</span><h1>你已经完成 MindIE 推理服务部署</h1><p>这次你完成了环境准备和推理请求验证，下一步可以把服务调用跑通。</p></header>
+    <section class="result" aria-labelledby="result-title"><div class="check" aria-hidden="true">✓</div><div><h2 id="result-title">完成了什么</h2><p>已完成 MindIE 服务启动、提交推理请求，并查看模型返回结果。</p></div><span class="result-tag">课程已完成</span></section>
+    <div class="columns">
+      <section class="panel" aria-labelledby="mastered-title"><h3 id="mastered-title">本次掌握</h3><p class="sub">把完成结果转成清楚的学习收获</p><div class="list">
+        <article class="item"><span class="mark">01</span><div><b>启动 MindIE 推理服务</b><small>确认服务进程与端口状态</small></div><span class="level">已完成</span></article>
+        <article class="item"><span class="mark">02</span><div><b>构造推理请求</b><small>理解 prompt 与 max_tokens 参数</small></div><span class="level">已掌握</span></article>
+        <article class="item"><span class="mark">03</span><div><b>查看模型输出</b><small>读懂终端返回内容并核对结果</small></div><span class="level">已完成</span></article>
+      </div></section>
+      <section class="panel next" aria-labelledby="next-title"><div class="next-head">下一步实验 · 02</div><h3 id="next-title">MindIE 推理服务调用与结果验证</h3><p>在已准备好的环境中调用推理服务，检查请求参数对输出的影响，并保存一份验证记录。</p><div class="outcomes"><span>请求与响应</span><span>参数对比</span><span>结果记录</span></div><div class="actions"><a class="button" href="learn.html?course=mindie&experiment=2">开始第二个实验 →</a><a class="button secondary" href="learn.html?course=mindie&mode=video">稍后继续</a></div></section>
+    </div>
+    <section class="journey" aria-labelledby="journey-title"><div class="journey-head"><h3 id="journey-title">学习路径进度</h3><small>课程完成后，顺着实验继续</small></div><div class="track"><div class="node done"><b>实验 1 · 服务部署</b><span>已完成</span></div><span class="arrow">→</span><div class="node current"><b>实验 2 · 调用验证</b><span>下一步</span></div><span class="arrow">→</span><div class="node"><b>能力认证</b><span>完成路径后解锁</span></div></div></section>
+    <p class="note">这里只确认课程学习结果；真实环境运行记录与认证资格分别依据对应的验证结果更新。</p>
+  </main>
+</body>
+</html>

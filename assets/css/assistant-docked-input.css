@@ -1,0 +1,9 @@
+body.assistant-docked #unifiedCompanion{display:none!important}
+body.reference-immersive.assistant-docked:is([data-fixed-view=video],[data-fixed-view=board],[data-fixed-view=ide]) .iv-surface,
+body.reference-immersive.assistant-docked[data-fixed-view=ide] .ex-surface{left:0!important;right:0!important}
+.assistant-docked-input{position:fixed;z-index:240;left:50%;bottom:28px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;width:min(680px,calc(100vw - 32px));min-height:66px;padding:9px 12px 9px 16px;border:1px solid #d9dff0;border-radius:999px;background:linear-gradient(105deg,#fbfdff,#f5f4ff);box-shadow:0 12px 34px #29396325;color:#20283a;font:15px IVHarmony,'PingFang SC',sans-serif}
+.assistant-docked-input[hidden],body.assistant-reviews-floor .assistant-docked-input{display:none!important}
+.assistant-docked-input button{border:0;cursor:pointer}.assistant-docked-input [data-docked-expand]{display:flex;align-items:center;gap:8px;flex:none;padding:0;background:transparent;color:#4b4b89}.docked-assistant-icon{display:grid;place-items:center;width:27px;height:27px}.docked-assistant-icon .iv-source{transform:scale(.75)}
+.assistant-docked-input input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#20283a;font:inherit}.assistant-docked-input input::placeholder{color:#8992a5}
+.assistant-docked-input button[type=submit]{display:grid;place-items:center;flex:none;width:36px;height:36px;border-radius:50%;background:#596fd1;color:#fff;font-size:22px}.assistant-docked-input:focus-within{border-color:#8fa3eb;box-shadow:0 12px 34px #29396325,0 0 0 2px #d8e2ff}
+@media(max-width:600px){.assistant-docked-input{bottom:12px;min-height:56px;gap:7px;padding:7px 9px}.assistant-docked-input [data-docked-expand] strong{display:none}}

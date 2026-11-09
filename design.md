@@ -1,5 +1,7 @@
 # 学习方案探索版设计系统入口
 
+现行页面视觉与交互请先参阅 [`design-system/current-demo-visual.md`](design-system/current-demo-visual.md)。下方标题数值是早期基线；若与最新 demo 或用户确认的设计稿不同，以现行方案为准。
+
 设计系统已经拆成五层，完整入口见 [`design-system/README.md`](design-system/README.md)。本文件保留为历史入口，记录首页标题的已确认基线，并把后续规则指向新的分层文档。
 
 ## 首页标题基线

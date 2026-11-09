@@ -26,6 +26,9 @@
     {"id":"certification-v1","title":"开发者认证","status":"legacy","source":"archive/legacy-v1/certification.html","publicPath":"archive/legacy-v1/certification.html","description":"早期认证页面"},
 
     {"id":"companion-unified-lowfi","title":"AI 学伴统一交互","status":"lowfi","source":"prototypes/lowfi/ai-companion-unified.html","publicPath":"prototypes/lowfi/ai-companion-unified.html","description":"气泡、完整学伴、课程预览、白板、IDE、主动提醒与知识地图的统一交互"},
+    {"id":"emotional-motivation-journey","title":"学习激励与情感化 · 六个节点","status":"lowfi","source":"prototypes/lowfi/emotional-motivation-journey.html","publicPath":"prototypes/lowfi/emotional-motivation-journey.html","description":"初次进入、提问、停留、暂停、课程完成与证书发放的演示入口；步骤 2–4 在沉浸式学习页通过遥控器切换"},
+    {"id":"course-completion-emotional","title":"课程完成 · 下一步实验","status":"lowfi","source":"prototypes/lowfi/course-completion-emotional.html","publicPath":"prototypes/lowfi/course-completion-emotional.html","description":"课程完成结果、掌握内容与第二个实验的名称和描述"},
+    {"id":"certificate-issued","title":"获得证书 · 认证达成","status":"lowfi","source":"prototypes/lowfi/certificate-issued.html","publicPath":"prototypes/lowfi/certificate-issued.html","description":"仅在证书正式发放后呈现的查看、下载、分享与知识地图点亮状态"},
     {"id":"course-completion-highlight-lowfi","title":"课程完成与本次点亮结果","status":"lowfi","source":"prototypes/lowfi/course-completion-highlight.html","publicPath":"prototypes/lowfi/course-completion-highlight.html","description":"课程完成后的新增知识点、实践证据、能力变化与知识地图定位"},
     {"id":"personal-center-assets-lowfi","title":"个人中心与长期知识资产","status":"lowfi","source":"prototypes/lowfi/personal-center-knowledge-assets.html","publicPath":"prototypes/lowfi/personal-center-knowledge-assets.html","description":"个人长期知识资产、实践证据、学习路线与贡献记录"},
     {"id":"companion-entry-lowfi","title":"AI 学伴统一入口（旧版）","status":"legacy","source":"prototypes/lowfi/ai-companion.html","publicPath":"prototypes/lowfi/ai-companion.html","description":"早期首页卡片、气泡与完整学伴中心方案，已合并到统一交互"},

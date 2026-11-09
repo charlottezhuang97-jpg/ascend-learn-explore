@@ -1,0 +1,13 @@
+/* Whiteboard text selection follows the current light learning surface. */
+.iv-board-selection-actions{position:fixed;z-index:230;display:flex;gap:6px;padding:5px;border:1px solid #dce4f2;border-radius:999px;background:#fff;box-shadow:0 8px 24px #213c6424}
+.iv-board-selection-actions[hidden]{display:none!important}
+.iv-board-selection-actions button{padding:6px 12px;border:0;border-radius:999px;background:#f4f6ff;color:#31559c;font:13px/18px IVHarmony,'PingFang SC',sans-serif;white-space:nowrap;cursor:pointer}
+.iv-board-selection-actions button:hover,.iv-board-selection-actions button:focus-visible{background:#e5ecff;outline:2px solid #8ba5ed;outline-offset:1px}
+body.reference-immersive .uac-panel .uac-chat .uac-message.user{align-self:flex-end;width:max-content;max-width:calc(100% - 24px);margin-left:auto}
+body.reference-immersive .uac-panel .uac-chat .uac-message.user>div{width:max-content;max-width:100%;padding:10px 14px}
+body.reference-immersive .uac-panel .uac-chat .uac-message.user p{margin:0;white-space:pre-wrap}
+body.reference-immersive .uac-panel .iv-selection-guide{display:block;color:inherit;font:inherit}
+body.reference-immersive .uac-panel .iv-selection-guide>p{margin:0 0 10px;color:inherit;font:inherit}
+body.reference-immersive .uac-panel .iv-selection-questions{position:static;display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding:0;background:none;border-radius:0;box-shadow:none}
+body.reference-immersive .uac-panel:has(.iv-selection-questions) .uac-body{padding-bottom:20px}
+body.reference-immersive .uac-panel .iv-selection-questions button{width:max-content;max-width:100%;white-space:normal}
