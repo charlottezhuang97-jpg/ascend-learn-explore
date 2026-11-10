@@ -17,9 +17,9 @@
     <h2 data-type>AI Core内部并行计算架构抽象</h2>
     <h3 data-type>异步指令流</h3>
     <p data-type>Scalar 计算单元读取指令序列，并把向量计算、矩阵计算、数据搬运指令发射给对应单元的指令队列。向量计算单元、矩阵计算单元和数据搬运单元异步并行执行接收到的指令。</p>
-    <figure class="iv-board-reveal" data-reveal><img src="${diagram}" alt="AI Core 内部并行架构：Scalar 发射指令，Vector、Cube 和 DMA 单元通过 Local Memory 与 Global Memory 协作"><figcaption>AI Core内部并行计算架构抽象示意图</figcaption></figure>
     <h3 data-type>同步信号流</h3><p data-type>指令间可能存在依赖关系。为保证不同指令队列中的指令按正确的逻辑关系执行，Scalar 计算单元也会向对应单元下发同步指令。</p>
-    <h3 data-type>计算数据流</h3><p data-type>DMA 搬入单元把数据从 Global Memory 搬运到 Local Memory；Vector / Cube 计算单元完成数据计算，并把结果写回 Local Memory；DMA 搬出单元将处理好的数据搬运返回 Global Memory。</p>`;
+    <h3 data-type>计算数据流</h3><p data-type>DMA 搬入单元把数据从 Global Memory 搬运到 Local Memory；Vector / Cube 计算单元完成数据计算，并把结果写回 Local Memory；DMA 搬出单元将处理好的数据搬运返回 Global Memory。</p>
+    <figure class="iv-board-reveal" data-reveal><img src="${diagram}" alt="AI Core 内部并行架构：Scalar 发射指令，Vector、Cube 和 DMA 单元通过 Local Memory 与 Global Memory 协作"><figcaption>AI Core内部并行计算架构抽象示意图</figcaption></figure>`;
   middle.innerHTML = `<h3 data-type>本节课路线图</h3><p data-type>• AI Core 三流并行</p><p data-type>• 问题 1：谁在发指令？</p><p data-type>• 问题 2：算力单元怎么协同？</p><p data-type>• 问题 3：数据从哪来、到哪去？</p>
     <h3 data-type>核心概念 1</h3><p data-type>知识卡片：异步指令流</p><p data-type>定义：Scalar 读取指令序列，分发到各指令队列。</p><p data-type>要点：Vector / Cube / DMA 可异步并行执行。</p>
     <h3 data-type>核心概念 2</h3><p data-type>计算、发令和数据搬运由不同单元负责，配合完成算子任务。</p>
@@ -36,11 +36,7 @@
   }
   const waits = ms => new Promise(resolve => setTimeout(resolve, ms));
   async function typeLane(lane) {
-    for (const element of lane.querySelectorAll('[data-type], [data-reveal]')) {
-      if (element.hasAttribute('data-reveal')) {
-        element.classList.add('is-visible');
-        continue;
-      }
+    for (const element of lane.querySelectorAll('[data-type]')) {
       const characters = Array.from(element.dataset.full);
       for (let i = 0; i < characters.length; i += 2) {
         element.textContent += characters.slice(i, i + 2).join('');
@@ -57,7 +53,10 @@
       art.querySelectorAll('[data-reveal]').forEach(item => item.classList.add('is-visible'));
       return;
     }
-    Promise.all([left, middle, right].map(typeLane)).then(() => art.classList.add('is-complete'));
+    Promise.all([left, middle, right].map(typeLane)).then(() => {
+      art.classList.add('is-complete');
+      art.querySelectorAll('[data-reveal]').forEach(item => item.classList.add('is-visible'));
+    });
   }
   new MutationObserver(start).observe(document.body, {attributes:true, attributeFilter:['data-fixed-view']});
   start();

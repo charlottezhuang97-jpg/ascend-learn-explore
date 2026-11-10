@@ -99,7 +99,7 @@
   renderScene(0);renderCert('ACDA');renderCalendar();
 })();
 
-// A single decorative particle field; springs return every point to its grid.
+// A fixed square particle field; pointer proximity changes light only.
 (() => {
   const hero = document.querySelector('.dlc-hero');
   if (!hero) return;
@@ -113,69 +113,123 @@
   const pointer = { x: 0, y: 0, active: false };
   let width = 0, height = 0, points = [], frame = 0, visible = true;
   let glow = 0;
+  let lastDraw = 0;
 
-  function draw() {
-    ctx.clearRect(0, 0, width, height);
-    if (glow > .005) {
-      const radius = Math.min(240, width * .38);
-      const light = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, radius);
-      light.addColorStop(0, `rgba(255,255,255,${.34 * glow})`);
-      light.addColorStop(.4, `rgba(246,250,255,${.17 * glow})`);
-      light.addColorStop(1, 'rgba(255,255,255,0)');
-      ctx.fillStyle = light;
-      ctx.fillRect(0, 0, width, height);
+  function roundedSquare(x, y, size, radius) {
+    const left = x - size / 2;
+    const top = y - size / 2;
+    ctx.beginPath();
+    if (typeof ctx.roundRect === 'function') {
+      ctx.roundRect(left, top, size, size, radius);
+      return;
     }
+    const r = Math.min(radius, size / 2);
+    ctx.moveTo(left + r, top);
+    ctx.lineTo(left + size - r, top);
+    ctx.quadraticCurveTo(left + size, top, left + size, top + r);
+    ctx.lineTo(left + size, top + size - r);
+    ctx.quadraticCurveTo(left + size, top + size, left + size - r, top + size);
+    ctx.lineTo(left + r, top + size);
+    ctx.quadraticCurveTo(left, top + size, left, top + size - r);
+    ctx.lineTo(left, top + r);
+    ctx.quadraticCurveTo(left, top, left + r, top);
+    ctx.closePath();
+  }
+
+  function draw(now) {
+    ctx.clearRect(0, 0, width, height);
     for (const p of points) {
       const distance = Math.hypot(p.x - pointer.x, p.y - pointer.y);
       const lit = Math.max(0, 1 - distance / 200) * glow;
-      const fade = Math.max(.08, 1 - p.by / (height * 1.12));
-      ctx.fillStyle = `rgba(255,255,255,${Math.min(1, .68 * fade + lit * .55)})`;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 1.25 + lit * .85, 0, Math.PI * 2);
+      const pulse = p.sparkles && !motion.matches
+        ? (Math.sin(now * p.twinkleSpeed + p.twinklePhase) + 1) * .5
+        : 0;
+      const twinkle = p.sparkles ? Math.pow(pulse, 20) * p.twinkleStrength : 0;
+      const lightStrength = Math.max(lit, twinkle);
+      const size = 4;
+      const cornerRadius = 1;
+      const fillAlpha = .3 + (.8 - .3) * lightStrength;
+
+      ctx.save();
+      ctx.shadowColor = `rgba(255,255,255,${lightStrength})`;
+      ctx.shadowBlur = 6 * lightStrength;
+      ctx.fillStyle = `rgba(255,255,255,${fillAlpha})`;
+      roundedSquare(p.x, p.y, size, cornerRadius);
       ctx.fill();
+      if (lit > .005) {
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = `rgba(255,255,255,${lit})`;
+        ctx.stroke();
+      }
+      ctx.restore();
     }
   }
 
-  function animate() {
+  function animate(now) {
     frame = 0;
     if (!visible || document.hidden) return;
+    if (now - lastDraw < 33) {
+      frame = requestAnimationFrame(animate);
+      return;
+    }
+    lastDraw = now;
     const targetGlow = pointer.active && !motion.matches ? 1 : 0;
     glow += (targetGlow - glow) * .09;
-    let moving = Math.abs(targetGlow - glow) > .005;
-    const radius = Math.min(240, width * .38);
-    for (const p of points) {
-      let tx = p.bx, ty = p.by;
-      if (pointer.active && !motion.matches) {
-        const dx = pointer.x - p.bx, dy = pointer.y - p.by;
-        const distance = Math.hypot(dx, dy);
-        const strength = Math.max(0, 1 - distance / radius);
-        // Keep a spread of particles around the pointer rather than one white dot.
-        const attraction = .68 * strength * strength;
-        tx += dx * attraction;
-        ty += dy * attraction;
-      }
-      p.vx = (p.vx + (tx - p.x) * .035) * .79;
-      p.vy = (p.vy + (ty - p.y) * .035) * .79;
-      p.x += p.vx;
-      p.y += p.vy;
-      if (Math.abs(tx - p.x) + Math.abs(ty - p.y) + Math.abs(p.vx) + Math.abs(p.vy) > .04) moving = true;
-    }
-    draw();
-    if (moving) frame = requestAnimationFrame(animate);
+    const moving = Math.abs(targetGlow - glow) > .005;
+    draw(now);
+    if (!motion.matches || moving) frame = requestAnimationFrame(animate);
   }
   function wake() { if (!frame && visible && !document.hidden) frame = requestAnimationFrame(animate); }
+  function localRect(element, heroBox) {
+    if (!element) return null;
+    const rect = element.getBoundingClientRect();
+    return {
+      left: rect.left - heroBox.left,
+      right: rect.right - heroBox.left,
+      top: rect.top - heroBox.top,
+      bottom: rect.bottom - heroBox.top,
+    };
+  }
+  function distanceToRect(x, y, rect) {
+    if (!rect) return Infinity;
+    const dx = Math.max(rect.left - x, 0, x - rect.right);
+    const dy = Math.max(rect.top - y, 0, y - rect.bottom);
+    return Math.hypot(dx, dy);
+  }
   function reset() {
     const box = hero.getBoundingClientRect();
     width = box.width; height = box.height;
     const dpr = Math.min(devicePixelRatio || 1, 2);
     canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const titleRect = localRect(hero.querySelector('.dlc-title'), box);
+    const searchRect = localRect(hero.querySelector('.dlc-search-shell'), box);
     points = [];
-    for (let y = 10; y < height; y += 26) {
-      for (let x = 10; x < width; x += 26) points.push({bx:x, by:y, x, y, vx:0, vy:0});
+    for (let y = 12; y < height; y += 24) {
+      for (let x = 12; x < width; x += 24) {
+        const titleDistance = distanceToRect(x, y, titleRect);
+        const searchDistance = distanceToRect(x, y, searchRect);
+        const focusWeight = .1
+          + Math.exp(-titleDistance / 90) * 2.6
+          + Math.exp(-searchDistance / 110) * 3.2;
+        points.push({
+          x,
+          y,
+          sparkles: false,
+          twinkleRank: Math.pow(Math.random(), 1 / focusWeight),
+          twinklePhase: Math.random() * Math.PI * 2,
+          twinkleSpeed: .0005 + Math.random() * .00055,
+          twinkleStrength: .72 + Math.random() * .28,
+        });
+      }
     }
+    const sparkleCount = Math.round(points.length * .2);
+    [...points]
+      .sort((a, b) => b.twinkleRank - a.twinkleRank)
+      .slice(0, sparkleCount)
+      .forEach(point => { point.sparkles = true; });
     glow = 0;
-    draw();
+    draw(performance.now());
     wake();
   }
   hero.addEventListener('pointermove', e => {
