@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MindIE 文本生成实验教练 · 开发者学习中心</title>
+  <link rel="stylesheet" href="assets/css/experiment-coach.css?v=1">
+  <script defer src="assets/js/experiment-coach.js?v=1"></script>
+</head>
+<body>
+  <header class="coach-top"><a href="learn.html?course=mindie&mode=video">← 返回学习</a><span><img src="assets/images/companion-icon.png" alt="">学习助手 · 实验教练</span></header>
+  <main class="coach-layout">
+    <aside class="coach-rail"><p class="eyebrow">我的学习 Agent</p><div class="agent-id"><span id="agentIcon">✦</span><div><strong id="agentName">MindIE 实验教练</strong><small>生成式 AI · 推理部署</small></div></div><button id="editAgent" type="button">编辑教练</button><h2>本次任务</h2><ol id="taskList"></ol><div class="coach-rail-note">任务进度保存在当前浏览器。实验操作以现有手册引导为准。</div></aside>
+    <section class="coach-chat" aria-label="实验教练对话"><div class="coach-dialogue" id="dialogue" role="log" aria-live="polite"></div><form id="coachForm" class="coach-input"><input id="coachQuestion" aria-label="向实验教练提问" placeholder="描述你遇到的问题，或输入实验目标"><button type="submit">发送 ↑</button></form></section>
+    <aside class="coach-work"><p class="eyebrow">正在进行的实验</p><h1>基于 MindIE 的文本生成推理实践</h1><p>从环境检查、模型准备到启动服务和请求验证，按实验手册逐步完成。</p><div class="coach-progress"><span id="progressLabel">0 / 7 项操作</span><div><i id="progressFill"></i></div></div><div class="current-step" id="currentStep"></div><a class="primary" id="openLab" href="learn-stepwise.html?course=mindie&mode=ide&guide=open">打开现有 IDE 七步引导 ↗</a><p class="coach-disclaimer">此页为交互原型。未连接服务器，不能自动判断命令是否成功；请在实验环境核对真实回显。</p></aside>
+  </main>
+  <dialog id="createDialog" class="coach-modal"><form method="dialog" id="createForm"><div class="modal-head"><h2>创建实验教练</h2><button type="button" id="closeDialog" aria-label="关闭">×</button></div><div class="avatar-picker"><span id="avatarPreview">✦</span><div><strong>选择教练标识</strong><div class="color-row"><button type="button" data-color="#7c5cff" aria-label="紫色" class="active"></button><button type="button" data-color="#3b82f6" aria-label="蓝色"></button><button type="button" data-color="#0ca98d" aria-label="绿色"></button></div></div></div><label>教练名称<input id="nameInput" maxlength="24" value="MindIE 实验教练" required></label><label>这次想完成什么？<textarea id="goalInput" rows="2">按实验手册完成 MindIE 文本生成推理实践</textarea></label><div class="modal-actions"><button type="button" id="cancelCreate">取消</button><button class="primary" type="submit">创建并生成任务</button></div></form></dialog>
+</body></html>
