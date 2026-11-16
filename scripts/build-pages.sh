@@ -16,6 +16,10 @@ cp -R "$repo_root/design-system" "$dist/design-system"
 cp -R "$repo_root/docs" "$dist/docs"
 cp -R "$repo_root/archive/legacy-v1/." "$dist/archive/legacy-v1/"
 cp -R "$repo_root/prototypes/lowfi/." "$dist/prototypes/lowfi/"
+if [[ -d "$repo_root/prototypes/highfi" ]]; then
+  mkdir -p "$dist/prototypes/highfi"
+  cp -R "$repo_root/prototypes/highfi/." "$dist/prototypes/highfi/"
+fi
 cp -R "$repo_root/research/." "$dist/research/"
 
 if [[ -d "$repo_root/outputs/ux-audit" ]]; then

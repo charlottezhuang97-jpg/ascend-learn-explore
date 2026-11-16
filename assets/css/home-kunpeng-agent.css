@@ -1,0 +1,11 @@
+.dlc-search-shell{overflow:visible}
+.kunpeng-search-agent{position:absolute;z-index:32;right:14px;bottom:calc(100% + 3px);display:block;width:90px;height:54px;overflow:visible;cursor:pointer;filter:drop-shadow(0 5px 8px #7f93bc2b)}
+.kunpeng-search-agent img{position:absolute;left:-30px;width:150px;height:auto;max-width:none;pointer-events:none;transition:opacity .22s ease,transform .3s ease}
+.kunpeng-search-agent .kunpeng-agent-peek{top:-16px}
+.kunpeng-search-agent .kunpeng-agent-wave{top:-31px}
+.kunpeng-agent-peek{opacity:1;transform:translateY(0)}
+.kunpeng-agent-wave{opacity:0;transform:translateY(12px)}
+.kunpeng-search-agent:hover .kunpeng-agent-peek{opacity:0;transform:translateY(12px)}
+.kunpeng-search-agent:hover .kunpeng-agent-wave{opacity:1;transform:translateY(0)}
+@media(max-width:700px){.kunpeng-search-agent{right:4px;width:76px;height:48px;bottom:calc(100% + 2px)}.kunpeng-search-agent img{width:130px;left:-27px}.kunpeng-search-agent .kunpeng-agent-peek{top:-14px}.kunpeng-search-agent .kunpeng-agent-wave{top:-27px}}
+@media(prefers-reduced-motion:reduce){.kunpeng-search-agent img{transition:none}}

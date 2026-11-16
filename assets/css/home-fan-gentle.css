@@ -1,0 +1,15 @@
+/* A single springy entrance, then a quiet glass edge; hover only changes stacking. */
+.october-fan .fan-slot-left{animation:fan-arrive-side .66s cubic-bezier(.25,.85,.3,1) both}
+.october-fan .fan-slot-center{animation:fan-arrive-center .68s cubic-bezier(.25,.85,.3,1) .1s both}
+.october-fan .fan-slot-right{animation:fan-arrive-side .66s cubic-bezier(.25,.85,.3,1) .2s both}
+@keyframes fan-arrive-side{0%{opacity:0;transform:translateY(30px) scale(.94)}60%{opacity:1;transform:translateY(-12px) scale(1.025)}82%{transform:translateY(4px) scale(.99)}100%{opacity:1;transform:none}}
+@keyframes fan-arrive-center{0%{opacity:0;transform:translateX(-50%) translateY(30px) scale(.94)}60%{opacity:1;transform:translateX(-50%) translateY(-12px) scale(1.025)}82%{transform:translateX(-50%) translateY(4px) scale(.99)}100%{opacity:1;transform:translateX(-50%)}}
+.october-fan .fan-slot .fan-side,.october-fan .fan-slot .fan-center{box-shadow:0 12px 22px #647fa511,0 0 0 3px #ffffffaa,0 0 18px #a1c5ff42}
+.october-fan .fan-slot .fan-side::after,.october-fan .fan-slot .fan-center::after{content:"";position:absolute;inset:0;z-index:4;border:2px solid #ffffffc9;border-radius:inherit;box-shadow:inset 0 0 0 1px #d8e6ff73,inset 0 5px 12px #ffffff70;pointer-events:none}
+.october-fan:has(.fan-slot:is(:hover,:focus-within)) .fan-slot-left,.october-fan:has(.fan-slot:is(:hover,:focus-within)) .fan-slot-right{transform:none}
+.october-fan:has(.fan-slot:is(:hover,:focus-within)) .fan-slot-center{transform:translateX(-50%)}
+.october-fan .fan-slot-left:is(:hover,:focus-within) .fan-left{transform:rotate(-6deg)}
+.october-fan .fan-slot-center:is(:hover,:focus-within) .fan-center{transform:none}
+.october-fan .fan-slot-right:is(:hover,:focus-within) .fan-right{transform:rotate(6deg)}
+.october-fan .fan-slot:is(:hover,:focus-within) .fan-side,.october-fan .fan-slot:is(:hover,:focus-within) .fan-center{box-shadow:0 12px 22px #647fa511,0 0 0 3px #ffffffaa,0 0 18px #a1c5ff42;filter:none}
+@media(prefers-reduced-motion:reduce){.october-fan .fan-slot{animation:none}}

@@ -31,9 +31,13 @@
   <link rel="stylesheet" href="assets/css/home-october.css?v=fan-motion-2">
   <link rel="stylesheet" href="assets/css/home-quiz-prompt.css?v=2">
   <link rel="stylesheet" href="assets/css/home-hero-typewriter.css?v=1">
-  <link rel="stylesheet" href="assets/css/home-search-results.css?v=1">
+  <link rel="stylesheet" href="assets/css/home-search-results.css?v=2">
   <link rel="stylesheet" href="assets/css/community-contribution-photo.css?v=3">
-  <link rel="stylesheet" href="assets/css/home-learning-assistant.css?v=source-1">
+  <link rel="stylesheet" href="assets/css/community-contribution-floor.css?v=4">
+  <link rel="stylesheet" href="assets/css/home-kunpeng-agent.css?v=4">
+  <link rel="stylesheet" href="assets/css/home-fan-gentle.css?v=2">
+  <link rel="stylesheet" href="assets/css/home-learning-assistant.css?v=agent-home-1">
+  <link rel="stylesheet" href="assets/css/home-starter-ide.css?v=6">
 <link rel="icon" href="assets/images/figma-home/certification.svg" type="image/svg+xml">
 </head>
 <body>
@@ -49,6 +53,7 @@
         <h1 class="dlc-title" id="heroTitle">开发者学习中心<span>DLC</span></h1>
         <p class="dlc-rotating-question" aria-label="你想学习算子开发，或正在解决算子调优问题？"><span>你想学习</span><span class="dlc-topic dlc-topic-learning" data-topic-learning>算子开发</span><span>，或正在解决</span><span class="dlc-topic dlc-topic-problem" data-topic-problem>算子调优问题</span><span>？</span></p>
         <div class="dlc-search-shell">
+          <span class="kunpeng-search-agent" aria-hidden="true"><img class="kunpeng-agent-peek" src="assets/images/october-home/kunpeng-agent-peek.png" alt=""><img class="kunpeng-agent-wave" src="assets/images/october-home/kunpeng-agent-wave.png" alt=""></span>
           <form class="dlc-search" id="heroForm">
             <span class="dlc-selected-prompt" id="selectedPrompt" hidden><span class="selected-prompt-mark" aria-hidden="true"></span><span id="selectedPromptText"></span><button id="clearShortcut" type="button" aria-label="清除快捷选项">×</button></span>
             <input id="heroInput" type="text" autocomplete="off" aria-label="输入学习目标" placeholder="今天你想学点什么？使用/获取快捷选项">
@@ -69,7 +74,23 @@
       </div>
     </section>
 
-    <section class="october-fan" id="courseFirstFloor" aria-label="推荐与继续学习">
+    <section class="starter-floor" id="courseFirstFloor" aria-label="第一个算子开发任务与继续学习">
+      <div class="starter-ide" id="starterIde" aria-labelledby="starterTitle">
+        <div class="starter-window-bar"><span class="starter-window-dots" aria-hidden="true"><i></i><i></i><i></i></span><strong>我的第一个昇腾任务</strong><span class="starter-duration" id="starterDuration">约 3 分钟</span><button type="button" class="starter-change-task" id="starterChangeTask">更换任务 ⇄</button></div>
+        <div class="starter-heading"><div><h2 id="starterTitle">写一个加法算子，让偏暗照片亮起来</h2><p id="starterDescription">完成一行 Ascend C 加法计算，看看它如何改变图像像素。</p></div>            <div class="starter-steps" aria-label="任务步骤"><button type="button" data-step="0" aria-current="step">补全 Add</button><button type="button" data-step="1">写入 Add 算子</button><button type="button" data-step="2">运行查看结果</button></div></div>
+        <div class="starter-workbench">
+          <div class="starter-editor"><header><b><span class="starter-ide-brand" aria-hidden="true"></span>HiDevLab 在线环境</b><span>文件　编辑　查看　运行　调试</span></header>
+
+            <div class="starter-editor-body"><nav id="starterFiles" aria-label="Project 文件列表"></nav><div class="starter-code-pane"><div class="starter-code"><div class="starter-tabs" id="starterTabs"></div><div class="starter-breadcrumb" id="starterBreadcrumb">MyApplication / entry / src / main / add_custom.cpp</div><div class="starter-code-content"><p><em>01</em><code id="starterCodeBefore">// 输入像素 x 和亮度增量 y 已准备好</code></p><p><em>02</em><code id="starterCodeComment">// 逐元素相加：z = x + y</code></p><label id="starterCodeLabel" for="starterCode">03 · 补全 Add 计算</label><textarea id="starterCode" spellcheck="false" aria-label="补全当前任务的一行代码" placeholder="AscendC::Add(zLocal, xLocal, yLocal, TILE_LENGTH);"></textarea><p><em>04</em><code id="starterCodeAfter">// DataCopy 将 z 搬出，Host 读取结果</code></p><pre id="starterFilePreview" hidden></pre></div></div>
+              <footer><button type="button" id="starterRun">▶ 运行预览</button></footer>
+              <div class="starter-editor-terminal"><div class="starter-terminal-tabs" role="tablist" aria-label="开发输出"><button role="tab" aria-selected="true" type="button" data-terminal-tab="Terminal">▧ Terminal</button><button role="tab" aria-selected="false" type="button" data-terminal-tab="Problem">ⓘ Problem</button><button role="tab" aria-selected="false" type="button" data-terminal-tab="Output">⚑ Output</button><button role="tab" aria-selected="false" type="button" data-terminal-tab="DebugConsole">▧ DebugConsole</button><button role="tab" aria-selected="false" type="button" data-terminal-tab="Event">▤ Event</button></div><pre id="starterTerminal" role="status" aria-live="polite">等待运行。补全代码后，这里会显示校验结果。</pre></div></div></div>
+          </div>
+          <div class="starter-output"><header><b>结果输出</b><span id="starterOutputStatus">等待运行</span></header><div class="starter-result-body"><div class="starter-images"><figure><div class="starter-image-wrap"><img id="starterOriginal" src="assets/images/october-home/starter-operator-example.png" alt="昇腾算子开发示例图"><label class="starter-upload">更换一张自己的照片<input id="starterFile" type="file" accept="image/*"></label></div><figcaption id="starterOriginalCaption">原图 · 示例照片</figcaption></figure><figure id="starterCanvasFigure"><canvas id="starterBright" aria-label="任务结果预览"></canvas><figcaption id="starterCanvasCaption">提亮后 · 等待运行</figcaption></figure></div><div class="starter-task-controls" id="starterTaskControls"></div><div class="starter-preview-info" id="starterPreviewInfo" hidden></div><p class="starter-result-note" id="starterResultNote">选择示例照片或悬浮更换照片，在左侧补全代码并运行。</p><button type="button" id="starterFinish" hidden>完成任务，接着学习 →</button></div></div>
+        </div>
+        <p class="starter-disclosure" id="starterDisclosure">浏览器计算预览，未连接昇腾 NPU；真实算子需在实验环境编译并验证。图片预处理与显示裁剪由浏览器完成。</p>
+      </div>
+      <dialog id="starterTaskDialog" class="starter-task-dialog" aria-labelledby="starterTaskDialogTitle"><h2 id="starterTaskDialogTitle">选择一个起步任务</h2><p>从一次小实践开始，体验不同开发方向。</p><div id="starterTaskOptions"></div><button type="button" id="starterCloseTaskDialog">暂不更换</button></dialog>
+      <div class="october-fan" id="homeContinueCards" aria-label="推荐与继续学习" hidden>
       <div class="fan-slot fan-slot-left">
         <a class="fan-pill" href="course-preview.html?course=operator" aria-label="查看课程">课程 <span aria-hidden="true">↗</span></a>
         <a class="fan-side fan-left" href="course-preview.html?course=operator"><small>模型训练 / CANN</small><h3>Ascend C算子开发</h3><div class="small-tags"><span>编程模型</span><span>编程范式</span><span>SIMD模型</span></div><img src="assets/images/october-home/operator-art.webp" alt=""></a>
@@ -82,6 +103,8 @@
         <a class="fan-pill" href="#certifications" aria-label="查看认证">认证 <span aria-hidden="true">↗</span></a>
         <a class="fan-side fan-right" href="#certifications"><small><em>入门级 ACDA</em> 算子开发</small><h3>算子开发认证</h3><div class="small-tags"><span>代码</span><span>算子</span><span>调优</span></div><img src="assets/images/october-home/badge.webp" alt=""></a>
       </div>
+      </div>
+      <button type="button" id="starterReplay" class="starter-replay" hidden>重新体验第一个小任务</button>
     </section>
 
     <section class="dlc-section problem-first-floor" id="problemFirstFloor" aria-labelledby="problemFloorTitle" hidden>
@@ -110,13 +133,47 @@
     </section>
 
     <section class="october-section" id="scenes" aria-labelledby="scenesTitle">
-      <h2 id="scenesTitle">按照开发场景学习</h2><p class="section-intro">以下是我们按真实开发任务梳理的学习课程，从模型部署到算子调优，跟着场景一步一步走，学完即可直接用到项目里。</p>
+      <h2 id="scenesTitle">按照开发场景学习</h2><p class="section-intro" id="scenarioIntro">从精选课程链路出发，继续完成真实的开发实践。</p>
       <div class="pill-tabs" id="scenarioTabs" role="tablist" aria-label="开发场景"><button role="tab" aria-selected="true" data-scene="0">精选</button><button role="tab" aria-selected="false" data-scene="1">训练开发</button><button role="tab" aria-selected="false" data-scene="2">推理与部署</button><button role="tab" aria-selected="false" data-scene="0">算子开发</button><button role="tab" aria-selected="false" data-scene="3">调试与性能调优</button><button role="tab" aria-selected="false" data-scene="4">AI应用与智能体</button></div>
       <div class="scenario-panel"><div class="scenario-subtabs" id="featuredTabs" role="tablist" aria-label="精选课程"><button role="tab" aria-selected="true" data-featured="0">精选1</button><button role="tab" aria-selected="false" data-featured="1">精选2</button><button role="tab" aria-selected="false" data-featured="2">精选3</button><button role="tab" aria-selected="false" data-featured="4">精选4</button></div><div class="scenario-body" id="scenarioContent" role="tabpanel" aria-live="polite"></div></div>
     </section>
     <section class="october-section" id="certifications" aria-labelledby="certTitle"><h2 id="certTitle">按照认证路径学习</h2><p class="section-intro">以下是我们按认证等级设计的进阶路线，从入门到专家逐级递进，帮你在体系化学习中夯实能力、拿下社区认证</p><div class="pill-tabs cert-tabs" role="tablist" aria-label="认证等级"><button role="tab" aria-selected="true" data-cert="ACDA">入门级 ACDA</button><button role="tab" aria-selected="false" data-cert="ACDP">工作级 ACDP</button><button role="tab" aria-selected="false" data-cert="ACDE">专家级 ACDE</button></div><div class="cert-grid" id="certGrid" role="tabpanel" aria-live="polite"></div></section>
     <section class="october-section" id="events" aria-labelledby="eventsTitle"><h2 id="eventsTitle">开发者活动</h2><p class="section-intro">汇集开发者社区活动与我的学习安排，查看课程学习、AI 学伴建议复习和认证考试日程。</p><div class="events-board"><div class="events-toolbar"><div class="month-controls"><button type="button" id="previousMonth" aria-label="上个月">‹</button><strong id="calendarMonth"></strong><button type="button" id="nextMonth" aria-label="下个月">›</button></div><span class="schedule-label">活动日程 <small>示例</small></span><div class="event-filters" aria-label="活动类型"><button aria-pressed="true" data-kind="全部">全部</button><button aria-pressed="false" data-kind="会议">会议</button><button aria-pressed="false" data-kind="活动">活动</button><button aria-pressed="false" data-kind="峰会">峰会</button></div></div><div class="events-body"><div class="calendar"><div class="weekdays" aria-hidden="true"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div><div class="calendar-grid" id="calendarGrid" aria-label="活动日期"></div></div><div class="event-list" id="eventList" aria-live="polite"></div></div></div><button class="all-events" id="showAllEvents" type="button">查看本月全部活动 <span aria-hidden="true">›</span></button></section>
-    <section class="october-section community-section" id="growth" aria-labelledby="growthTitle"><h2 id="growthTitle">社区经验贡献</h2><p class="section-intro">开发者沉淀的实战经验在这里分享，把踩过的坑变成后来者的路，在分享中放大你的技术影响力。</p><div class="contribution-banner"><div><h3>成为社区贡献者</h3><p>每一次有效贡献，无论是一篇教程、一段答疑，还是一份代码样例，都会累积积分成长值、兑换昇腾算力，为你的开发实验持续供能；当每个人的经验点滴汇入，把全场景 AI 异构计算平台越建越好，共同繁荣软硬件应用生态。</p><div class="contribution-actions"><a class="outline-button" href="prototypes/lowfi/developer-contribution-closed-loop.html">立即贡献</a></div></div><img src="assets/images/october-home/community-developers.webp" alt="四位开发者围坐在电脑前，轻松讨论和分享代码" loading="lazy"></div></section>
+    <section class="october-section community-section" id="growth" aria-labelledby="growthTitle">
+      <div class="contribution-feature-card">
+        <div class="contribution-examples" aria-hidden="true">
+          <article class="contribution-example contribution-example-code">
+            <div class="example-window-bar"><span></span><span></span><span></span><small>add_custom.cpp</small></div>
+            <pre><code><span class="code-keyword">__aicore__ void</span> AddKernel() {
+  <span class="code-type">AscendC::Add</span>(dst, x, y);
+  <span class="code-comment">// 分享你的算子实践</span>
+}</code></pre>
+          </article>
+          <article class="contribution-example contribution-example-blog">
+            <div class="example-blog-author"><img src="assets/images/avatars/avatar-female.png" alt=""><span><strong>开发者小语</strong><small>社区技术博客 · 刚刚发布</small></span></div>
+            <strong class="example-blog-title">从零写出第一个 Ascend C 算子</strong>
+            <p>记录调试过程、性能优化与踩坑经验，让更多人从这里继续。</p>
+            <span class="example-blog-meta">算子开发 <i>·</i> 8 分钟阅读</span>
+          </article>
+          <span class="contribution-example-chip contribution-example-chip-top">代码样例已收录 <b>✓</b></span>
+          <span class="contribution-example-chip contribution-example-chip-bottom">实践经验正在帮助更多开发者 ↗</span>
+          <span class="contribution-spark contribution-spark-blog-a">✍️</span>
+          <span class="contribution-spark contribution-spark-blog-b">✨</span>
+          <span class="contribution-spark contribution-spark-code-a">💡</span>
+          <span class="contribution-spark contribution-spark-code-b">✨</span>
+        </div>
+        <p class="contribution-feature-kicker">社区经验贡献</p>
+        <h2 id="growthTitle">你的经验，值得被整个社区记住</h2>
+        <p class="contribution-feature-description">分享你的教程、答疑或代码样例，让更多开发者从你的实践中受益。</p>
+        <a class="contribution-feature-action" href="prototypes/lowfi/developer-contribution-closed-loop.html">立即贡献</a>
+      </div>
+      <div class="contribution-redeem-banner">
+        <span class="contribution-redeem-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5h16v4a2.5 2.5 0 0 0 0 5v4H4v-4a2.5 2.5 0 0 0 0-5v-4Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 5.5v13" stroke="currentColor" stroke-width="1.7" stroke-dasharray="2 2"/></svg></span>
+        <strong>算子兑换</strong>
+        <span class="contribution-redeem-copy">每一次有效贡献，都在为你积累算力、教程、答疑、代码样例等</span>
+        <a class="contribution-redeem-action" href="prototypes/lowfi/developer-contribution-closed-loop.html">获取卡时</a>
+      </div>
+    </section>
   </main>
 
   <footer class="dlc-footer">
@@ -141,17 +198,10 @@
   <aside class="home-assistant-window" id="homeAssistantWindow" role="dialog" aria-modal="false" aria-labelledby="homeAssistantTitle" hidden>
     <header class="ha-header">
       <div class="ha-drag-handle" tabindex="0" role="group" aria-label="移动学习助手窗口" aria-describedby="homeAssistantMoveHint"><span class="ha-source ha-logo" aria-hidden="true"></span><h2 id="homeAssistantTitle">学习助手</h2><span class="ha-source ha-chevron" aria-hidden="true"></span></div>
-      <div class="ha-actions"><button type="button" data-ha-section="homeAssistantAbility" aria-label="查看我的能力"><span class="ha-source ha-person-icon" aria-hidden="true"></span></button><button type="button" data-ha-section="homeAssistantPlan" aria-label="查看学习计划"><span class="ha-source ha-list-icon" aria-hidden="true"></span></button><button type="button" data-ha-close aria-label="关闭学习助手"><span class="ha-source ha-close-icon" aria-hidden="true"></span></button></div>
+      <div class="ha-agent-rail" id="homeAgentRail" aria-label="已选学习分身"></div><div class="ha-actions"><button type="button" data-ha-section="homeAssistantAbility" aria-label="查看我的能力"><span class="ha-source ha-person-icon" aria-hidden="true"></span></button><button type="button" data-ha-section="homeAssistantPlan" aria-label="查看学习计划"><span class="ha-source ha-list-icon" aria-hidden="true"></span></button><button type="button" data-ha-close aria-label="关闭学习助手"><span class="ha-source ha-close-icon" aria-hidden="true"></span></button></div>
     </header>
     <p class="ha-sr" id="homeAssistantMoveHint">拖动标题栏移动窗口，也可使用方向键移动，按 Home 恢复默认位置。</p>
-    <div class="ha-content">
-      <div class="ha-welcome"><span class="ha-source ha-portrait" role="img" aria-label="向你挥手的学习助手"></span><div class="ha-welcome-copy"><h3>嗨，我是你的学习助手</h3><p>自动分析你对昇腾能力的掌握程度和学习进度~</p><span class="ha-source ha-badges" role="img" aria-label="已获得三枚学习徽章，还有两枚待解锁"></span></div></div>
-      <div class="ha-metrics"><div class="ha-metric"><span>分布式训练学习进度</span><div><strong>35<small>%</small></strong><span class="ha-ticks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div></div><div class="ha-metric"><span>本周掌握知识点</span><div><strong>12</strong><span class="ha-change"><span class="ha-source ha-up-icon" aria-hidden="true"></span><span aria-label="增加5个">5</span></span></div></div><div class="ha-metric"><span>本周验证实践</span><div><strong>2</strong><span class="ha-change down"><span class="ha-source ha-down-icon" aria-hidden="true"></span><span aria-label="减少1个">1</span></span></div></div></div>
-      <div class="ha-diagnosis"><span class="ha-source ha-magic-icon" aria-hidden="true"></span><p><b>AI诊断：</b>你在模型训练上领先同级30%，但算子开发明显拖后腿，需要进行补强。</p></div>
-      <section class="ha-card ha-ability" id="homeAssistantAbility" aria-labelledby="homeAbilityTitle"><h3 id="homeAbilityTitle">我的能力</h3><div class="ha-source ha-radar" role="img" aria-label="能力雷达图：Ascend C 基础、LLM 训练、生成式 AI、应用开发部署、推理开发"></div></section>
-      <section class="ha-card ha-analysis" aria-labelledby="homeAnalysisTitle"><span class="ha-source ha-ai-watermark" aria-hidden="true"></span><h3 id="homeAnalysisTitle">AI分析与学习建议</h3><div class="ha-analysis-row"><span class="ha-tag positive">优势</span><span>模型训练 - 贡献实践密度最高</span></div><div class="ha-analysis-row"><span class="ha-tag gap">缺口</span><span>算子开发 - 缺少可验证实践证据</span></div><div class="ha-recommendation"><div class="ha-recommendation-head"><strong>重点补强算子开发能力</strong><span class="ha-duration">预计3周</span><a class="ha-study-link" href="course-preview.html?course=operator">立即学习<span class="ha-source ha-next-icon" aria-hidden="true"></span></a></div><p>因为你已经学习了算子开发初阶，但缺乏成熟的开发能力，所以建议你学习进阶</p></div></section>
-      <section class="ha-card ha-plan" id="homeAssistantPlan" aria-labelledby="homePlanTitle"><h3 id="homePlanTitle">学习计划</h3><div class="ha-plan-row"><div class="ha-plan-info"><p class="ha-plan-title"><span>课程</span>单卡Pytorch训练迁移</p><div class="ha-plan-meta"><span><span class="ha-source ha-calendar-icon" aria-hidden="true"></span>2026-10-20</span><span><span class="ha-source ha-clock-icon" aria-hidden="true"></span>2小时</span><span><span class="ha-source ha-clipboard-icon" aria-hidden="true"></span>两周完成</span></div></div><span class="ha-source ha-check-icon" role="img" aria-label="已完成"></span></div></section>
-    </div>
+    <div class="ha-content ha-agent-content"><iframe id="homeAgentFrame" title="学习助手：分身、学习计划与任务" src="prototypes/highfi/learning-agent-studio.html?embedded=1&v=overview-restored-20261116" class="ha-agent-frame"></iframe></div>
   </aside>
 
   <script src="assets/js/bird-motion.js?v=1"></script>
@@ -166,14 +216,16 @@
       zIndex: 0
     });
   </script>
-  <script src="assets/js/home-october.js?v=bird-particles-1"></script>
+  <script src="assets/js/home-october.js?v=starter-followup-2"></script>
+  <script src="assets/js/home-starter-ide.js?v=6"></script>
   <script src="assets/js/home-hero-typewriter.js?v=1"></script>
   <script src="assets/js/home-figma.js?v=quiz-multiselect-avatar-1"></script>
-  <script src="assets/js/home-search-results.js?v=1"></script>
+  <script src="assets/js/home-search-results.js?v=2"></script>
   <script src="assets/js/course-outline.js?v=outline-toolbar-1"></script>
   <script src="assets/js/course-compose.js?v=lesson-types-2"></script>
   <script src="assets/js/course-flow.js?v=operator-certification-1"></script>
   <script src="assets/js/floating-assistant-window.js?v=1"></script>
-  <script src="assets/js/home-learning-assistant.js?v=source-2"></script>
+  <script src="assets/js/home-learning-assistant.js?v=focus-fix-2"></script>
+  <script src="assets/js/home-agent-integration.js?v=1"></script>
 </body>
 </html>
