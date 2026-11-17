@@ -31,6 +31,10 @@ if [[ -f "$repo_root/outputs/highfi/home-community-contribution-floor-v1.png" ]]
   cp "$repo_root/outputs/highfi/home-community-contribution-floor-v1.png" "$dist/lab/highfi/"
 fi
 
+if [[ -d "$repo_root/explorations" ]]; then
+  cp -R "$repo_root/explorations" "$dist/explorations"
+fi
+
 touch "$dist/.nojekyll"
 
 write_redirect() {

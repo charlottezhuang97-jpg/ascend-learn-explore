@@ -74,23 +74,8 @@
       </div>
     </section>
 
-    <section class="starter-floor" id="courseFirstFloor" aria-label="第一个算子开发任务与继续学习">
-      <div class="starter-ide" id="starterIde" aria-labelledby="starterTitle">
-        <div class="starter-window-bar"><span class="starter-window-dots" aria-hidden="true"><i></i><i></i><i></i></span><strong>我的第一个昇腾任务</strong><span class="starter-duration" id="starterDuration">约 3 分钟</span><button type="button" class="starter-change-task" id="starterChangeTask">更换任务 ⇄</button></div>
-        <div class="starter-heading"><div><h2 id="starterTitle">写一个加法算子，让偏暗照片亮起来</h2><p id="starterDescription">完成一行 Ascend C 加法计算，看看它如何改变图像像素。</p></div>            <div class="starter-steps" aria-label="任务步骤"><button type="button" data-step="0" aria-current="step">补全 Add</button><button type="button" data-step="1">写入 Add 算子</button><button type="button" data-step="2">运行查看结果</button></div></div>
-        <div class="starter-workbench">
-          <div class="starter-editor"><header><b><span class="starter-ide-brand" aria-hidden="true"></span>HiDevLab 在线环境</b><span>文件　编辑　查看　运行　调试</span></header>
-
-            <div class="starter-editor-body"><nav id="starterFiles" aria-label="Project 文件列表"></nav><div class="starter-code-pane"><div class="starter-code"><div class="starter-tabs" id="starterTabs"></div><div class="starter-breadcrumb" id="starterBreadcrumb">MyApplication / entry / src / main / add_custom.cpp</div><div class="starter-code-content"><p><em>01</em><code id="starterCodeBefore">// 输入像素 x 和亮度增量 y 已准备好</code></p><p><em>02</em><code id="starterCodeComment">// 逐元素相加：z = x + y</code></p><label id="starterCodeLabel" for="starterCode">03 · 补全 Add 计算</label><textarea id="starterCode" spellcheck="false" aria-label="补全当前任务的一行代码" placeholder="AscendC::Add(zLocal, xLocal, yLocal, TILE_LENGTH);"></textarea><p><em>04</em><code id="starterCodeAfter">// DataCopy 将 z 搬出，Host 读取结果</code></p><pre id="starterFilePreview" hidden></pre></div></div>
-              <footer><button type="button" id="starterRun">▶ 运行预览</button></footer>
-              <div class="starter-editor-terminal"><div class="starter-terminal-tabs" role="tablist" aria-label="开发输出"><button role="tab" aria-selected="true" type="button" data-terminal-tab="Terminal">▧ Terminal</button><button role="tab" aria-selected="false" type="button" data-terminal-tab="Problem">ⓘ Problem</button><button role="tab" aria-selected="false" type="button" data-terminal-tab="Output">⚑ Output</button><button role="tab" aria-selected="false" type="button" data-terminal-tab="DebugConsole">▧ DebugConsole</button><button role="tab" aria-selected="false" type="button" data-terminal-tab="Event">▤ Event</button></div><pre id="starterTerminal" role="status" aria-live="polite">等待运行。补全代码后，这里会显示校验结果。</pre></div></div></div>
-          </div>
-          <div class="starter-output"><header><b>结果输出</b><span id="starterOutputStatus">等待运行</span></header><div class="starter-result-body"><div class="starter-images"><figure><div class="starter-image-wrap"><img id="starterOriginal" src="assets/images/october-home/starter-operator-example.png" alt="昇腾算子开发示例图"><label class="starter-upload">更换一张自己的照片<input id="starterFile" type="file" accept="image/*"></label></div><figcaption id="starterOriginalCaption">原图 · 示例照片</figcaption></figure><figure id="starterCanvasFigure"><canvas id="starterBright" aria-label="任务结果预览"></canvas><figcaption id="starterCanvasCaption">提亮后 · 等待运行</figcaption></figure></div><div class="starter-task-controls" id="starterTaskControls"></div><div class="starter-preview-info" id="starterPreviewInfo" hidden></div><p class="starter-result-note" id="starterResultNote">选择示例照片或悬浮更换照片，在左侧补全代码并运行。</p><button type="button" id="starterFinish" hidden>完成任务，接着学习 →</button></div></div>
-        </div>
-        <p class="starter-disclosure" id="starterDisclosure">浏览器计算预览，未连接昇腾 NPU；真实算子需在实验环境编译并验证。图片预处理与显示裁剪由浏览器完成。</p>
-      </div>
-      <dialog id="starterTaskDialog" class="starter-task-dialog" aria-labelledby="starterTaskDialogTitle"><h2 id="starterTaskDialogTitle">选择一个起步任务</h2><p>从一次小实践开始，体验不同开发方向。</p><div id="starterTaskOptions"></div><button type="button" id="starterCloseTaskDialog">暂不更换</button></dialog>
-      <div class="october-fan" id="homeContinueCards" aria-label="推荐与继续学习" hidden>
+    <section class="starter-floor" id="courseFirstFloor" aria-label="推荐与继续学习">
+      <div class="october-fan" id="homeContinueCards" aria-label="推荐与继续学习">
       <div class="fan-slot fan-slot-left">
         <a class="fan-pill" href="course-preview.html?course=operator" aria-label="查看课程">课程 <span aria-hidden="true">↗</span></a>
         <a class="fan-side fan-left" href="course-preview.html?course=operator"><small>模型训练 / CANN</small><h3>Ascend C算子开发</h3><div class="small-tags"><span>编程模型</span><span>编程范式</span><span>SIMD模型</span></div><img src="assets/images/october-home/operator-art.webp" alt=""></a>
@@ -104,7 +89,6 @@
         <a class="fan-side fan-right" href="#certifications"><small><em>入门级 ACDA</em> 算子开发</small><h3>算子开发认证</h3><div class="small-tags"><span>代码</span><span>算子</span><span>调优</span></div><img src="assets/images/october-home/badge.webp" alt=""></a>
       </div>
       </div>
-      <button type="button" id="starterReplay" class="starter-replay" hidden>重新体验第一个小任务</button>
     </section>
 
     <section class="dlc-section problem-first-floor" id="problemFirstFloor" aria-labelledby="problemFloorTitle" hidden>
@@ -217,7 +201,6 @@
     });
   </script>
   <script src="assets/js/home-october.js?v=starter-followup-2"></script>
-  <script src="assets/js/home-starter-ide.js?v=6"></script>
   <script src="assets/js/home-hero-typewriter.js?v=1"></script>
   <script src="assets/js/home-figma.js?v=quiz-multiselect-avatar-1"></script>
   <script src="assets/js/home-search-results.js?v=2"></script>
