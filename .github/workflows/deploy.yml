@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, '1030']
+    branches: [main, '1030', 'codex/november-version']
   workflow_dispatch:
 
 permissions:
@@ -61,6 +61,20 @@ jobs:
           test -f .pages-dist/knowledge-map-preview/knowledge-map.html
           test -f .pages-dist/knowledge-map-preview/knowledge-map-v1.html
           test -f .pages-dist/knowledge-map-preview/learning-plan.html
+      # The fullscreen map is overlaid without replacing production or other previews.
+      - name: Checkout fullscreen knowledge-map source
+        uses: actions/checkout@v4
+        with:
+          ref: 'codex/november-version'
+          path: .preview-cube-source
+      - name: Add fullscreen map and its catalog entry
+        run: |
+          set -euo pipefail
+          cp .preview-cube-source/knowledge-map-cube.html .pages-dist/knowledge-map-cube.html
+          cp .preview-cube-source/assets/css/knowledge-map-cube.css .pages-dist/assets/css/knowledge-map-cube.css
+          cp .preview-cube-source/assets/js/knowledge-map-cube.js .pages-dist/assets/js/knowledge-map-cube.js
+          node -e 'const fs=require("fs");const p=".pages-dist/page-registry.json";const r=JSON.parse(fs.readFileSync(p,"utf8"));const add=JSON.parse(fs.readFileSync(".preview-cube-source/page-registry.json","utf8")).pages.find(x=>x.id==="knowledge-map-cube");if(!add)throw Error("Missing cube catalog entry");r.pages=r.pages.filter(x=>x.id!==add.id);r.pages.push(add);fs.writeFileSync(p,JSON.stringify(r,null,2));fs.writeFileSync(".pages-dist/assets/js/page-registry-data.js","window.PAGE_REGISTRY="+JSON.stringify(r)+";\n");'
+          test -f .pages-dist/knowledge-map-cube.html
       - uses: actions/configure-pages@v5
         with:
           enablement: true

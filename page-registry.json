@@ -17,6 +17,7 @@
     {"id":"learn-stepwise","title":"AI 学伴 · 实验模式","status":"current","source":"learn-stepwise.html","publicPath":"learn-stepwise.html?course=mindie&mode=video&guide=open","description":"按设计方案呈现 MindIE 文本生成实验的环境准备、权重与镜像、推理配置、实验执行四组任务；保留七项操作的逐项确认与结果预览。"},
     {"id":"ai-companion","title":"AI 学伴","status":"current","source":"ai-companion.html","publicPath":"ai-companion.html","description":"个人能力同心环、学习建议与计划"},
     {"id":"knowledge-map","title":"知识地图","status":"current","source":"knowledge-map.html","publicPath":"knowledge-map.html","description":"CANN、生成式 AI 与大语言模型、智能体三大领域的分区知识网络、个人状态与 AI 推荐路线"},
+    {"id":"knowledge-map-cube","title":"知识地图 · 全屏版","status":"exploration","source":"knowledge-map-cube.html","publicPath":"knowledge-map-cube.html","description":"全屏画布、悬浮图例与领域学习方向详情"},
 
     {"id":"find-v1","title":"查找学习资源","status":"legacy","source":"archive/legacy-v1/find.html","publicPath":"archive/legacy-v1/find.html","description":"早期全站导航与资源查找方案"},
     {"id":"paths-v1","title":"学习路径","status":"legacy","source":"archive/legacy-v1/paths.html","publicPath":"archive/legacy-v1/paths.html","description":"早期学习路径列表方案"},
