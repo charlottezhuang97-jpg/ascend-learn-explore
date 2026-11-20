@@ -242,5 +242,5 @@
     }
   });
   addEventListener('resize',fit);
-  openView(new URLSearchParams(location.search).get('view')==='network'?'network':'map');
+  openView('map');
 })();
