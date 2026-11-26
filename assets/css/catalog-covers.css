@@ -1,0 +1,62 @@
+/* Current-scheme covers: seven cells from one consistent illustration atlas. */
+.cards { gap: 20px; }
+.group-head { margin-bottom: 18px; }
+.group-head > span { color: var(--secondary); font-size: 12px; white-space: nowrap; }
+.illustrated-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  box-shadow: 0 6px 24px rgba(35, 65, 105, .035);
+}
+.card-cover {
+  display: flex;
+  height: 196px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #f4f8ff;
+}
+.cover-art {
+  display: block;
+  flex: 0 0 262px;
+  height: 262px;
+  background-image: url('../images/catalog/current-covers.png');
+  background-size: 400% 200%;
+  background-position: var(--cover-x) var(--cover-y);
+}
+.card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 24px;
+}
+.card-kicker { color: #5874a8; font-size: 11px; }
+.illustrated-card code { font-size: 10px; }
+.illustrated-card h3 { font-size: 18px; line-height: 1.5; }
+.illustrated-card p { min-height: 42px; font-size: 13px; line-height: 1.7; }
+.illustrated-card .open { margin-top: auto; padding-top: 14px; }
+.card:focus-visible { outline: 3px solid #658cfa; outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } .card:hover { transform: none; } }
+@media (max-width: 600px) {
+  .card-cover { height: 186px; }
+  .card-content { padding: 20px; }
+  .group-head { align-items: start; gap: 12px; }
+}
+
+[hidden] { display: none !important; }
+@media (max-width: 900px) {
+  .top { flex-wrap: wrap; height: auto; min-height: 64px; padding-top: 12px; padding-bottom: 12px; }
+  .top .catalog-header-brand span { display: none; }
+  .top .asset-switch { position: static; margin-left: auto; transform: none; }
+  .top .asset-home-link { display: none; }
+}
+@media (max-width: 480px) {
+  .top .asset-switch { width: 100%; margin-left: 0; }
+  .top .asset-switch a { flex: 1; }
+}
+
+.research-cover-art { display: block; width: 100%; height: 100%; object-fit: contain; }
